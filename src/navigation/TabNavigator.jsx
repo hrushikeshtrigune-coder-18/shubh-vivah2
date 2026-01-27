@@ -3,7 +3,7 @@ import HomeScreen from '../screens/home/HomeScreen';
 import MatchListScreen from '../screens/matchmaking/MatchListScreen';
 import UserProfileScreen from '../screens/profile/UserProfileScreen';
 import VendorListScreen from '../screens/vendor/VendorListScreen';
-import WeddingDashboardScreen from '../screens/wedding/WeddingDashboardScreen';
+import EventServicesScreen from '../screens/wedding/EventServicesScreen';
 import { colors } from '../theme/colors';
 
 // Placeholder icons (text for now or vector icons if available)
@@ -20,7 +20,7 @@ const TabNavigator = () => {
                     if (route.name === 'Home') iconName = '🏠';
                     else if (route.name === 'Matches') iconName = '❤️';
                     else if (route.name === 'Vendors') iconName = '🏪';
-                    else if (route.name === 'Wedding') iconName = '💍';
+                    else if (route.name === 'Services') iconName = '💍';
                     else if (route.name === 'Profile') iconName = '👤';
 
                     return <Text style={{ fontSize: size, color }}>{iconName}</Text>;
@@ -33,7 +33,7 @@ const TabNavigator = () => {
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Matches" component={MatchListScreen} />
             <Tab.Screen name="Vendors" component={VendorListScreen} />
-            <Tab.Screen name="Wedding" component={WeddingDashboardScreen} />
+            <Tab.Screen name="Services" component={EventServicesScreen} />
             <Tab.Screen name="Profile" component={UserProfileScreen} />
         </Tab.Navigator>
     );

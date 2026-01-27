@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import AuthNavigator from './AuthNavigator';
 import TabNavigator from './TabNavigator';
 
+
 // Mock Screens for loading
 import { ActivityIndicator, View } from 'react-native';
 
