@@ -45,7 +45,10 @@ const Card = React.memo(({ item, index, scrollX, itemWidth, itemHeight, onPress 
             >
                 {/* 1. Image Section (The "Card" - Bordered) */}
                 <View style={styles.imageContainer}>
-                    <Image source={{ uri: item.image }} style={styles.carouselImage} />
+                    <Image
+                        source={typeof item.image === 'string' ? { uri: item.image } : item.image}
+                        style={styles.carouselImage}
+                    />
                 </View>
 
                 {/* 2. Content Section (Outside the framed image) */}

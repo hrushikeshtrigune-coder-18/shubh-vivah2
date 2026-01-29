@@ -25,66 +25,75 @@ const EMPTY_ITEM_SIZE = (width - ITEM_WIDTH) / 2;
 const services = [
     {
         id: '1',
-        title: 'Royale Venues',
+        title: 'Wedding Venue',
         subtitle: 'Heritage & Luxury',
-        image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2098&auto=format&fit=crop',
-        description: 'Experience royalty with our curated selection of heritage palaces and luxury banquet halls. We ensure grand architecture and impeccable hospitality.',
+        image: require('../../../assets/images/decor.jpg'),
+        description: 'Experience royalty with our curated selection of heritage palaces and luxury banquet halls.',
         features: ['500-2000 Pax', 'Royal Stay'],
         icon: 'archway'
     },
     {
         id: '2',
-        title: 'Cinematic Captures',
+        title: 'Photography',
         subtitle: 'Drone & Candid',
-        image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=2070&auto=format&fit=crop',
-        description: 'Capture every emotion with our cinematic storytelling. Our expert team uses state-of-the-art drones to preserve your memories forever.',
+        image: require('../../../assets/images/photo.jpg'),
+        description: 'Capture every emotion with our cinematic storytelling and expert drone shots.',
         features: ['4K Drone', 'Same Day Edit'],
         icon: 'camera'
     },
     {
         id: '3',
-        title: 'Luxury Decor',
+        title: 'Decoration',
         subtitle: 'Floral & Thematic',
-        image: 'https://images.unsplash.com/photo-1519225421980-715cb0202128?q=80&w=2000&auto=format&fit=crop',
-        description: 'Transform your venue with bespoke floral arrangements and immersive themes. From vintage rustic to modern glam, we create magic.',
+        image: require('../../../assets/images/decor.jpg'),
+        description: 'Transform your venue with bespoke floral arrangements and immersive themes.',
         features: ['Exotic Flowers', 'Custom Props'],
         icon: 'holly-berry'
     },
     {
         id: '4',
-        title: 'Gourmet Catering',
-        subtitle: 'Global Flavors',
-        image: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=2070&auto=format&fit=crop',
-        description: 'Delight your guests with authentic regional and international cuisines, prepared by top-tier chefs with live interactive counters.',
-        features: ['Live Sushi', 'Royal Thali'],
+        title: 'Food & Catering',
+        subtitle: 'Gourmet Feasts',
+        image: require('../../../assets/images/Food.jpg'),
+        description: 'Exquisite culinary experiences with multi-cuisine menus from top chefs.',
+        features: ['Live Counters', 'Global Cuisine'],
         icon: 'utensils'
     },
     {
         id: '5',
-        title: 'Premium Gifting',
-        subtitle: 'Trousseau & Favors',
-        image: 'https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=1974&auto=format&fit=crop',
-        description: 'Curated return gifts and elegant trousseau packing that speaks volumes of your taste. Personalized hampers for every guest.',
-        features: ['Eco-Luxe', 'Handmade'],
+        title: 'Gifts & Return',
+        subtitle: 'Memorable Tokens',
+        image: 'https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=2000&auto=format&fit=crop',
+        description: 'Exclusive gift hampers and return favors to thank your guests.',
+        features: ['Custom Packing', 'Eco-friendly'],
         icon: 'gift'
     },
     {
         id: '6',
-        title: 'Star Entertainment',
-        subtitle: 'Live Bands & DJs',
-        image: 'https://images.unsplash.com/photo-1516054575922-f0b8ee4becf1?q=80&w=2074&auto=format&fit=crop',
-        description: 'Electrify your sangeet with celebrity singers, high-energy folk artists, and top-rated DJs who keep the dance floor buzzing.',
-        features: ['Celeb Artist', 'Sound & Lights'],
+        title: 'Entertainment',
+        subtitle: 'Live & DJ',
+        image: require('../../../assets/images/entertenment.jpg'),
+        description: 'Electrifying performances, live bands, and DJs to keep the party alive.',
+        features: ['Celebrity Artists', 'Live Band'],
         icon: 'music'
     },
     {
         id: '7',
-        title: 'Bridal Glow',
-        subtitle: 'Makeup & Styling',
-        image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=2071&auto=format&fit=crop',
-        description: 'Look your absolute best with our premium bridal makeup artists. We offer trials and personalized grooming packages for the big day.',
-        features: ['HD Makeup', 'Draping'],
+        title: 'Makeup & Grooming',
+        subtitle: 'Bridal & Groom',
+        image: require('../../../assets/images/makeup.jpg'),
+        description: 'Expert makeup artists to give you the perfect look for your big day.',
+        features: ['HD Makeup', 'Trial Included'],
         icon: 'magic'
+    },
+    {
+        id: '8',
+        title: 'E-Invites',
+        subtitle: 'Digital & Animated',
+        image: require('../../../assets/images/invite.jpg'),
+        description: 'Eco-friendly and animated digital invitations to impress your guests instantly.',
+        features: ['Video Invites', 'RSVP Tracking'],
+        icon: 'envelope-open-text'
     },
 ];
 
@@ -111,7 +120,7 @@ const Backdrop = ({ scrollX }) => {
                 return (
                     <Animated.Image
                         key={index}
-                        source={{ uri: item.image }}
+                        source={typeof item.image === 'string' ? { uri: item.image } : item.image}
                         style={{
                             width: width,
                             height: height,
