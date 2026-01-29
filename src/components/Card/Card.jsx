@@ -1,31 +1,166 @@
-import { StyleSheet, View } from 'react-native';
+import { FontAwesome5 } from '@expo/vector-icons';
+import React from 'react';
+import {
+    Animated,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
 import { colors } from '../../theme/colors';
-import { spacing } from '../../theme/spacing';
 
-const Card = ({ children, style, padding = true }) => {
+const Card = React.memo(({ item, index, scrollX, itemWidth, itemHeight, onPress }) => {
+    const inputRange = [(index - 1) * itemWidth, index * itemWidth, (index + 1) * itemWidth];
+
+    const scale = scrollX.interpolate({
+        inputRange,
+        outputRange: [0.9, 1, 0.9],
+        extrapolate: 'clamp',
+    });
+
+    const opacity = scrollX.interpolate({
+        inputRange,
+        outputRange: [0.7, 1, 0.7],
+        extrapolate: 'clamp',
+    });
+
+    const translateY = scrollX.interpolate({
+        inputRange,
+        outputRange: [50, 0, 50], // Side cards move down by 50px
+        extrapolate: 'clamp',
+    });
+
     return (
-        <View style={[styles.container, padding && styles.padding, style]}>
-            {children}
-        </View>
+        <Animated.View style={{
+            width: itemWidth,
+            height: itemHeight,
+            transform: [{ scale }, { translateY }],
+            opacity,
+        }}>
+            <TouchableOpacity
+                style={styles.container}
+                onPress={onPress}
+                activeOpacity={0.9}
+            >
+                {/* 1. Image Section (The "Card" - Bordered) */}
+                <View style={styles.imageContainer}>
+                    <Image source={{ uri: item.image }} style={styles.carouselImage} />
+                </View>
+
+                {/* 2. Content Section (Outside the framed image) */}
+                <View style={styles.contentContainer}>
+                    <View style={styles.iconWrapper}>
+                        <View style={styles.iconContainer}>
+                            <FontAwesome5 name={item.icon} size={20} color={colors.akshada} />
+                        </View>
+                    </View>
+
+                    <View style={styles.textWrapper}>
+                        <Text style={styles.carouselTitle}>{item.title}</Text>
+                        <Text style={styles.carouselSubtitle}>{item.subtitle}</Text>
+
+                        <View style={styles.divider} />
+
+                        <Text style={styles.carouselDesc} numberOfLines={2}>
+                            {item.description}
+                        </Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        </Animated.View>
     );
-};
+});
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.white,
-        borderRadius: 12,
-        marginVertical: spacing.xs,
-        shadowColor: colors.black,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
+        flex: 1,
+        borderRadius: 25,
+        marginHorizontal: 10,
+        backgroundColor: 'transparent', // Container is transparent
+    },
+    imageContainer: {
+        flex: 0.65, // Takes up 65% of the height
+        borderRadius: 25,
+        overflow: 'hidden',
+        borderWidth: 2,
+        borderColor: colors.kumkum, // Kumkum Border on Image only
+        backgroundColor: '#fff',
+        elevation: 5,
+        marginBottom: 10, // Space between image and content
+    },
+    carouselImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+    },
+    contentContainer: {
+        flex: 0.35, // Remaining 35%
+        paddingHorizontal: 10,
+        justifyContent: 'flex-start',
+    },
+    iconWrapper: {
+        alignItems: 'center',
+        marginTop: -33, // Pull icon up to overlap/bridge
+        marginBottom: 5,
+        zIndex: 10,
+    },
+    iconContainer: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: colors.darkHaldi, // Dark/Circle Haldi (#f29502)
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: colors.haldi, // Haldi Border for premium contrast
+        elevation: 8,
+        shadowColor: colors.kumkum,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+    },
+    textWrapper: {
+        backgroundColor: colors.akshada, // Akshid (#FFFFE4)
+        borderRadius: 20,
+        padding: 15,
+        paddingTop: 25, // More space for icon
+        borderWidth: 1.5,
+        borderColor: colors.haldi, // Haldi Border
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3, // For Android
+        elevation: 3,
     },
-    padding: {
-        padding: spacing.md,
+    carouselTitle: {
+        color: colors.kumkum,
+        fontSize: 20,
+        fontWeight: 'bold',
+        fontFamily: 'serif',
+        textAlign: 'center',
+    },
+    carouselSubtitle: {
+        color: colors.textRed,
+        fontSize: 12,
+        fontWeight: '600',
+        textAlign: 'center',
+        marginBottom: 5,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: colors.haldi,
+        width: '60%',
+        alignSelf: 'center',
+        marginVertical: 5,
+        opacity: 0.6,
+    },
+    carouselDesc: {
+        color: colors.textRed,
+        fontSize: 11,
+        lineHeight: 14,
+        textAlign: 'center',
+        fontWeight: '500',
     },
 });
 

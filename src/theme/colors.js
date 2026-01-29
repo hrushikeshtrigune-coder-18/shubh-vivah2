@@ -1,19 +1,21 @@
 export const colors = {
-    primary: '#F29502', // Dark/Circle Haldi
+    primary: '#f29502', // Dark/Circle Haldi
     secondary: '#A70002', // Kumkum
     background: '#FFFFE4', // Akshada
-    surface: '#FFFFFF',
-    text: '#1A1A1A',
-    textRed: '#CC0E0E', // Text Red
+    surface: '#FFFFE4', // Akshada as surface for premium feel (was white)
+    text: '#A70002', // Kumkum (Primary Text)
+    textRed: '#CC0E0E', // Text Red (Secondary Text)
     textLight: '#757575',
     border: '#F3D870', // Haldi
     error: '#D32F2F',
     success: '#388E3C',
     white: '#FFFFFF',
     black: '#000000',
-    kumkum: '#A70002',
-    akshada: '#FFFFE4',
-    haldi: '#F3D870',
-    darkHaldi: '#F29502',
-    gold: '#D4AF37', // Keeping existing gold as fallback or accent
+
+    // Custom Named Colors
+    kumkum: '#A70002',       // Primary Red
+    akshada: '#FFFFE4',      // Cream Background
+    haldi: '#F3D870',        // Gold/Yellow Border
+    darkHaldi: '#f29502',    // Deep Orange/Gold
+    gold: '#D4AF37',         // Classic Gold
 };
