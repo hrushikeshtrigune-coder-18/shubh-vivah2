@@ -14,7 +14,6 @@ import {
     useWindowDimensions
 } from 'react-native';
 import Card from '../../components/Card/Card';
-import { colors } from '../../theme/colors';
 
 const { width, height } = Dimensions.get('window');
 const ITEM_WIDTH = width * 0.75;
@@ -193,7 +192,7 @@ const EventServicesScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar hidden={false} barStyle="light-content" />
+            <StatusBar hidden={false} barStyle="dark-content" backgroundColor="#FFFFE4" />
 
             {/* Dynamic Background */}
             <Backdrop scrollX={scrollX} />
@@ -201,18 +200,18 @@ const EventServicesScreen = ({ navigation }) => {
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Wedding Services</Text>
                 <View style={styles.searchBar}>
-                    <Ionicons name="search" size={20} color={colors.haldi} style={{ marginRight: 10 }} />
+                    <Ionicons name="search" size={20} color="#A70002" style={{ marginRight: 10 }} />
                     <TextInput
                         placeholder="Find a service..."
                         value={searchText}
                         onChangeText={setSearchText}
                         style={styles.searchInput}
-                        placeholderTextColor={colors.haldi}
+                        placeholderTextColor="#A70002"
                     />
                 </View>
             </View>
 
-            <View style={{ flex: 1, justifyContent: 'center', paddingTop: 80 }}>
+            <View style={{ flex: 1, justifyContent: 'flex-start', paddingTop: 20 }}>
                 <Animated.FlatList
                     ref={flatListRef}
                     data={services}
@@ -291,15 +290,14 @@ const EventServicesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.white, // White Background to remove red shadow
+        backgroundColor: '#FFFFE4', // Akshid Background
     },
     header: {
         paddingTop: 50,
         paddingHorizontal: 20,
         paddingBottom: 20,
-        backgroundColor: colors.kumkum, // Kumkum Header
-        borderBottomWidth: 2,
-        borderBottomColor: colors.haldi,
+        backgroundColor: '#FFFFE4', // Akshid Header
+        // borderBottomWidth: 2,
         elevation: 8,
         zIndex: 10,
         borderBottomLeftRadius: 25,
@@ -308,31 +306,31 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 26,
         fontWeight: 'bold',
-        color: colors.haldi, // Haldi Title
+        color: '#A70002', // Kumkum Title
         fontFamily: 'serif',
         textAlign: 'center',
         marginBottom: 15,
         textTransform: 'uppercase',
-        textShadowColor: 'rgba(0, 0, 0, 0.2)',
+        textShadowColor: 'rgba(0, 0, 0, 0.1)',
         textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 2,
+        textShadowRadius: 1,
     },
     searchBar: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: colors.kumkum, // Kumkum Search Bar
+        backgroundColor: '#FFFFE4', // Akshid Search Bar
         borderRadius: 25,
         paddingHorizontal: 15,
         height: 48,
         borderWidth: 1.5,
-        borderColor: colors.haldi, // Haldi Border
+        borderColor: '#A70002', // Kumkum Border
         elevation: 2,
     },
     searchInput: {
         flex: 1,
         marginLeft: 10,
         fontSize: 14,
-        color: colors.haldi, // Haldi Input Text
+        color: '#A70002', // Kumkum Input Text
         fontWeight: '600',
     },
     modalOverlay: {
@@ -344,7 +342,7 @@ const styles = StyleSheet.create({
     },
     modalCard: {
         width: '90%',
-        backgroundColor: '#FFF',
+        backgroundColor: '#FFFFE4',
         borderRadius: 20,
         overflow: 'hidden',
         elevation: 20,
