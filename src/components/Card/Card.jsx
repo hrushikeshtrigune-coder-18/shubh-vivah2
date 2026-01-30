@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { colors } from '../../theme/colors';
 
-const Card = React.memo(({ item, index, scrollX, itemWidth, itemHeight, onPress }) => {
+const Card = ({ item, index, scrollX, itemWidth, itemHeight, onPress }) => {
     const inputRange = [(index - 1) * itemWidth, index * itemWidth, (index + 1) * itemWidth];
 
     const scale = scrollX.interpolate({
@@ -73,7 +73,7 @@ const Card = React.memo(({ item, index, scrollX, itemWidth, itemHeight, onPress 
             </TouchableOpacity>
         </Animated.View>
     );
-});
+};
 
 const styles = StyleSheet.create({
     container: {

@@ -1,6 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import {
+    Alert,
     Animated,
     Dimensions,
     Image,
@@ -175,7 +176,11 @@ const EventServicesScreen = ({ navigation }) => {
                 scrollX={scrollX}
                 itemWidth={ITEM_WIDTH}
                 itemHeight={ITEM_HEIGHT}
-                onPress={() => setSelectedService(item)}
+                onPress={() => {
+                    // Debug Alert to confirm touch
+                    Alert.alert("Debug", `Clicked ${item.title}`);
+                    setSelectedService(item);
+                }}
             />
         );
     }, [ITEM_WIDTH, ITEM_HEIGHT]);
@@ -199,7 +204,7 @@ const EventServicesScreen = ({ navigation }) => {
             <Backdrop scrollX={scrollX} />
 
             <View style={styles.header}>
-                <Text style={styles.headerTitle}>Wedding Services</Text>
+                <Text style={styles.headerTitle}>Wedding Services (Debug)</Text>
                 <View style={styles.searchBar}>
                     <Ionicons name="search" size={20} color={colors.haldi} style={{ marginRight: 10 }} />
                     <TextInput
@@ -245,7 +250,10 @@ const EventServicesScreen = ({ navigation }) => {
                     <View style={styles.modalCard}>
                         {selectedService && (
                             <View style={{ flex: 1 }}>
-                                <Image source={{ uri: selectedService.image }} style={styles.modalImage} />
+                                <Image
+                                    source={typeof selectedService.image === 'string' ? { uri: selectedService.image } : selectedService.image}
+                                    style={styles.modalImage}
+                                />
                                 <TouchableOpacity
                                     style={styles.closeBtn}
                                     onPress={() => setSelectedService(null)}
@@ -273,7 +281,13 @@ const EventServicesScreen = ({ navigation }) => {
                                         onPress={() => {
                                             const s = selectedService;
                                             setSelectedService(null);
-                                            navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+                                            if (s.title === 'Wedding Venue') {
+                                                navigation.navigate('WeddingVenue');
+                                            } else if (s.title === 'Photography') {
+                                                navigation.navigate('Photography');
+                                            } else {
+                                                // navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+                                            }
                                         }}
                                     >
                                         <Text style={styles.modalCtaText}>Book Now</Text>
