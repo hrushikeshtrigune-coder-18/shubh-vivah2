@@ -9,8 +9,8 @@ const TAB_HEIGHT = 50;
 const CIRCLE_RADIUS = 25;
 const BORDER_WIDTH = 5;
 
-// Light Yellow Background
-const FOOTER_BG_COLOR = '#f2f2a6';
+// Light Yellow Background (Updated to Light Ivory)
+const FOOTER_BG_COLOR = '#FFFFE0';
 
 const Footer = ({ state, descriptors, navigation }) => {
     const insets = useSafeAreaInsets();
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 6,
         borderWidth: BORDER_WIDTH,
-        borderColor: '#f2f2a6',
+        borderColor: '#FFFFE0', // Updated to match footer bg
     },
     tabsContainer: {
         flexDirection: 'row',
