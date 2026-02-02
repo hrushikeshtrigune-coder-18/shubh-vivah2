@@ -62,12 +62,12 @@ const services = [
     },
     {
         id: '5',
-        title: 'Gifts & Return',
-        subtitle: 'Memorable Tokens',
-        image: 'https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=2000&auto=format&fit=crop',
-        description: 'Exclusive gift hampers and return favors to thank your guests.',
-        features: ['Custom Packing', 'Eco-friendly'],
-        icon: 'gift'
+        title: 'Honeymoon Planning',
+        subtitle: 'Romantic Getaways',
+        image: 'https://images.unsplash.com/photo-1544644181-1bc97b771e12?q=80&w=2000&auto=format&fit=crop',
+        description: 'Plan your perfect romantic escape with our curated honeymoon packages.',
+        features: ['Intl. Packages', 'Custom Itinerary'],
+        icon: 'plane'
     },
     {
         id: '6',
@@ -285,6 +285,10 @@ const EventServicesScreen = ({ navigation }) => {
                                                 navigation.navigate('WeddingVenue');
                                             } else if (s.title === 'Photography') {
                                                 navigation.navigate('Photography');
+                                            } else if (s.title === 'Food & Catering') {
+                                                navigation.navigate('Food');
+                                            } else if (s.title === 'Honeymoon Planning') {
+                                                navigation.navigate('Honeymoon');
                                             } else {
                                                 // navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
                                             }

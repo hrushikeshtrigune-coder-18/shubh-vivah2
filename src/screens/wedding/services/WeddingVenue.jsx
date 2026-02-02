@@ -1,11 +1,9 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Animated,
-    Dimensions,
     FlatList,
     Image,
-    ScrollView,
     StatusBar,
     StyleSheet,
     Text,
@@ -15,7 +13,22 @@ import {
 } from 'react-native';
 import { colors } from '../../../theme/colors';
 
-const { width } = Dimensions.get('window');
+
+
+const venue1 = require('../../../../assets/images/venue1.jpg');
+const venue2 = require('../../../../assets/images/venue2.jpg');
+const venue3 = require('../../../../assets/images/venue3.jpg');
+const venue4 = require('../../../../assets/images/venue4.jpg');
+const venue5 = require('../../../../assets/images/venue5.jpg');
+const venue6 = require('../../../../assets/images/venue6.jpg');
+const venue7 = require('../../../../assets/images/venue7.jpg');
+const venue8 = require('../../../../assets/images/venue8.jpg');
+
+const COLORS = {
+    background: '#FFFFF0',
+    border: '#F29502',
+    textMain: '#CC0E0E',
+};
 
 const LOCATIONS = [
     { id: '1', name: 'Pune', image: 'https://images.unsplash.com/photo-1569317002804-ab77bcf1bce4?q=80&w=200&auto=format&fit=crop' },
@@ -23,17 +36,11 @@ const LOCATIONS = [
     { id: '3', name: 'Jaipur', image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=200&auto=format&fit=crop' },
     { id: '4', name: 'Goa', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=200&auto=format&fit=crop' },
     { id: '5', name: 'Delhi', image: 'https://images.unsplash.com/photo-1587474260584-18bd27909ddb?q=80&w=200&auto=format&fit=crop' },
+    { id: '6', name: 'Udaipur', image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=200&auto=format&fit=crop' },
+    { id: '7', name: 'Bangalore', image: 'https://images.unsplash.com/photo-1596436889106-4e8932d8d388?q=80&w=200&auto=format&fit=crop' },
+    { id: '8', name: 'Hyderabad', image: 'https://images.unsplash.com/photo-1549488391-7f8d68962803?q=80&w=200&auto=format&fit=crop' },
 ];
 
-const PUNE_AREAS = [
-    'All Areas',
-    'Pimpri Chinchwad',
-    'Chinchwad',
-    'Pimpri',
-    'Kothrud',
-    'Aundh',
-    'Baner'
-];
 
 const VENUES = [
     // Pune Venues
@@ -47,7 +54,7 @@ const VENUES = [
         rating: 4.8,
         price: '₹2,50,000',
         guests: '500-1000',
-        image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800&auto=format&fit=crop',
+        image: venue1,
     },
     {
         id: '4',
@@ -59,7 +66,7 @@ const VENUES = [
         rating: 4.5,
         price: '₹3,50,000',
         guests: '1000-2000',
-        image: 'https://images.unsplash.com/photo-1587474260584-18bd27909ddb?q=80&w=800&auto=format&fit=crop',
+        image: venue2,
     },
     {
         id: '8',
@@ -71,7 +78,7 @@ const VENUES = [
         rating: 4.2,
         price: '₹1,50,000',
         guests: '300-800',
-        image: 'https://images.unsplash.com/photo-1519225463359-d743a56b4199?q=80&w=800&auto=format&fit=crop',
+        image: venue3,
     },
     {
         id: '9',
@@ -83,7 +90,7 @@ const VENUES = [
         rating: 4.6,
         price: '₹2,00,000',
         guests: '200-500',
-        image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=800&auto=format&fit=crop',
+        image: venue4,
     },
 
     // Mumbai Venues
@@ -109,7 +116,7 @@ const VENUES = [
         rating: 5.0,
         price: '₹15,00,000',
         guests: '500-2000',
-        image: 'https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=800&auto=format&fit=crop',
+        image: venue5,
     },
     {
         id: '5',
@@ -120,7 +127,7 @@ const VENUES = [
         rating: 5.0,
         price: '₹20,00,000',
         guests: '500+',
-        image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=800&auto=format&fit=crop',
+        image: venue6,
     },
 
     // Goa Venues
@@ -133,7 +140,7 @@ const VENUES = [
         rating: 4.7,
         price: '₹4,50,000',
         guests: '200-500',
-        image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=800&auto=format&fit=crop',
+        image: venue7,
     },
     {
         id: '7',
@@ -144,30 +151,44 @@ const VENUES = [
         rating: 4.9,
         price: '₹8,00,000',
         guests: '300-800',
-        image: 'https://images.unsplash.com/photo-1520483602335-3b3dd1c50d2e?q=80&w=800&auto=format&fit=crop',
+        image: venue8,
     },
 ];
 
 const WeddingVenue = ({ navigation }) => {
     const scrollY = useRef(new Animated.Value(0)).current;
+    const locationListRef = useRef(null);
     const [selectedLocation, setSelectedLocation] = useState('Pune');
-    const [selectedArea, setSelectedArea] = useState('All Areas');
     const [filteredVenues, setFilteredVenues] = useState([]);
-    const [showAreaDropdown, setShowAreaDropdown] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [sortBy, setSortBy] = useState('Recommended');
+    const [showSortDropdown, setShowSortDropdown] = useState(false);
+
+    // Auto-scroll Locations
+    // useEffect(() => {
+    //     let scrollIndex = 0;
+    //     const interval = setInterval(() => {
+    //         if (locationListRef.current) {
+    //             scrollIndex = (scrollIndex + 1) % LOCATIONS.length;
+    //             locationListRef.current.scrollToIndex({
+    //                 index: scrollIndex,
+    //                 animated: true,
+    //                 viewPosition: 0.5
+    //             });
+    //         }
+    //     }, 2000); // Faster scrolling
+
+    //     return () => clearInterval(interval);
+    // }, []);
 
     useEffect(() => {
-        let filtered = VENUES;
+        let filtered = [...VENUES]; // Create a copy to sort
 
         // Filter by Location
         if (selectedLocation !== 'All') {
             filtered = filtered.filter(v => v.city === selectedLocation);
         }
 
-        // Filter by Area (only for Pune)
-        if (selectedLocation === 'Pune' && selectedArea !== 'All Areas') {
-            filtered = filtered.filter(v => v.area === selectedArea);
-        }
 
         // Filter by Search Query
         if (searchQuery) {
@@ -177,8 +198,29 @@ const WeddingVenue = ({ navigation }) => {
             );
         }
 
+        // Sort Logic
+        const parsePrice = (priceStr) => parseInt(priceStr.replace(/[^0-9]/g, ''), 10);
+
+        switch (sortBy) {
+            case 'Price: Low to High':
+                filtered.sort((a, b) => parsePrice(a.price) - parsePrice(b.price));
+                break;
+            case 'Price: High to Low':
+                filtered.sort((a, b) => parsePrice(b.price) - parsePrice(a.price));
+                break;
+            case 'Rating: Low to High':
+                filtered.sort((a, b) => a.rating - b.rating);
+                break;
+            case 'Rating: High to Low':
+                filtered.sort((a, b) => b.rating - a.rating);
+                break;
+            default:
+                // Recommended (Default order or logic)
+                break;
+        }
+
         setFilteredVenues(filtered);
-    }, [selectedLocation, selectedArea, searchQuery]);
+    }, [selectedLocation, searchQuery, sortBy]);
 
     const renderLocation = ({ item }) => {
         const isSelected = selectedLocation === item.name;
@@ -187,8 +229,6 @@ const WeddingVenue = ({ navigation }) => {
                 style={styles.locationContainer}
                 onPress={() => {
                     setSelectedLocation(item.name);
-                    setSelectedArea('All Areas'); // Reset area when location changes
-                    setShowAreaDropdown(false);
                 }}
             >
                 <View style={[
@@ -236,7 +276,10 @@ const WeddingVenue = ({ navigation }) => {
                     opacity
                 }
             ]}>
-                <Image source={{ uri: item.image }} style={styles.venueImage} />
+                <Image
+                    source={typeof item.image === 'string' ? { uri: item.image } : item.image}
+                    style={styles.venueImage}
+                />
                 <View style={styles.venueTypeBadge}>
                     <Text style={styles.venueTypeText}>{item.type}</Text>
                 </View>
@@ -278,9 +321,58 @@ const WeddingVenue = ({ navigation }) => {
                     <View style={{ width: 24 }} />
                 </View>
 
+
+                {/* Search Bar & Sort - Moved above locations */}
+                <View style={[styles.searchRow, { marginBottom: 15 }]}>
+                    {/* Sort Button (Left) */}
+                    <View style={styles.sortContainer}>
+                        <TouchableOpacity
+                            style={styles.sortButton}
+                            onPress={() => setShowSortDropdown(!showSortDropdown)}
+                        >
+                            <MaterialIcons name="sort" size={20} color="#CC0E0E" />
+                        </TouchableOpacity>
+
+                        {showSortDropdown && (
+                            <View style={styles.sortDropdown}>
+                                {['Recommended', 'Price: Low to High', 'Price: High to Low', 'Rating: Low to High', 'Rating: High to Low'].map((option) => (
+                                    <TouchableOpacity
+                                        key={option}
+                                        style={styles.dropdownItem}
+                                        onPress={() => {
+                                            setSortBy(option);
+                                            setShowSortDropdown(false);
+                                        }}
+                                    >
+                                        <Text style={[
+                                            styles.dropdownItemText,
+                                            sortBy === option && { color: '#CC0E0E', fontWeight: 'bold' }
+                                        ]}>
+                                            {option}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        )}
+                    </View>
+
+                    {/* Search Input */}
+                    <View style={styles.searchContainer}>
+                        <Ionicons name="search" size={18} color="#CC0E0E" />
+                        <TextInput
+                            placeholder="Search venues..."
+                            style={styles.searchInput}
+                            placeholderTextColor="#CC0E0E"
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+                    </View>
+                </View>
+
                 {/* Locations Horizontal List */}
                 <View style={styles.locationsWrapper}>
                     <FlatList
+                        ref={locationListRef}
                         data={LOCATIONS}
                         renderItem={renderLocation}
                         keyExtractor={item => item.id}
@@ -290,55 +382,6 @@ const WeddingVenue = ({ navigation }) => {
                     />
                 </View>
 
-                {/* Search Bar & Area Dropdown (for Pune) */}
-                <View style={styles.searchRow}>
-                    <View style={styles.searchContainer}>
-                        <Ionicons name="search" size={20} color="#CC0E0E" />
-                        <TextInput
-                            placeholder="Search venues..."
-                            style={styles.searchInput}
-                            placeholderTextColor="#CC0E0E"
-                            value={searchQuery}
-                            onChangeText={setSearchQuery}
-                        />
-                    </View>
-
-                    {selectedLocation === 'Pune' && (
-                        <View style={styles.areaDropdownContainer}>
-                            <TouchableOpacity
-                                style={styles.areaDropdownButton}
-                                onPress={() => setShowAreaDropdown(!showAreaDropdown)}
-                            >
-                                <Text style={styles.areaDropdownText} numberOfLines={1}>
-                                    {selectedArea === 'All Areas' ? 'Area' : selectedArea}
-                                </Text>
-                                <Ionicons name={showAreaDropdown ? "chevron-up" : "chevron-down"} size={16} color="#CC0E0E" />
-                            </TouchableOpacity>
-
-                            {showAreaDropdown && (
-                                <View style={styles.dropdownMenu}>
-                                    <ScrollView style={{ maxHeight: 200 }}>
-                                        {PUNE_AREAS.map((area, index) => (
-                                            <TouchableOpacity
-                                                key={index}
-                                                style={styles.dropdownItem}
-                                                onPress={() => {
-                                                    setSelectedArea(area);
-                                                    setShowAreaDropdown(false);
-                                                }}
-                                            >
-                                                <Text style={[
-                                                    styles.dropdownItemText,
-                                                    selectedArea === area && { color: '#CC0E0E', fontWeight: 'bold' }
-                                                ]}>{area}</Text>
-                                            </TouchableOpacity>
-                                        ))}
-                                    </ScrollView>
-                                </View>
-                            )}
-                        </View>
-                    )}
-                </View>
             </View>
 
             {/* Venue List */}
@@ -365,12 +408,12 @@ const WeddingVenue = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFE4', // New Background
-        paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight + 10 : 20, // Reduced top padding
+        backgroundColor: COLORS.background, // FFFFF0
+        paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight + 10 : 20,
     },
     headerContainer: {
-        paddingBottom: 10, // Reduced
-        backgroundColor: '#FFFFE4', // Match Background
+        paddingBottom: 10,
+        backgroundColor: COLORS.background,
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         elevation: 5,
@@ -379,14 +422,14 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 5,
         marginBottom: 10,
-        zIndex: 100, // Important for dropdown visibility
+        zIndex: 100,
     },
     topBar: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        marginBottom: 5, // Reduced
+        marginBottom: 5,
     },
     backButton: {
         padding: 5,
@@ -394,8 +437,8 @@ const styles = StyleSheet.create({
     pageTitle: {
         fontSize: 22,
         fontWeight: 'bold',
-        color: '#CC0E0E', // New Text Color
-        fontFamily: 'serif',
+        color: COLORS.textMain,
+        fontFamily: 'Poppins_700Bold',
     },
     locationsWrapper: {
         marginBottom: 15,
@@ -413,7 +456,7 @@ const styles = StyleSheet.create({
         borderRadius: 27.5,
         overflow: 'hidden',
         borderWidth: 2,
-        borderColor: '#F3D870',
+        borderColor: COLORS.border,
         marginBottom: 8,
         elevation: 6,
         shadowColor: '#000',
@@ -429,95 +472,84 @@ const styles = StyleSheet.create({
     },
     locationText: {
         fontSize: 12,
-        fontWeight: '700',
-        color: '#CC0E0E',
+        fontFamily: 'Poppins_700Bold',
+        color: COLORS.textMain,
     },
     locationImageSelected: {
         borderWidth: 3,
-        borderColor: '#D32F2F',
+        borderColor: COLORS.textMain,
         transform: [{ scale: 1.1 }]
     },
     searchRow: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 20,
-        zIndex: 200, // Higher than header container for dropdown
+        zIndex: 200,
+    },
+    sortContainer: {
+        marginRight: 10,
+        position: 'relative',
+        zIndex: 300,
+    },
+    sortButton: {
+        width: 35,
+        height: 35,
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1.5,
+        borderColor: COLORS.border,
+        elevation: 3,
+    },
+    sortDropdown: {
+        position: 'absolute',
+        top: 40,
+        left: 0,
+        width: 180,
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        paddingVertical: 5,
+        elevation: 5,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+    },
+    dropdownItem: {
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+    },
+    dropdownItemText: {
+        fontSize: 13,
+        color: '#333',
+        fontFamily: 'Poppins_400Regular',
     },
     searchContainer: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        borderRadius: 25,
-        paddingHorizontal: 15,
-        height: 40,
+        borderRadius: 20,
+        paddingHorizontal: 10,
+        height: 35,
         borderWidth: 1.5,
-        borderColor: '#F3D870',
-        marginRight: 10,
+        borderColor: COLORS.border,
     },
     searchInput: {
         flex: 1,
         marginLeft: 10,
         fontSize: 15,
-        color: '#CC0E0E',
-    },
-    areaDropdownContainer: {
-        position: 'relative',
-        zIndex: 300,
-    },
-    areaDropdownButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#FFF',
-        borderWidth: 1.5,
-        borderColor: '#F3D870',
-        borderRadius: 20,
-        paddingHorizontal: 12,
-        height: 40,
-        minWidth: 100,
-        maxWidth: 140,
-    },
-    areaDropdownText: {
-        fontSize: 13,
-        color: '#CC0E0E',
-        fontWeight: 'bold',
-        marginRight: 5,
-        flex: 1,
-    },
-    dropdownMenu: {
-        position: 'absolute',
-        top: 45,
-        right: 0,
-        width: 160,
-        backgroundColor: '#FFF',
-        borderRadius: 15,
-        elevation: 8,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
-        zIndex: 1000,
-    },
-    dropdownItem: {
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#F5F5F5',
-    },
-    dropdownItemText: {
-        fontSize: 14,
-        color: '#333',
+        color: COLORS.textMain,
+        fontFamily: 'Poppins_400Regular',
     },
     venueList: {
         padding: 20,
         paddingTop: 10,
-        paddingBottom: 100, // Extra padding for scrolling
+        paddingBottom: 100,
     },
     venueCard: {
-        backgroundColor: '#FFF',
+        backgroundColor: COLORS.background, // FFFFF0
         borderRadius: 16,
         marginBottom: 24,
         overflow: 'visible',
@@ -527,9 +559,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 12,
         borderWidth: 1.5,
-        borderColor: '#CC0E0E',
-        borderBottomWidth: 4,
-        borderRightWidth: 2,
+        borderColor: COLORS.border, // F29502
     },
     venueImage: {
         width: '100%',
@@ -540,7 +570,7 @@ const styles = StyleSheet.create({
     },
     venueInfo: {
         padding: 15,
-        backgroundColor: '#FFFFE4',
+        backgroundColor: COLORS.background, // FFFFF0
         borderBottomLeftRadius: 16,
         borderBottomRightRadius: 16,
     },
@@ -553,23 +583,23 @@ const styles = StyleSheet.create({
     venueName: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#CC0E0E',
+        color: COLORS.textMain,
         flex: 1,
-        fontFamily: 'serif',
+        fontFamily: 'Poppins_700Bold',
     },
     ratingBadge: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F3D870',
+        backgroundColor: COLORS.border,
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderRadius: 12,
     },
     ratingText: {
-        color: '#CC0E0E',
+        color: COLORS.textMain,
         marginLeft: 4,
         fontSize: 12,
-        fontWeight: 'bold',
+        fontFamily: 'Poppins_700Bold',
     },
     locationRow: {
         flexDirection: 'row',
@@ -580,18 +610,19 @@ const styles = StyleSheet.create({
         color: '#555',
         marginLeft: 5,
         fontSize: 14,
+        fontFamily: 'Poppins_400Regular',
     },
     detailsRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderTopWidth: 1,
-        borderTopColor: '#F3D870',
+        borderTopColor: COLORS.border,
         paddingTop: 10,
     },
     detailText: {
         fontSize: 13,
-        color: '#CC0E0E',
-        fontWeight: '500',
+        color: COLORS.textMain,
+        fontFamily: 'Poppins_500Medium',
     },
     venueTypeBadge: {
         position: 'absolute',
@@ -603,11 +634,11 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         elevation: 5,
         borderWidth: 1,
-        borderColor: '#F3D870'
+        borderColor: COLORS.border
     },
     venueTypeText: {
-        color: '#CC0E0E',
-        fontWeight: 'bold',
+        color: COLORS.textMain,
+        fontFamily: 'Poppins_700Bold',
         fontSize: 12
     },
     emptyContainer: {
@@ -618,6 +649,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#888',
         fontStyle: 'italic',
+        fontFamily: 'Poppins_400Regular',
     }
 });
 

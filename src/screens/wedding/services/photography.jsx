@@ -1,10 +1,9 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import React, { useRef, useState } from 'react';
 import {
     Animated,
     Dimensions,
     Image,
-    ImageBackground,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -111,8 +110,8 @@ const Photography = ({ navigation }) => {
         const inputRange = [
             -1,
             0,
-            (index * 240), // Adjusted for card height
-            (index + 2) * 240
+            (index * 330), // Adjusted for card height (260 img + content)
+            (index + 2) * 330
         ];
 
         const scale = scrollY.interpolate({
@@ -184,76 +183,70 @@ const Photography = ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-            {/* Navbar & Search */}
-            <View style={styles.navbarWrapper}>
-                <View style={styles.navbar}>
+            {/* Header / Search Section */}
+            <View style={styles.headerContainer}>
+                <View style={styles.topBar}>
                     <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                         <Ionicons name="arrow-back" size={24} color="#CC0E0E" />
                     </TouchableOpacity>
+                    <View style={styles.titleContainer}>
+                        <Text style={styles.pageTitle}>Wedding Photographer</Text>
+                    </View>
+                    <View style={styles.backButtonPlaceholder} />
+                </View>
 
-                    <View style={styles.searchBar}>
-                        <Ionicons name="search" size={20} color="#888" style={{ marginRight: 8 }} />
+                {/* Search Bar & Sort - Moved above locations */}
+                <View style={[styles.searchRow, { marginBottom: 15 }]}>
+                    {/* Filter Button (Left) - Replacing Chips */}
+                    <View style={styles.sortContainer}>
+                        <TouchableOpacity
+                            style={styles.sortButton}
+                            onPress={() => setShowPriceDropdown(!showPriceDropdown)}
+                        >
+                            <MaterialIcons name="sort" size={20} color="#CC0E0E" />
+                        </TouchableOpacity>
+
+                        {showPriceDropdown && (
+                            <View style={styles.sortDropdown}>
+                                <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSort('asc')}>
+                                    <Text style={styles.dropdownText}>Price: Low to High</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSort('desc')}>
+                                    <Text style={styles.dropdownText}>Price: High to Low</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSort(null)}>
+                                    <Text style={styles.dropdownText}>Reset</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    </View>
+
+                    {/* Search Input */}
+                    <View style={styles.searchContainer}>
+                        <Ionicons name="search" size={18} color="#CC0E0E" />
                         <TextInput
                             placeholder="Search photographers..."
-                            placeholderTextColor="#999"
                             style={styles.searchInput}
+                            placeholderTextColor="#CC0E0E"
                             value={searchQuery}
                             onChangeText={setSearchQuery}
                         />
                     </View>
                 </View>
 
-                {/* Filters & Locations */}
-                <View style={styles.filterSection}>
-                    <View style={styles.filtersContainer}>
-                        <View style={{ position: 'relative', zIndex: 20 }}>
-                            <TouchableOpacity
-                                style={[styles.filterChip, sortOrder && styles.activeFilterChip]}
-                                onPress={() => setShowPriceDropdown(!showPriceDropdown)}
-                            >
-                                <Text style={[styles.filterText, sortOrder && styles.activeFilterText]}>
-                                    Price {sortOrder === 'asc' ? '(Low-High)' : sortOrder === 'desc' ? '(High-Low)' : ''}
-                                </Text>
-                                <Ionicons name={showPriceDropdown ? "chevron-up" : "chevron-down"} size={14} color={sortOrder ? "#CC0E0E" : "#555"} style={{ marginLeft: 4 }} />
-                            </TouchableOpacity>
-
-                            {showPriceDropdown && (
-                                <View style={styles.dropdownMenu}>
-                                    <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSort('asc')}>
-                                        <Text style={styles.dropdownText}>Low to High</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSort('desc')}>
-                                        <Text style={styles.dropdownText}>High to Low</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSort(null)}>
-                                        <Text style={styles.dropdownText}>Reset</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                        </View>
-
-                        <TouchableOpacity style={styles.filterChip}>
-                            <Text style={styles.filterText}>Ratings</Text>
-                        </TouchableOpacity>
-                    </View>
-
+                {/* Locations Horizontal List */}
+                <View style={styles.locationsWrapper}>
                     <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}
-                        style={styles.locationScroll}
-                        contentContainerStyle={styles.locationContent}
+                        contentContainerStyle={styles.locationsList}
                     >
                         {LOCATIONS.map((loc) => (
-                            <TouchableOpacity key={loc.id} style={styles.locationCircleContainer}>
-                                <ImageBackground
-                                    source={{ uri: loc.image }}
-                                    style={styles.locationCircle}
-                                    imageStyle={{ borderRadius: 25 }}
-                                >
-                                    <View style={styles.locationOverlay}>
-                                        <Text style={styles.locationCircleText}>{loc.short}</Text>
-                                    </View>
-                                </ImageBackground>
+                            <TouchableOpacity key={loc.id} style={styles.headerLocationContainer}>
+                                <View style={styles.locationImageWrapper}>
+                                    <Image source={{ uri: loc.image }} style={styles.locationImage} />
+                                </View>
+                                <Text style={styles.locationTextLabel}>{loc.name}</Text>
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
@@ -278,138 +271,153 @@ const Photography = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFE4', // Cream Background
+        backgroundColor: '#FFFFF0', // Updated Background
     },
-    navbarWrapper: {
-        backgroundColor: 'rgba(255, 255, 228, 0.95)',
-        zIndex: 10,
-        paddingTop: StatusBar.currentHeight + 10,
+    headerContainer: {
         paddingBottom: 10,
+        backgroundColor: '#FFFFF0',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
         elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowRadius: 5,
+        marginBottom: 10,
+        zIndex: 100,
     },
-    navbar: {
+    topBar: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 15,
-        marginBottom: 10,
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        marginBottom: 5,
     },
     backButton: {
         padding: 5,
-        marginRight: 10,
+        zIndex: 10,
     },
-    searchBar: {
+    backButtonPlaceholder: {
+        width: 34,
+        height: 34,
+    },
+    titleContainer: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 0,
+    },
+    pageTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#CC0E0E',
+        fontFamily: 'Poppins_700Bold',
+        textAlign: 'center',
+    },
+    locationsWrapper: {
+        marginBottom: 15,
+    },
+    locationsList: {
+        paddingHorizontal: 15,
+        flexDirection: 'row',
+    },
+    headerLocationContainer: {
+        alignItems: 'center',
+        marginHorizontal: 8,
+    },
+    locationImageWrapper: {
+        width: 55,
+        height: 55,
+        borderRadius: 27.5,
+        overflow: 'hidden',
+        borderWidth: 2,
+        borderColor: '#F3D870',
+        marginBottom: 4, // Reduced from 8
+        elevation: 6,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        backgroundColor: '#FFF',
+    },
+    locationImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+    },
+    locationTextLabel: {
+        fontSize: 12,
+        fontFamily: 'Poppins_700Bold',
+        color: '#CC0E0E',
+        textAlign: 'center',
+        // Removed marginTop
+    },
+    searchRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        zIndex: 200,
+    },
+    sortContainer: {
+        marginRight: 10,
+        position: 'relative',
+        zIndex: 300,
+    },
+    sortButton: {
+        width: 35,
+        height: 35,
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1.5,
+        borderColor: '#F3D870',
+        elevation: 3,
+    },
+    sortDropdown: {
+        position: 'absolute',
+        top: 40,
+        left: 0,
+        width: 180,
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        paddingVertical: 5,
+        elevation: 5,
+        borderWidth: 1,
+        borderColor: '#F3D870',
+    },
+    dropdownItem: {
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+    },
+    dropdownText: {
+        fontSize: 13,
+        color: '#333',
+        fontFamily: 'Poppins_400Regular',
+    },
+    searchContainer: {
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'rgba(255,255,255,0.7)',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
         borderRadius: 20,
         paddingHorizontal: 10,
-        height: 40,
-        borderWidth: 1,
-        borderColor: '#E0E0E0',
+        height: 35,
+        borderWidth: 1.5,
+        borderColor: '#F3D870',
     },
     searchInput: {
         flex: 1,
-        fontSize: 14,
-        color: '#333',
-    },
-    filterSection: {
-        paddingHorizontal: 15,
-        zIndex: 20, // To ensure dropdown appears above other elements if needed
-    },
-    filtersContainer: {
-        flexDirection: 'row',
-        marginBottom: 10,
-        flexWrap: 'wrap',
-        zIndex: 30, // Higher index for dropdown
-    },
-    filterChip: {
-        backgroundColor: '#FFF',
-        borderWidth: 1,
-        borderColor: '#F3D870',
-        borderRadius: 15,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        marginRight: 8,
-        marginBottom: 5,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    activeFilterChip: {
-        backgroundColor: '#FFFBE6',
-        borderColor: '#CC0E0E',
-    },
-    filterText: {
-        fontSize: 11,
-        color: '#555',
-        fontWeight: '600',
-    },
-    activeFilterText: {
+        marginLeft: 10,
+        fontSize: 15,
         color: '#CC0E0E',
-    },
-    dropdownMenu: {
-        position: 'absolute',
-        top: 35,
-        left: 0,
-        backgroundColor: '#FFF',
-        borderRadius: 10,
-        padding: 5,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        width: 120,
-        zIndex: 100,
-        borderWidth: 1,
-        borderColor: '#F0F0F0',
-    },
-    dropdownItem: {
-        paddingVertical: 8,
-        paddingHorizontal: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#F0F0F0',
-    },
-    dropdownText: {
-        fontSize: 12,
-        color: '#333',
-    },
-    locationScroll: {
-        flexDirection: 'row',
-        zIndex: 10,
-    },
-    locationContent: {
-        alignItems: 'center',
-        paddingVertical: 5,
-    },
-    locationCircleContainer: {
-        marginRight: 10,
-    },
-    locationCircle: {
-        width: 50,
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden',
-        borderRadius: 25,
-        borderWidth: 1,
-        borderColor: '#F3D870',
-    },
-    locationOverlay: {
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        width: '100%',
-        height: '100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    locationCircleText: {
-        color: '#FFF',
-        fontSize: 10,
-        fontWeight: 'bold',
+        fontFamily: 'Poppins_400Regular',
     },
     listContainer: {
         padding: 15,
@@ -419,7 +427,7 @@ const styles = StyleSheet.create({
     card: {
         marginBottom: 15,
         borderRadius: 15,
-        backgroundColor: '#FFF',
+        backgroundColor: '#FFFFF0', // Matches page background
         elevation: 4,
         shadowColor: '#5a4a15',
         shadowOffset: { width: 0, height: 3 },
@@ -427,19 +435,19 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         overflow: 'hidden',
         borderWidth: 1,
-        borderColor: '#CC0E0E',
+        borderColor: '#F29502', // Updated Border Color
     },
     imageScrollContainer: {
-        height: 180,
+        height: 260,
     },
     cardImage: {
         width: width - 32,
-        height: 180,
+        height: 260,
         resizeMode: 'cover',
     },
     cardContent: {
         padding: 10,
-        backgroundColor: '#FFFFE4',
+        backgroundColor: '#FFFFF0', // Matches page background
     },
     headerRow: {
         flexDirection: 'row',
@@ -449,9 +457,8 @@ const styles = StyleSheet.create({
     },
     name: {
         fontSize: 16,
-        fontWeight: 'bold',
-        color: '#CC0E0E',
-        fontFamily: 'serif',
+        color: '#CC0E0E', // Reverted to Red
+        fontFamily: 'Poppins_700Bold',
     },
     ratingContainer: {
         flexDirection: 'row',
@@ -463,7 +470,7 @@ const styles = StyleSheet.create({
     },
     ratingText: {
         color: '#CC0E0E',
-        fontWeight: 'bold',
+        fontFamily: 'Poppins_700Bold',
         marginLeft: 3,
         fontSize: 10,
     },
@@ -478,12 +485,13 @@ const styles = StyleSheet.create({
     },
     locationText: {
         fontSize: 12,
-        color: '#555',
+        color: '#555', // Reverted to dark grey
         marginLeft: 4,
+        fontFamily: 'Poppins_400Regular',
     },
     priceText: {
         fontSize: 12,
-        fontWeight: 'bold',
+        fontFamily: 'Poppins_700Bold',
         color: '#333',
         backgroundColor: 'rgba(243, 216, 112, 0.3)',
         paddingHorizontal: 8,
