@@ -74,7 +74,7 @@ const services = [
         id: '6',
         title: 'Honeymoon Planning',
         subtitle: 'Romantic Getaways',
-        image: { uri: 'https://images.unsplash.com/photo-1540206395-688085723adb?q=80&w=2000&auto=format&fit=crop' },
+        image: require('../../../assets/images/honeymoon planning.jpg'),
         description: 'Romantic getaways to the world\'s most beautiful destinations.',
         features: ['Custom Packages', 'Luxury Stays'],
         icon: 'plane'
@@ -111,7 +111,7 @@ const Backdrop = ({ scrollX }) => {
                             position: 'absolute',
                             opacity,
                         }}
-                        blurRadius={20}
+                        blurRadius={5}
                     />
                 );
             })}
@@ -130,7 +130,7 @@ const EventServicesScreen = ({ navigation }) => {
             id: 's1',
             title: 'Guest Management',
             subtitle: 'Hospitality & Logistics',
-            image: { uri: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=2098&auto=format&fit=crop' },
+            image: require('../../../assets/images/Gust Mangment.jpg'),
             description: 'Seamless guest hospitality, logistics, and accommodation management.',
             features: ['RSVP Management', 'Transport Logistics'],
             icon: 'users'
@@ -164,31 +164,24 @@ const EventServicesScreen = ({ navigation }) => {
         },
         {
             id: 's5',
-            title: 'Lighting & Stage',
-            subtitle: 'Visual & Audio',
-            image: { uri: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2070&auto=format&fit=crop' },
-            description: 'Illuminate your events with spectacular lighting and stage setups.',
-            features: ['LED Walls', 'Spotlights'],
-            icon: 'lightbulb'
+            title: 'Bridal Makeup',
+            subtitle: 'Professional Artists',
+            image: require('../../../assets/images/makeup.jpg'),
+            description: 'Get the perfect bridal look with our certified makeup artists.',
+            features: ['HD Makeup', 'Trial Included'],
+            icon: 'magic'
         },
+
         {
             id: 's6',
             title: 'Jewellery',
             subtitle: 'Bridal & Gold',
-            image: { uri: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop' },
+            image: require('../../../assets/images/Jewellery.jpg'),
             description: 'Exquisite bridal and wedding jewellery collections.',
             features: ['Gold & Diamond', 'Custom Designs'],
             icon: 'gem'
         },
-        {
-            id: 's7',
-            title: 'Videography',
-            subtitle: 'Cinematic Films',
-            image: { uri: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=2080&auto=format&fit=crop' },
-            description: 'Cinematic wedding films to cherish forever.',
-            features: ['4K Films', 'Drone Shoots'],
-            icon: 'video'
-        },
+
         {
             id: 's8',
             title: 'Entertainment',
@@ -257,7 +250,9 @@ const EventServicesScreen = ({ navigation }) => {
 
     const onMomentumScrollEnd = (event) => {
         const index = Math.round(event.nativeEvent.contentOffset.x / ITEM_WIDTH);
-        setCurrentIndex(index);
+        if (index !== currentIndex) {
+            setCurrentIndex(index);
+        }
         setIsUserScrolling(false); // Resume auto-scroll
     };
 
@@ -408,9 +403,16 @@ const styles = StyleSheet.create({
     header: {
         paddingHorizontal: 20,
         paddingTop: 60,
-        paddingBottom: 20,
+        paddingBottom: 30, // Increased bottom padding
         zIndex: 100,
         backgroundColor: '#FFFFE0', // Light Ivory
+        borderBottomLeftRadius: 30, // Rounded bottom corners
+        borderBottomRightRadius: 30,
+        shadowColor: '#A70002', // Kumkum shadow
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+        elevation: 8, // Elevated header
     },
     headerTitle: {
         fontSize: 28,
