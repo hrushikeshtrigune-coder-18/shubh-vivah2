@@ -286,6 +286,11 @@ const EventServicesScreen = ({ navigation }) => {
                                 Platform.OS === 'web' && { outlineStyle: 'none' }
                             ]}
                         />
+                        {searchText.length > 0 && (
+                            <TouchableOpacity onPress={() => { setSearchText(''); setShowSuggestions(true); }}>
+                                <Ionicons name="close-circle" size={20} color="#A70002" />
+                            </TouchableOpacity>
+                        )}
                     </View>
 
                     {/* Search Suggestions Dropdown - Glass Effect */}
@@ -373,7 +378,11 @@ const EventServicesScreen = ({ navigation }) => {
                                             onPress={() => {
                                                 const s = selectedService;
                                                 setSelectedService(null);
-                                                navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+                                                if (s.title === 'Decoration & Floral') {
+                                                    navigation.navigate('DecorationFloral');
+                                                } else {
+                                                    navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+                                                }
                                             }}
                                         >
                                             <Text style={styles.modalCtaText}>Book Now</Text>
@@ -413,6 +422,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.15,
         shadowRadius: 10,
         elevation: 8, // Elevated header
+        overflow: 'visible', // Ensure suggestions didn't get clipped
     },
     headerTitle: {
         fontSize: 28,
@@ -454,6 +464,7 @@ const styles = StyleSheet.create({
         padding: 15,
         borderWidth: 1,
         borderColor: 'rgba(212, 175, 55, 0.4)', // Gold tint border for glass
+        elevation: 50, // High elevation to appear on top of everything
     },
     chipsContainer: {
         flexDirection: 'row',
