@@ -1,13 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
 import React, { useEffect, useRef, useState } from 'react';
 import {
+    Alert,
     Animated,
     Dimensions,
     Image,
     Modal,
-    Platform,
-    ScrollView,
     StatusBar,
     StyleSheet,
     Text,
@@ -63,12 +61,12 @@ const services = [
     },
     {
         id: '5',
-        title: 'Photography',
-        subtitle: 'Drone & Candid',
-        image: require('../../../assets/images/photo.jpg'),
-        description: 'Capture every emotion with our cinematic storytelling and expert drone shots.',
-        features: ['4K Drone', 'Same Day Edit'],
-        icon: 'camera'
+        title: 'Gifts & Return',
+        subtitle: 'Memorable Tokens',
+        image: 'https://images.unsplash.com/photo-1513201099705-a9746e1e201f?q=80&w=2000&auto=format&fit=crop',
+        description: 'Exclusive gift hampers and return favors to thank your guests.',
+        features: ['Custom Packing', 'Eco-friendly'],
+        icon: 'gift'
     },
     {
         id: '6',
@@ -229,7 +227,11 @@ const EventServicesScreen = ({ navigation }) => {
                 scrollX={scrollX}
                 itemWidth={ITEM_WIDTH}
                 itemHeight={ITEM_HEIGHT}
-                onPress={() => setSelectedService(item)}
+                onPress={() => {
+                    // Debug Alert to confirm touch
+                    Alert.alert("Debug", `Clicked ${item.title}`);
+                    setSelectedService(item);
+                }}
             />
         );
     }, [ITEM_WIDTH, ITEM_HEIGHT]);
@@ -257,54 +259,15 @@ const EventServicesScreen = ({ navigation }) => {
 
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Wedding Services</Text>
-                <View style={{ zIndex: 100 }}>
-                    <View style={styles.searchBar}>
-                        <Ionicons name="search" size={20} color="#A70002" style={{ marginRight: 10 }} />
-                        <TextInput
-                            placeholder="Find a service..."
-                            value={searchText}
-                            onChangeText={setSearchText}
-                            placeholderTextColor="rgba(167, 0, 2, 0.6)" // Kumkum transparent
-                            onFocus={() => setShowSuggestions(true)}
-                            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                            underlineColorAndroid="transparent"
-                            selectionColor="#A70002"
-                            cursorColor="#A70002"
-                            autoCorrect={false} // Prevent suggestion box
-                            spellCheck={false}
-                            style={[
-                                styles.searchInput,
-                                { backgroundColor: 'transparent', borderWidth: 0, borderColor: 'transparent' },
-                                Platform.OS === 'web' && { outlineStyle: 'none' }
-                            ]}
-                        />
-                        {searchText.length > 0 && (
-                            <TouchableOpacity onPress={() => { setSearchText(''); setShowSuggestions(true); }}>
-                                <Ionicons name="close-circle" size={20} color="#A70002" />
-                            </TouchableOpacity>
-                        )}
-                    </View>
-
-                    {/* Search Suggestions Dropdown - Glass Effect */}
-                    {showSuggestions && (
-                        <BlurView intensity={80} tint="light" style={styles.suggestionsDropdown}>
-                            <View style={styles.chipsContainer}>
-                                {filteredSuggestions.map((item) => (
-                                    <TouchableOpacity
-                                        key={item.id}
-                                        style={styles.suggestionChip}
-                                        onPress={() => {
-                                            setSelectedService(item);
-                                            setShowSuggestions(false);
-                                            setSearchText(item.title);
-                                        }}
-                                    >
-                                        <Text style={styles.suggestionText}>{item.title}</Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        </BlurView>
-                    )}
+                <View style={styles.searchBar}>
+                    <Ionicons name="search" size={20} color={colors.haldi} style={{ marginRight: 10 }} />
+                    <TextInput
+                        placeholder="Find a service..."
+                        value={searchText}
+                        onChangeText={setSearchText}
+                        style={styles.searchInput}
+                        placeholderTextColor={colors.haldi}
+                    />
                 </View>
             </View>
 
@@ -343,50 +306,41 @@ const EventServicesScreen = ({ navigation }) => {
                 <View style={styles.modalOverlay}>
                     <View style={[styles.modalCard, { maxHeight: '80%', width: '90%' }]}>
                         {selectedService && (
-                            <View style={{ flexShrink: 1 }}>
-                                <ScrollView bounces={false} contentContainerStyle={{ flexGrow: 1 }}>
-                                    <Image
-                                        source={selectedService.image}
-                                        style={styles.modalImage}
-                                        resizeMode="cover"
-                                    />
-                                    <View style={styles.modalContent}>
-                                        <Text style={styles.modalTitle}>{selectedService.title}</Text>
-                                        <Text style={styles.modalSub}>{selectedService.subtitle}</Text>
-                                        <View style={styles.divider} />
-
-                                        <Text style={styles.modalDesc}>{selectedService.description}</Text>
-
-                                        <View style={styles.modalFeatures}>
-                                            {selectedService.features.map((feature, idx) => (
-                                                <View key={idx} style={styles.modalBadge}>
-                                                    <Text style={styles.modalBadgeText}>{feature}</Text>
-                                                </View>
-                                            ))}
-                                        </View>
-
-                                        <TouchableOpacity
-                                            style={styles.modalCta}
-                                            onPress={() => {
-                                                const s = selectedService;
-                                                setSelectedService(null);
-                                                if (s.title === 'Decoration & Floral') {
-                                                    navigation.navigate('DecorationFloral');
-                                                } else {
-                                                    navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
-                                                }
-                                            }}
-                                        >
-                                            <Text style={styles.modalCtaText}>Book Now</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </ScrollView>
+                            <View style={{ flex: 1 }}>
+                                <Image source={{ uri: selectedService.image }} style={styles.modalImage} />
                                 <TouchableOpacity
                                     style={styles.closeBtn}
                                     onPress={() => setSelectedService(null)}
                                 >
                                     <Ionicons name="close" size={24} color={'#fff'} />
                                 </TouchableOpacity>
+
+                                <View style={styles.modalContent}>
+                                    <Text style={styles.modalTitle}>{selectedService.title}</Text>
+                                    <Text style={styles.modalSub}>{selectedService.subtitle}</Text>
+                                    <View style={styles.divider} />
+
+                                    <Text style={styles.modalDesc}>{selectedService.description}</Text>
+
+                                    <View style={styles.modalFeatures}>
+                                        {selectedService.features.map((feature, idx) => (
+                                            <View key={idx} style={styles.modalBadge}>
+                                                <Text style={styles.modalBadgeText}>{feature}</Text>
+                                            </View>
+                                        ))}
+                                    </View>
+
+                                    <TouchableOpacity
+                                        style={styles.modalCta}
+                                        onPress={() => {
+                                            const s = selectedService;
+                                            setSelectedService(null);
+                                            navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+                                        }}
+                                    >
+                                        <Text style={styles.modalCtaText}>Book Now</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         )}
                     </View>
