@@ -9,7 +9,6 @@ import {
     LayoutAnimation,
     Linking,
     Platform,
-    SafeAreaView,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -26,6 +25,7 @@ import Reanimated, {
     withDelay,
     withTiming
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 if (Platform.OS === 'android') {
     if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -40,7 +40,16 @@ const CARD_WIDTH = width * 0.6;
 const SPACING = 15;
 const SIDECARD_LENGTH = (width - CARD_WIDTH) / 2;
 
+const COLORS = {
+    kumkum: '#A70002',
+    akshid: '#FFFFE4',
+    textRed: '#CC0E0E',
+    haldi: '#F3D870',
+    darkHaldi: '#f29502',
+};
+
 const EventManagement = ({ navigation }) => {
+    const insets = useSafeAreaInsets();
     const [expandedService, setExpandedService] = useState(null);
 
     // Scroll Animation for Team Section
@@ -52,14 +61,16 @@ const EventManagement = ({ navigation }) => {
     });
 
     const toggleService = (id) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        if (Platform.OS !== 'web') {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        }
         setExpandedService(expandedService === id ? null : id);
     };
 
     return (
         <View style={{ flex: 1 }}>
-            <SafeAreaView style={styles.container}>
-                <StatusBar barStyle="light-content" backgroundColor="#000" />
+            <View style={[styles.container, { paddingTop: insets.top }]}>
+                <StatusBar barStyle="dark-content" backgroundColor={COLORS.akshid} />
 
                 <Reanimated.ScrollView
                     onScroll={scrollHandler}
@@ -115,15 +126,15 @@ const EventManagement = ({ navigation }) => {
                         />
 
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 20 }}>
-                            <ProcessStep scrollY={scrollY} step="1" title="Understanding Your Vision" desc="Theme, budget, and guest experience planning." isLast={false} color="#E91E63" stringHeight={20} />
+                            <ProcessStep scrollY={scrollY} step="1" title="Understanding Your Vision" desc="Theme, budget, and guest experience planning." isLast={false} color={COLORS.textRed} stringHeight={20} />
                             <ProcessStep scrollY={scrollY} step="2" title="Design & Concept" desc="Mood boards, layouts, and flow visualization." isLast={false} color="#00BCD4" stringHeight={60} />
-                            <ProcessStep scrollY={scrollY} step="3" title="Vendor Curation" desc="Sourcing the best venues, food, and artists." isLast={false} color="#FF9800" stringHeight={40} />
+                            <ProcessStep scrollY={scrollY} step="3" title="Vendor Curation" desc="Sourcing the best venues, food, and artists." isLast={false} color={COLORS.darkHaldi} stringHeight={40} />
                             <ProcessStep scrollY={scrollY} step="4" title="Execution" desc="On-ground team managing every detail flawlessly." isLast={true} color="#673AB7" stringHeight={70} />
                         </ScrollView>
                     </View>
 
                     {/* 3. Services We Manage (Accordion) */}
-                    <View style={[styles.sectionContainer, { backgroundColor: '#FFFAF0' }]}>
+                    <View style={[styles.sectionContainer, { backgroundColor: COLORS.akshid }]}>
                         <Text style={styles.sectionTitle}>Services We Manage</Text>
 
                         {servicesData.map((service) => (
@@ -164,9 +175,9 @@ const EventManagement = ({ navigation }) => {
                             <Text style={styles.sectionTitleCenter}>Meet Your Event Team</Text>
                             <Text style={styles.sectionSubtitleCenter}>Dedicated professionals ensuring your perfect celebration</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center', opacity: 0.6, marginTop: 5 }}>
-                                <View style={{ height: 1, backgroundColor: '#D4AF37', width: 40, marginRight: 10 }} />
-                                <FontAwesome5 name="spa" size={14} color="#D4AF37" />
-                                <View style={{ height: 1, backgroundColor: '#D4AF37', width: 40, marginLeft: 10 }} />
+                                <View style={{ height: 1, backgroundColor: COLORS.haldi, width: 40, marginRight: 10 }} />
+                                <FontAwesome5 name="spa" size={14} color={COLORS.haldi} />
+                                <View style={{ height: 1, backgroundColor: COLORS.haldi, width: 40, marginLeft: 10 }} />
                             </View>
                         </View>
 
@@ -234,13 +245,15 @@ const EventManagement = ({ navigation }) => {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.stickyBtnSecondary}>
                         <TouchableOpacity onPress={() => Linking.openURL(`tel:${9876543210}`)}>
-                            <Ionicons name="call" size={20} color="#A70002" />
+                            <Ionicons name="call" size={20} color={COLORS.kumkum} />
                         </TouchableOpacity>
                     </TouchableOpacity>
                 </View>
 
-            </SafeAreaView>
+            </View>
+
         </View>
+
     );
 };
 
@@ -258,7 +271,7 @@ const TeamCard = ({ item, scale, opacity }) => {
             <Animated.View style={[styles.teamCardContainer, { transform: [{ scale }], opacity }]}>
                 {/* Profile Image with Gradient Ring */}
                 <LinearGradient
-                    colors={['#FFD700', '#A70002']}
+                    colors={[COLORS.haldi, COLORS.kumkum]}
                     style={styles.gradientRing}
                 >
                     <Image source={item.image} style={styles.teamImage} />
@@ -268,7 +281,7 @@ const TeamCard = ({ item, scale, opacity }) => {
                     <Text style={styles.teamName}>{item.name}</Text>
 
                     <View style={styles.roleRow}>
-                        <FontAwesome5 name={item.roleIcon} size={12} color="#A70002" style={{ marginRight: 5 }} />
+                        <FontAwesome5 name={item.roleIcon} size={12} color={COLORS.kumkum} style={{ marginRight: 5 }} />
                         <Text style={styles.teamRole}>{item.role}</Text>
                     </View>
 
@@ -279,7 +292,7 @@ const TeamCard = ({ item, scale, opacity }) => {
                     {/* Star Rating (Optional) */}
                     <View style={styles.starRow}>
                         {[...Array(5)].map((_, i) => (
-                            <MaterialCommunityIcons key={i} name="star" size={14} color="#FFD700" />
+                            <MaterialCommunityIcons key={i} name="star" size={14} color={COLORS.haldi} />
                         ))}
                     </View>
                 </View>
@@ -304,7 +317,7 @@ const TeamCard = ({ item, scale, opacity }) => {
 const TrustItem = ({ icon, text }) => (
     <View style={styles.trustItem}>
         <View style={styles.trustIconCircle}>
-            <FontAwesome5 name={icon} size={24} color="#A70002" />
+            <FontAwesome5 name={icon} size={24} color={COLORS.kumkum} />
         </View>
         <Text style={styles.trustText}>{text}</Text>
     </View>
@@ -359,7 +372,7 @@ const ProcessStep = ({ step, title, desc, isLast, scrollY, color, stringHeight }
         >
             {/* The Hook (Top anchor) */}
             <View style={{ position: 'absolute', top: -45, left: '50%', marginLeft: -10, zIndex: -1 }}>
-                <MaterialCommunityIcons name="hook" size={20} color="#F3D870" style={{ transform: [{ rotate: '-90deg' }] }} />
+                <MaterialCommunityIcons name="hook" size={20} color={COLORS.haldi} style={{ transform: [{ rotate: '-90deg' }] }} />
             </View>
 
             {/* Hanging Chain */}
@@ -372,7 +385,7 @@ const ProcessStep = ({ step, title, desc, isLast, scrollY, color, stringHeight }
                 height: stringHeight + 55,
                 // Chain effect - dashed looks like links
                 borderLeftWidth: 4,
-                borderLeftColor: '#F3D870', // Matching Bell
+                borderLeftColor: COLORS.haldi, // Matching Bell
                 borderStyle: 'dashed',
                 zIndex: -1,
                 alignItems: 'center',
@@ -381,17 +394,17 @@ const ProcessStep = ({ step, title, desc, isLast, scrollY, color, stringHeight }
                 <View style={{
                     position: 'absolute', top: '20%',
                     width: 8, height: 12, borderRadius: 4,
-                    backgroundColor: '#CC0E0E', elevation: 1
+                    backgroundColor: COLORS.textRed, elevation: 1
                 }} />
                 <View style={{
                     position: 'absolute', top: '50%',
                     width: 8, height: 12, borderRadius: 4,
-                    backgroundColor: '#CC0E0E', elevation: 1
+                    backgroundColor: COLORS.textRed, elevation: 1
                 }} />
                 <View style={{
                     position: 'absolute', top: '80%',
                     width: 8, height: 12, borderRadius: 4,
-                    backgroundColor: '#CC0E0E', elevation: 1
+                    backgroundColor: COLORS.textRed, elevation: 1
                 }} />
             </View>
 
@@ -403,10 +416,10 @@ const ProcessStep = ({ step, title, desc, isLast, scrollY, color, stringHeight }
                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
 
                     {/* Ring/Loop at top of bell */}
-                    <View style={{ width: 10, height: 10, borderRadius: 5, borderWidth: 2, borderColor: '#B8860B', marginBottom: -5, zIndex: 1, backgroundColor: '#F3D870' }} />
+                    <View style={{ width: 10, height: 10, borderRadius: 5, borderWidth: 2, borderColor: '#B8860B', marginBottom: -5, zIndex: 1, backgroundColor: COLORS.haldi }} />
 
                     {/* The Gold Bell */}
-                    <MaterialCommunityIcons name="bell" size={60} color="#F3D870" style={{
+                    <MaterialCommunityIcons name="bell" size={60} color={COLORS.haldi} style={{
                         shadowColor: '#B8860B', shadowOpacity: 0.8, shadowRadius: 5, elevation: 6
                     }} />
 
@@ -420,7 +433,7 @@ const ProcessStep = ({ step, title, desc, isLast, scrollY, color, stringHeight }
                         width: 30, height: 30, borderRadius: 15
                     }}>
                         <Text style={{
-                            color: '#CC0E0E', // User specified Red text
+                            color: COLORS.textRed, // User specified Red text
                             fontWeight: 'bold',
                             fontSize: 16,
                             textShadowColor: 'rgba(255,255,255,0.3)', textShadowRadius: 1
@@ -431,7 +444,7 @@ const ProcessStep = ({ step, title, desc, isLast, scrollY, color, stringHeight }
 
             {/* Text Content */}
             <Reanimated.View style={[styles.processTextBottom, rTextStyle]}>
-                <Text style={[styles.processTitle, { color: '#CC0E0E', marginBottom: 4, fontSize: 15 }]}>{title}</Text>
+                <Text style={[styles.processTitle, { color: COLORS.textRed, marginBottom: 4, fontSize: 15 }]}>{title}</Text>
                 <Text style={styles.processDesc}>{desc}</Text>
             </Reanimated.View>
         </Reanimated.View>
@@ -442,7 +455,7 @@ const ServiceItem = ({ item, expanded, onPress }) => (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8} style={styles.serviceCard}>
         <View style={styles.serviceHeader}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <FontAwesome5 name={item.icon} size={20} color="#A70002" style={{ width: 30 }} />
+                <FontAwesome5 name={item.icon} size={20} color={COLORS.kumkum} style={{ width: 30 }} />
                 <Text style={styles.serviceTitle}>{item.title}</Text>
             </View>
             <Ionicons name={expanded ? "chevron-up" : "chevron-down"} size={20} color="#666" />
@@ -557,7 +570,7 @@ const teamData = [
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.akshid,
     },
     scrollContent: {
         paddingBottom: 20,
@@ -572,7 +585,7 @@ const styles = StyleSheet.create({
     },
     headerRow: {
         position: 'absolute',
-        top: 20,
+        top: 0,
         left: 20,
         zIndex: 10
     },
@@ -598,13 +611,13 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     primaryCTA: {
-        backgroundColor: '#A70002',
+        backgroundColor: COLORS.kumkum,
         paddingVertical: 15,
         borderRadius: 30,
         alignItems: 'center',
         marginBottom: 10,
         elevation: 5,
-        shadowColor: '#A70002',
+        shadowColor: COLORS.kumkum,
         shadowOpacity: 0.4,
         shadowOffset: { width: 0, height: 4 }
     },
@@ -653,7 +666,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         marginBottom: 8,
         borderWidth: 1.5,
-        borderColor: '#F3D870',
+        borderColor: COLORS.haldi,
     },
     trustText: {
         color: '#333',

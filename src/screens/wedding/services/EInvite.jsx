@@ -142,7 +142,28 @@ const InviteCard = React.memo(({ item, index, scrollY, navigation }) => {
     });
 
     const handlePress = () => {
-        navigation.navigate('InviteStudioScreen', { eventType: item.title });
+        let screenName = 'InviteStudioScreen';
+        switch (item.title) {
+            case 'Haldi':
+                screenName = 'HaldiInviteScreen';
+                break;
+            case 'Sangeet':
+                screenName = 'SangitInviteScreen';
+                break;
+            case 'Mehndi':
+                screenName = 'MehndiInviteScreen';
+                break;
+            case 'Wedding':
+                screenName = 'WeddingInviteScreen';
+                break;
+            case 'Reception':
+                screenName = 'ReceptionInviteScreen';
+                break;
+            default:
+                screenName = 'InviteStudioScreen';
+                break;
+        }
+        navigation.navigate(screenName, { eventType: item.title });
     };
 
 

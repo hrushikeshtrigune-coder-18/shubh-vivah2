@@ -1,13 +1,12 @@
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { Animated, Dimensions, Image, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-// import { SafeAreaView } from 'react-native-safe-area-context';
+
 const { width, height } = Dimensions.get('window');
-// Calculate card dimensions to ensure fit
 const CARD_WIDTH = width * 0.8;
 const CARD_ASPECT_RATIO = 0.67; // 2:3
 const CARD_HEIGHT = CARD_WIDTH / CARD_ASPECT_RATIO;
-const PREVIEW_HEIGHT = CARD_HEIGHT + 60; // Card height + padding for top/bottom
+const PREVIEW_HEIGHT = CARD_HEIGHT + 60;
 
 const COLORS = {
     kumkum: '#A70002',
@@ -22,26 +21,22 @@ const Tabs = [
     { id: 'theme', icon: 'palette', label: 'Theme & Format' },
 ];
 
-// Text Styling Options
 const TEXT_COLORS = [
     COLORS.textRed,
     COLORS.kumkum,
     COLORS.darkHaldi,
-    '#000000', // Black
-    '#FFFFFF', // White
-    '#1A237E', // Navy Blue
-    '#004D40', // Teal
+    '#000000',
+    '#FFFFFF',
+    '#1A237E',
+    '#004D40',
 ];
 
 const FONTS = [
     { id: 'system', label: 'System', value: 'System' },
     { id: 'serif', label: 'Serif', value: 'serif' },
     { id: 'monospace', label: 'Mono', value: 'monospace' },
-    // In a real app, we would load custom fonts here.
-    // For now, we rely on basic system font variants.
 ];
 
-// Template Data
 const TEMPLATES = [
     { id: 't1', image: require('../../../../assets/EventMimg/Einvite/ring1.jpg'), name: 'Classic Gold' },
     { id: 't2', image: require('../../../../assets/EventMimg/Einvite/ring2.jpg'), name: 'Floral Bliss' },
@@ -49,13 +44,13 @@ const TEMPLATES = [
     { id: 't4', image: require('../../../../assets/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
 ];
 
-const InviteStudioScreen = ({ navigation, route }) => {
-    const { eventType } = route.params || { eventType: 'Wedding' };
+const HaldiInviteScreen = ({ navigation, route }) => {
+    const { eventType } = route.params || { eventType: 'Haldi' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
     const [customStyle, setCustomStyle] = useState({
         textColor: COLORS.textRed,
-        fontFamily: 'System' // Default
+        fontFamily: 'System'
     });
     const [modalVisible, setModalVisible] = useState(false);
     const scrollY = React.useRef(new Animated.Value(0)).current;
@@ -66,15 +61,14 @@ const InviteStudioScreen = ({ navigation, route }) => {
         extrapolate: 'clamp',
     });
 
-    // Form State
     const [eventDetails, setEventDetails] = useState({
-        title: 'Wedding Ceremony',
+        title: 'Haldi Ceremony',
         names: 'Aarav & Ananya',
         host: 'Mrs. & Mr. Sharma',
         date: '24 - 01 - 2026',
-        time: '7:00 PM',
+        time: '11:00 AM',
         venue: 'The Leela Palace, Udaipur',
-        message: 'We request the honor of your presence at our wedding ceremony.'
+        message: 'Join us for the Haldi ceremony to bless the couple.'
     });
 
     const renderPreviewCard = () => (
@@ -89,11 +83,6 @@ const InviteStudioScreen = ({ navigation, route }) => {
                     {eventDetails.title}
                 </Text>
                 <Text style={[styles.overlayCouple, { color: COLORS.kumkum, fontFamily: customStyle.fontFamily === 'serif' ? 'serif' : 'System' }]}>
-                    {/* Keep Couple Name distinct or link to customStyle if desired. Let's link it to font but keep Red color for emphasis? Or user full control?
-                        Let's give full control for now or keep couple name emphasis.
-                        User asked for "select color for card content". Usually main text follows this.
-                        I will apply custom color to everything for simplicity, except maybe divider.
-                     */}
                     {eventDetails.names}
                 </Text>
                 <Text style={[styles.overlayHost, { color: customStyle.textColor, fontFamily: customStyle.fontFamily }]}>
@@ -725,4 +714,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default InviteStudioScreen;
+export default HaldiInviteScreen;
