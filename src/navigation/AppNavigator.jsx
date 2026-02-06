@@ -24,7 +24,13 @@ const AppNavigator = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             {user ? (
-                <Stack.Screen name="Main" component={TabNavigator} />
+                <>
+                    <Stack.Screen name="Main" component={TabNavigator} />
+                    <Stack.Screen name="EInviteScreen" component={require('../screens/wedding/services/EInvite').default} />
+                    <Stack.Screen name="InviteStudioScreen" component={require('../screens/wedding/services/InviteStudioScreen').default} />
+                    <Stack.Screen name="EventManagementScreen" component={require('../screens/wedding/services/EventMangment').default} />
+                    <Stack.Screen name="VendorListScreen" component={require('../screens/wedding/services/VendorListScreen').default} />
+                </>
             ) : (
                 <Stack.Screen name="Auth" component={AuthNavigator} />
             )}

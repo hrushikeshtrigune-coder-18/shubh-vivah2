@@ -244,10 +244,16 @@ const EventServicesScreen = ({ navigation }) => {
                 scrollX={scrollX}
                 itemWidth={ITEM_WIDTH}
                 itemHeight={ITEM_HEIGHT}
-                onPress={() => setSelectedService(item)}
+                onPress={() => {
+                    if (item.id === '1') {
+                        navigation.navigate('EInviteScreen');
+                    } else {
+                        setSelectedService(item);
+                    }
+                }}
             />
         );
-    }, [ITEM_WIDTH, ITEM_HEIGHT]);
+    }, [ITEM_WIDTH, ITEM_HEIGHT, navigation]);
 
     const getItemLayout = (data, index) => ({
         length: ITEM_WIDTH,
@@ -378,7 +384,11 @@ const EventServicesScreen = ({ navigation }) => {
                                             onPress={() => {
                                                 const s = selectedService;
                                                 setSelectedService(null);
-                                                navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+                                                if (s.id === '2') {
+                                                    navigation.navigate('EventManagementScreen');
+                                                } else {
+                                                    navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+                                                }
                                             }}
                                         >
                                             <Text style={styles.modalCtaText}>Book Now</Text>
