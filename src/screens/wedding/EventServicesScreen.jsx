@@ -126,15 +126,7 @@ const EventServicesScreen = ({ navigation }) => {
 
     // Search Suggestions Data
     const searchSuggestions = [
-        {
-            id: 's1',
-            title: 'Guest Management',
-            subtitle: 'Hospitality & Logistics',
-            image: require('../../../assets/images/Gust Mangment.jpg'),
-            description: 'Seamless guest hospitality, logistics, and accommodation management.',
-            features: ['RSVP Management', 'Transport Logistics'],
-            icon: 'users'
-        },
+
         {
             id: 's2',
             title: 'Decoration & Floral',
