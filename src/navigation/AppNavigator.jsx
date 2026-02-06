@@ -7,6 +7,7 @@ import TabNavigator from './TabNavigator';
 
 // Mock Screens for loading
 import { ActivityIndicator, View } from 'react-native';
+import DecorationFloralScreen from '../screens/wedding/Decoration & Floral/Decoration & Floral';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ const AppNavigator = () => {
             ) : (
                 <Stack.Screen name="Auth" component={AuthNavigator} />
             )}
+            <Stack.Screen name="DecorationFloral" component={DecorationFloralScreen} />
         </Stack.Navigator>
     );
 };
