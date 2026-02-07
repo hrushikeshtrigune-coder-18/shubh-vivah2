@@ -1,5 +1,8 @@
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
+
+
+
 import { Animated, Dimensions, Image, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -38,10 +41,16 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/ring1.jpg'), name: 'Classic Gold' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/ring2.jpg'), name: 'Floral Bliss' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/ring3.jpg'), name: 'Royal Blue' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
+    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/haldi1.jpg'), name: 'Traditional Yellow' },
+    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/haldi2.jpg'), name: 'Floral Mandala' },
+    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/haldi3.jpg'), name: 'Festive Marigold' },
+    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/haldi4.jpeg'), name: 'Modern Minimal' },
+    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/haldi5.jpg'), name: 'Royal Gold' },
+    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/haldi6.jpeg'), name: 'Elegant Motif' },
+    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/haldi7.jpg'), name: 'Classic Border' },
+    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/haldi8.jpeg'), name: 'Vibrant Floral' },
+    { id: 't9', image: require('../../../../assets/EventMimg/Einvite/haldi9.jpg'), name: 'Artistic Splash' },
+    { id: 't10', image: require('../../../../assets/EventMimg/Einvite/haldi10.jpg'), name: 'Simple Elegance' },
 ];
 
 const HaldiInviteScreen = ({ navigation, route }) => {

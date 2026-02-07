@@ -1,5 +1,6 @@
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
+
 import { Animated, Dimensions, Image, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -38,10 +39,14 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/ring1.jpg'), name: 'Classic Gold' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/ring2.jpg'), name: 'Floral Bliss' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/ring3.jpg'), name: 'Royal Blue' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
+    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/reception3.jpg'), name: 'Grand Reception' },
+    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/reception4.jpg'), name: 'Elegant Evening' },
+    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/reception5.jpg'), name: 'Royal Feast' },
+    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/reception6.jpg'), name: 'Modern Celebration' },
+    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/reception7.jpg'), name: 'Classic Dinner' },
+    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/reseption1.jpg'), name: 'Floral Night' },
+    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/reseption2.jpg'), name: 'Golden Gala' },
+    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/reseption8.jpg'), name: 'Starry Banquet' },
 ];
 
 const ReceptionInviteScreen = ({ navigation, route }) => {
@@ -260,7 +265,9 @@ const ReceptionInviteScreen = ({ navigation, route }) => {
                     <Ionicons name="arrow-back" size={24} color={COLORS.kumkum} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Invite Studio:{eventType}</Text>
-                <TouchableOpacity style={styles.saveButton}>
+                <TouchableOpacity
+                    style={styles.saveButton}
+                >
                     <Text style={styles.saveText}>Save</Text>
                 </TouchableOpacity>
             </View>

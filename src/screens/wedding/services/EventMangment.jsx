@@ -1,13 +1,11 @@
 import { FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Video } from 'expo-av';
-import { LinearGradient } from 'expo-linear-gradient';
 import React, { useRef, useState } from 'react';
 import {
     Animated,
     Dimensions,
     Image,
     LayoutAnimation,
-    Linking,
     Platform,
     ScrollView,
     StatusBar,
@@ -19,6 +17,7 @@ import {
     View
 } from 'react-native';
 import Reanimated, {
+    useAnimatedRef,
     useAnimatedScrollHandler,
     useAnimatedStyle,
     useSharedValue,
@@ -33,10 +32,9 @@ if (Platform.OS === 'android') {
     }
 }
 
-const { width } = Dimensions.get('window');
-
 // Team Card Constants
-const CARD_WIDTH = width * 0.6;
+const { width } = Dimensions.get('window');
+const CARD_WIDTH = width * 0.75; // Increased width for better visibility
 const SPACING = 15;
 const SIDECARD_LENGTH = (width - CARD_WIDTH) / 2;
 
@@ -60,6 +58,15 @@ const EventManagement = ({ navigation }) => {
         scrollY.value = event.contentOffset.y;
     });
 
+    const scrollViewRef = useAnimatedRef();
+    const teamSectionY = useSharedValue(0);
+
+    const scrollToTeam = () => {
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: teamSectionY.value, animated: true });
+        }
+    };
+
     const toggleService = (id) => {
         if (Platform.OS !== 'web') {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -67,191 +74,195 @@ const EventManagement = ({ navigation }) => {
         setExpandedService(expandedService === id ? null : id);
     };
 
+    const renderScrollContent = () => (
+        <>
+            {/* 1. Hero Section */}
+            <View style={styles.heroSection}>
+                <Video
+                    source={require('../../../../assets/EventMimg/EventV.mp4')}
+                    style={StyleSheet.absoluteFill}
+                    resizeMode="cover"
+                    isLooping
+                    shouldPlay
+                    isMuted
+                />
+
+                <View style={styles.heroContent}>
+                    <View style={styles.headerRow}>
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                            <Ionicons name="arrow-back" size={24} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
+
+                    <Text style={styles.heroHeadline}>We Don’t Just Plan Events — We Create Experiences ✨</Text>
+                    <Text style={styles.heroSubtext}>Weddings • Social Events • Corporate Experiences • Destination Events</Text>
+
+                    <TouchableOpacity style={styles.primaryCTA} onPress={scrollToTeam}>
+                        <Text style={styles.ctaText}>💬 Plan My Event</Text>
+                    </TouchableOpacity>
+
+                    {/* Trust Highlights */}
+                    <View style={styles.trustRow}>
+                        <TrustItem icon="calendar-check" text="1,000+ Events" />
+                        <TrustItem icon="users" text="Expert Managers" />
+                        <TrustItem icon="star" text="Satisfaction Guaranteed" />
+                    </View>
+                </View>
+            </View>
+
+            {/* 2. Process Section */}
+            <View style={styles.sectionContainer}>
+                <AnimatedSectionHeader
+                    scrollY={scrollY}
+                    title="Our Event Planning Process"
+                    subtitle="From Vision to Reality"
+                />
+
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 20 }}>
+                    <ProcessStep scrollY={scrollY} step="1" title="Understanding Your Vision" desc="Theme, budget, and guest experience planning." isLast={false} color={COLORS.textRed} stringHeight={20} />
+                    <ProcessStep scrollY={scrollY} step="2" title="Design & Concept" desc="Mood boards, layouts, and flow visualization." isLast={false} color="#00BCD4" stringHeight={60} />
+                    <ProcessStep scrollY={scrollY} step="3" title="Vendor Curation" desc="Sourcing the best venues, food, and artists." isLast={false} color={COLORS.darkHaldi} stringHeight={40} />
+                    <ProcessStep scrollY={scrollY} step="4" title="Execution" desc="On-ground team managing every detail flawlessly." isLast={true} color="#673AB7" stringHeight={70} />
+                </ScrollView>
+            </View>
+
+            {/* 3. Services We Manage (Accordion) */}
+            <View style={[styles.sectionContainer, { backgroundColor: COLORS.akshid }]}>
+                <Text style={styles.sectionTitle}>Services We Manage</Text>
+
+                {servicesData.map((service) => (
+                    <ServiceItem
+                        key={service.id}
+                        item={service}
+                        expanded={expandedService === service.id}
+                        onPress={() => toggleService(service.id)}
+                    />
+                ))}
+            </View>
+
+            {/* 4. Real Stories */}
+            <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>Real Events, Real Stories</Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.storiesScroll}>
+                    <StoryCard
+                        image={require('../../../../assets/images/decor.jpg')}
+                        title="Royal Jaipur Wedding"
+                        quote="Everything felt effortless — they handled it all."
+                    />
+                    <StoryCard
+                        image={require('../../../../assets/images/entertenment.jpg')}
+                        title="Sangeet Night"
+                        quote="The best musical experience we ever had!"
+                    />
+                    <StoryCard
+                        image={require('../../../../assets/images/Food.jpg')}
+                        title="Grand Reception"
+                        quote="Food and hospitality were top notch."
+                    />
+                </ScrollView>
+            </View>
+
+            {/* 5. Meet Your Team (Revamped) */}
+            <View
+                style={[styles.sectionContainer, { backgroundColor: '#fff', paddingBottom: 40 }]}
+                onLayout={(event) => {
+                    teamSectionY.value = event.nativeEvent.layout.y;
+                }}
+            >
+                <View style={styles.sectionHeaderCentered}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', opacity: 0.6, marginTop: 5 }}>
+                        <View style={{ height: 1, backgroundColor: COLORS.haldi, width: 40, marginRight: 10 }} />
+                        <FontAwesome5 name="spa" size={14} color={COLORS.haldi} />
+                        <View style={{ height: 1, backgroundColor: COLORS.haldi, width: 40, marginLeft: 10 }} />
+                    </View>
+                </View>
+
+                <Animated.FlatList
+                    data={teamData}
+                    keyExtractor={item => item.id}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    snapToInterval={CARD_WIDTH + SPACING * 2}
+                    decelerationRate="fast"
+                    contentContainerStyle={{
+                        paddingHorizontal: SIDECARD_LENGTH - SPACING,
+                        paddingBottom: 20
+                    }}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                        { useNativeDriver: true }
+                    )}
+                    scrollEventThrottle={16}
+                    renderItem={({ item, index }) => {
+                        const inputRange = [
+                            (index - 1) * (CARD_WIDTH + SPACING * 2),
+                            index * (CARD_WIDTH + SPACING * 2),
+                            (index + 1) * (CARD_WIDTH + SPACING * 2),
+                        ];
+
+                        const scale = scrollX.interpolate({
+                            inputRange,
+                            outputRange: [0.9, 1.1, 0.9], // Center card scales up to 1.1x
+                            extrapolate: 'clamp',
+                        });
+
+                        const opacity = scrollX.interpolate({
+                            inputRange,
+                            outputRange: [0.6, 1, 0.6], // Side cards fade out
+                            extrapolate: 'clamp',
+                        });
+
+                        return (
+                            <TeamCard
+                                item={item}
+                                scale={scale}
+                                opacity={opacity}
+                            />
+                        );
+                    }}
+                />
+            </View>
+
+            {/* 6. Emotional Storytelling */}
+            <View style={styles.emotionalSection}>
+                <Text style={styles.emotionalText}>“Your moments matter.</Text>
+                <Text style={styles.emotionalText}>We take care of everything, so you can live them fully.” 💫</Text>
+            </View>
+
+            {/* Space for bottom CTA */}
+            <View style={{ height: 100 }} />
+        </>
+    );
+
     return (
         <View style={{ flex: 1 }}>
             <View style={[styles.container, { paddingTop: insets.top }]}>
                 <StatusBar barStyle="dark-content" backgroundColor={COLORS.akshid} />
 
-                <Reanimated.ScrollView
-                    onScroll={scrollHandler}
-                    scrollEventThrottle={16}
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.scrollContent}
-                >
-
-                    {/* 1. Hero Section */}
-                    <View style={styles.heroSection}>
-                        <Video
-                            source={require('../../../../assets/EventMimg/EventV.mp4')}
-                            style={StyleSheet.absoluteFill}
-                            resizeMode="cover"
-                            isLooping
-                            shouldPlay
-                            isMuted
-                        />
-
-                        <View style={styles.heroContent}>
-                            <View style={styles.headerRow}>
-                                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                                    <Ionicons name="arrow-back" size={24} color="#fff" />
-                                </TouchableOpacity>
-                            </View>
-
-                            <Text style={styles.heroHeadline}>We Don’t Just Plan Events — We Create Experiences ✨</Text>
-                            <Text style={styles.heroSubtext}>Weddings • Social Events • Corporate Experiences • Destination Events</Text>
-
-                            <TouchableOpacity style={styles.primaryCTA}>
-                                <Text style={styles.ctaText}>💬 Plan My Event</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={styles.secondaryCTA}>
-                                <Text style={styles.secondaryCTAText}>📞 Talk to an Event Expert</Text>
-                            </TouchableOpacity>
-
-                            {/* Trust Highlights */}
-                            <View style={styles.trustRow}>
-                                <TrustItem icon="calendar-check" text="1,000+ Events" />
-                                <TrustItem icon="users" text="Expert Managers" />
-                                <TrustItem icon="star" text="Satisfaction Guaranteed" />
-                            </View>
-                        </View>
-                    </View>
-
-                    {/* 2. Process Section */}
-                    <View style={styles.sectionContainer}>
-                        <AnimatedSectionHeader
-                            scrollY={scrollY}
-                            title="Our Event Planning Process"
-                            subtitle="From Vision to Reality"
-                        />
-
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 20 }}>
-                            <ProcessStep scrollY={scrollY} step="1" title="Understanding Your Vision" desc="Theme, budget, and guest experience planning." isLast={false} color={COLORS.textRed} stringHeight={20} />
-                            <ProcessStep scrollY={scrollY} step="2" title="Design & Concept" desc="Mood boards, layouts, and flow visualization." isLast={false} color="#00BCD4" stringHeight={60} />
-                            <ProcessStep scrollY={scrollY} step="3" title="Vendor Curation" desc="Sourcing the best venues, food, and artists." isLast={false} color={COLORS.darkHaldi} stringHeight={40} />
-                            <ProcessStep scrollY={scrollY} step="4" title="Execution" desc="On-ground team managing every detail flawlessly." isLast={true} color="#673AB7" stringHeight={70} />
-                        </ScrollView>
-                    </View>
-
-                    {/* 3. Services We Manage (Accordion) */}
-                    <View style={[styles.sectionContainer, { backgroundColor: COLORS.akshid }]}>
-                        <Text style={styles.sectionTitle}>Services We Manage</Text>
-
-                        {servicesData.map((service) => (
-                            <ServiceItem
-                                key={service.id}
-                                item={service}
-                                expanded={expandedService === service.id}
-                                onPress={() => toggleService(service.id)}
-                            />
-                        ))}
-                    </View>
-
-                    {/* 4. Real Stories */}
-                    <View style={styles.sectionContainer}>
-                        <Text style={styles.sectionTitle}>Real Events, Real Stories</Text>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.storiesScroll}>
-                            <StoryCard
-                                image={require('../../../../assets/images/decor.jpg')}
-                                title="Royal Jaipur Wedding"
-                                quote="Everything felt effortless — they handled it all."
-                            />
-                            <StoryCard
-                                image={require('../../../../assets/images/entertenment.jpg')}
-                                title="Sangeet Night"
-                                quote="The best musical experience we ever had!"
-                            />
-                            <StoryCard
-                                image={require('../../../../assets/images/Food.jpg')}
-                                title="Grand Reception"
-                                quote="Food and hospitality were top notch."
-                            />
-                        </ScrollView>
-                    </View>
-
-                    {/* 5. Meet Your Team (Revamped) */}
-                    <View style={[styles.sectionContainer, { backgroundColor: '#fff', paddingBottom: 40 }]}>
-                        <View style={styles.sectionHeaderCentered}>
-                            <Text style={styles.sectionTitleCenter}>Meet Your Event Team</Text>
-                            <Text style={styles.sectionSubtitleCenter}>Dedicated professionals ensuring your perfect celebration</Text>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', opacity: 0.6, marginTop: 5 }}>
-                                <View style={{ height: 1, backgroundColor: COLORS.haldi, width: 40, marginRight: 10 }} />
-                                <FontAwesome5 name="spa" size={14} color={COLORS.haldi} />
-                                <View style={{ height: 1, backgroundColor: COLORS.haldi, width: 40, marginLeft: 10 }} />
-                            </View>
-                        </View>
-
-                        <Animated.FlatList
-                            data={teamData}
-                            keyExtractor={item => item.id}
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            snapToInterval={CARD_WIDTH + SPACING * 2}
-                            decelerationRate="fast"
-                            contentContainerStyle={{
-                                paddingHorizontal: SIDECARD_LENGTH - SPACING,
-                                paddingBottom: 20
-                            }}
-                            onScroll={Animated.event(
-                                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                                { useNativeDriver: true }
-                            )}
-                            scrollEventThrottle={16}
-                            renderItem={({ item, index }) => {
-                                const inputRange = [
-                                    (index - 1) * (CARD_WIDTH + SPACING * 2),
-                                    index * (CARD_WIDTH + SPACING * 2),
-                                    (index + 1) * (CARD_WIDTH + SPACING * 2),
-                                ];
-
-                                const scale = scrollX.interpolate({
-                                    inputRange,
-                                    outputRange: [0.9, 1.1, 0.9], // Center card scales up to 1.1x
-                                    extrapolate: 'clamp',
-                                });
-
-                                const opacity = scrollX.interpolate({
-                                    inputRange,
-                                    outputRange: [0.6, 1, 0.6], // Side cards fade out
-                                    extrapolate: 'clamp',
-                                });
-
-                                return (
-                                    <TeamCard
-                                        item={item}
-                                        scale={scale}
-                                        opacity={opacity}
-                                    />
-                                );
-                            }}
-                        />
-                    </View>
-
-                    {/* 6. Emotional Storytelling */}
-                    <View style={styles.emotionalSection}>
-                        <Text style={styles.emotionalText}>“Your moments matter.</Text>
-                        <Text style={styles.emotionalText}>We take care of everything, so you can live them fully.” 💫</Text>
-                    </View>
-
-                    {/* Space for bottom CTA */}
-                    <View style={{ height: 100 }} />
-
-                </Reanimated.ScrollView>
-
-                {/* Sticky Bottom CTA */}
-                <View style={styles.stickyBottom}>
-                    <TouchableOpacity style={styles.stickyBtnPrimary}>
-                        <Text style={styles.stickyTextPrimary}>💬 Get My Event Plan</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.stickyBtnSecondary}>
-                        <TouchableOpacity onPress={() => Linking.openURL(`tel:${9876543210}`)}>
-                            <Ionicons name="call" size={20} color={COLORS.kumkum} />
-                        </TouchableOpacity>
-                    </TouchableOpacity>
-                </View>
-
+                {Platform.OS === 'web' ? (
+                    <ScrollView
+                        ref={scrollViewRef}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.scrollContent}
+                        onScroll={(e) => {
+                            scrollY.value = e.nativeEvent.contentOffset.y;
+                        }}
+                        scrollEventThrottle={16}
+                    >
+                        {renderScrollContent()}
+                    </ScrollView>
+                ) : (
+                    <Reanimated.ScrollView
+                        ref={scrollViewRef}
+                        onScroll={scrollHandler}
+                        scrollEventThrottle={16}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.scrollContent}
+                    >
+                        {renderScrollContent()}
+                    </Reanimated.ScrollView>
+                )}
             </View>
-
         </View>
 
     );
@@ -260,54 +271,38 @@ const EventManagement = ({ navigation }) => {
 // --- Components ---
 
 const TeamCard = ({ item, scale, opacity }) => {
-    const [tapped, setTapped] = useState(false);
-
+    const [liked, setLiked] = useState(false);
     return (
         <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => setTapped(!tapped)}
-            style={{ width: CARD_WIDTH, marginHorizontal: SPACING, alignItems: 'center' }}
+            activeOpacity={0.9}
+            style={{ width: CARD_WIDTH, marginHorizontal: SPACING }}
         >
             <Animated.View style={[styles.teamCardContainer, { transform: [{ scale }], opacity }]}>
-                {/* Profile Image with Gradient Ring */}
-                <LinearGradient
-                    colors={[COLORS.haldi, COLORS.kumkum]}
-                    style={styles.gradientRing}
-                >
-                    <Image source={item.image} style={styles.teamImage} />
-                </LinearGradient>
+                {/* Full Image Background */}
+                <Image
+                    source={item.image}
+                    style={styles.teamImageBg}
+                    resizeMode="cover"
+                />
 
-                <View style={styles.teamInfo}>
-                    <Text style={styles.teamName}>{item.name}</Text>
-
-                    <View style={styles.roleRow}>
-                        <FontAwesome5 name={item.roleIcon} size={12} color={COLORS.kumkum} style={{ marginRight: 5 }} />
-                        <Text style={styles.teamRole}>{item.role}</Text>
-                    </View>
-
-                    <View style={styles.expPill}>
-                        <Text style={styles.expText}>{item.experience}</Text>
-                    </View>
-
-                    {/* Star Rating (Optional) */}
-                    <View style={styles.starRow}>
-                        {[...Array(5)].map((_, i) => (
-                            <MaterialCommunityIcons key={i} name="star" size={14} color={COLORS.haldi} />
-                        ))}
+                {/* Top Row: Rating & Heart */}
+                <View style={styles.cardTopRow}>
+                    <View style={styles.ratingBadge}>
+                        <Text style={styles.ratingText}>{item.rating}</Text>
                     </View>
                 </View>
 
-                {/* Revealed Actions on Tap */}
-                {tapped && (
-                    <Animated.View style={styles.actionRow}>
-                        <TouchableOpacity style={styles.actionBtn} onPress={() => Linking.openURL(`tel:${item.phone}`)}>
-                            <Ionicons name="call" size={18} color="#fff" />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.actionBtn, { backgroundColor: '#25D366' }]}>
-                            <Ionicons name="logo-whatsapp" size={18} color="#fff" />
-                        </TouchableOpacity>
-                    </Animated.View>
-                )}
+                {/* Bottom Overlay */}
+                <View style={styles.cardBottomOverlay}>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.cardTitle}>{item.name}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <FontAwesome5 name={item.roleIcon} size={10} color={COLORS.darkHaldi} style={{ marginRight: 5 }} />
+                            <Text style={styles.cardSubtitle}>{item.role}</Text>
+                        </View>
+                        <Text style={styles.cardPrice}>{item.experience}</Text>
+                    </View>
+                </View>
             </Animated.View>
         </TouchableOpacity>
     );
@@ -363,12 +358,23 @@ const ProcessStep = ({ step, title, desc, isLast, scrollY, color, stringHeight }
         };
     });
 
+    // Conditional Wrapper for Web Compatibility
+    const Container = Platform.OS === 'web' ? View : Reanimated.View;
+    const IconContainer = Platform.OS === 'web' ? View : Reanimated.View;
+    const TextContainer = Platform.OS === 'web' ? View : Reanimated.View;
+
+    // Web-safe styles: remove animated styles on web
+    const containerStyle = Platform.OS === 'web' ? styles.processStepContainer : [styles.processStepContainer, rStyle];
+    const iconStyle = Platform.OS === 'web' ? [styles.processIconCenter, { height: 'auto', marginBottom: 15 }] : [styles.processIconCenter, rIconStyle, { height: 'auto', marginBottom: 15 }];
+    const textStyle = Platform.OS === 'web' ? styles.processTextBottom : [styles.processTextBottom, rTextStyle];
+
     return (
-        <Reanimated.View
+        <Container
             onLayout={(e) => {
+                // Only track layout if needed for animations (Native) or if checking visibility
                 itemY.value = e.nativeEvent.layout.y + 580;
             }}
-            style={[styles.processStepContainer, rStyle]}
+            style={containerStyle}
         >
             {/* The Hook (Top anchor) */}
             <View style={{ position: 'absolute', top: -45, left: '50%', marginLeft: -10, zIndex: -1 }}>
@@ -412,7 +418,7 @@ const ProcessStep = ({ step, title, desc, isLast, scrollY, color, stringHeight }
             <View style={{ height: stringHeight }} />
 
             {/* Gold Bell Icon Area */}
-            <Reanimated.View style={[styles.processIconCenter, rIconStyle, { height: 'auto', marginBottom: 15 }]}>
+            <IconContainer style={iconStyle}>
                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
 
                     {/* Ring/Loop at top of bell */}
@@ -440,14 +446,14 @@ const ProcessStep = ({ step, title, desc, isLast, scrollY, color, stringHeight }
                         }}>{step}</Text>
                     </View>
                 </View>
-            </Reanimated.View>
+            </IconContainer>
 
             {/* Text Content */}
-            <Reanimated.View style={[styles.processTextBottom, rTextStyle]}>
+            <TextContainer style={textStyle}>
                 <Text style={[styles.processTitle, { color: COLORS.textRed, marginBottom: 4, fontSize: 15 }]}>{title}</Text>
                 <Text style={styles.processDesc}>{desc}</Text>
-            </Reanimated.View>
-        </Reanimated.View>
+            </TextContainer>
+        </Container>
     );
 };
 
@@ -530,39 +536,43 @@ const servicesData = [
 const teamData = [
     {
         id: '1',
-        name: 'Aarav Singh',
-        role: 'Lead Planner',
+        name: 'Aarav Planner',
+        role: 'Event Planner',
         roleIcon: 'clipboard-list',
-        experience: '10+ Years Exp',
+        experience: '10+ Years',
+        rating: '4.9',
         phone: '9876543210',
-        image: { uri: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2000&auto=format&fit=crop' }
+        image: require('../../../../assets/images/decor.jpg')
     },
     {
         id: '2',
-        name: 'Sneha Kapoor',
-        role: 'Creative Director',
+        name: 'Sneha Event Management',
+        role: 'Event Planner',
         roleIcon: 'palette',
-        experience: '8+ Years Exp',
+        experience: '8+ Years',
+        rating: '4.8',
         phone: '9876543211',
-        image: { uri: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2000&auto=format&fit=crop' }
+        image: require('../../../../assets/images/decor.jpg')
     },
     {
         id: '3',
-        name: 'Rohan Das',
-        role: 'Ops Manager',
+        name: 'Rohan Event Management',
+        role: 'Event Planner',
         roleIcon: 'cogs',
-        experience: '6+ Years Exp',
+        experience: '6+ Years',
+        rating: '4.7',
         phone: '9876543212',
-        image: { uri: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2000&auto=format&fit=crop' }
+        image: require('../../../../assets/images/decor.jpg')
     },
     {
         id: '4',
-        name: 'Priya Sharma',
-        role: 'Guest Relations',
+        name: 'Priya Event Management',
+        role: 'Event Planner',
         roleIcon: 'users',
-        experience: '5+ Years Exp',
+        experience: '5+ Years',
+        rating: '4.9',
         phone: '9876543213',
-        image: { uri: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2000&auto=format&fit=crop' }
+        image: require('../../../../assets/images/decor.jpg')
     },
 ];
 
@@ -626,19 +636,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
     },
-    secondaryCTA: {
-        backgroundColor: 'rgba(255,255,255,0.2)',
-        paddingVertical: 12,
-        borderRadius: 30,
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#fff',
-        marginBottom: 20,
-    },
-    secondaryCTAText: {
-        color: '#fff',
-        fontWeight: '600',
-    },
+
     trustRow: {
         position: 'absolute',
         bottom: -60, // Moved down further
@@ -823,86 +821,88 @@ const styles = StyleSheet.create({
     },
     teamCardContainer: {
         width: '100%',
-        backgroundColor: '#FFF',
+        height: 380, // Taller card for image
         borderRadius: 20,
-        padding: 20,
-        alignItems: 'center',
+        backgroundColor: '#fff',
+        overflow: 'hidden',
         elevation: 8,
         shadowColor: '#000',
-        shadowOpacity: 0.15,
-        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
         shadowRadius: 8,
-        borderWidth: 1,
-        borderColor: '#f0f0f0',
+        shadowOffset: { width: 0, height: 4 },
     },
-    gradientRing: {
-        padding: 3,
-        borderRadius: 50,
-        marginBottom: 15,
-    },
-    teamImage: {
-        width: 90,
-        height: 90,
-        borderRadius: 45,
-        borderWidth: 2,
-        borderColor: '#fff',
-    },
-    teamInfo: {
-        alignItems: 'center',
-    },
-    teamName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#1E1E2D',
-        fontFamily: 'serif',
-        marginBottom: 5,
-    },
-    roleRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    teamRole: {
-        fontSize: 12,
-        color: '#A70002',
-        fontWeight: '600',
-        textTransform: 'uppercase',
-        letterSpacing: 1,
-    },
-    expPill: {
-        backgroundColor: '#FFF8E1', // Light Gold
-        paddingHorizontal: 12,
-        paddingVertical: 4,
-        borderRadius: 12,
-        marginBottom: 10,
-    },
-    expText: {
-        color: '#F29502',
-        fontSize: 11,
-        fontWeight: '700',
-    },
-    starRow: {
-        flexDirection: 'row',
-        gap: 2,
-    },
-    actionRow: {
-        flexDirection: 'row',
-        marginTop: 15,
-        gap: 15,
-        paddingTop: 15,
-        borderTopWidth: 1,
-        borderTopColor: '#f5f5f5',
+    teamImageBg: {
         width: '100%',
-        justifyContent: 'center',
+        height: '100%',
+        position: 'absolute',
     },
-    actionBtn: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: '#A70002',
+    cardTopRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 15,
+        zIndex: 10,
+    },
+    ratingBadge: {
+        backgroundColor: '#F29502',
+        width: 36,
+        height: 36,
+        borderRadius: 18,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 3,
+    },
+    ratingText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 12,
+    },
+    heartBtn: {
+        backgroundColor: '#fff',
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    cardBottomOverlay: {
+        position: 'absolute',
+        bottom: 15,
+        left: 15,
+        right: 15,
+        backgroundColor: '#fff',
+        borderRadius: 15,
+        padding: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        elevation: 5,
+    },
+    cardTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: COLORS.textRed,
+        marginBottom: 2,
+    },
+    cardSubtitle: {
+        fontSize: 12,
+        color: '#666',
+        fontWeight: '500',
+    },
+    cardPrice: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: COLORS.kumkum,
+        marginTop: 4,
+    },
+    bookBtn: {
+        backgroundColor: COLORS.kumkum,
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+    },
+    bookBtnText: {
+        color: '#fff',
+        fontSize: 12,
+        fontWeight: 'bold',
     },
 
     // Emotional

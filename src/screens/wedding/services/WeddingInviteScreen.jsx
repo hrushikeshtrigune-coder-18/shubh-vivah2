@@ -1,5 +1,6 @@
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
+
 import { Animated, Dimensions, Image, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -38,10 +39,16 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/ring1.jpg'), name: 'Classic Gold' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/ring2.jpg'), name: 'Floral Bliss' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/ring3.jpg'), name: 'Royal Blue' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
+    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/wedding1.jpg'), name: 'Royal Wedding' },
+    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/wedding2.jpg'), name: 'Classic Elegance' },
+    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/wedding3.jpg'), name: 'Floral Dreams' },
+    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/wedding4.jpg'), name: 'Modern Love' },
+    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/wedding5.jpg'), name: 'Traditional Red' },
+    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/wedding6.jpg'), name: 'Golden Knots' },
+    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/wedding7.jpg'), name: 'Vintage Charm' },
+    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/wedding8.jpg'), name: 'Pure Romance' },
+    { id: 't9', image: require('../../../../assets/EventMimg/Einvite/wedding9.jpg'), name: 'Majestic Union' },
+    { id: 't10', image: require('../../../../assets/EventMimg/Einvite/wedding10.jpg'), name: 'Eternal Bond' },
 ];
 
 const WeddingInviteScreen = ({ navigation, route }) => {
@@ -260,7 +267,9 @@ const WeddingInviteScreen = ({ navigation, route }) => {
                     <Ionicons name="arrow-back" size={24} color={COLORS.kumkum} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Invite Studio:{eventType}</Text>
-                <TouchableOpacity style={styles.saveButton}>
+                <TouchableOpacity
+                    style={styles.saveButton}
+                >
                     <Text style={styles.saveText}>Save</Text>
                 </TouchableOpacity>
             </View>

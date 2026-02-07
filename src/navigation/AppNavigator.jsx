@@ -39,6 +39,7 @@ const AppNavigator = () => {
                     <Stack.Screen name="InviteStudioScreen" component={require('../screens/wedding/services/InviteStudioScreen').default} />
                     <Stack.Screen name="EventManagementScreen" component={require('../screens/wedding/services/EventMangment').default} />
                     <Stack.Screen name="VendorListScreen" component={require('../screens/wedding/services/VendorListScreen').default} />
+                    <Stack.Screen name="JewelleryScreen" component={require('../screens/wedding/services/Jewellery').default} />
                     <Stack.Screen name="HaldiInviteScreen" component={require('../screens/wedding/services/HaldiInviteScreen').default} />
                     <Stack.Screen name="SangitInviteScreen" component={require('../screens/wedding/services/SangitInviteScreen').default} />
                     <Stack.Screen name="MehndiInviteScreen" component={require('../screens/wedding/services/MehndiInviteScreen').default} />
