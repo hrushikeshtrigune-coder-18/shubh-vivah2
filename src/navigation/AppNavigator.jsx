@@ -31,12 +31,10 @@ const AppNavigator = () => {
             {user ? (
                 <>
                     <Stack.Screen name="Main" component={TabNavigator} />
-<<<<<<< HEAD
                     <Stack.Screen name="WeddingVenue" component={WeddingVenue} />
                     <Stack.Screen name="Photography" component={Photography} />
                     <Stack.Screen name="Food" component={Food} />
                     <Stack.Screen name="Honeymoon" component={Honeymoon} />
-=======
                     <Stack.Screen name="EInviteScreen" component={require('../screens/wedding/services/EInvite').default} />
                     <Stack.Screen name="InviteStudioScreen" component={require('../screens/wedding/services/InviteStudioScreen').default} />
                     <Stack.Screen name="EventManagementScreen" component={require('../screens/wedding/services/EventMangment').default} />
@@ -46,7 +44,6 @@ const AppNavigator = () => {
                     <Stack.Screen name="MehndiInviteScreen" component={require('../screens/wedding/services/MehndiInviteScreen').default} />
                     <Stack.Screen name="WeddingInviteScreen" component={require('../screens/wedding/services/WeddingInviteScreen').default} />
                     <Stack.Screen name="ReceptionInviteScreen" component={require('../screens/wedding/services/ReceptionInviteScreen').default} />
->>>>>>> sayali
                 </>
             ) : (
                 <Stack.Screen name="Auth" component={AuthNavigator} />
