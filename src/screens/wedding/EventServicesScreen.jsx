@@ -117,6 +117,14 @@ const Backdrop = ({ scrollX }) => {
     );
 };
 
+const colors = {
+    haldi: '#D4AF37',
+    kumkum: '#A70002',
+    ivory: '#FFFFE4',
+    white: '#FFFFFF',
+    text: '#A70002',
+};
+
 const EventServicesScreen = ({ navigation }) => {
     const [searchText, setSearchText] = useState('');
     const [selectedService, setSelectedService] = useState(null);
