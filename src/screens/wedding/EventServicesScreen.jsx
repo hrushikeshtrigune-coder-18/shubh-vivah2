@@ -78,6 +78,15 @@ const services = [
         description: 'Romantic getaways to the world\'s most beautiful destinations.',
         features: ['Custom Packages', 'Luxury Stays'],
         icon: 'plane'
+    },
+    {
+        id: '7',
+        title: 'Jewellery',
+        subtitle: 'Bridal & Gold',
+        image: require('../../../assets/images/Jewellery.jpg'),
+        description: 'Exquisite bridal and wedding jewellery collections.',
+        features: ['Gold & Diamond', 'Custom Designs'],
+        icon: 'gem'
     }
 ];
 
@@ -423,6 +432,10 @@ const EventServicesScreen = ({ navigation }) => {
                                                         break;
                                                     case '5': // Photography
                                                         navigation.navigate('Photography');
+                                                        break;
+                                                    case '7': // Jewellery
+                                                    case 's6': // Jewellery (from suggestions)
+                                                        navigation.navigate('JewelleryScreen');
                                                         break;
                                                     case '6': // Honeymoon Planning
                                                         navigation.navigate('Honeymoon');

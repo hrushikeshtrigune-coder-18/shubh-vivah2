@@ -1,4 +1,3 @@
-import { PlayfairDisplay_700Bold, useFonts } from '@expo-google-fonts/playfair-display';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -251,9 +250,7 @@ const VendorCard = ({ vendor, isHero, onPress, openItinerary }) => {
 
 const HoneymoonNeumorphic = ({ navigation }) => {
     // --- STATE & REFS ---
-    const [fontsLoaded] = useFonts({
-        PlayfairDisplay_700Bold,
-    });
+    /* Fonts loaded in App.jsx */
 
     const [bookingStep, setBookingStep] = useState(0); // 0 = default, 1 = loading, 2 = confirmed
     const [modalVisible, setModalVisible] = useState(false);
@@ -322,9 +319,7 @@ const HoneymoonNeumorphic = ({ navigation }) => {
         setModalVisible(true);
     };
 
-    if (!fontsLoaded) {
-        return null; // Or a splash screen
-    }
+    /* Fonts checked in App.jsx */
 
     // --- RENDER SECTIONS ---
 
