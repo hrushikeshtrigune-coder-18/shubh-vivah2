@@ -318,7 +318,12 @@ const EventServicesScreen = ({ navigation }) => {
                     <View style={[styles.modalCard, { maxHeight: '80%', width: '90%' }]}>
                         {selectedService && (
                             <View style={{ flex: 1 }}>
-                                <Image source={{ uri: selectedService.image }} style={styles.modalImage} />
+                                <Image
+                                    source={typeof selectedService.image === 'string'
+                                        ? { uri: selectedService.image }
+                                        : selectedService.image}
+                                    style={styles.modalImage}
+                                />
                                 <TouchableOpacity
                                     style={styles.closeBtn}
                                     onPress={() => setSelectedService(null)}
