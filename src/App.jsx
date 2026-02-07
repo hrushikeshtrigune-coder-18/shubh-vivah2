@@ -7,7 +7,11 @@ import {
 } from '@expo-google-fonts/poppins';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
+<<<<<<< HEAD
 import { ActivityIndicator, View } from 'react-native';
+=======
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+>>>>>>> sayali
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider } from './context/AuthContext';
 import { RoleProvider } from './context/RoleContext';
@@ -30,15 +34,17 @@ export default function App() {
     }
 
     return (
-        <SafeAreaProvider>
-            <AuthProvider>
-                <RoleProvider>
-                    <NavigationContainer>
-                        <AppNavigator />
-                        <StatusBar style="auto" />
-                    </NavigationContainer>
-                </RoleProvider>
-            </AuthProvider>
-        </SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaProvider>
+                <AuthProvider>
+                    <RoleProvider>
+                        <NavigationContainer>
+                            <AppNavigator />
+                            <StatusBar style="auto" />
+                        </NavigationContainer>
+                    </RoleProvider>
+                </AuthProvider>
+            </SafeAreaProvider>
+        </GestureHandlerRootView>
     );
 }
