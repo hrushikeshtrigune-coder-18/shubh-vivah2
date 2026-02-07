@@ -1,7 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    Alert,
     Animated,
     Dimensions,
     Image,
@@ -237,9 +236,12 @@ const EventServicesScreen = ({ navigation }) => {
                 itemHeight={ITEM_HEIGHT}
                 onPress={() => {
                     // Debug Alert to confirm touch
-                    Alert.alert("Debug", `Clicked ${item.title}`);
-                    setSelectedService(item);
-
+                    // Alert.alert("Debug", `Clicked ${item.title}`);
+                    if (item.id === '1') {
+                        navigation.navigate('EInviteScreen');
+                    } else {
+                        setSelectedService(item);
+                    }
                 }}
             />
         );
@@ -344,7 +346,25 @@ const EventServicesScreen = ({ navigation }) => {
                                         onPress={() => {
                                             const s = selectedService;
                                             setSelectedService(null);
-                                            navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+
+                                            // Conditional Navigation based on Service ID
+                                            switch (s.id) {
+                                                case '2': // Event Management
+                                                    navigation.navigate('EventManagementScreen');
+                                                    break;
+                                                case '3': // Wedding Venue
+                                                    navigation.navigate('WeddingVenue');
+                                                    break;
+                                                case '4': // Food & Catering
+                                                    navigation.navigate('Food');
+                                                    break;
+                                                case '6': // Honeymoon Planning
+                                                    navigation.navigate('Honeymoon');
+                                                    break;
+                                                default:
+                                                    // Default: Vendor List (Gifts & Return, Entertainment, etc.)
+                                                    navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+                                            }
                                         }}
                                     >
                                         <Text style={styles.modalCtaText}>Book Now</Text>
