@@ -1,3 +1,5 @@
+import { Outfit_400Regular, Outfit_500Medium, Outfit_700Bold } from '@expo-google-fonts/outfit';
+import { PlayfairDisplay_700Bold, useFonts } from '@expo-google-fonts/playfair-display';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -250,7 +252,12 @@ const VendorCard = ({ vendor, isHero, onPress, openItinerary }) => {
 
 const HoneymoonNeumorphic = ({ navigation }) => {
     // --- STATE & REFS ---
-    /* Fonts loaded in App.jsx */
+    const [fontsLoaded] = useFonts({
+        PlayfairDisplay_700Bold,
+        Outfit_400Regular,
+        Outfit_500Medium,
+        Outfit_700Bold,
+    });
 
     const [bookingStep, setBookingStep] = useState(0); // 0 = default, 1 = loading, 2 = confirmed
     const [modalVisible, setModalVisible] = useState(false);
