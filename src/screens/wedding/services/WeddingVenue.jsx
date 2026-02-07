@@ -16,6 +16,14 @@ import {
     UIManager,
     View
 } from 'react-native';
+import venue1 from '../../../../assets/images/venue1.jpg';
+import venue2 from '../../../../assets/images/venue2.jpg';
+import venue3 from '../../../../assets/images/venue3.jpg';
+import venue4 from '../../../../assets/images/venue4.jpg';
+import venue5 from '../../../../assets/images/venue5.jpg';
+import venue6 from '../../../../assets/images/venue6.jpg';
+import venue7 from '../../../../assets/images/venue7.jpg';
+import venue8 from '../../../../assets/images/venue8.jpg';
 
 const { width } = Dimensions.get('window');
 
@@ -45,9 +53,9 @@ const VENUES_DATA = [
         location: 'Pune, MH',
         price: '₹2.5L',
         capacity: '500-1500',
-        type: 'Palaces',
+        type: 'Palace',
         amenities: ['Outdoor', 'Alcohol'],
-        image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=800&auto=format&fit=crop',
+        image: venue1,
     },
     {
         id: '2',
@@ -58,9 +66,9 @@ const VENUES_DATA = [
         location: 'Mumbai, MH',
         price: '₹5.0L',
         capacity: '1000+',
-        type: 'Banquets',
+        type: 'Banquet',
         amenities: ['Indoor', 'Decor'],
-        image: 'https://images.unsplash.com/photo-1561589255-b46132924a4d?q=80&w=800&auto=format&fit=crop',
+        image: venue2,
     },
     {
         id: '3',
@@ -71,9 +79,9 @@ const VENUES_DATA = [
         location: 'Goa',
         price: '₹4.5L',
         capacity: '200-500',
-        type: 'Beachside',
+        type: 'Resort',
         amenities: ['Beach', 'Stay'],
-        image: 'https://images.unsplash.com/photo-1544124499-58912cbddaad?q=80&w=800&auto=format&fit=crop',
+        image: venue3,
     },
     {
         id: '5',
@@ -84,9 +92,9 @@ const VENUES_DATA = [
         location: 'Jaipur, RJ',
         price: '₹15L',
         capacity: '500-2000',
-        type: 'Palaces',
+        type: 'Palace',
         amenities: ['Royal', 'Luxury'],
-        image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=800&auto=format&fit=crop',
+        image: venue4,
     },
     {
         id: '6',
@@ -97,9 +105,9 @@ const VENUES_DATA = [
         location: 'Udaipur, RJ',
         price: '₹20L',
         capacity: '200-800',
-        type: 'Palaces',
+        type: 'Palace',
         amenities: ['Lake View', 'Royal'],
-        image: 'https://images.unsplash.com/photo-1582234032535-6187b47b43f9?q=80&w=800&auto=format&fit=crop',
+        image: venue5,
     },
     {
         id: '7',
@@ -110,9 +118,9 @@ const VENUES_DATA = [
         location: 'Benaulim, Goa',
         price: '₹6.0L',
         capacity: '300-600',
-        type: 'Beachside',
+        type: 'Resort',
         amenities: ['Beach', 'Luxury'],
-        image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop',
+        image: venue7,
     },
     {
         id: '8',
@@ -123,44 +131,95 @@ const VENUES_DATA = [
         location: 'Yerwada, Pune',
         price: '₹4.0L',
         capacity: '400-900',
-        type: 'Banquets',
+        type: 'Banquet',
         amenities: ['Indoor', 'Golf'],
-        image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=800&auto=format&fit=crop',
+        image: venue8,
     },
 ];
 
 const CITIES = [
-    { id: '1', name: 'Mumbai', image: 'https://images.unsplash.com/photo-1562283833-281b37494ce4?q=80&w=400&auto=format&fit=crop' },
-    { id: '2', name: 'Pune', image: 'https://images.unsplash.com/photo-1569317002804-ab77bcf1bce4?q=80&w=400&auto=format&fit=crop' },
-    { id: '3', name: 'Jaipur', image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=400&auto=format&fit=crop' },
-    { id: '4', name: 'Goa', image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=400&auto=format&fit=crop' },
-    { id: '5', name: 'Delhi', image: 'https://images.unsplash.com/photo-1587474260584-18bd27909ddb?q=80&w=400&auto=format&fit=crop' },
+    {
+        id: '1',
+        name: 'Mumbai',
+        image: 'https://images.unsplash.com/photo-1562283833-281b37494ce4?q=80&w=400&auto=format&fit=crop',
+        vibe: 'Luxury • Sea View • Grand',
+    },
+    {
+        id: '2',
+        name: 'Pune',
+        image: 'https://images.unsplash.com/photo-1569317002804-ab77bcf1bce4?q=80&w=400&auto=format&fit=crop',
+        vibe: 'Budget-Friendly • Scenic',
+    },
+    {
+        id: '3',
+        name: 'Jaipur',
+        image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=400&auto=format&fit=crop',
+        vibe: 'Royal • Palaces • Heritage',
+    },
+    {
+        id: '4',
+        name: 'Goa',
+        image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=400&auto=format&fit=crop',
+        vibe: 'Beach • Party • Relaxed',
+    },
+    {
+        id: '5',
+        name: 'Udaipur',
+        image: 'https://images.unsplash.com/photo-1582234032535-6187b47b43f9?q=80&w=400&auto=format&fit=crop',
+        vibe: 'Lakes • Royal • Romance',
+    },
+];
+
+const VENUE_TYPES = [
+    { id: '1', name: 'Palace', icon: 'castle' },
+    { id: '2', name: 'Resort', icon: 'island' },
+    { id: '3', name: 'Banquet', icon: 'glass-wine' },
+    { id: '4', name: 'Lawn', icon: 'grass' },
+    { id: '5', name: 'Hotel', icon: 'office-building' },
 ];
 
 const WeddingVenue = ({ navigation }) => {
+    const scrollRef = useRef(null);
+    const [venueListY, setVenueListY] = useState(0);
     const scrollY = useRef(new Animated.Value(0)).current;
 
     // States
-    const [activeCityId, setActiveCityId] = useState('1');
-    const [city, setCity] = useState('');
-    const [guestCount, setGuestCount] = useState('');
-    const [budget, setBudget] = useState('');
+    const [activeCityId, setActiveCityId] = useState(null); // Default to null (show all)
+    const [activeTypeId, setActiveTypeId] = useState(null);
 
     const toggleCity = (id) => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setActiveCityId(id === activeCityId ? null : id);
     };
 
+    const toggleType = (id) => {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        setActiveTypeId(id === activeTypeId ? null : id);
+    };
+
+    // Filter Logic
+    const filteredVenues = VENUES_DATA.filter(venue => {
+        const cityMatch = activeCityId
+            ? venue.city === CITIES.find(c => c.id === activeCityId)?.name
+            : true;
+
+        const typeMatch = activeTypeId
+            ? venue.type === VENUE_TYPES.find(t => t.id === activeTypeId)?.name
+            : true;
+
+        return cityMatch && typeMatch;
+    });
+
     const renderActionHero = () => (
         <View style={styles.heroContainer}>
-            {/* Background Layer with Overlay - Reduced Height */}
+            {/* Background Layer with Overlay */}
             <ImageBackground
-                source={{ uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop' }}
+                source={venue6}
                 style={styles.heroImage}
-                imageStyle={{ borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }}
+                imageStyle={{ borderBottomLeftRadius: 32, borderBottomRightRadius: 32 }}
             >
                 <LinearGradient
-                    colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.8)']}
+                    colors={['rgba(0,0,0,0.2)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,0.8)']}
                     style={styles.heroGradient}
                 >
                     <View style={styles.topBar}>
@@ -169,35 +228,52 @@ const WeddingVenue = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
 
-                    <Text style={styles.heroHeadline}>
-                        Verified Wedding Venues That Match{'\n'}Your Budget, Style & Guest List
-                    </Text>
+                    <Animated.View style={{ opacity: 1, transform: [{ translateY: 0 }] }}>
+                        <Text style={styles.heroHeadline}>
+                            Find the one before the big day 💍
+                        </Text>
+                        <Text style={styles.heroSubhead}>
+                            Hand-picked venues for every wedding dream
+                        </Text>
+
+                        <View style={styles.heroActionsRow}>
+                            <TouchableOpacity
+                                style={styles.heroPrimaryBtn}
+                                onPress={() => scrollRef.current?.scrollTo({ y: venueListY, animated: true })}
+                            >
+                                <Ionicons name="search" size={18} color="#FFF" style={{ marginRight: 8 }} />
+                                <Text style={styles.heroPrimaryBtnText}>Find Venues</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Animated.View>
                 </LinearGradient>
             </ImageBackground>
 
-            {/* Trust Signals - Specific Proof */}
-            <View style={styles.trustSignalsRow}>
-                <View style={styles.trustSignalItem}>
-                    <MaterialCommunityIcons name="check-decagram" size={16} color={COLORS.secondary} />
-                    <Text style={styles.trustSignalText}>500+ Verified Listings</Text>
-                </View>
-                <View style={styles.trustSignalItem}>
-                    <MaterialCommunityIcons name="currency-usd-off" size={16} color={COLORS.secondary} />
-                    <Text style={styles.trustSignalText}>No Broker Calls</Text>
-                </View>
-                <View style={styles.trustSignalItem}>
-                    <MaterialCommunityIcons name="image-multiple-outline" size={16} color={COLORS.secondary} />
-                    <Text style={styles.trustSignalText}>Real Photos Only</Text>
-                </View>
+            {/* Trust Signals - Pills */}
+            <View style={styles.trustSignalsContainer}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.trustSignalsScroll}>
+                    <View style={styles.trustPill}>
+                        <MaterialCommunityIcons name="check-decagram" size={16} color={COLORS.primary} />
+                        <Text style={styles.trustPillText}>500+ Verified Venues</Text>
+                    </View>
+                    <View style={styles.trustPill}>
+                        <MaterialCommunityIcons name="phone-off" size={16} color={COLORS.primary} />
+                        <Text style={styles.trustPillText}>Zero Broker Spam</Text>
+                    </View>
+                    <View style={styles.trustPill}>
+                        <MaterialCommunityIcons name="camera-outline" size={16} color={COLORS.primary} />
+                        <Text style={styles.trustPillText}>100% Real Photos</Text>
+                    </View>
+                </ScrollView>
             </View>
         </View>
     );
 
     const renderEditorialCityGrid = () => (
         <View style={styles.sectionContainer}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 15, marginBottom: 15 }}>
+            <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Curated Collections</Text>
-                <Text style={{ color: COLORS.secondary, fontFamily: 'Outfit_400Regular' }}>Explore cities</Text>
+                <Text style={styles.sectionSubtitle}>Explore cities</Text>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15 }}>
                 {CITIES.map((item) => {
@@ -209,10 +285,15 @@ const WeddingVenue = ({ navigation }) => {
                             onPress={() => toggleCity(item.id)}
                             activeOpacity={0.9}
                         >
-                            <ImageBackground source={{ uri: item.image }} style={styles.cityBg}>
-                                <LinearGradient colors={['transparent', 'rgba(0,0,0,0.7)']} style={styles.cityGradient}>
-                                    <Text style={[styles.cityName, isActive && { fontSize: 24 }]}>{item.name}</Text>
-                                    {isActive && <Text style={styles.cityExplore}>Explore 20+ Venues</Text>}
+                            <ImageBackground source={{ uri: item.image }} style={styles.cityBg} imageStyle={{ borderRadius: 16 }}>
+                                <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.cityGradient}>
+                                    <Text style={styles.cityName}>{item.name}</Text>
+                                    <Text style={styles.cityVibe} numberOfLines={1}>{item.vibe}</Text>
+                                    {isActive && (
+                                        <View style={styles.cityExploreTag}>
+                                            <Text style={styles.cityExploreText}>Top Picks</Text>
+                                        </View>
+                                    )}
                                 </LinearGradient>
                             </ImageBackground>
                         </TouchableOpacity>
@@ -224,23 +305,37 @@ const WeddingVenue = ({ navigation }) => {
 
     const renderVenueTypes = () => (
         <View style={styles.sectionContainer}>
-            <Text style={[styles.sectionTitle, { paddingHorizontal: 15, marginBottom: 15 }]}>Explore by Type</Text>
+            <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Explore by Type</Text>
+            </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15 }}>
-                {['Palace', 'Resort', 'Banquet', 'Farmhouse', 'Hotel'].map((type, i) => (
-                    <TouchableOpacity key={i} style={styles.typeCard}>
-                        <View style={styles.typeIcon}>
-                            <MaterialCommunityIcons name={type === 'Palace' ? 'castle' : 'home'} size={24} color={COLORS.primary} />
-                        </View>
-                        <Text style={styles.typeText}>{type}</Text>
-                    </TouchableOpacity>
-                ))}
+                {VENUE_TYPES.map((item) => {
+                    const isActive = activeTypeId === item.id;
+                    return (
+                        <TouchableOpacity
+                            key={item.id}
+                            style={[styles.glassTypeCard, isActive && styles.glassTypeCardActive]}
+                            activeOpacity={0.8}
+                            onPress={() => toggleType(item.id)}
+                        >
+                            <View style={[styles.glassIconContainer, isActive && { backgroundColor: COLORS.primary }]}>
+                                <MaterialCommunityIcons
+                                    name={item.icon}
+                                    size={28}
+                                    color={isActive ? COLORS.white : COLORS.secondary}
+                                />
+                            </View>
+                            <Text style={[styles.glassTypeText, isActive && { color: COLORS.primary, fontFamily: 'Outfit_600SemiBold' }]}>{item.name}</Text>
+                        </TouchableOpacity>
+                    );
+                })}
             </ScrollView>
         </View>
     );
 
     const renderEditorialVenueCard = ({ item }) => (
         <TouchableOpacity style={styles.editorialCard} activeOpacity={0.9}>
-            <Image source={{ uri: item.image }} style={styles.editorialImage} />
+            <Image source={item.image} style={styles.editorialImage} />
             <View style={styles.cardHeaderOverlay}>
                 <View style={styles.ratingPill}>
                     <Text style={styles.ratingPillText}>{item.rating}</Text>
@@ -266,8 +361,9 @@ const WeddingVenue = ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
             <ScrollView
+                ref={scrollRef}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 100 }}
+                contentContainerStyle={{ paddingBottom: 40 }}
                 onScroll={Animated.event(
                     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
                     { useNativeDriver: false }
@@ -278,22 +374,37 @@ const WeddingVenue = ({ navigation }) => {
                 {renderEditorialCityGrid()}
                 {renderVenueTypes()}
 
-                <View style={styles.sectionContainer}>
-                    <Text style={[styles.sectionTitle, { paddingHorizontal: 15, marginBottom: 20 }]}>Editor's Pick</Text>
-                    {VENUES_DATA.map(item => (
-                        <View key={item.id}>
-                            {renderEditorialVenueCard({ item })}
+                <View
+                    style={styles.sectionContainer}
+                    onLayout={(event) => setVenueListY(event.nativeEvent.layout.y)}
+                >
+                    <Text style={[styles.sectionTitle, { paddingHorizontal: 15, marginBottom: 20 }]}>
+                        {activeCityId || activeTypeId ? 'Suggested Venues' : "Editor's Pick"}
+                    </Text>
+
+                    {filteredVenues.length > 0 ? (
+                        filteredVenues.map(item => (
+                            <View key={item.id}>
+                                {renderEditorialVenueCard({ item })}
+                            </View>
+                        ))
+                    ) : (
+                        <View style={styles.noResultsContainer}>
+                            <Text style={styles.noResultsText}>No venues found for this selection.</Text>
+                            <TouchableOpacity onPress={() => { setActiveCityId(null); setActiveTypeId(null); }}>
+                                <Text style={styles.clearFilterText}>Show All Venues</Text>
+                            </TouchableOpacity>
                         </View>
-                    ))}
+                    )}
+                </View>
+
+                <View style={styles.footerContainer}>
+                    <TouchableOpacity style={styles.stickyButton}>
+                        <Text style={styles.stickyButtonText}>Shortlist Venues</Text>
+                        <Ionicons name="arrow-forward" size={18} color="#FFF" />
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
-
-            <View style={styles.stickyFooter}>
-                <TouchableOpacity style={styles.stickyButton}>
-                    <Text style={styles.stickyButtonText}>Shortlist Venues</Text>
-                    <Ionicons name="arrow-forward" size={18} color="#FFF" />
-                </TouchableOpacity>
-            </View>
         </View>
     );
 };
@@ -304,17 +415,17 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background, // Ivory
     },
     // --- Hero Section Styles ---
-    heroContainer: { marginBottom: 20 },
+    heroContainer: { marginBottom: 10 },
     heroImage: {
         width: width,
-        height: 320,
+        height: 380, // Taller image for impact
         justifyContent: 'flex-end',
     },
     heroGradient: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         padding: 20,
-        paddingBottom: 80,
+        paddingBottom: 40,
     },
     topBar: {
         position: 'absolute',
@@ -326,141 +437,128 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.3)',
         padding: 8,
         borderRadius: 20,
+        // backdropFilter: 'blur(10px)', // For web, might not work on native without library but harmless
     },
     heroHeadline: {
         fontFamily: SERIF_FONT,
-        fontSize: 28,
+        fontSize: 32,
         color: COLORS.white,
-        lineHeight: 36,
+        lineHeight: 40,
         textShadowColor: 'rgba(0,0,0,0.5)',
         textShadowOffset: { width: 0, height: 1 },
         textShadowRadius: 4,
-        marginTop: 40,
-        textAlign: 'center',
+        marginBottom: 8,
     },
-    searchCardWrapper: {
-        marginTop: -60, // Overlap image
-        paddingHorizontal: 15,
-    },
-    searchCard: {
-        backgroundColor: COLORS.white,
-        borderRadius: 20,
-        padding: 20,
-        shadowColor: COLORS.secondary,
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.15,
-        shadowRadius: 15,
-        elevation: 8,
-        borderWidth: 1,
-        borderColor: COLORS.secondary,
-    },
-    inputRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: COLORS.inputBg,
-        borderRadius: 12,
-        paddingHorizontal: 12,
-        height: 50,
-    },
-    mainInput: {
-        flex: 1,
-        fontFamily: 'Outfit_500Medium',
-        fontSize: 16,
-        color: COLORS.primary,
-        marginLeft: 10,
-    },
-    subInput: {
-        flex: 1,
+    heroSubhead: {
         fontFamily: 'Outfit_400Regular',
-        fontSize: 14,
-        color: COLORS.primary,
-        marginLeft: 8,
+        fontSize: 16,
+        color: '#F0F0F0',
+        marginBottom: 24,
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 2,
     },
-    secondaryInputsRow: {
+    heroActionsRow: {
         flexDirection: 'row',
-        marginTop: 15,
-    },
-    divider: {
-        height: 1,
-        backgroundColor: '#EEE',
-        marginVertical: 0,
-    },
-    findVenuesButton: {
-        backgroundColor: COLORS.primary,
-        flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center',
-        height: 50,
-        borderRadius: 12,
-        marginTop: 15,
+    },
+    heroPrimaryBtn: {
+        backgroundColor: COLORS.primary,
+        paddingVertical: 14,
+        paddingHorizontal: 24,
+        borderRadius: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginRight: 12,
         shadowColor: COLORS.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,
         elevation: 5,
     },
-    findVenuesText: {
-        fontFamily: 'Outfit_700Bold',
-        fontSize: 16,
+    heroPrimaryBtnText: {
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 15,
         color: COLORS.white,
-        marginRight: 8,
-        textTransform: 'uppercase',
-        letterSpacing: 1,
     },
-    shortcutsContainer: {
-        marginTop: 15,
-        paddingLeft: 5,
-    },
-    shortcutChip: {
-        backgroundColor: COLORS.white,
+    heroSecondaryBtn: {
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        paddingVertical: 14,
+        paddingHorizontal: 24,
+        borderRadius: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
         borderWidth: 1,
-        borderColor: COLORS.secondary,
-        paddingHorizontal: 16,
+        borderColor: 'rgba(255,255,255,0.4)',
+    },
+    heroSecondaryBtnText: {
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 15,
+        color: COLORS.white,
+    },
+
+    // --- Trust Signals ---
+    trustSignalsContainer: {
+        marginTop: -25, // Overlap the image slightly
+        marginBottom: 10,
+    },
+    trustSignalsScroll: {
+        paddingHorizontal: 15,
+        paddingVertical: 10, // Avoid clipping shadow
+    },
+    trustPill: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: COLORS.white,
         paddingVertical: 8,
+        paddingHorizontal: 16,
         borderRadius: 20,
-        marginRight: 10,
-        marginBottom: 5,
+        marginRight: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        borderWidth: 1,
+        borderColor: '#F0F0F0',
     },
-    shortcutText: {
+    trustPillText: {
         fontFamily: 'Outfit_500Medium',
-        fontSize: 12,
-        color: COLORS.secondary,
+        fontSize: 13,
+        color: COLORS.textDark,
+        marginLeft: 6,
     },
-    trustSignalsRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        marginTop: 15,
-        paddingHorizontal: 10,
-    },
-    trustSignalItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    trustSignalText: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 11,
-        color: '#666',
-        marginLeft: 5,
-    },
+
     // --- City Grid ---
     sectionContainer: {
         marginTop: 30,
     },
+    sectionHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+        marginBottom: 15,
+    },
     sectionTitle: {
         fontFamily: SERIF_FONT,
-        fontSize: 24,
+        fontSize: 20, // Reduced from 24
         color: COLORS.primary,
     },
+    sectionSubtitle: {
+        color: COLORS.secondary,
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 12,
+    },
     cityCard: {
-        marginRight: 15,
-        width: 120,
-        height: 120,
-        borderRadius: 15,
+        marginRight: 10,
+        width: 100, // Reduced from 120 (and 140 in previous refactor)
+        height: 140, // Reduced from 180
+        borderRadius: 12,
         overflow: 'hidden',
     },
     cityCardActive: {
-        width: 200, // Expanded width
+        width: 140, // Reduced active width
     },
     cityBg: {
         width: '100%',
@@ -468,45 +566,75 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     cityGradient: {
-        padding: 10,
+        padding: 8,
         width: '100%',
+        height: '60%',
+        justifyContent: 'flex-end',
     },
     cityName: {
         fontFamily: SERIF_FONT,
-        fontSize: 16,
+        fontSize: 14, // Reduced Text
         color: COLORS.white,
+        marginBottom: 2,
     },
-    cityExplore: {
-        fontFamily: 'Outfit_500Medium',
-        fontSize: 12,
-        color: COLORS.warning,
+    cityVibe: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 9, // Reduced Text
+        color: '#EEE',
+        opacity: 0.9,
+    },
+    cityExploreTag: {
         marginTop: 4,
+        backgroundColor: COLORS.secondary,
+        alignSelf: 'flex-start',
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        borderRadius: 4,
     },
-    // --- Type Grid ---
-    typeCard: {
+    cityExploreText: {
+        color: COLORS.white,
+        fontSize: 8,
+        fontFamily: 'Outfit_600SemiBold',
+    },
+
+    // --- Glassmorphism Type Grid ---
+    glassTypeCard: {
         marginRight: 15,
         alignItems: 'center',
+        width: 80,
+        height: 90,
+        backgroundColor: 'rgba(255, 255, 240, 0.6)', // Pastel Ivory/Beige transparent
+        borderRadius: 16,
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(242, 149, 2, 0.2)', // Subtle Gold border
+        shadowColor: '#D4AF37', // Gold shadow
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 2,
     },
-    typeIcon: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: COLORS.white,
+    glassTypeCardActive: {
+        backgroundColor: '#FFF',
+        borderColor: COLORS.primary,
+        transform: [{ scale: 1.05 }],
+    },
+    glassIconContainer: {
+        width: 40,
+        height: 40,
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: COLORS.secondary,
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        borderRadius: 20,
         marginBottom: 8,
-        shadowColor: COLORS.secondary,
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
     },
-    typeText: {
+    glassTypeText: {
         fontFamily: 'Outfit_500Medium',
-        fontSize: 12,
-        color: COLORS.primary,
+        fontSize: 11,
+        color: COLORS.textDark,
+        marginTop: 4,
     },
+
     // --- Editorial Venue Cards ---
     editorialCard: {
         marginHorizontal: 15,
@@ -601,11 +729,10 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
         borderRadius: 8,
     },
-    stickyFooter: {
-        position: 'absolute',
-        bottom: 30,
-        alignSelf: 'center',
-        zIndex: 100,
+    footerContainer: {
+        alignItems: 'center',
+        marginVertical: 30,
+        paddingBottom: 20,
     },
     stickyButton: {
         backgroundColor: COLORS.primary,
@@ -630,6 +757,22 @@ const styles = StyleSheet.create({
         marginRight: 10,
         letterSpacing: 1,
         textTransform: 'uppercase',
+    },
+    noResultsContainer: {
+        padding: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    noResultsText: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 16,
+        color: '#888',
+        marginBottom: 10,
+    },
+    clearFilterText: {
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 14,
+        color: COLORS.primary,
     },
 });
 

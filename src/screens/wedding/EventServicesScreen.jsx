@@ -1,12 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
-import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Animated,
     Dimensions,
     Image,
     Modal,
-    Platform,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -17,6 +16,8 @@ import {
     useWindowDimensions
 } from 'react-native';
 import Card from '../../components/Card/Card';
+
+
 
 const { width, height } = Dimensions.get('window');
 const ITEM_WIDTH = width * 0.75;
@@ -261,58 +262,71 @@ const EventServicesScreen = ({ navigation }) => {
             {/* Dynamic Background */}
             <Backdrop scrollX={scrollX} />
 
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>Wedding Services</Text>
-                <View style={{ zIndex: 100 }}>
-                    <View style={styles.searchBar}>
-                        <Ionicons name="search" size={20} color="#A70002" style={{ marginRight: 10 }} />
-                        <TextInput
-                            placeholder="Find a service..."
-                            value={searchText}
-                            onChangeText={setSearchText}
-                            placeholderTextColor="rgba(167, 0, 2, 0.6)" // Kumkum transparent
-                            onFocus={() => setShowSuggestions(true)}
-                            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                            underlineColorAndroid="transparent"
-                            selectionColor="#A70002"
-                            cursorColor="#A70002"
-                            autoCorrect={false} // Prevent suggestion box
-                            spellCheck={false}
-                            style={[
-                                styles.searchInput,
-                                { backgroundColor: 'transparent', borderWidth: 0, borderColor: 'transparent' },
-                                Platform.OS === 'web' && { outlineStyle: 'none' }
-                            ]}
-                        />
-                        {searchText.length > 0 && (
-                            <TouchableOpacity onPress={() => { setSearchText(''); setShowSuggestions(true); }}>
-                                <Ionicons name="close-circle" size={20} color="#A70002" />
-                            </TouchableOpacity>
-                        )}
-                    </View>
+            {/* Hero Image Header */}
+            <View style={styles.heroContainer}>
+                <Image
+                    source={require('../../../assets/images/venue1.jpg')} // Using venue1 for a grand look (Palace/Decor)
+                    style={styles.heroImage}
+                    resizeMode="cover"
+                />
+                <LinearGradient
+                    colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.9)']}
+                    style={styles.heroGradient}
+                >
+                    <View style={styles.heroContent}>
+                        <Text style={styles.heroTitle}>Wedding Services</Text>
+                        <Text style={styles.heroSubtitle}>Find decorators, florists, and more...</Text>
 
-                    {/* Search Suggestions Dropdown - Glass Effect */}
-                    {showSuggestions && (
-                        <BlurView intensity={80} tint="light" style={styles.suggestionsDropdown}>
-                            <View style={styles.chipsContainer}>
-                                {filteredSuggestions.map((item) => (
-                                    <TouchableOpacity
-                                        key={item.id}
-                                        style={styles.suggestionChip}
-                                        onPress={() => {
-                                            setSelectedService(item);
-                                            setShowSuggestions(false);
-                                            setSearchText(item.title);
-                                        }}
-                                    >
-                                        <Text style={styles.suggestionText}>{item.title}</Text>
+                        <View style={styles.searchContainer}>
+                            <View style={styles.searchBar}>
+                                <Ionicons name="search" size={20} color="#CC0E0E" style={{ marginRight: 10 }} />
+                                <TextInput
+                                    placeholder="Search for services..."
+                                    value={searchText}
+                                    onChangeText={setSearchText}
+                                    placeholderTextColor="#666"
+                                    onFocus={() => setShowSuggestions(true)}
+                                    // onBlur handled by touchable overlay if needed
+                                    underlineColorAndroid="transparent"
+                                    style={styles.searchInput}
+                                />
+                                {searchText.length > 0 && (
+                                    <TouchableOpacity onPress={() => setSearchText('')}>
+                                        <Ionicons name="close-circle" size={20} color="#CC0E0E" />
                                     </TouchableOpacity>
-                                ))}
+                                )}
                             </View>
-                        </BlurView>
-                    )}
-                </View>
+                        </View>
+                    </View>
+                </LinearGradient>
             </View>
+
+            {/* Search Suggestions (Absolute on top) */}
+            {showSuggestions && (
+                <View style={[styles.suggestionsDropdown, { top: 280 }]}>
+                    <View style={styles.chipsContainer}>
+                        {filteredSuggestions.map((item) => (
+                            <TouchableOpacity
+                                key={item.id}
+                                style={styles.suggestionChip}
+                                onPress={() => {
+                                    setSelectedService(item);
+                                    setShowSuggestions(false);
+                                    setSearchText(item.title);
+                                }}
+                            >
+                                <Text style={styles.suggestionText}>{item.title}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                    <TouchableOpacity
+                        style={{ alignSelf: 'center', marginTop: 10, padding: 5 }}
+                        onPress={() => setShowSuggestions(false)}
+                    >
+                        <Text style={{ color: '#666', fontSize: 12 }}>Close</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
 
             <View style={{ flex: 1, justifyContent: 'flex-start', paddingTop: 20, zIndex: 1 }}>
                 <Animated.FlatList
@@ -385,6 +399,12 @@ const EventServicesScreen = ({ navigation }) => {
 
                                                 // Conditional Navigation based on Service ID
                                                 switch (s.id) {
+                                                    case 's5': // Bridal Makeup
+                                                        // navigation.navigate('BridalMakeup');
+                                                        break;
+                                                    case 's4': // Mehandi
+                                                        navigation.navigate('MehandiScreen');
+                                                        break;
                                                     case '2': // Event Management
                                                         navigation.navigate('EventManagementScreen');
                                                         break;
@@ -430,62 +450,86 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff', // Ivory
     },
-    header: {
-        paddingHorizontal: 20,
-        paddingTop: 60,
-        paddingBottom: 30, // Increased bottom padding
-        zIndex: 100,
-        backgroundColor: '#FFFFE0', // Light Ivory
-        borderBottomLeftRadius: 30, // Rounded bottom corners
+    heroContainer: {
+        height: 300,
+        width: '100%',
+        position: 'relative',
+        marginBottom: -20, // Negative margin to overlap with list slightly if needed, or just 0
+        borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
-        shadowColor: '#A70002', // Kumkum shadow
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 10,
-        elevation: 8, // Elevated header
-        overflow: 'visible', // Ensure suggestions didn't get clipped
+        overflow: 'hidden',
+        elevation: 10,
+        zIndex: 100,
     },
-    headerTitle: {
-        fontSize: 28,
+    heroImage: {
+        width: '100%',
+        height: '100%',
+    },
+    heroGradient: {
+        position: 'absolute',
+        bottom: 0, left: 0, right: 0, top: 0,
+        justifyContent: 'flex-end',
+        paddingBottom: 40,
+        paddingHorizontal: 20,
+    },
+    heroContent: {
+        alignItems: 'center',
+    },
+    heroTitle: {
+        fontSize: 32,
         fontWeight: 'bold',
-        color: '#A70002', // Maroon
-        marginBottom: 20,
+        color: '#FFFFFF',
         fontFamily: 'serif',
         textAlign: 'center',
-        textTransform: 'uppercase',
-        letterSpacing: 1,
+        marginBottom: 5,
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
+    },
+    heroSubtitle: {
+        fontSize: 16,
+        color: '#E0E0E0',
+        fontFamily: 'serif',
+        textAlign: 'center',
+        marginBottom: 20,
+        fontStyle: 'italic',
+    },
+    searchContainer: {
+        width: '100%',
+        maxWidth: 400,
     },
     searchBar: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FFFFFF', // White Background as per image
-        borderRadius: 25,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 30,
         paddingHorizontal: 15,
-        height: 48,
-        borderWidth: 1,
-        borderColor: '#D4AF37', // Gold Border
-        elevation: 2,
+        height: 50,
+        elevation: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
     },
     searchInput: {
         flex: 1,
         marginLeft: 10,
-        fontSize: 14,
-        color: '#A70002', // Kumkum Text
-        fontWeight: '600',
+        fontSize: 15,
+        color: '#333',
     },
-    // Matches the chips/pills glass effect requested
     suggestionsDropdown: {
         position: 'absolute',
-        top: 60,
         left: 20,
         right: 20,
-        borderRadius: 20,
-        overflow: 'hidden',
-        zIndex: 1000,
+        backgroundColor: '#FFF',
+        borderRadius: 15,
         padding: 15,
-        borderWidth: 1,
-        borderColor: 'rgba(212, 175, 55, 0.4)', // Gold tint border for glass
-        elevation: 50, // High elevation to appear on top of everything
+        elevation: 20,
+        zIndex: 1000,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
     },
     chipsContainer: {
         flexDirection: 'row',
@@ -493,17 +537,15 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     suggestionChip: {
-        backgroundColor: '#FFFFFF', // White Background
+        backgroundColor: '#F5F5F5',
         paddingVertical: 8,
         paddingHorizontal: 15,
         borderRadius: 20,
-        borderWidth: 1,
-        borderColor: '#D4AF37', // Gold Border
     },
     suggestionText: {
         fontSize: 13,
         fontWeight: '600',
-        color: '#A70002', // Kumkum Text
+        color: '#333',
     },
     modalOverlay: {
         flex: 1,
