@@ -11,7 +11,7 @@ import TabNavigator from './TabNavigator';
 
 // Mock Screens for loading
 import { ActivityIndicator, View } from 'react-native';
-import DecorationFloralScreen from '../screens/wedding/Decoration & Floral/Decoration & Floral';
+import DecorationFloralScreen from '../screens/wedding/services/DecorationFloral';
 
 const Stack = createNativeStackNavigator();
 

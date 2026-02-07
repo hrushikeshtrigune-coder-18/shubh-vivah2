@@ -262,20 +262,20 @@ const EventServicesScreen = ({ navigation }) => {
             {/* Dynamic Background */}
             <Backdrop scrollX={scrollX} />
 
-            {/* Hero Image Header */}
+            {/* Minimal Gradient Header */}
             <View style={styles.heroContainer}>
-                <Image
-                    source={require('../../../assets/images/venue1.jpg')} // Using venue1 for a grand look (Palace/Decor)
-                    style={styles.heroImage}
-                    resizeMode="cover"
-                />
                 <LinearGradient
-                    colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.9)']}
+                    colors={['#8E0E00', '#1F1C18']} // Deep Red/Maroon to Dark for elegance
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
                     style={styles.heroGradient}
                 >
                     <View style={styles.heroContent}>
-                        <Text style={styles.heroTitle}>Wedding Services</Text>
-                        <Text style={styles.heroSubtitle}>Find decorators, florists, and more...</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
+                            <Ionicons name="rose" size={28} color="#FFD700" style={{ marginRight: 10 }} />
+                            <Text style={styles.heroTitle}>Wedding Services</Text>
+                        </View>
+                        <Text style={styles.heroSubtitle}>Find everything for your big day</Text>
 
                         <View style={styles.searchContainer}>
                             <View style={styles.searchBar}>
@@ -284,7 +284,7 @@ const EventServicesScreen = ({ navigation }) => {
                                     placeholder="Search for services..."
                                     value={searchText}
                                     onChangeText={setSearchText}
-                                    placeholderTextColor="#666"
+                                    placeholderTextColor="#999"
                                     onFocus={() => setShowSuggestions(true)}
                                     // onBlur handled by touchable overlay if needed
                                     underlineColorAndroid="transparent"
@@ -303,7 +303,7 @@ const EventServicesScreen = ({ navigation }) => {
 
             {/* Search Suggestions (Absolute on top) */}
             {showSuggestions && (
-                <View style={[styles.suggestionsDropdown, { top: 280 }]}>
+                <View style={[styles.suggestionsDropdown, { top: 230 }]}>
                     <View style={styles.chipsContainer}>
                         {filteredSuggestions.map((item) => (
                             <TouchableOpacity
@@ -328,7 +328,7 @@ const EventServicesScreen = ({ navigation }) => {
                 </View>
             )}
 
-            <View style={{ flex: 1, justifyContent: 'flex-start', paddingTop: 20, zIndex: 1 }}>
+            <View style={{ flex: 1, justifyContent: 'flex-start', paddingTop: 10, zIndex: 1 }}>
                 <Animated.FlatList
                     ref={flatListRef}
                     data={services}
@@ -451,47 +451,40 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff', // Ivory
     },
     heroContainer: {
-        height: 300,
+        height: 220, // Minimal height
         width: '100%',
         position: 'relative',
-        marginBottom: -20, // Negative margin to overlap with list slightly if needed, or just 0
+        marginBottom: 20, // Positive margin for spacing
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         overflow: 'hidden',
         elevation: 10,
         zIndex: 100,
     },
-    heroImage: {
-        width: '100%',
-        height: '100%',
-    },
     heroGradient: {
-        position: 'absolute',
-        bottom: 0, left: 0, right: 0, top: 0,
-        justifyContent: 'flex-end',
-        paddingBottom: 40,
+        flex: 1, // Fill container
+        justifyContent: 'center', // Center content vertically
         paddingHorizontal: 20,
+        paddingBottom: 20,
     },
     heroContent: {
         alignItems: 'center',
     },
     heroTitle: {
-        fontSize: 32,
+        fontSize: 30,
         fontWeight: 'bold',
         color: '#FFFFFF',
         fontFamily: 'serif',
-        textAlign: 'center',
-        marginBottom: 5,
-        textShadowColor: 'rgba(0,0,0,0.5)',
-        textShadowOffset: { width: 0, height: 2 },
-        textShadowRadius: 4,
+        textShadowColor: 'rgba(0,0,0,0.2)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
     },
     heroSubtitle: {
-        fontSize: 16,
+        fontSize: 14,
         color: '#E0E0E0',
         fontFamily: 'serif',
         textAlign: 'center',
-        marginBottom: 20,
+        marginBottom: 15, // Tighter spacing
         fontStyle: 'italic',
     },
     searchContainer: {
@@ -504,7 +497,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderRadius: 30,
         paddingHorizontal: 15,
-        height: 50,
+        height: 45, // Slightly smaller height
         elevation: 8,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
