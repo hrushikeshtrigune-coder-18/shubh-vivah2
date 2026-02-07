@@ -228,17 +228,10 @@ const EventServicesScreen = ({ navigation }) => {
                 itemWidth={ITEM_WIDTH}
                 itemHeight={ITEM_HEIGHT}
                 onPress={() => {
-<<<<<<< HEAD
                     // Debug Alert to confirm touch
                     Alert.alert("Debug", `Clicked ${item.title}`);
                     setSelectedService(item);
-=======
-                    if (item.id === '1') {
-                        navigation.navigate('EInviteScreen');
-                    } else {
-                        setSelectedService(item);
-                    }
->>>>>>> sayali
+
                 }}
             />
         );
@@ -314,49 +307,8 @@ const EventServicesScreen = ({ navigation }) => {
                 <View style={styles.modalOverlay}>
                     <View style={[styles.modalCard, { maxHeight: '80%', width: '90%' }]}>
                         {selectedService && (
-<<<<<<< HEAD
                             <View style={{ flex: 1 }}>
                                 <Image source={{ uri: selectedService.image }} style={styles.modalImage} />
-=======
-                            <View style={{ flexShrink: 1 }}>
-                                <ScrollView bounces={false} contentContainerStyle={{ flexGrow: 1 }}>
-                                    <Image
-                                        source={selectedService.image}
-                                        style={styles.modalImage}
-                                        resizeMode="cover"
-                                    />
-                                    <View style={styles.modalContent}>
-                                        <Text style={styles.modalTitle}>{selectedService.title}</Text>
-                                        <Text style={styles.modalSub}>{selectedService.subtitle}</Text>
-                                        <View style={styles.divider} />
-
-                                        <Text style={styles.modalDesc}>{selectedService.description}</Text>
-
-                                        <View style={styles.modalFeatures}>
-                                            {selectedService.features.map((feature, idx) => (
-                                                <View key={idx} style={styles.modalBadge}>
-                                                    <Text style={styles.modalBadgeText}>{feature}</Text>
-                                                </View>
-                                            ))}
-                                        </View>
-
-                                        <TouchableOpacity
-                                            style={styles.modalCta}
-                                            onPress={() => {
-                                                const s = selectedService;
-                                                setSelectedService(null);
-                                                if (s.id === '2') {
-                                                    navigation.navigate('EventManagementScreen');
-                                                } else {
-                                                    navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
-                                                }
-                                            }}
-                                        >
-                                            <Text style={styles.modalCtaText}>Book Now</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </ScrollView>
->>>>>>> sayali
                                 <TouchableOpacity
                                     style={styles.closeBtn}
                                     onPress={() => setSelectedService(null)}
