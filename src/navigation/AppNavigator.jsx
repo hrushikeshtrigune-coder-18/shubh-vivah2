@@ -2,8 +2,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import Honeymoon from '../screens/wedding/services/Honeymoon';
+import HoneymoonVendorDetails from '../screens/wedding/services/HoneymoonVendorDetails';
 import WeddingVenue from '../screens/wedding/services/WeddingVenue';
+import Decoration from '../screens/wedding/services/decoration';
 import Food from '../screens/wedding/services/food';
+import Mehandi from '../screens/wedding/services/mehandi';
 import Photography from '../screens/wedding/services/photography';
 import AuthNavigator from './AuthNavigator';
 import TabNavigator from './TabNavigator';
@@ -34,6 +37,9 @@ const AppNavigator = () => {
                     <Stack.Screen name="Photography" component={Photography} />
                     <Stack.Screen name="Food" component={Food} />
                     <Stack.Screen name="Honeymoon" component={Honeymoon} />
+                    <Stack.Screen name="HoneymoonVendorDetails" component={HoneymoonVendorDetails} />
+                    <Stack.Screen name="Decoration" component={Decoration} />
+                    <Stack.Screen name="Mehandi" component={Mehandi} />
                 </>
             ) : (
                 <Stack.Screen name="Auth" component={AuthNavigator} />

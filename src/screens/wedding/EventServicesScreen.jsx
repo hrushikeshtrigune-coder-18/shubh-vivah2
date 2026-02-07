@@ -96,6 +96,15 @@ const services = [
         features: ['Video Invites', 'RSVP Tracking'],
         icon: 'envelope-open-text'
     },
+    {
+        id: '9',
+        title: 'Mehandi Art',
+        subtitle: 'Intricate & Traditional',
+        image: 'https://images.unsplash.com/photo-1596704014902-127116790a6f?q=80&w=400&auto=format&fit=crop',
+        description: 'Adorn your hands with exquisite Mehandi designs, from traditional to contemporary styles.',
+        features: ['Bridal Packages', 'Organic Henna'],
+        icon: 'hand-holding-heart'
+    },
 ];
 
 // Backdrop Component (Restored)
@@ -289,6 +298,10 @@ const EventServicesScreen = ({ navigation }) => {
                                                 navigation.navigate('Food');
                                             } else if (s.title === 'Honeymoon Planning') {
                                                 navigation.navigate('Honeymoon');
+                                            } else if (s.title === 'Decoration') {
+                                                navigation.navigate('Decoration');
+                                            } else if (s.title === 'Mehandi Art') {
+                                                navigation.navigate('Mehandi');
                                             } else {
                                                 // navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
                                             }

@@ -1,4 +1,10 @@
 import {
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
+    Outfit_700Bold,
+} from '@expo-google-fonts/outfit';
+import {
     Poppins_400Regular,
     Poppins_500Medium,
     Poppins_600SemiBold,
@@ -19,6 +25,10 @@ export default function App() {
         Poppins_500Medium,
         Poppins_600SemiBold,
         Poppins_700Bold,
+        Outfit_400Regular,
+        Outfit_500Medium,
+        Outfit_600SemiBold,
+        Outfit_700Bold,
     });
 
     if (!fontsLoaded) {
