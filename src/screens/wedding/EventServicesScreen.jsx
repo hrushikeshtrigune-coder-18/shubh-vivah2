@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Animated,
@@ -83,13 +82,13 @@ const services = [
 ];
 
 // Backdrop Component
-const Backdrop = ({ scrollX }) => {
+const Backdrop = ({ data, scrollX }) => {
     const { width, height } = useWindowDimensions();
     const ITEM_WIDTH = width * 0.75;
 
     return (
         <View style={{ position: 'absolute', width, height }}>
-            {services.map((item, index) => {
+            {data.map((item, index) => {
                 const inputRange = [
                     (index - 1) * ITEM_WIDTH,
                     index * ITEM_WIDTH,
@@ -104,7 +103,7 @@ const Backdrop = ({ scrollX }) => {
 
                 return (
                     <Animated.Image
-                        key={index}
+                        key={item.id} // Use item.id as key for better tracking
                         source={typeof item.image === 'string' ? { uri: item.image } : item.image}
                         style={{
                             width: width,
@@ -125,9 +124,29 @@ const EventServicesScreen = ({ navigation }) => {
     const [selectedService, setSelectedService] = useState(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
+    // Category Pills Data
+    const CATEGORIES = ['All', 'Decor', 'Florist', 'Catering', 'Music', 'Photo', 'Venue'];
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
+    // Filter services based on category AND search text
+    // Note: We are filtering 'services' for the main list, but 'searchSuggestions' for the dropdown.
+    // The main list logic needs to be updated to use 'filteredServices' instead of 'services'.
+
+    const filteredServices = services.filter(service => {
+        const matchesSearch = service.title.toLowerCase().includes(searchText.toLowerCase());
+        const matchesCategory = selectedCategory === 'All' ||
+            (selectedCategory === 'Decor' && (service.title.includes('Decoration') || service.title.includes('Venue'))) ||
+            (selectedCategory === 'Florist' && service.title.includes('Decoration')) ||
+            (selectedCategory === 'Catering' && service.title.includes('Food')) ||
+            (selectedCategory === 'Music' && service.title.includes('Entertainment')) ||
+            (selectedCategory === 'Photo' && service.title.includes('Photography')) ||
+            (selectedCategory === 'Venue' && service.title.includes('Venue'));
+
+        return matchesSearch && matchesCategory;
+    });
+
     // Search Suggestions Data
     const searchSuggestions = [
-
         {
             id: 's2',
             title: 'Decoration & Floral',
@@ -164,7 +183,6 @@ const EventServicesScreen = ({ navigation }) => {
             features: ['HD Makeup', 'Trial Included'],
             icon: 'magic'
         },
-
         {
             id: 's6',
             title: 'Jewellery',
@@ -174,22 +192,20 @@ const EventServicesScreen = ({ navigation }) => {
             features: ['Gold & Diamond', 'Custom Designs'],
             icon: 'gem'
         },
-
         {
             id: 's8',
             title: 'Entertainment',
             subtitle: 'Music & Dance',
-            image: require('../../../assets/images/entertenment.jpg'), // existing asset
+            image: require('../../../assets/images/entertenment.jpg'),
             description: 'Live bands, DJs, and celebrity performances.',
             features: ['Live DJ', 'Dancers'],
             icon: 'music'
         }
     ];
 
-    // Filter suggestions based on searchText
-    // Logic: If text is empty, show specific default suggestions (Guest, Decor, Gifts, Mehandi).
-    // If text is NOT empty, search across ALL suggestions (including Lighting, Jewellery, etc.).
-    const defaultSuggestionIds = ['s1', 's2', 's3', 's4']; // IDs of default visible items
+    // Filter suggestions based on searchText (Dropdown logic)
+    // Logic: If text is empty, show specific default suggestions.
+    const defaultSuggestionIds = ['s1', 's2', 's3', 's4'];
 
     const filteredSuggestions = searchText.trim() === ''
         ? searchSuggestions.filter(item => defaultSuggestionIds.includes(item.id))
@@ -260,50 +276,41 @@ const EventServicesScreen = ({ navigation }) => {
             <StatusBar hidden={false} barStyle="dark-content" backgroundColor="#FFFFE4" />
 
             {/* Dynamic Background */}
-            <Backdrop scrollX={scrollX} />
+            <Backdrop data={services} scrollX={scrollX} />
 
-            {/* Minimal Gradient Header */}
+            {/* Luxury Glass Header (No Curve) */}
+            {/* Cream & Maroon Header (Reference Image Style) */}
             <View style={styles.heroContainer}>
-                <LinearGradient
-                    colors={['#8E0E00', '#1F1C18']} // Deep Red/Maroon to Dark for elegance
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.heroGradient}
-                >
+                <View style={styles.heroGradient}>
                     <View style={styles.heroContent}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                            <Ionicons name="rose" size={28} color="#FFD700" style={{ marginRight: 10 }} />
-                            <Text style={styles.heroTitle}>Wedding Services</Text>
-                        </View>
-                        <Text style={styles.heroSubtitle}>Find everything for your big day</Text>
+                        <Text style={styles.heroTitle}>WEDDING SERVICES</Text>
+                    </View>
 
-                        <View style={styles.searchContainer}>
-                            <View style={styles.searchBar}>
-                                <Ionicons name="search" size={20} color="#CC0E0E" style={{ marginRight: 10 }} />
-                                <TextInput
-                                    placeholder="Search for services..."
-                                    value={searchText}
-                                    onChangeText={setSearchText}
-                                    placeholderTextColor="#999"
-                                    onFocus={() => setShowSuggestions(true)}
-                                    // onBlur handled by touchable overlay if needed
-                                    underlineColorAndroid="transparent"
-                                    style={styles.searchInput}
-                                />
-                                {searchText.length > 0 && (
-                                    <TouchableOpacity onPress={() => setSearchText('')}>
-                                        <Ionicons name="close-circle" size={20} color="#CC0E0E" />
-                                    </TouchableOpacity>
-                                )}
-                            </View>
+                    <View style={styles.searchContainer}>
+                        <View style={styles.searchBar}>
+                            <Ionicons name="search" size={24} color="#800000" style={{ marginRight: 10 }} />
+                            <TextInput
+                                placeholder="Find a service..."
+                                value={searchText}
+                                onChangeText={setSearchText}
+                                placeholderTextColor="#999"
+                                onFocus={() => setShowSuggestions(true)}
+                                underlineColorAndroid="transparent"
+                                style={styles.searchInput}
+                            />
+                            {searchText.length > 0 && (
+                                <TouchableOpacity onPress={() => setSearchText('')}>
+                                    <Ionicons name="close-circle" size={20} color="#800000" />
+                                </TouchableOpacity>
+                            )}
                         </View>
                     </View>
-                </LinearGradient>
+                </View>
             </View>
 
             {/* Search Suggestions (Absolute on top) */}
             {showSuggestions && (
-                <View style={[styles.suggestionsDropdown, { top: 230 }]}>
+                <View style={[styles.suggestionsDropdown, { top: 190 }]}>
                     <View style={styles.chipsContainer}>
                         {filteredSuggestions.map((item) => (
                             <TouchableOpacity
@@ -451,58 +458,56 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff', // Ivory
     },
     heroContainer: {
-        height: 220, // Minimal height
+        height: 180, // Compact but elegant
         width: '100%',
         position: 'relative',
-        marginBottom: 20, // Positive margin for spacing
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
+        marginBottom: 20,
         overflow: 'hidden',
-        elevation: 10,
+        elevation: 0, // No shadow for flat look
         zIndex: 100,
+        backgroundColor: '#FFFFE4', // Cream/Ivory background
     },
     heroGradient: {
-        flex: 1, // Fill container
-        justifyContent: 'center', // Center content vertically
+        flex: 1,
+        justifyContent: 'center',
         paddingHorizontal: 20,
         paddingBottom: 20,
+        paddingTop: 10,
     },
     heroContent: {
         alignItems: 'center',
+        marginBottom: 20,
     },
     heroTitle: {
-        fontSize: 30,
+        fontSize: 28, // Slightly larger
         fontWeight: 'bold',
-        color: '#FFFFFF',
+        color: '#800000', // Deep Maroon/Red
         fontFamily: 'serif',
-        textShadowColor: 'rgba(0,0,0,0.2)',
-        textShadowOffset: { width: 0, height: 1 },
-        textShadowRadius: 3,
+        marginBottom: 5,
+        letterSpacing: 1.5,
+        // Removed heavy shadow for cleaner look
     },
-    heroSubtitle: {
-        fontSize: 14,
-        color: '#E0E0E0',
-        fontFamily: 'serif',
-        textAlign: 'center',
-        marginBottom: 15, // Tighter spacing
-        fontStyle: 'italic',
-    },
+    // Subtitle removed as per reference image
     searchContainer: {
         width: '100%',
-        maxWidth: 400,
+        alignItems: 'center',
     },
     searchBar: {
+        width: '100%',
+        maxWidth: 400,
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#FFFFFF',
-        borderRadius: 30,
-        paddingHorizontal: 15,
-        height: 45, // Slightly smaller height
-        elevation: 8,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
+        borderRadius: 30, // Pill shape
+        paddingHorizontal: 20,
+        height: 50,
+        elevation: 3, // Subtle shadow
+        shadowColor: '#DAA520', // Golden shadow
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        borderWidth: 1.5,
+        borderColor: '#DAA520', // Goldenrod border
     },
     searchInput: {
         flex: 1,
