@@ -1,5 +1,6 @@
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
+
 import { Animated, Dimensions, Image, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 // import { SafeAreaView } from 'react-native-safe-area-context';
 const { width, height } = Dimensions.get('window');
@@ -271,7 +272,9 @@ const InviteStudioScreen = ({ navigation, route }) => {
                     <Ionicons name="arrow-back" size={24} color={COLORS.kumkum} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Invite Studio:{eventType}</Text>
-                <TouchableOpacity style={styles.saveButton}>
+                <TouchableOpacity
+                    style={styles.saveButton}
+                >
                     <Text style={styles.saveText}>Save</Text>
                 </TouchableOpacity>
             </View>

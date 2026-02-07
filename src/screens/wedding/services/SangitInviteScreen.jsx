@@ -1,5 +1,6 @@
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
+
 import { Animated, Dimensions, Image, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -38,10 +39,17 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/ring1.jpg'), name: 'Classic Gold' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/ring2.jpg'), name: 'Floral Bliss' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/ring3.jpg'), name: 'Royal Blue' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
+    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/sangit.jpeg'), name: 'Musical Night' },
+    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/sangit1.jpg'), name: 'Dancing Couple' },
+    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/sangit2.jpg'), name: 'Royal Stage' },
+    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/sangit3.jpg'), name: 'Vibrant Beats' },
+    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/sangit4.jpg'), name: 'Elegant Sangeet' },
+    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/sangit5.jpg'), name: 'Traditional Tune' },
+    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/sangit6.jpg'), name: 'Festive Lights' },
+    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/sangit7.jpg'), name: 'Classic Melody' },
+    { id: 't9', image: require('../../../../assets/EventMimg/Einvite/sangit8.jpg'), name: 'Modern Dance' },
+    { id: 't10', image: require('../../../../assets/EventMimg/Einvite/sangit9.jpg'), name: 'Golden Celebration' },
+    { id: 't11', image: require('../../../../assets/EventMimg/Einvite/sangit10.jpg'), name: 'Starry Night' },
 ];
 
 const SangitInviteScreen = ({ navigation, route }) => {
@@ -260,7 +268,9 @@ const SangitInviteScreen = ({ navigation, route }) => {
                     <Ionicons name="arrow-back" size={24} color={COLORS.kumkum} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Invite Studio:{eventType}</Text>
-                <TouchableOpacity style={styles.saveButton}>
+                <TouchableOpacity
+                    style={styles.saveButton}
+                >
                     <Text style={styles.saveText}>Save</Text>
                 </TouchableOpacity>
             </View>

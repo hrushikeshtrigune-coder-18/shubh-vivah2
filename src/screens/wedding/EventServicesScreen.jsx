@@ -386,6 +386,8 @@ const EventServicesScreen = ({ navigation }) => {
                                                 setSelectedService(null);
                                                 if (s.id === '2') {
                                                     navigation.navigate('EventManagementScreen');
+                                                } else if (s.id === 's6') {
+                                                    navigation.navigate('JewelleryScreen');
                                                 } else {
                                                     navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
                                                 }

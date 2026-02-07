@@ -1,5 +1,6 @@
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
+
 import { Animated, Dimensions, Image, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -38,10 +39,16 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/ring1.jpg'), name: 'Classic Gold' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/ring2.jpg'), name: 'Floral Bliss' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/ring3.jpg'), name: 'Royal Blue' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
+    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/mehandi1.jpg'), name: 'Traditional Henna' },
+    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/mehandi2.jpg'), name: 'Green Elegance' },
+    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/mehandi3.jpg'), name: 'Floral Vines' },
+    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/mehandi4.jpg'), name: 'Royal Peacock' },
+    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/mehandi5.jpg'), name: 'Festive Hands' },
+    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/mehandi6.jpg'), name: 'Modern Mehndi' },
+    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/mehandi7.jpeg'), name: 'Artistic Pattern' },
+    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/mehandi8.jpg'), name: 'Intricate Design' },
+    { id: 't9', image: require('../../../../assets/EventMimg/Einvite/mehandi9.jpg'), name: 'Vibrant Colors' },
+    { id: 't10', image: require('../../../../assets/EventMimg/Einvite/mehandi10.jpg'), name: 'Simple Beauty' },
 ];
 
 const MehndiInviteScreen = ({ navigation, route }) => {
@@ -260,7 +267,9 @@ const MehndiInviteScreen = ({ navigation, route }) => {
                     <Ionicons name="arrow-back" size={24} color={COLORS.kumkum} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Invite Studio:{eventType}</Text>
-                <TouchableOpacity style={styles.saveButton}>
+                <TouchableOpacity
+                    style={styles.saveButton}
+                >
                     <Text style={styles.saveText}>Save</Text>
                 </TouchableOpacity>
             </View>
