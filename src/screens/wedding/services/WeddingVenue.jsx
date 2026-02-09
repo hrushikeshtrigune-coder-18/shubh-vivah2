@@ -179,8 +179,32 @@ const VENUE_TYPES = [
 
 const WeddingVenue = ({ navigation }) => {
     const scrollRef = useRef(null);
+    const cityScrollRef = useRef(null);
     const [venueListY, setVenueListY] = useState(0);
     const scrollY = useRef(new Animated.Value(0)).current;
+    const [isAutoScrolling, setIsAutoScrolling] = useState(true);
+
+    // Auto-scroll logic for cities
+    React.useEffect(() => {
+        let scrollValue = 0;
+        let intervalId = null;
+
+        if (isAutoScrolling) {
+            intervalId = setInterval(() => {
+                if (cityScrollRef.current) {
+                    scrollValue += 120; // Approx card width + margin
+                    if (scrollValue > 120 * CITIES.length) {
+                        scrollValue = 0; // Reset to start
+                    }
+                    cityScrollRef.current.scrollTo({ x: scrollValue, animated: true });
+                }
+            }, 2500);
+        }
+
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
+    }, [isAutoScrolling]);
 
     // States
     const [activeCityId, setActiveCityId] = useState(null); // Default to null (show all)
@@ -271,17 +295,26 @@ const WeddingVenue = ({ navigation }) => {
     const renderEditorialCityGrid = () => (
         <View style={styles.sectionContainer}>
             <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Curated Collections</Text>
+                <Text style={styles.sectionTitle}>Featured Destinations</Text>
                 <Text style={styles.sectionSubtitle}>Explore cities</Text>
             </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15 }}>
+            <ScrollView
+                ref={cityScrollRef}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ paddingHorizontal: 15 }}
+                onScrollBeginDrag={() => setIsAutoScrolling(false)} // Stop auto-scroll on user interaction
+            >
                 {CITIES.map((item) => {
                     const isActive = activeCityId === item.id;
                     return (
                         <TouchableOpacity
                             key={item.id}
                             style={[styles.cityCard, isActive && styles.cityCardActive]}
-                            onPress={() => toggleCity(item.id)}
+                            onPress={() => {
+                                setIsAutoScrolling(false);
+                                toggleCity(item.id);
+                            }}
                             activeOpacity={0.9}
                         >
                             <ImageBackground source={{ uri: item.image }} style={styles.cityBg} imageStyle={{ borderRadius: 16 }}>
@@ -305,7 +338,7 @@ const WeddingVenue = ({ navigation }) => {
     const renderVenueTypes = () => (
         <View style={styles.sectionContainer}>
             <View style={styles.sectionHeader}>
-                <Text style={styles.sectionTitle}>Explore by Type</Text>
+                <Text style={styles.sectionTitle}>Choose Your Vibe</Text>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 15 }}>
                 {VENUE_TYPES.map((item) => {
@@ -378,7 +411,7 @@ const WeddingVenue = ({ navigation }) => {
                     onLayout={(event) => setVenueListY(event.nativeEvent.layout.y)}
                 >
                     <Text style={[styles.sectionTitle, { paddingHorizontal: 15, marginBottom: 20 }]}>
-                        {activeCityId || activeTypeId ? 'Suggested Venues' : "Editor's Pick"}
+                        {activeCityId || activeTypeId ? 'Suggested Venues' : "Top Picks"}
                     </Text>
 
                     {filteredVenues.length > 0 ? (
@@ -439,7 +472,7 @@ const styles = StyleSheet.create({
         // backdropFilter: 'blur(10px)', // For web, might not work on native without library but harmless
     },
     heroHeadline: {
-        fontFamily: SERIF_FONT,
+        fontFamily: 'Outfit_700Bold',
         fontSize: 32,
         color: COLORS.white,
         lineHeight: 40,
@@ -451,7 +484,7 @@ const styles = StyleSheet.create({
     heroSubhead: {
         fontFamily: 'Outfit_400Regular',
         fontSize: 16,
-        color: '#F0F0F0',
+        color: '#FFEB3B', // Updated to Bright Yellow
         marginBottom: 24,
         textShadowColor: 'rgba(0,0,0,0.5)',
         textShadowOffset: { width: 0, height: 1 },
@@ -460,15 +493,16 @@ const styles = StyleSheet.create({
     heroActionsRow: {
         flexDirection: 'row',
         alignItems: 'center',
+        width: '100%',
     },
     heroPrimaryBtn: {
         backgroundColor: COLORS.primary,
-        paddingVertical: 14,
-        paddingHorizontal: 24,
+        paddingVertical: 12, // Reduced height
         borderRadius: 30,
         flexDirection: 'row',
         alignItems: 'center',
-        marginRight: 12,
+        justifyContent: 'center',
+        width: '100%', // Increased width to cover hero section
         shadowColor: COLORS.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
@@ -540,9 +574,9 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     sectionTitle: {
-        fontFamily: SERIF_FONT,
-        fontSize: 20, // Reduced from 24
-        color: COLORS.primary,
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 20,
+        color: '#CC0E0E',
     },
     sectionSubtitle: {
         color: COLORS.secondary,
@@ -663,13 +697,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     ratingPill: {
-        backgroundColor: COLORS.secondary,
+        backgroundColor: '#f29502', // Updated color
         paddingHorizontal: 10,
         paddingVertical: 6,
         borderRadius: 20,
     },
     ratingPillText: {
-        color: COLORS.primary,
+        color: '#FFFFFF', // White text
         fontFamily: 'Outfit_600SemiBold',
         fontSize: 12,
     },
