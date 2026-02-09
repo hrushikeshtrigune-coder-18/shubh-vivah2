@@ -48,6 +48,7 @@ const COLORS = {
 
 const EventManagement = ({ navigation }) => {
     const insets = useSafeAreaInsets();
+    // Force update for hero section visibility
     const [expandedService, setExpandedService] = useState(null);
 
     // Scroll Animation for Team Section
@@ -88,7 +89,7 @@ const EventManagement = ({ navigation }) => {
                 />
 
                 <View style={styles.heroContent}>
-                    <View style={styles.headerRow}>
+                    <View style={[styles.headerRow, { top: insets.top + 10 }]}>
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                             <Ionicons name="arrow-back" size={24} color="#fff" />
                         </TouchableOpacity>
@@ -98,7 +99,8 @@ const EventManagement = ({ navigation }) => {
                     <Text style={styles.heroSubtext}>Weddings • Social Events • Corporate Experiences • Destination Events</Text>
 
                     <TouchableOpacity style={styles.primaryCTA} onPress={scrollToTeam}>
-                        <Text style={styles.ctaText}>💬 Plan My Event</Text>
+                        <Ionicons name="chatbubble-ellipses-outline" size={20} color="#fff" style={{ marginRight: 8 }} />
+                        <Text style={styles.ctaText}>Plan My Event</Text>
                     </TouchableOpacity>
 
                     {/* Trust Highlights */}
@@ -625,11 +627,14 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         borderRadius: 30,
         alignItems: 'center',
+        justifyContent: 'center',
         marginBottom: 10,
         elevation: 5,
         shadowColor: COLORS.kumkum,
         shadowOpacity: 0.4,
-        shadowOffset: { width: 0, height: 4 }
+        shadowOffset: { width: 0, height: 4 },
+        flexDirection: 'row', // align icon and text
+        paddingHorizontal: 25,
     },
     ctaText: {
         color: '#fff',
