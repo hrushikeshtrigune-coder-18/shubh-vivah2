@@ -87,13 +87,14 @@ const EventManagement = ({ navigation }) => {
                     isMuted
                 />
 
-                <View style={styles.heroContent}>
-                    <View style={styles.headerRow}>
-                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                            <Ionicons name="arrow-back" size={24} color="#fff" />
-                        </TouchableOpacity>
-                    </View>
+                {/* Header with Back Button */}
+                <View style={styles.headerRow}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                        <Ionicons name="arrow-back" size={24} color="#fff" />
+                    </TouchableOpacity>
+                </View>
 
+                <View style={styles.heroContent}>
                     <Text style={styles.heroHeadline}>We Don’t Just Plan Events — We Create Experiences ✨</Text>
                     <Text style={styles.heroSubtext}>Weddings • Social Events • Corporate Experiences • Destination Events</Text>
 
@@ -595,7 +596,7 @@ const styles = StyleSheet.create({
     },
     headerRow: {
         position: 'absolute',
-        top: 0,
+        top: 20, // Adjusted top margin
         left: 20,
         zIndex: 10
     },

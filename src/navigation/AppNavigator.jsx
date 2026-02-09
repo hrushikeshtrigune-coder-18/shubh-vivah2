@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import Honeymoon from '../screens/wedding/services/Honeymoon';
+import HoneymoonVendorDetails from '../screens/wedding/services/HoneymoonVendorDetails';
 import WeddingVenue from '../screens/wedding/services/WeddingVenue';
 import Food from '../screens/wedding/services/food';
 import Photography from '../screens/wedding/services/photography';
@@ -35,6 +36,7 @@ const AppNavigator = () => {
                     <Stack.Screen name="Photography" component={Photography} />
                     <Stack.Screen name="Food" component={Food} />
                     <Stack.Screen name="Honeymoon" component={Honeymoon} />
+                    <Stack.Screen name="HoneymoonVendorDetails" component={HoneymoonVendorDetails} />
                     <Stack.Screen name="EInviteScreen" component={require('../screens/wedding/services/EInvite').default} />
                     <Stack.Screen name="InviteStudioScreen" component={require('../screens/wedding/services/InviteStudioScreen').default} />
                     <Stack.Screen name="EventManagementScreen" component={require('../screens/wedding/services/EventMangment').default} />
@@ -51,6 +53,7 @@ const AppNavigator = () => {
                 <Stack.Screen name="Auth" component={AuthNavigator} />
             )}
             <Stack.Screen name="DecorationFloral" component={DecorationFloralScreen} />
+            <Stack.Screen name="Services2" component={require('../screens/wedding/Services 2').default} />
         </Stack.Navigator>
     );
 };

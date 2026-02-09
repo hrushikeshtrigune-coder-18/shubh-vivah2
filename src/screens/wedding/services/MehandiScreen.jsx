@@ -1,380 +1,440 @@
-import { PlayfairDisplay_400Regular, PlayfairDisplay_700Bold, useFonts } from '@expo-google-fonts/playfair-display';
-import { FontAwesome5, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import {
     Dimensions,
+    Image,
     ImageBackground,
     ScrollView,
     StatusBar,
     StyleSheet,
     Text,
-    TextInput,
     TouchableOpacity,
     View
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-// --- VISUAL IDENTITY (UPDATED) ---
+// --- CONSTANTS & THEME ---
 const COLORS = {
-    // Background: FFFFF0 (Ivory)
-    mainBg: '#FFFFF0',
-    cardBg: '#FFFFF0',
-
-    // Text Colors
-    primaryText: '#CC0E0E', // Red
-    subText: '#F29502',     // Gold
-
-    // Accents
-    gold: '#F29502',
-    accent: '#CC0E0E',
-    white: '#FFFFFF',
+    background: '#FFFFF0', // Ivory
+    primary: '#CC0E0E',    // Red (Main Text)
+    secondary: '#F29502',  // Gold/Orange (Sub Text & Borders)
     textDark: '#333333',
-    border: '#F29502',   // Gold Border
-    surface: '#FFFFFF',
+    textLight: '#F5F5F5',
+    white: '#FFFFFF',
+    cardBg: '#FFFFFF',
+    placeholder: '#CCCCCC',
+    overlay: 'rgba(0,0,0,0.4)',
+    vine: '#E6D2B5', // Light tan for the connector line
 };
 
-
 const FONTS = {
-    serif: 'PlayfairDisplay_700Bold',
-    serifReg: 'PlayfairDisplay_400Regular',
+    serif: 'System', // Use System Serif for "Handwritten" feel if custom font not avail
     sans: 'System',
 };
 
 // --- DUMMY DATA ---
+const STYLES_INFO = {
+    'Bridal': {
+        title: 'Royal Bridal',
+        desc: 'Full hands & feet, intricate storytelling.',
+        time: '4-6 Hours',
+        complexity: 'High',
+    },
+    'Arabic': {
+        title: 'Modern Arabic',
+        desc: 'Flowing floral patterns, open spaces.',
+        time: '1-2 Hours',
+        complexity: 'Medium',
+    },
+    'Minimal': {
+        title: 'Chic Minimal',
+        desc: 'Simple finger tips or wrist cuffs.',
+        time: '30-45 Mins',
+        complexity: 'Low',
+    },
+};
+
 const VENDORS = [
     {
         id: '1',
-        name: 'SHAAA MEHANDI',
+        name: 'Shaaa Mehandi',
+        portrait: require('../../../../assets/images/mehandiF.jpg'),
+        quote: "“I believe every line tells a story. Let's write yours.”",
         verified: true,
+        experience: '8 Years Exp.',
+        badge: 'Intricate Bridal',
         rating: 4.9,
         weddings: 120,
-        city: 'Pune',
-        startingPrice: '₹2,500',
-        mostBooked: true,
-        styles: ['Bridal', 'Arabic'],
-        imageMain: 'https://images.unsplash.com/photo-1596236904946-b620d2380d19?q=80&w=400&auto=format&fit=crop',
+        price: 3000,
+        complexityRates: [
+            { level: 'Simple', price: '₹1500', time: '1 hr' },
+            { level: 'Med', price: '₹3000', time: '3 hrs' },
+            { level: 'Bridal', price: '₹7000+', time: '6 hrs' },
+        ],
+        tags: ['Bridal Specialist', 'Portrait Mehandi', 'Certified'],
+        experienceDesc: '8 Years • 120 Weddings',
+        images: [
+            'https://images.unsplash.com/photo-1596236904946-b620d2380d19?q=80&w=400&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1544476915-ed1370594142?q=80&w=400&auto=format&fit=crop',
+        ]
     },
     {
         id: '2',
-        name: 'KAJAL ARTISTRY',
+        name: 'Kajal Artistry',
+        portrait: require('../../../../assets/images/mehandi1.jpg'),
+        quote: "“Modern designs for the modern bride. Fast & flawless.”",
         verified: true,
+        experience: '5 Years Exp.',
+        badge: 'Speed Artist',
         rating: 4.8,
         weddings: 85,
-        city: 'Mumbai',
-        startingPrice: '₹3,000',
-        mostBooked: false,
-        styles: ['Portrait', 'Modern'],
-        imageMain: 'https://images.unsplash.com/photo-1632514066928-8b09d6614457?q=80&w=400&auto=format&fit=crop',
+        price: 2500,
+        complexityRates: [
+            { level: 'Simple', price: '₹1200', time: '45m' },
+            { level: 'Med', price: '₹2500', time: '2 hrs' },
+            { level: 'Bridal', price: '₹5500+', time: '5 hrs' },
+        ],
+        tags: ['Speed Artist', 'Modern Designs', 'Geometric'],
+        experienceDesc: '5 Years • 85 Weddings',
+        images: [
+            'https://images.unsplash.com/photo-1598522307222-263af7085c72?q=80&w=400&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1632514066928-8b09d6614457?q=80&w=400&auto=format&fit=crop',
+        ]
     },
     {
         id: '3',
-        name: 'MEHENDI BY RIYA',
-        verified: false,
-        rating: 4.6,
-        weddings: 45,
-        city: 'Delhi',
-        startingPrice: '₹1,500',
-        mostBooked: false,
-        styles: ['Floral', 'Minimal'],
-        imageMain: 'https://images.unsplash.com/photo-1551024601-562963344d18?q=80&w=400&auto=format&fit=crop',
+        name: 'Sana Henna Art',
+        portrait: require('../../../../assets/images/mehandi.jpg'),
+        quote: "“Intricate details, timeless traditions.”",
+        verified: true,
+        experience: '6 Years Exp.',
+        badge: 'Traditional',
+        rating: 4.7,
+        weddings: 95,
+        price: 2800,
+        complexityRates: [
+            { level: 'Simple', price: '₹1400', time: '50m' },
+            { level: 'Med', price: '₹2800', time: '2.5 hrs' },
+            { level: 'Bridal', price: '₹6000+', time: '5.5 hrs' },
+        ],
+        tags: ['Traditional', 'Intricate', 'Organic Henna'],
+        experienceDesc: '6 Years • 95 Weddings',
+        images: []
     },
     {
         id: '4',
-        name: 'ARTISTIC HANDS',
+        name: 'Riya Mehndi',
+        portrait: require('../../../../assets/images/mehandiF.jpg'),
+        quote: "“Beautiful henna for your special day.”",
+        verified: false,
+        experience: '3 Years Exp.',
+        badge: 'Modern',
+        rating: 4.5,
+        weddings: 40,
+        price: 2000,
+        complexityRates: [
+            { level: 'Simple', price: '₹1000', time: '40m' },
+            { level: 'Med', price: '₹2200', time: '2 hrs' },
+            { level: 'Bridal', price: '₹5000+', time: '4.5 hrs' },
+        ],
+        tags: ['Budget Friendly', 'Modern', 'Simple'],
+        experienceDesc: '3 Years • 40 Weddings',
+        images: []
+    },
+    {
+        id: '5',
+        name: 'Pooja Art',
+        portrait: require('../../../../assets/images/mehandi1.jpg'),
+        quote: "“Express yourself with henna.”",
         verified: true,
-        rating: 4.7,
+        experience: '4 Years Exp.',
+        badge: 'Creative',
+        rating: 4.6,
         weddings: 60,
-        city: 'Bangalore',
-        startingPrice: '₹2,000',
-        mostBooked: true,
-        styles: ['Traditional', 'Mughlai'],
-        imageMain: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=400&auto=format&fit=crop',
+        price: 2400,
+        complexityRates: [
+            { level: 'Simple', price: '₹1300', time: '45m' },
+            { level: 'Med', price: '₹2600', time: '2.2 hrs' },
+            { level: 'Bridal', price: '₹5800+', time: '5 hrs' },
+        ],
+        tags: ['Creative', 'Custom Designs', 'Floral'],
+        experienceDesc: '4 Years • 60 Weddings',
+        images: []
     },
 ];
 
-const FILTER_STYLES = ['All', 'Bridal', 'Arabic', 'Floral', 'Portrait', 'Modern'];
-const FILTER_CHIPS = ['Price Range', 'Bridal', 'Guest', 'Style', 'Experience', 'Dates'];
+const TESTIMONIALS = [
+    { id: '1', name: 'Anya Sharma', text: "The spin-the-wheel discount was such a fun surprise! And the henna was perfection.", stars: 5 },
+    { id: '2', name: 'Priya Verma', text: "Found my artist in 2 minutes. Loved the mood board feature for inspiration!", stars: 5 },
+    { id: '3', name: 'Siddhi G.', text: "Professional, fast, and exactly the dark stain I wanted.", stars: 4 },
+];
+
+const MOOD_BOARD_IMAGES = [
+    'https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1616091093747-4d8b9daf1e5d?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1563823294326-8c4de8e09f5a?q=80&w=400&auto=format&fit=crop',
+    'https://images.unsplash.com/photo-1544988636-6da456345ec4?q=80&w=400&auto=format&fit=crop',
+];
+
+const DESIGN_STYLES = [
+    { id: '1', title: 'Minimalist Arabic', icon: 'leaf-outline', desc: 'Elegant Vines' },
+    { id: '2', title: 'Rajasthani', icon: 'hand-right-outline', desc: 'Intricate Patterns' },
+    { id: '3', title: 'Modern Mandala', icon: 'aperture-outline', desc: 'Geometric Center' },
+    { id: '4', title: 'Portrait Bridal', icon: 'heart-circle-outline', desc: 'Love Story' },
+];
+
+const FEATURED_PATTERNS = [
+    { id: '1', title: 'Back-Hand Vines', image: require('../../../../assets/images/mehandi.jpg') },
+    { id: '2', title: 'Leg Patterns', image: require('../../../../assets/images/mehandi1.jpg') },
+    { id: '3', title: 'Floral Bel', image: require('../../../../assets/images/mehandi.jpg') },
+    { id: '4', title: 'Finger Caps', image: require('../../../../assets/images/mehandi1.jpg') },
+];
+
+
 
 const MehandiScreen = ({ navigation }) => {
-    const [fontsLoaded] = useFonts({
-        PlayfairDisplay_700Bold,
-        PlayfairDisplay_400Regular,
-    });
+    const [selectedStyle, setSelectedStyle] = useState('Bridal'); // Default active state
+    const [bookingStep, setBookingStep] = useState(0); // For simple interaction in booking
 
-    const [selectedStyle, setSelectedStyle] = useState('All');
-    const [location, setLocation] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
-
-    if (!fontsLoaded) {
+    // --- Interactive Hand Canvas ---
+    const renderHandCanvas = () => {
+        const info = STYLES_INFO[selectedStyle];
         return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Loading Fonts...</Text>
-            </View>
-        );
-    }
-
-    const renderHero = () => (
-        <View style={styles.heroContainer}>
-            <ImageBackground
-                source={require('../../../../assets/images/mehandi1.jpg')}
-                style={styles.heroImage}
-                resizeMode="cover"
-            >
-                {/* Removed overlay for full clarity */}
-
-                <LinearGradient
-                    colors={['transparent', 'rgba(255, 255, 240, 0.0)', 'rgba(255, 255, 240, 0.6)']}
-                    style={styles.heroGradient}
+            <View style={styles.heroContainer}>
+                <ImageBackground
+                    source={require('../../../../assets/images/mehandiF.jpg')} // Updated to local asset
+                    style={styles.heroImage}
                 >
-                    <View style={styles.heroContent}>
+                    <LinearGradient
+                        colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.8)']}
+                        style={styles.heroGradient}
+                    >
                         <TouchableOpacity onPress={() => navigation?.goBack()} style={styles.backButton}>
-                            <Ionicons name="arrow-back" size={24} color={COLORS.primaryText} />
+                            <Ionicons name="arrow-back" size={24} color={COLORS.white} />
                         </TouchableOpacity>
 
-                        <Text style={styles.heroHeadline}>Elegance Etched in Tradition.</Text>
-                        <Text style={styles.heroSubhead}>
-                            Discover the finest Mehendi artists to color your celebrations with intricate stories and timeless patterns.
-                        </Text>
+                        <Text style={styles.heroHeadline}>The Scent of Celebration</Text>
+                        <Text style={styles.heroSubhead}>Begin your bridal journey with the timeless stain of deep mahogany and shared laughter.</Text>
 
-                        {/* Search/Filter Bar */}
-                        <View style={styles.searchContainer}>
-                            <View style={styles.inputWrapper}>
-                                <Ionicons name="location-outline" size={20} color={COLORS.primaryText} style={styles.inputIcon} />
-                                <TextInput
-                                    placeholder="Location (e.g. Pune)"
-                                    placeholderTextColor="#999"
-                                    style={styles.input}
-                                    value={location}
-                                    onChangeText={setLocation}
-                                />
-                            </View>
-                            <View style={styles.dividerVertical} />
-                            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.styleFilterScroll}>
-                                {FILTER_STYLES.map((style, index) => (
-                                    <TouchableOpacity
-                                        key={index}
-                                        style={[
-                                            styles.styleChip,
-                                            selectedStyle === style && styles.styleChipActive
-                                        ]}
-                                        onPress={() => setSelectedStyle(style)}
-                                    >
-                                        <Text style={[
-                                            styles.styleChipText,
-                                            selectedStyle === style && styles.styleChipTextActive
-                                        ]}>{style}</Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </ScrollView>
+                        {/* Interactive Hand Area */}
+                        <View style={styles.handCanvasContainer}>
+                            <TouchableOpacity
+                                style={styles.findArtistButton}
+                                onPress={() => {
+                                    // Scroll to artist section or perform action
+                                }}
+                            >
+                                <Text style={styles.findArtistText}>Find Your Artist</Text>
+                                <Ionicons name="arrow-down" size={18} color="#FFF" />
+                            </TouchableOpacity>
                         </View>
+                    </LinearGradient>
+                </ImageBackground>
+            </View>
+        );
+    };
+
+    // --- New Section: Choose Your Design Style ---
+    const renderDesignStyles = () => (
+        <View style={styles.sectionContainer}>
+            <Text style={[styles.sectionTitle, { color: COLORS.primary }]}>Choose Your Vibe</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.styleScrollContainer}>
+                {DESIGN_STYLES.map((style, index) => (
+                    <TouchableOpacity key={index} style={styles.styleCard}>
+                        {/* Reference Image Style: Light Checkered/Plain BG Card + Icon Circle */}
+                        <View style={styles.styleIconBox}>
+                            <Ionicons name={style.icon} size={24} color={COLORS.secondary} />
+                        </View>
+                        <Text style={styles.styleCardTitle}>{style.title}</Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        </View>
+    );
+
+    // --- New Section: Mehndi Favorites ---
+    const renderFeaturedPatterns = () => (
+        <View style={[styles.sectionContainer, { marginTop: 30 }]}>
+            <Text style={styles.sectionTitle}>Mehndi Favorites</Text>
+            <Text style={styles.sectionSub}>Trending patterns for you.</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.patternScrollContainer}>
+                {FEATURED_PATTERNS.map((item, index) => (
+                    <View key={index} style={styles.patternCard}>
+                        <ImageBackground
+                            source={item.image} // Using local require
+                            style={styles.patternImage}
+                            imageStyle={{ borderRadius: 12 }}
+                        >
+                            {/* Vintage Filter Overlay */}
+                            <View style={styles.vintageOverlay} />
+                            <LinearGradient
+                                colors={['transparent', 'rgba(0,0,0,0.7)']}
+                                style={styles.patternGradient}
+                            >
+                                <Text style={styles.patternTitle}>{item.title}</Text>
+                            </LinearGradient>
+                        </ImageBackground>
+                    </View>
+                ))}
+            </ScrollView>
+        </View>
+    );
+
+    // --- Artist First Card ---
+    // --- Artist Card (Venue Style Redesign) ---
+    // --- Enhanced Artist Card (Static - High info on Front) ---
+    const renderArtistCard = (artist) => (
+        <View key={artist.id} style={styles.artistCardContainer}>
+            <ImageBackground
+                source={artist.portrait} // Changed to direct source object as it's now a require()
+                style={styles.cardImageBg}
+                imageStyle={{ borderRadius: 15 }}
+            >
+                {/* Top Badges */}
+                <View style={[styles.cardHeaderRow, { justifyContent: 'flex-end' }]}>
+                    <TouchableOpacity style={styles.heartBtn}>
+                        <Ionicons name="heart-outline" size={20} color={COLORS.primary} />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Info Overlay (Lower Half) */}
+                <LinearGradient
+                    colors={['transparent', 'rgba(0,0,0,0.8)', '#000']}
+                    style={styles.cardOverlayGradient}
+                >
+                    <Text style={styles.cardTitle}>{artist.name}</Text>
+                    <Text style={styles.cardLocation}>📍 Mumbai, MH</Text>
+
+                    {/* Tags */}
+                    <View style={styles.tagsRow}>
+                        {artist.tags?.map((tag, idx) => (
+                            <View key={idx} style={styles.tagBadge}>
+                                <Text style={styles.tagText}>{tag}</Text>
+                            </View>
+                        ))}
+                    </View>
+
+                    {/* Experience */}
+                    <View style={styles.expPriceRow}>
+                        <Text style={styles.expText}>{artist.experienceDesc}</Text>
+                    </View>
+
+                    {/* Action Buttons */}
+                    <View style={styles.cardActionsRow}>
+                        <TouchableOpacity style={styles.bookNowBtn}>
+                            <Text style={styles.bookNowText}>Book Now</Text>
+                        </TouchableOpacity>
                     </View>
                 </LinearGradient>
             </ImageBackground>
         </View>
     );
 
-    const renderFilters = () => (
-        <View style={styles.stickyFilterContainer}>
-            {/* Search Bar */}
-            <View style={styles.searchBarRow}>
-                <View style={styles.locationInputWrapper}>
-                    <Ionicons name="location-outline" size={18} color={COLORS.primary} />
-                    <TextInput
-                        placeholder="City"
-                        placeholderTextColor="#999"
-                        style={styles.locationInput}
-                        value={location}
-                        onChangeText={setLocation}
-                    />
-                </View>
-                <View style={styles.verticalDivider} />
-                <View style={styles.mainSearchWrapper}>
-                    <Ionicons name="search-outline" size={18} color={COLORS.textSub} />
-                    <TextInput
-                        placeholder="Search artist"
-                        placeholderTextColor="#999"
-                        style={styles.searchInput}
-                        value={searchQuery}
-                        onChangeText={setSearchQuery}
-                    />
-                </View>
-            </View>
+    // --- Advanced Mood Board (Masonry Effect) ---
+    const renderMoodBoard = () => {
+        // Split images into two columns for masonry effect
+        const col1 = MOOD_BOARD_IMAGES.filter((_, i) => i % 2 === 0);
+        const col2 = MOOD_BOARD_IMAGES.filter((_, i) => i % 2 !== 0);
 
-            {/* Filter Chips */}
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterChipScroll} contentContainerStyle={{ paddingHorizontal: 4 }}>
-                {FILTER_CHIPS.map((chip, index) => (
-                    <TouchableOpacity key={index} style={styles.filterChip}>
-                        <Text style={styles.filterChipText}>{chip}</Text>
-                        <Ionicons name="chevron-down" size={12} color={COLORS.textSub} style={{ marginLeft: 4 }} />
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-        </View>
-    );
+        return (
+            <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>Event Mood Board 🎨</Text>
+                <Text style={styles.sectionSub}>Pin your inspirations.</Text>
 
-    const renderVendorCard = (vendor) => (
-        <View key={vendor.id} style={styles.cardContainer}>
-            <ImageBackground
-                source={{ uri: vendor.imageMain }}
-                style={styles.cardImage}
-                imageStyle={{ borderRadius: 12 }}
-            >
-                {vendor.mostBooked && (
-                    <View style={styles.mostBookedBadge}>
-                        <Text style={styles.mostBookedText}>MOST BOOKED</Text>
+                <View style={styles.masonryContainer}>
+                    {/* Column 1 */}
+                    <View style={styles.masonryCol}>
+                        {col1.map((img, index) => (
+                            <View key={`col1-${index}`} style={[styles.masonryItem, { height: index % 2 === 0 ? 200 : 150 }]}>
+                                <Image source={{ uri: img }} style={styles.masonryImage} />
+                                <TouchableOpacity style={styles.saveBtn} onPress={() => {/* Show toast */ }}>
+                                    <Ionicons name="bookmark-outline" size={18} color="#FFF" />
+                                </TouchableOpacity>
+                            </View>
+                        ))}
                     </View>
-                )}
-            </ImageBackground>
-
-            <View style={styles.cardContent}>
-                <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>{vendor.name}</Text>
-                    <View style={styles.ratingTag}>
-                        <Ionicons name="star" size={12} color="#FFF" />
-                        <Text style={styles.ratingText}>{vendor.rating}</Text>
+                    {/* Column 2 */}
+                    <View style={styles.masonryCol}>
+                        {col2.map((img, index) => (
+                            <View key={`col2-${index}`} style={[styles.masonryItem, { height: index % 2 === 0 ? 160 : 210 }]}> {/* Varying heights */}
+                                <Image source={{ uri: img }} style={styles.masonryImage} />
+                                <TouchableOpacity style={styles.saveBtn} onPress={() => {/* Show toast */ }}>
+                                    <Ionicons name="bookmark-outline" size={18} color="#FFF" />
+                                </TouchableOpacity>
+                            </View>
+                        ))}
                     </View>
                 </View>
-
-                <Text style={styles.cardLocation}>
-                    <Ionicons name="location-outline" size={14} color={COLORS.subText} /> {vendor.city} • {vendor.styles.join(', ')}
-                </Text>
-
-                <View style={styles.cardPriceRow}>
-                    <Text style={styles.priceLabel}>Starting at </Text>
-                    <Text style={styles.priceValue}>{vendor.startingPrice}</Text>
-                </View>
-
-                <View style={styles.cardActions}>
-                    <TouchableOpacity style={styles.cardBtnOutline}>
-                        <Text style={styles.cardBtnTextOutline}>View Profile</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.cardBtnFilled}>
-                        <Text style={styles.cardBtnTextFilled}>Book Now</Text>
-                    </TouchableOpacity>
-                </View>
             </View>
-        </View>
-    );
+        );
+    };
 
-
-
-    const renderWhyChooseUs = () => (
-        <View style={styles.sectionContainer}>
-            <Text style={[styles.sectionTitle, { textAlign: 'center' }]}>Why Choose Us?</Text>
-            <View style={styles.featuresGrid}>
-                {[
-                    { icon: 'shield-check-outline', title: 'Verified' },
-                    { icon: 'star-outline', title: 'Top Rated' },
-                    { icon: 'cash-outline', title: 'Best Price' },
-                    { icon: 'home-heart-outline', title: 'Home Service' },
-                ].map((item, index) => (
-                    <View key={index} style={styles.featureCardSimple}>
-                        <MaterialCommunityIcons name={item.icon} size={30} color={COLORS.primaryText} />
-                        <Text style={styles.featureTitleSimple}>{item.title}</Text>
-                    </View>
-                ))}
-            </View>
-        </View>
-    );
-
-    const renderHowItWorks = () => (
-        <View style={[styles.sectionContainer, { marginBottom: 30 }]}>
-            <Text style={styles.sectionTitle}>How it Works</Text>
-            <View style={styles.howItWorksContainer}>
-                {[
-                    { icon: 'compass-outline', title: 'Browse', desc: 'Explore artists' },
-                    { icon: 'image-outline', title: 'Select', desc: 'Check designs' },
-                    { icon: 'calendar-outline', title: 'Book', desc: 'Pay deposit' },
-                    { icon: 'heart-outline', title: 'Enjoy', desc: 'Mehndi at home' },
-                ].map((item, index) => (
-                    <View key={index} style={styles.howItWorksCard}>
-                        <View style={styles.howItWorksIconBox}>
-                            <Ionicons name={item.icon} size={20} color={COLORS.primaryText} />
-                        </View>
-                        <Text style={styles.howItWorksTitle}>{item.title}</Text>
-                        <Text style={styles.howItWorksDesc}>{item.desc}</Text>
-                    </View>
-                ))}
-            </View>
-        </View>
-    );
-
-    const renderReviews = () => (
+    // --- Testimonials (Real Brides) ---
+    const renderTestimonials = () => (
         <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>Real Brides, Real Stories</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} pagingEnabled style={{ marginTop: 10 }}>
-                {[
-                    { name: 'Ananya S.', rating: 5, text: "The designs were intricate & beautiful! Highly recommend Shubh Vivah artists." },
-                    { name: 'Priya K.', rating: 4.8, text: "Professional and very patient artist. Loved the bridal mehndi!" },
-                    { name: 'Riya M.', rating: 5, text: "On-time service and extremely neat work. Verified artists are a blessing." },
-                ].map((review, index) => (
-                    <View key={index} style={styles.reviewCard}>
-                        <View style={styles.quoteIcon}>
-                            <FontAwesome5 name="quote-left" size={16} color={COLORS.gold} />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20 }}>
+                {TESTIMONIALS.map((review) => (
+                    <View key={review.id} style={styles.testimonialCard}>
+                        <View style={styles.starsRow}>
+                            {Array(5).fill().map((_, i) => (
+                                <Ionicons key={i} name={i < review.stars ? "star" : "star-outline"} size={14} color={COLORS.secondary} />
+                            ))}
                         </View>
-                        <Text style={styles.reviewText}>"{review.text}"</Text>
-                        <View style={styles.reviewFooter}>
-                            <View style={styles.reviewRating}>
-                                {Array(5).fill().map((_, i) => (
-                                    <Ionicons key={i} name={i < Math.floor(review.rating) ? "star" : "star-outline"} size={12} color={COLORS.gold} />
-                                ))}
-                            </View>
-                            <Text style={styles.reviewName}>- {review.name}</Text>
-                        </View>
+                        <Text style={styles.testimonialText}>"{review.text}"</Text>
+                        <Text style={styles.testimonialName}>- {review.name}</Text>
                     </View>
                 ))}
             </ScrollView>
         </View>
     );
 
-    const renderFooter = () => (
-        <View style={styles.footerContainer}>
-            <View style={styles.footerContent}>
-                <Text style={styles.footerLogo}>Shubh Vivah</Text>
-                <Text style={styles.footerTagline}>Making weddings memorable.</Text>
+    // --- Gamified Booking (Spin the Wheel) ---
+    const renderSpinWheel = () => (
+        <View style={styles.spinContainer}>
+            <LinearGradient
+                colors={['#FFF0F0', '#FFF']}
+                style={styles.spinCard}
+            >
+                <View style={styles.spinContent}>
+                    <Text style={[styles.bookingTitle, { textAlign: 'center' }]}>Unlock Your Offer! 🎁</Text>
+                    <Text style={[styles.bookingSub, { textAlign: 'center' }]}>Spin to win discounts or upgrades.</Text>
 
-                <View style={styles.footerLinksRow}>
-                    <TouchableOpacity><Text style={styles.footerLink}>Vendors</Text></TouchableOpacity>
-                    <View style={styles.footerDot} />
-                    <TouchableOpacity><Text style={styles.footerLink}>Venues</Text></TouchableOpacity>
-                    <View style={styles.footerDot} />
-                    <TouchableOpacity><Text style={styles.footerLink}>Contact</Text></TouchableOpacity>
+                    {/* Wheel Visual (Static for now, implies animation) */}
+                    <View style={styles.wheelCircle}>
+                        <Ionicons name="color-palette" size={50} color={COLORS.primary} />
+                    </View>
+
+                    <TouchableOpacity style={styles.spinButton}>
+                        <Text style={styles.spinBtnText}>Spin & Book Now</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.spinNote}>*Guaranteed prize for every booking.</Text>
                 </View>
-
-                <View style={styles.footerSocialRow}>
-                    <TouchableOpacity style={styles.footerSocialIcon}><FontAwesome5 name="instagram" size={18} color="#FFF" /></TouchableOpacity>
-                    <TouchableOpacity style={styles.footerSocialIcon}><FontAwesome5 name="facebook" size={18} color="#FFF" /></TouchableOpacity>
-                    <TouchableOpacity style={styles.footerSocialIcon}><FontAwesome5 name="twitter" size={18} color="#FFF" /></TouchableOpacity>
-                </View>
-
-                <Text style={styles.copyrightText}>© 2024 Shubh Vivah. All rights reserved.</Text>
-            </View>
+            </LinearGradient>
         </View>
     );
 
     return (
         <View style={styles.container}>
             <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }}
-                stickyHeaderIndices={[1]}
-            >
-                {renderHero()}
-                {renderFilters()}
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
 
-                <View style={styles.vendorListContainer}>
-                    <Text style={[styles.sectionTitle, { paddingHorizontal: 20 }]}>Curated Artists</Text>
-                    {VENDORS.map(renderVendorCard)}
+                {renderHandCanvas()}
+
+                {renderFeaturedPatterns()}
+                {renderDesignStyles()}
+
+                <View style={styles.journeyContainer}>
+                    <Text style={styles.journeyTitle}>Featured Artists</Text>
+                    {VENDORS.map(renderArtistCard)}
                 </View>
 
+                {renderTestimonials()}
+                {/* {renderMoodBoard()} */}
+                {/* {renderSpinWheel()} */}
 
-                {renderWhyChooseUs()}
-                {renderHowItWorks()}
-                {renderReviews()}
-                {renderFooter()}
             </ScrollView>
         </View>
     );
@@ -385,9 +445,9 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: COLORS.background,
     },
-    // Hero Section
+    // Hero & Hand Canvas
     heroContainer: {
-        height: height * 0.65, // Full immersive hero
+        height: height * 0.55, // Reduced Height (was 0.65)
         width: width,
     },
     heroImage: {
@@ -396,471 +456,486 @@ const styles = StyleSheet.create({
     },
     heroGradient: {
         flex: 1,
-        justifyContent: 'flex-end',
         padding: 20,
-        paddingBottom: 40,
+        paddingTop: 50,
     },
-    backButton: {
+
+    // Find Artist Button
+    findArtistButton: {
         position: 'absolute',
-        top: 50,
-        left: 20,
+        bottom: 20,
+        backgroundColor: COLORS.primary, // User requested Red #CC0E0E
+        width: '90%', // Cover hero section width
+        alignSelf: 'center',
+        paddingVertical: 14,
+        borderRadius: 30,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center', // Center Text
+        gap: 8,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+    },
+    findArtistText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+
+    backButton: {
+        marginBottom: 20,
         backgroundColor: 'rgba(255,255,255,0.2)',
+        alignSelf: 'flex-start',
         padding: 8,
         borderRadius: 20,
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.3)',
-    },
-    heroContent: {
-        marginBottom: 20,
     },
     heroHeadline: {
         fontFamily: FONTS.serif,
         fontSize: 34,
-        color: COLORS.primaryText, // Red
-        marginBottom: 10,
-        lineHeight: 40,
-        textShadowColor: 'rgba(255,255,255,0.8)',
-        textShadowOffset: { width: 0, height: 1 },
-        textShadowRadius: 4,
+        color: COLORS.white,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
     heroSubhead: {
-        fontFamily: FONTS.serifReg,
+        fontFamily: FONTS.sans,
         fontSize: 16,
-        color: COLORS.subText, // Gold
-        marginBottom: 24,
-        lineHeight: 24,
-        fontWeight: '600',
-    },
-    heroButtonsContainer: {
-        flexDirection: 'row',
-        gap: 12,
+        color: COLORS.secondary, // User requested Orange #F29502
         marginBottom: 20,
     },
-    primaryBtn: {
-        backgroundColor: COLORS.primary,
-        paddingVertical: 14,
-        paddingHorizontal: 24,
-        borderRadius: 30,
-        elevation: 4,
+    handCanvasContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
     },
-    primaryBtnText: {
-        color: COLORS.textLight,
+    handIcon: {
+        width: 250,
+        height: 350,
+        resizeMode: 'contain',
+        opacity: 0.9,
+    },
+    touchZone: {
+        position: 'absolute',
+        // backgroundColor: 'rgba(255,0,0,0.3)', // Debug color
+    },
+    zoneFingers: { top: 0, height: 100, width: 200 },
+    zonePalm: { top: 120, height: 100, width: 150 },
+    zoneWrist: { bottom: 20, height: 80, width: 120 },
+
+    styleInfoCard: {
+        position: 'absolute',
+        bottom: 80,
+        backgroundColor: 'rgba(255,255,255,0.95)',
+        padding: 15,
+        borderRadius: 16,
+        width: '90%',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 6,
+        borderLeftWidth: 4,
+        borderLeftColor: COLORS.primary,
+    },
+    styleTitle: {
+        fontSize: 18,
         fontWeight: 'bold',
-        fontSize: 14,
-    },
-    secondaryBtn: {
-        backgroundColor: 'rgba(255,255,255,0.9)',
-        paddingVertical: 14,
-        paddingHorizontal: 24,
-        borderRadius: 30,
-        elevation: 4,
-    },
-    secondaryBtnText: {
         color: COLORS.primary,
-        fontWeight: 'bold',
-        fontSize: 14,
+        fontFamily: FONTS.serif,
     },
-    trustBadgesRow: {
+    styleDesc: {
+        fontSize: 13,
+        color: '#555',
+        marginBottom: 8,
+    },
+    styleMetaRow: {
+        flexDirection: 'row',
+        gap: 15,
+    },
+    metaItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+    },
+    metaText: {
+        fontSize: 12,
+        fontWeight: '600',
+        color: COLORS.textDark,
+    },
+    styleTabs: {
+        position: 'absolute',
+        bottom: 10,
+        flexDirection: 'row',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: 25,
+        padding: 4,
+    },
+    styleTab: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+    },
+    styleTabActive: {
+        backgroundColor: COLORS.secondary,
+    },
+    styleTabText: {
+        color: '#DDD',
+        fontSize: 12,
+        fontWeight: '600',
+    },
+    styleTabTextActive: {
+        color: '#FFF',
+    },
+
+    // Journey Layout
+    journeyContainer: {
+        paddingHorizontal: 20,
+        paddingTop: 30,
+        backgroundColor: COLORS.background,
+    },
+    journeyTitle: {
+        fontSize: 24,
+        fontFamily: FONTS.serif,
+        color: COLORS.primary,
+        marginBottom: 30,
+        textAlign: 'left', // Left Align
+    },
+    journeyStopContainer: {
+        marginBottom: 40,
+        position: 'relative',
+        paddingLeft: 30, // Space for vine
+    },
+    vineLine: {
+        position: 'absolute',
+        left: 9,
+        top: -40,
+        bottom: -40,
+        width: 2,
+        backgroundColor: COLORS.vine,
+        zIndex: 0,
+    },
+    vineNode: {
+        position: 'absolute',
+        left: 0,
+        top: 20,
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        backgroundColor: COLORS.secondary,
+        zIndex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: COLORS.background,
+    },
+    nodeIcon: {
+        width: 12,
+        height: 12,
+        tintColor: '#FFF',
+    },
+
+    // Enhanced Artist Card
+    artistCardContainer: {
+        marginBottom: 30,
+        height: 400, // Reduced Height (was 480)
+        borderRadius: 20,
+        overflow: 'hidden',
+        backgroundColor: COLORS.white,
+        elevation: 8,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+    },
+    cardImageBg: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'space-between',
+    },
+    cardOverlayGradient: {
+        padding: 20,
+        paddingTop: 60, // Fade start
+        justifyContent: 'flex-end',
+    },
+    cardTitle: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        color: '#FFF',
+        fontFamily: FONTS.serif,
+        marginBottom: 2,
+    },
+    cardLocation: {
+        fontSize: 14,
+        color: COLORS.secondary, // Orange
+        marginBottom: 12,
+        fontWeight: '600',
+    },
+    tagsRow: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 8,
+        marginBottom: 12,
+    },
+    tagBadge: {
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.4)',
+    },
+    tagText: {
+        color: '#FFF',
+        fontSize: 11,
+        fontWeight: '600',
+    },
+    expPriceRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    expText: {
+        color: '#DDD',
+        fontSize: 13,
+    },
+    cardPrice: {
+        color: COLORS.primary, // Red text for price to pop
+        fontSize: 18,
+        fontWeight: 'bold',
+        backgroundColor: '#FFF',
+        paddingHorizontal: 8,
+        paddingVertical: 2,
+        borderRadius: 4,
+    },
+    cardActionsRow: {
         flexDirection: 'row',
         gap: 15,
         alignItems: 'center',
     },
-    trustBadge: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 6,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        paddingVertical: 6,
-        paddingHorizontal: 12,
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.2)',
-    },
-    trustBadgeText: {
-        color: '#EEE',
-        fontSize: 12,
-        fontWeight: '600',
-    },
-
-    // Sticky Search & Filter
-    stickyFilterContainer: {
-        backgroundColor: COLORS.surface,
+    bookNowBtn: {
+        flex: 1,
+        backgroundColor: COLORS.primary,
         paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: COLORS.border,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        zIndex: 100,
-    },
-    searchBarRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#F9F9F9',
         borderRadius: 12,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-        paddingHorizontal: 12,
-        height: 50,
-        marginBottom: 10,
-    },
-    locationInputWrapper: {
-        flexDirection: 'row',
         alignItems: 'center',
-        width: '30%',
+        justifyContent: 'center',
     },
-    locationInput: {
-        flex: 1,
-        marginLeft: 6,
-        fontSize: 13,
-        color: COLORS.textMain,
-        fontFamily: FONTS.sans,
+    bookNowText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: 14,
+        textTransform: 'uppercase',
+        letterSpacing: 1,
     },
-    verticalDivider: {
-        width: 1,
-        height: '60%',
-        backgroundColor: '#DDD',
-        marginHorizontal: 10,
-    },
-    mainSearchWrapper: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    searchInput: {
-        flex: 1,
-        marginLeft: 8,
-        fontSize: 13,
-        color: COLORS.textMain,
-        fontFamily: FONTS.sans,
-    },
-    filterChipScroll: {
-        flexDirection: 'row',
-    },
-    filterChip: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#FFF',
-        borderWidth: 1,
-        borderColor: COLORS.border,
+    whatsappBtn: {
+        width: 40,
+        height: 40,
         borderRadius: 20,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        marginRight: 8,
-    },
-    filterChipText: {
-        fontSize: 12,
-        color: COLORS.textMain,
-        fontFamily: FONTS.sans,
+        backgroundColor: '#25D366',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
-    // Vendor Grid
-    vendorListContainer: {
-        marginTop: 20,
-        paddingHorizontal: 20, // increased padding for better alignment
-    },
-    sectionHeaderRow: {
-        width: '100%',
+    // Masonry Mood Board
+    masonryContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 15,
-        paddingHorizontal: 5,
+        paddingHorizontal: 20,
+        gap: 15,
     },
-    viewAllText: {
-        fontSize: 14,
-        color: COLORS.primary,
-        fontFamily: FONTS.sans,
-        fontWeight: 'bold',
+    masonryCol: {
+        flex: 1,
+        gap: 15,
+    },
+    masonryItem: {
+        borderRadius: 12,
+        overflow: 'hidden',
+        position: 'relative',
+        backgroundColor: '#EEE',
+    },
+    masonryImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+    },
+
+    // Sections
+    sectionContainer: {
+        marginBottom: 30,
     },
     sectionTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: COLORS.primary, // Red Main Headings
+        marginLeft: 20,
+        marginBottom: 15,
         fontFamily: FONTS.serif,
-        fontSize: 24,
-        color: COLORS.primaryText,
     },
-    // Updated Premium Card Styles
-    cardContainer: {
-        backgroundColor: COLORS.white,
-        borderRadius: 16,
-        marginBottom: 25,
-        borderWidth: 1,
-        borderColor: COLORS.gold,
-        overflow: 'hidden',
-        elevation: 4,
-        shadowColor: COLORS.gold,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-    },
-    cardImage: {
-        width: '100%',
-        height: 220,
-        justifyContent: 'space-between',
-        padding: 10,
-    },
-    // Retaining mostBookedBadge styles
-    mostBookedBadge: {
-        backgroundColor: COLORS.gold,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 4,
-        alignSelf: 'flex-start',
-    },
-    mostBookedText: {
-        fontSize: 11,
-        fontWeight: 'bold',
-        color: COLORS.white,
-    },
-    cardContent: {
-        padding: 16,
-    },
-    cardHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 6,
-    },
-    cardTitle: {
-        fontFamily: FONTS.serif,
-        fontSize: 20,
-        color: COLORS.primaryText, // Red
-    },
-    ratingTag: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: COLORS.gold,
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 12,
-        gap: 4,
-    },
-    ratingText: {
-        color: COLORS.white,
-        fontSize: 12,
-        fontWeight: 'bold',
-    },
-    cardLocation: {
-        fontSize: 13,
-        color: '#666',
-        marginBottom: 12,
-        fontFamily: FONTS.sans,
-    },
-    cardPriceRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 16,
-    },
-    priceLabel: {
-        fontSize: 12,
-        color: '#666',
-    },
-    priceValue: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: COLORS.primaryText, // Red
-        marginLeft: 5,
-    },
-    cardActions: {
-        flexDirection: 'row',
-        gap: 12,
-    },
-    cardBtnOutline: {
-        flex: 1,
-        paddingVertical: 12,
-        borderRadius: 25,
-        borderWidth: 1.5,
-        borderColor: COLORS.primaryText,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    cardBtnTextOutline: {
-        color: COLORS.primaryText,
-        fontWeight: 'bold',
+    sectionSub: {
         fontSize: 14,
-    },
-    cardBtnFilled: {
-        flex: 1,
-        paddingVertical: 12,
-        borderRadius: 25,
-        backgroundColor: COLORS.primaryText,
-        alignItems: 'center',
-        justifyContent: 'center',
-        elevation: 2,
-    },
-    cardBtnTextFilled: {
-        color: COLORS.white,
-        fontWeight: 'bold',
-        fontSize: 14,
+        color: '#666',
+        marginLeft: 20,
+        marginTop: -10,
+        marginBottom: 15,
     },
 
-    // How it Works (Simple Icon Base)
-    sectionContainer: {
-        marginTop: 30,
-        paddingHorizontal: 20,
+    // Testimonials
+    testimonialCard: {
+        width: 280,
+        backgroundColor: '#FFF',
+        padding: 20,
+        borderRadius: 16,
+        marginRight: 15,
+        borderWidth: 1,
+        borderColor: '#EEE',
     },
-    howItWorksContainer: {
+    starsRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 15,
+        marginBottom: 10,
+        gap: 2,
     },
-    howItWorksCard: {
-        width: '23%', // Adjusted for 4 items
+    testimonialText: {
+        fontSize: 13,
+        color: '#555',
+        fontStyle: 'italic',
+        marginBottom: 10,
+        lineHeight: 20,
+    },
+    testimonialName: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: COLORS.secondary,
+        alignSelf: 'flex-end',
+    },
+
+
+
+    // Spin Wheel
+    spinContainer: {
+        padding: 20,
+        marginBottom: 50,
+    },
+    spinCard: {
+        borderRadius: 20,
+        padding: 4, // border effect
+        elevation: 4,
+    },
+    spinContent: {
+        backgroundColor: '#FFF',
+        borderRadius: 18,
+        padding: 30,
         alignItems: 'center',
     },
-    howItWorksIconBox: {
-        width: 45,
-        height: 45,
-        borderRadius: 25,
-        backgroundColor: 'rgba(204, 14, 14, 0.1)',
+    wheelCircle: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: '#FFF5E6',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 4,
+        borderColor: COLORS.secondary,
+        marginVertical: 20,
+        borderStyle: 'dashed',
+    },
+    spinButton: {
+        backgroundColor: COLORS.primary,
+        paddingHorizontal: 40,
+        paddingVertical: 15,
+        borderRadius: 30,
+        marginBottom: 10,
+    },
+    spinBtnText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    spinNote: {
+        fontSize: 10,
+        color: '#999',
+    },
+
+
+
+
+    // --- New Styles ---
+    styleScrollContainer: {
+        paddingHorizontal: 20,
+        gap: 15,
+    },
+    styleCard: {
+        width: 85, // Further Reduced (was 100)
+        height: 100, // Further Reduced (was 120)
+        backgroundColor: '#FFF8F0',
+        borderRadius: 14,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#FFE0B2',
+        padding: 6,
+    },
+    styleIconBox: {
+        width: 40, // Reduced (was 45)
+        height: 40, // Reduced (was 45)
+        borderRadius: 20,
+        backgroundColor: '#FFFFFF',
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 8,
+        elevation: 1,
     },
-    howItWorksTitle: {
-        fontSize: 11,
+    styleCardTitle: {
+        fontSize: 10, // Reduced (was 12)
         fontWeight: 'bold',
-        color: COLORS.primaryText,
-        marginBottom: 4,
+        color: COLORS.primary, // Red Text
+        textAlign: 'center',
         fontFamily: FONTS.serif,
-        textAlign: 'center',
     },
-    howItWorksDesc: {
-        fontSize: 9,
-        color: COLORS.textDark,
+    styleCardDesc: {
+        fontSize: 8,
+        color: '#666',
         textAlign: 'center',
-        fontFamily: FONTS.sans,
-        lineHeight: 12,
+        opacity: 0.8,
     },
 
-    // Why Choose Us (Simple)
-    featuresGrid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    featureCardSimple: {
-        width: '23%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 15,
-        backgroundColor: COLORS.surface,
-        borderRadius: 12,
-        marginBottom: 10,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-    },
-    featureTitleSimple: {
-        fontSize: 10,
-        fontWeight: 'bold',
-        color: COLORS.primaryText,
-        marginTop: 6,
-        textAlign: 'center',
-        fontFamily: FONTS.sans,
-    },
-
-    // Reviews
-    reviewCard: {
-        width: width * 0.75, // Carousel card width
-        backgroundColor: COLORS.surface,
-        marginRight: 15,
-        borderRadius: 12,
-        padding: 20,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-        elevation: 2,
-    },
-    quoteIcon: {
-        marginBottom: 10,
-        opacity: 0.5,
-    },
-    reviewText: {
-        fontSize: 13,
-        color: COLORS.textMain,
-        fontFamily: FONTS.serif,
-        fontStyle: 'italic',
-        lineHeight: 20,
-        marginBottom: 15,
-    },
-    reviewFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    reviewRating: {
-        flexDirection: 'row',
-        gap: 2,
-    },
-    reviewName: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: COLORS.primaryText,
-    },
-
-    // Footer
-    footerContainer: {
-        marginTop: 50,
-        backgroundColor: COLORS.primary, // Dark Green
-        paddingVertical: 40,
+    patternScrollContainer: {
         paddingHorizontal: 20,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        alignItems: 'center',
+        gap: 15,
     },
-    footerContent: {
-        alignItems: 'center',
+    patternCard: {
+        width: 110, // Reduced (was 130)
+        height: 150, // Reduced (was 180)
+        borderRadius: 12,
+        overflow: 'hidden',
+        elevation: 3,
+        backgroundColor: '#EEE',
+    },
+    patternImage: {
         width: '100%',
+        height: '100%',
     },
-    footerLogo: {
-        fontFamily: FONTS.serif,
-        fontSize: 24,
-        color: COLORS.gold,
-        marginBottom: 5,
+    vintageOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(242, 149, 2, 0.1)', // #F29502 gold warm tint
+        zIndex: 1,
     },
-    footerTagline: {
-        fontSize: 12,
-        color: COLORS.gold, // Updated to Gold
-        marginBottom: 20,
-        fontFamily: FONTS.sans,
+    patternGradient: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        padding: 12,
+        zIndex: 2,
     },
-    footerLinksRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 25,
-    },
-    footerLink: {
-        fontSize: 14,
+    patternTitle: {
         color: '#FFF',
-        fontWeight: '600',
-    },
-    footerDot: {
-        width: 4,
-        height: 4,
-        borderRadius: 2,
-        backgroundColor: COLORS.gold,
-        marginHorizontal: 15,
-    },
-    footerSocialRow: {
-        flexDirection: 'row',
-        gap: 20,
-        marginBottom: 30,
-    },
-    footerSocialIcon: {
-        padding: 8,
-        backgroundColor: 'rgba(255,255,255,0.1)',
-        borderRadius: 20,
-    },
-    copyrightText: {
-        fontSize: 10,
-        color: COLORS.gold, // Updated to Gold
+        fontWeight: 'bold',
+        fontSize: 14,
+        fontFamily: FONTS.serif,
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
     },
 });
 

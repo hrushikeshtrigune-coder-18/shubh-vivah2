@@ -75,18 +75,22 @@ const TESTIMONIALS = [
     {
         id: '1',
         couple: 'Aditi & Rohan',
+        initials: 'AR',
         event: 'Wedding Reception',
         caterer: 'Royal Feast Catering',
         quote: '“Our guests are still talking about the food! The live counters were a hit.”',
         image: 'https://images.unsplash.com/photo-1621621667797-e06afc217fb0?q=80&w=600&auto=format&fit=crop',
+        tags: ['300 Guests', 'Live Counters', 'Pune'],
     },
     {
         id: '2',
         couple: 'Priya & Vikram',
+        initials: 'PV',
         event: 'Sangeet Night',
         caterer: 'Spice Symphony',
         quote: '“Absolutely delicious spread and impeccable service. Highly recommended!”',
         image: 'https://images.unsplash.com/photo-1583939003579-73013917c9dd?q=80&w=600&auto=format&fit=crop',
+        tags: ['500 Guests', 'Multi-Cuisine', 'Mumbai'],
     },
 ];
 
@@ -95,6 +99,17 @@ const Food = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState(null);
+
+    // Filter Logic
+    const filteredCuisines = CUISINES.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const filteredCaterers = CATERERS_DATA.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.specialties.some(spec => spec.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
 
     const renderHeader = () => (
         <View style={styles.headerContainer}>
@@ -150,40 +165,39 @@ const Food = ({ navigation }) => {
                 </View>
             </View>
 
-            {/* Event Tags */}
-            <View style={styles.tagContainer}>
-                {['Weddings', 'Receptions', 'Mehendi', 'Sangeet'].map((tag, index) => (
-                    <View key={index} style={styles.tag}>
-                        <Text style={styles.tagText}>🎉 {tag}</Text>
-                    </View>
-                ))}
-            </View>
+
         </View>
     );
 
-    const renderCuisines = () => (
-        <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Explore by Cuisine</Text>
-            <FlatList
-                data={CUISINES}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 15 }}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.cuisineCard}>
-                        <Image source={{ uri: item.image }} style={styles.cuisineImage} />
-                        <LinearGradient
-                            colors={['transparent', 'rgba(0,0,0,0.8)']}
-                            style={styles.cuisineGradient}
-                        >
-                            <Text style={styles.cuisineName}>{item.name}</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-                )}
-            />
-        </View>
-    );
+    const renderCuisines = () => {
+        if (filteredCuisines.length === 0) return null;
+
+        return (
+            <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>
+                    {searchQuery ? 'Matching Cuisines' : 'Explore by Cuisine'}
+                </Text>
+                <FlatList
+                    data={filteredCuisines}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 15 }}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity style={styles.cuisineCard}>
+                            <Image source={{ uri: item.image }} style={styles.cuisineImage} />
+                            <LinearGradient
+                                colors={['transparent', 'rgba(0,0,0,0.8)']}
+                                style={styles.cuisineGradient}
+                            >
+                                <Text style={styles.cuisineName}>{item.name}</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
+        );
+    };
 
     const renderCatererCard = ({ item }) => (
         <View style={styles.card}>
@@ -249,15 +263,26 @@ const Food = ({ navigation }) => {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <View style={styles.testimonialCard}>
-                        <Image source={{ uri: item.image }} style={styles.testimonialImage} />
-                        <View style={styles.testimonialContent}>
-                            <Text style={styles.testimonialQuote}>{item.quote}</Text>
-                            <Text style={styles.testimonialCouple}>{item.couple}</Text>
-                            <Text style={styles.testimonialEvent}>{item.event}</Text>
-                            <View style={styles.testimonialCaterer}>
-                                <Text style={styles.testimonialCatererText}>Caterer: {item.caterer}</Text>
+                    <View style={styles.snapshotCard}>
+                        {/* Background Quote Icon */}
+                        <MaterialCommunityIcons name="format-quote-close" size={100} color="rgba(204, 14, 14, 0.05)" style={styles.bgQuoteIcon} />
+
+                        <View style={styles.snapshotHeader}>
+                            <Image source={{ uri: item.image }} style={styles.snapshotAvatar} />
+                            <View>
+                                <Text style={styles.snapshotCouple}>{item.couple}</Text>
+                                <Text style={styles.snapshotEvent}>{item.event}</Text>
                             </View>
+                        </View>
+
+                        <Text style={styles.snapshotQuote}>{item.quote}</Text>
+
+                        <View style={styles.snapshotTags}>
+                            {item.tags.map((tag, idx) => (
+                                <View key={idx} style={styles.snapshotTag}>
+                                    <Text style={styles.snapshotTagText}>{tag}</Text>
+                                </View>
+                            ))}
                         </View>
                     </View>
                 )}
@@ -269,32 +294,36 @@ const Food = ({ navigation }) => {
         <View style={styles.toolsContainer}>
             <Text style={styles.sectionTitle}>Plan Your Feast Smarter</Text>
             <View style={styles.toolsGrid}>
+                {/* Menu Planner - Dominant Card */}
                 <TouchableOpacity
-                    style={styles.toolCard}
+                    style={[styles.toolCard, styles.menuPlannerCard]}
+                    onPress={() => {
+                        setModalContent('Menu Planner feature coming soon!');
+                        setModalVisible(true);
+                    }}
+                >
+                    <View style={styles.mostUsedBadge}>
+                        <Text style={styles.mostUsedText}>Most Used by Couples 💍</Text>
+                    </View>
+                    <View style={[styles.toolIcon, { backgroundColor: '#FFF3E0' }]}>
+                        <MaterialCommunityIcons name="silverware-fork-knife" size={32} color="#E65100" />
+                    </View>
+                    <Text style={styles.toolTitleLarge}>Menu Planner</Text>
+                    <Text style={styles.toolDesc}>Curate your perfect spread with our smart tool</Text>
+                </TouchableOpacity>
+
+                {/* Budget Calculator - Smaller Card */}
+                <TouchableOpacity
+                    style={[styles.toolCard, styles.budgetCard]}
                     onPress={() => {
                         setModalContent('Budget Calculator feature coming soon!');
                         setModalVisible(true);
                     }}
                 >
                     <View style={[styles.toolIcon, { backgroundColor: '#E0F7FA' }]}>
-                        <MaterialCommunityIcons name="calculator" size={32} color="#006064" />
+                        <MaterialCommunityIcons name="calculator" size={24} color="#006064" />
                     </View>
-                    <Text style={styles.toolTitle}>Catering Budget Calculator</Text>
-                    <Text style={styles.toolDesc}>Estimate costs instantly</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.toolCard}
-                    onPress={() => {
-                        setModalContent('Menu Planner feature coming soon!');
-                        setModalVisible(true);
-                    }}
-                >
-                    <View style={[styles.toolIcon, { backgroundColor: '#FFF3E0' }]}>
-                        <MaterialCommunityIcons name="silverware-fork-knife" size={32} color="#E65100" />
-                    </View>
-                    <Text style={styles.toolTitle}>Menu Planner</Text>
-                    <Text style={styles.toolDesc}>Curate your perfect spread</Text>
+                    <Text style={styles.toolTitle}>Budget{'\n'}Calculator</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -315,13 +344,30 @@ const Food = ({ navigation }) => {
                 {renderCuisines()}
 
                 <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>Top Rated Caterers</Text>
-                    {CATERERS_DATA.map(item => (
-                        <View key={item.id}>
-                            {renderCatererCard({ item })}
-                        </View>
-                    ))}
+                    <Text style={styles.sectionTitle}>
+                        {searchQuery ? 'Matching Caterers' : 'Top Rated Caterers'}
+                    </Text>
+                    {filteredCaterers.length > 0 ? (
+                        filteredCaterers.map(item => (
+                            <View key={item.id}>
+                                {renderCatererCard({ item })}
+                            </View>
+                        ))
+                    ) : (
+                        <Text style={{ textAlign: 'center', color: '#888', marginTop: 20, fontFamily: 'Outfit_400Regular' }}>
+                            {searchQuery && filteredCuisines.length === 0 ? 'No caterers found matching your search.' : ''}
+                        </Text>
+                    )}
                 </View>
+
+                {searchQuery && filteredCuisines.length === 0 && filteredCaterers.length === 0 && (
+                    <View style={{ alignItems: 'center', marginTop: 50 }}>
+                        <MaterialCommunityIcons name="food-off" size={64} color="#ccc" />
+                        <Text style={{ marginTop: 10, color: '#888', fontFamily: 'Outfit_500Medium' }}>
+                            No results found for "{searchQuery}"
+                        </Text>
+                    </View>
+                )}
 
                 {renderTestimonials()}
                 {renderInteractiveTools()}
@@ -338,7 +384,6 @@ const Food = ({ navigation }) => {
                             style={styles.storyOverlay}
                         >
                             <Text style={styles.storyText}>“Because great food turns celebrations into lifelong memories.”</Text>
-                            <Text style={styles.storySubtext}>We help you serve joy on every plate. 💛</Text>
                         </LinearGradient>
                     </ImageBackground>
                 </View>
@@ -401,21 +446,21 @@ const styles = StyleSheet.create({
         marginTop: 60,
     },
     heroTitle: {
-        fontFamily: 'Outfit_700Bold',
+        fontFamily: 'Outfit_700Bold', // Ensuring it is Outfit_700Bold
         fontSize: 28,
-        color: '#FFF', // Reverted to White as requested
+        color: '#FFF',
         marginBottom: 10,
         lineHeight: 36,
-        textShadowColor: 'rgba(0,0,0,0.5)', // Reverted shadow for better contrast on image
+        textShadowColor: 'rgba(0,0,0,0.5)',
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 4,
     },
     heroSubtitle: {
         fontFamily: 'Outfit_400Regular',
-        fontSize: 16, // Increased from 14
-        color: '#F29502', // Updated to F29502 as requested
+        fontSize: 16,
+        color: '#FFEB3B', // Updated to Bright Yellow
         marginBottom: 20,
-        fontWeight: '600', // Added weight for better visibility
+        fontWeight: '600',
     },
     searchContainer: {
         flexDirection: 'row',
@@ -501,7 +546,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontFamily: 'Outfit_600SemiBold',
         fontSize: 20,
-        color: '#CC0E0E',
+        color: '#CC0E0E', // Ensuring it is Red
         marginBottom: 15,
     },
     cuisineCard: {
@@ -662,52 +707,75 @@ const styles = StyleSheet.create({
         color: '#FFF',
         marginRight: 8,
     },
-    testimonialCard: {
+    snapshotCard: {
         width: width - 60,
         marginRight: 15,
         backgroundColor: '#FFF',
-        borderRadius: 15,
-        overflow: 'hidden',
+        borderRadius: 20,
+        padding: 20,
         borderWidth: 1,
         borderColor: '#F29502',
+        shadowColor: '#F29502',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        elevation: 5,
+        overflow: 'hidden',
     },
-    testimonialImage: {
-        width: '100%',
-        height: 180,
-        resizeMode: 'cover',
+    bgQuoteIcon: {
+        position: 'absolute',
+        right: -10,
+        bottom: -10,
     },
-    testimonialContent: {
-        padding: 15,
+    snapshotHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 15,
     },
-    testimonialQuote: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 15, // Increased from 14
-        fontStyle: 'italic',
-        color: '#CC0E0E',
-        marginBottom: 10,
-        lineHeight: 22,
+    snapshotAvatar: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        marginRight: 12,
+        borderWidth: 2,
+        borderColor: '#F29502',
     },
-    testimonialCouple: {
+    snapshotCouple: {
         fontFamily: 'Outfit_700Bold',
-        fontSize: 15, // Increased from 14
-        color: '#F29502',
-    },
-    testimonialEvent: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 13, // Increased from 12
+        fontSize: 16,
         color: '#CC0E0E',
     },
-    testimonialCaterer: {
-        marginTop: 8,
-        paddingTop: 8,
-        borderTopWidth: 1,
-        borderTopColor: '#F29502',
+    snapshotEvent: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 12,
+        color: '#666',
     },
-    testimonialCatererText: {
+    snapshotQuote: {
+        fontFamily: 'Outfit_400Regular', // Normal weight for readability
+        fontSize: 15,
+        fontStyle: 'italic',
+        color: '#444',
+        marginBottom: 15,
+        lineHeight: 24,
+    },
+    snapshotTags: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 8,
+    },
+    snapshotTag: {
+        backgroundColor: '#FFF3E0',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 12,
+    },
+    snapshotTagText: {
         fontFamily: 'Outfit_500Medium',
-        fontSize: 12, // Increased from 11
-        color: '#F29502',
+        fontSize: 11,
+        color: '#E65100',
     },
+
+    // Tools Section
     toolsContainer: {
         paddingHorizontal: 15,
         marginTop: 30,
@@ -717,43 +785,78 @@ const styles = StyleSheet.create({
         gap: 15,
     },
     toolCard: {
-        flex: 1,
         backgroundColor: '#FFF',
         padding: 15,
-        borderRadius: 15,
+        borderRadius: 20,
         alignItems: 'center',
+        justifyContent: 'center',
         borderWidth: 1,
         borderColor: '#F29502',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    menuPlannerCard: {
+        flex: 2, // Larger card
+        backgroundColor: '#FFF',
+        paddingTop: 25, // Space for badge
+    },
+    budgetCard: {
+        flex: 1, // Smaller card
+    },
+    mostUsedBadge: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        backgroundColor: '#CC0E0E',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderBottomLeftRadius: 15,
+        borderTopRightRadius: 15,
+    },
+    mostUsedText: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 9,
+        color: '#FFF',
     },
     toolIcon: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: '#F29502',
+        marginBottom: 12,
     },
     toolTitle: {
         fontFamily: 'Outfit_600SemiBold',
-        fontSize: 14,
+        fontSize: 12,
         color: '#CC0E0E',
         textAlign: 'center',
-        marginBottom: 5,
+    },
+    toolTitleLarge: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 16,
+        color: '#CC0E0E',
+        textAlign: 'center',
+        marginBottom: 4,
     },
     toolDesc: {
         fontFamily: 'Outfit_400Regular',
-        fontSize: 11, // Increased from 10
-        color: '#F29502',
+        fontSize: 11,
+        color: '#888',
         textAlign: 'center',
+        marginTop: 5,
     },
+
+    // Story Section
     storyContainer: {
         margin: 15,
         marginTop: 30,
         borderRadius: 20,
         overflow: 'hidden',
-        height: 250,
+        height: 180, // Reduced from 250
         borderWidth: 1,
         borderColor: '#F29502',
     },
@@ -765,21 +868,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 30,
+        padding: 20,
     },
     storyText: {
         fontFamily: 'Outfit_600SemiBold',
-        fontSize: 18,
+        fontSize: 16, // Slightly reduced
         color: '#FFF',
         textAlign: 'center',
-        marginBottom: 15,
-        lineHeight: 26,
-    },
-    storySubtext: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 15, // Increased from 14
-        color: '#FFEB3B',
-        textAlign: 'center',
+        lineHeight: 24,
     },
     modalOverlay: {
         flex: 1,
