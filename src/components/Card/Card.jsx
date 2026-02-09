@@ -3,9 +3,9 @@ import React from 'react';
 import {
     Animated,
     Image,
+    Pressable,
     StyleSheet,
     Text,
-    TouchableOpacity,
     View,
 } from 'react-native';
 import { colors } from '../../theme/colors';
@@ -35,19 +35,22 @@ const Card = ({ item, index, scrollX, itemWidth, itemHeight, onPress }) => {
         <Animated.View style={{
             width: itemWidth,
             height: itemHeight,
-            transform: [{ scale }, { translateY }],
-            opacity,
+            // transform: [{ scale }, { translateY }], // Animation disabled to fix Android touch issue
+            opacity, // We keep opacity for fade effect, or remove it if requested. Keeping for now as it doesn't affect layout.
         }}>
-            <TouchableOpacity
-                style={styles.container}
+            <Pressable
+                style={({ pressed }) => [
+                    styles.container,
+                    { opacity: pressed ? 0.9 : 1, zIndex: 1 }
+                ]}
                 onPress={onPress}
-                activeOpacity={0.9}
             >
                 {/* 1. Image Section (The "Card" - Bordered) */}
                 <View style={styles.imageContainer}>
                     <Image
                         source={typeof item.image === 'string' ? { uri: item.image } : item.image}
                         style={styles.carouselImage}
+                        resizeMode="cover"
                     />
                 </View>
 
@@ -55,7 +58,7 @@ const Card = ({ item, index, scrollX, itemWidth, itemHeight, onPress }) => {
                 <View style={styles.contentContainer}>
                     <View style={styles.iconWrapper}>
                         <View style={styles.iconContainer}>
-                            <FontAwesome5 name={item.icon} size={20} color={colors.akshada} />
+                            <FontAwesome5 name={item.icon} size={20} color="#D4AF37" />
                         </View>
                     </View>
 
@@ -70,7 +73,7 @@ const Card = ({ item, index, scrollX, itemWidth, itemHeight, onPress }) => {
                         </Text>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </Pressable>
         </Animated.View>
     );
 };
@@ -89,13 +92,13 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: colors.kumkum, // Kumkum Border on Image only
         backgroundColor: '#fff',
-        elevation: 5,
+        // elevation: 5, // Removing elevation to fix Android touch issue
         marginBottom: 10, // Space between image and content
     },
     carouselImage: {
         width: '100%',
         height: '100%',
-        resizeMode: 'cover',
+        // resizeMode: 'cover', // Moved to component prop
     },
     contentContainer: {
         flex: 0.35, // Remaining 35%
@@ -112,12 +115,12 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 25,
-        backgroundColor: colors.darkHaldi, // Dark/Circle Haldi (#f29502)
+        backgroundColor: '#FFFFFF', // White background to highlight the Gold icon
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
         borderColor: colors.haldi, // Haldi Border for premium contrast
-        elevation: 8,
+        // elevation: 8, // Removing elevation to fix Android touch issue
         shadowColor: colors.kumkum,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
@@ -134,7 +137,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3,
+        // elevation: 3, // Removing elevation to fix Android touch issue
     },
     carouselTitle: {
         color: colors.kumkum,
