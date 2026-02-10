@@ -1,12 +1,11 @@
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { ResizeMode, Video } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     Dimensions,
     FlatList,
     Image,
-    LayoutAnimation,
     Platform,
     SafeAreaView,
     ScrollView,
@@ -45,47 +44,167 @@ const THEMES = [
     { id: '4', name: 'Modern Minimal', image: require('../../../../assets/DF images/Modern Minimal.jpg') },
 ];
 
-const EVENTS_PLANNER = [
+
+
+const REAL_STORIES = [
     {
         id: '1',
-        title: 'Haldi Decor',
-        status: 'In Progress',
-        icon: 'sun-o',
-        items: ['Marigold Drapes', 'Swing Setup', 'Yellow Backdrop'],
-        previousWorkImage: require('../../../../assets/DF images/Traditional Marigold.jpg')
+        title: 'Royal Heritage',
+        couple: 'Aditi & Rahul',
+        image: require('../../../../assets/images/Royal Heritage 2.jpg'),
+        icon: 'heart'
     },
     {
         id: '2',
-        title: 'Mehendi Vibes',
-        status: 'Pending',
-        icon: 'hand-stop-o',
-        items: ['Colorful Umbrellas', 'Lounge Seating', 'Signages'],
-        previousWorkImage: require('../../../../assets/DF images/Floral Pastel.jpg')
+        title: 'Beachside Bliss',
+        couple: 'Priya & Arjun',
+        image: require('../../../../assets/images/Beachside Bliss.jpg'),
+        icon: 'sunny'
     },
     {
         id: '3',
-        title: 'Wedding Mandap',
-        status: 'Planned',
-        icon: 'heart-o',
-        items: ['4-Pillar Mandap', 'Red Roses', 'Fire Pit Setup'],
-        previousWorkImage: require('../../../../assets/DF images/Royal Heritage.jpg')
+        title: 'Floral Fantasy',
+        couple: 'Sita & Ram',
+        image: require('../../../../assets/images/Floral Fantasy.jpg'),
+        icon: 'leaf'
     },
 ];
 
-const FLOWERS = [
-    { id: '1', name: 'Marigold', type: 'Local', stock: 'High', image: { uri: 'https://images.unsplash.com/photo-1596726662887-224424754546?q=80&w=600&auto=format&fit=crop' } },
-    { id: '2', name: 'Jasmine', type: 'Scented', stock: 'Med', image: { uri: 'https://plus.unsplash.com/premium_photo-1675853241484-93339bf4b105?q=80&w=600&auto=format&fit=crop' } },
-    { id: '3', name: 'Red Rose', type: 'Premium', stock: 'Low', image: { uri: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=600&auto=format&fit=crop' } },
-    { id: '4', name: 'Orchids', type: 'Exotic', stock: 'Med', image: { uri: 'https://images.unsplash.com/photo-1566928039233-149a4f4d2f44?q=80&w=600&auto=format&fit=crop' } },
+const TESTIMONIALS = [
+    {
+        id: '1',
+        text: "Absolutely dreamy decor! The team understood our vision perfectly.",
+        author: "Ananya S.",
+        rating: 5
+    },
+    {
+        id: '2',
+        text: "Professional, timely, and stunningly beautiful work.",
+        author: "Vikram R.",
+        rating: 5
+    },
+    {
+        id: '3',
+        text: "They transformed the venue into a fairytale. Highly recommended!",
+        author: "Meera K.",
+        rating: 4
+    }
 ];
 
-const VENUE_AREAS = [
-    { id: '1', area: 'Entrance', budget: '₹50k', status: 'Done' },
-    { id: '2', area: 'Stage', budget: '₹2L', status: 'Pending' },
-    { id: '3', area: 'Dining', budget: '₹80k', status: 'In Progress' },
+const VENDORS = [
+    {
+        id: '1',
+        name: 'Rohan Mehta',
+        location: 'Mumbai, India',
+        rating: 4.9,
+        price: '₹1,50,000',
+        image: { uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop' }
+    },
+    {
+        id: '2',
+        name: 'Kavya Singh',
+        location: 'Delhi, India',
+        rating: 4.7,
+        price: '₹2,00,000',
+        image: require('../../../../assets/images/venue1.jpg')
+    },
+    {
+        id: '3',
+        name: 'Ishaan Malhotra',
+        location: 'Udaipur, India',
+        rating: 5.0,
+        price: '₹5,00,000',
+        image: require('../../../../assets/images/venue2.jpg')
+    },
+    {
+        id: '4',
+        name: 'Aarav joshi',
+        location: 'Bangalore, India',
+        rating: 4.6,
+        price: '₹1,20,000',
+        image: require('../../../../assets/images/venue3.jpg')
+    }
 ];
 
 // --- COMPONENTS ---
+
+const StoryCard = ({ item }) => (
+    <View style={styles.storyCard}>
+        <Image source={item.image} style={styles.storyImage} />
+        <LinearGradient
+            colors={['transparent', 'rgba(0,0,0,0.8)']}
+            style={styles.storyOverlay}
+        >
+            <View style={styles.storyContent}>
+                <Ionicons name={item.icon} size={20} color={colors.gold} style={{ marginBottom: 5 }} />
+                <Text style={styles.storyTitle}>{item.title}</Text>
+                <Text style={styles.storyCouple}>{item.couple}</Text>
+            </View>
+        </LinearGradient>
+    </View>
+);
+
+const TestimonialCard = ({ item }) => (
+    <View style={styles.testimonialCard}>
+        <View style={styles.quoteIcon}>
+            <Ionicons name="chatbox-ellipses-outline" size={24} color={colors.saffron} />
+        </View>
+        <Text style={styles.testimonialText}>"{item.text}"</Text>
+        <View style={styles.testimonialFooter}>
+            <Text style={styles.testimonialAuthor}>- {item.author}</Text>
+            <View style={{ flexDirection: 'row' }}>
+                {[...Array(item.rating)].map((_, i) => (
+                    <Ionicons key={i} name="star" size={12} color={colors.gold} />
+                ))}
+            </View>
+        </View>
+    </View>
+);
+
+const VendorCard = ({ item }) => (
+    <View style={[styles.vendorCardEnhanced, { width: 280, marginRight: 20 }]}>
+        <View>
+            <Image
+                source={item.image}
+                style={styles.vendorCover}
+            />
+            <LinearGradient
+                colors={['transparent', 'rgba(0,0,0,0.6)']}
+                style={styles.vendorImageOverlay}
+            />
+            <View style={styles.cardFloatingBadges}>
+                <View style={styles.ratingBadgeFloating}>
+                    <Text style={styles.ratingText}>{item.rating}</Text>
+                    <Ionicons name="star" size={10} color={colors.white} />
+                </View>
+                <TouchableOpacity style={styles.favoriteBtn}>
+                    <Ionicons name="heart-outline" size={18} color={colors.white} />
+                </TouchableOpacity>
+            </View>
+        </View>
+
+        <View style={styles.vendorInfo}>
+            <Text style={styles.vendorNameLarge}>{item.name}</Text>
+            <View style={styles.vendorMetaRow}>
+                <Ionicons name="location-sharp" size={14} color={colors.saffron} />
+                <Text style={styles.vendorMetaText}>{item.location}</Text>
+            </View>
+
+            <View style={styles.divider} />
+
+            <View style={styles.vendorFooter}>
+                <View>
+                    <Text style={styles.vendorLabel}>Starting from</Text>
+                    <Text style={styles.vendorPrice}>{item.price}</Text>
+                </View>
+                <TouchableOpacity style={styles.contactBtn}>
+                    <Text style={styles.contactBtnText}>View Portfolio</Text>
+                    <Ionicons name="arrow-forward" size={14} color={colors.white} style={{ marginLeft: 5 }} />
+                </TouchableOpacity>
+            </View>
+        </View>
+    </View>
+);
 
 const ThemeCard = ({ item }) => (
     <View style={styles.themeCard}>
@@ -96,51 +215,28 @@ const ThemeCard = ({ item }) => (
     </View>
 );
 
-const EventDropdown = ({ item, expanded, toggle }) => (
-    <View style={[styles.eventCard, expanded && styles.eventCardExpanded]}>
-        <TouchableOpacity onPress={toggle} style={[styles.eventHeader, expanded && styles.eventHeaderExpanded]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View style={styles.eventIconBox}>
-                    <FontAwesome5 name={item.icon} size={16} color={colors.maroon} />
-                </View>
-                <Text style={styles.eventTitle}>{item.title}</Text>
-            </View>
-            <Ionicons name={expanded ? "chevron-up" : "chevron-down"} size={20} color={colors.textMain} />
-        </TouchableOpacity>
-        {expanded && (
-            <View style={styles.eventBody}>
-                {/* Previous Work Section */}
-                <View style={styles.previousWorkContainer}>
-                    <Text style={styles.previousWorkLabel}>Previous Work</Text>
-                    <Image source={item.previousWorkImage} style={styles.previousWorkImage} />
-                </View>
 
-                {/* Items List */}
-                <Text style={[styles.previousWorkLabel, { marginTop: 15, marginBottom: 5 }]}>Requirements</Text>
-                {item.items.map((sub, idx) => (
-                    <View key={idx} style={styles.eventItemRow}>
-                        <Ionicons name="flower-outline" size={16} color={colors.maroon} />
-                        <Text style={styles.eventItemText}>{sub}</Text>
-                    </View>
-                ))}
-            </View>
-        )}
-    </View>
-);
 
 const DecorationFloralScreen = ({ navigation }) => {
-    const [expandedEventId, setExpandedEventId] = useState(null);
+    const scrollViewRef = useRef(null);
+    const [themesY, setThemesY] = useState(0);
 
-    const toggleEvent = (id) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-        setExpandedEventId(expandedEventId === id ? null : id);
+    const scrollToThemes = () => {
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: themesY, animated: true });
+        }
     };
+
 
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor={colors.ivory} />
 
-            <ScrollView contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
+            <ScrollView
+                ref={scrollViewRef}
+                contentContainerStyle={{ paddingBottom: 100 }}
+                showsVerticalScrollIndicator={false}
+            >
 
                 {/* 1. HERO BANNER (VIDEO) */}
                 <View style={styles.heroBanner}>
@@ -152,13 +248,40 @@ const DecorationFloralScreen = ({ navigation }) => {
                         isLooping
                         isMuted
                     />
-                    <LinearGradient colors={['rgba(0,0,0,0.1)', 'rgba(44,24,16,0.7)']} style={styles.heroOverlay}>
+                    <LinearGradient colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.8)']} style={styles.heroOverlay}>
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+                            <Ionicons name="arrow-back" size={24} color={colors.ivory} />
+                        </TouchableOpacity>
+
                         <View style={styles.heroContent}>
-                            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                                <Ionicons name="arrow-back" size={24} color={colors.ivory} />
+                            <Text style={styles.heroTitle}>Because Some Moments Deserve to be Beautiful</Text>
+
+                            <Text style={styles.heroSubtitle}>
+                                <Text style={{ color: colors.gold }}>Floral</Text> • <Text style={{ color: colors.gold }}>Thematic</Text> • <Text style={{ color: colors.gold }}>Luxury</Text> • <Text style={{ color: colors.gold }}>Destination</Text>
+                            </Text>
+
+                            <TouchableOpacity style={styles.heroCTA} onPress={scrollToThemes}>
+                                <Ionicons name="heart" size={20} color={colors.white} style={{ marginRight: 8 }} />
+                                <Text style={styles.heroCTAText}>Plan My Decor</Text>
                             </TouchableOpacity>
-                            <Text style={styles.heroTitle}>Decoration & Floral</Text>
-                            <Text style={styles.heroSubtitle}>Weaving dreams with petals & precision.</Text>
+                        </View>
+
+                        {/* Floating Stats Bar */}
+                        <View style={styles.statsBar}>
+                            <View style={styles.statItem}>
+                                <Text style={styles.statNumber}>500+</Text>
+                                <Text style={styles.statLabel}>Verified Decorators</Text>
+                            </View>
+                            <View style={styles.statDivider} />
+                            <View style={styles.statItem}>
+                                <Text style={styles.statNumber}>4.8 <Ionicons name="star" size={14} color={colors.gold} /></Text>
+                                <Text style={styles.statLabel}>Average Rating</Text>
+                            </View>
+                            <View style={styles.statDivider} />
+                            <View style={styles.statItem}>
+                                <Text style={styles.statNumber}>100%</Text>
+                                <Text style={styles.statLabel}>Quality Guaranteed</Text>
+                            </View>
                         </View>
                     </LinearGradient>
                 </View>
@@ -166,7 +289,13 @@ const DecorationFloralScreen = ({ navigation }) => {
 
 
                 {/* 2. WEDDING THEMES */}
-                <View style={styles.sectionContainer}>
+                <View
+                    style={styles.sectionContainer}
+                    onLayout={(event) => {
+                        const layout = event.nativeEvent.layout;
+                        setThemesY(layout.y);
+                    }}
+                >
                     <Text style={styles.sectionHeader}>Curated Themes</Text>
                     <FlatList
                         data={THEMES}
@@ -179,114 +308,85 @@ const DecorationFloralScreen = ({ navigation }) => {
                 </View>
 
                 {/* 3. EVENT PLANNER */}
-                <View style={[styles.sectionContainer, { paddingHorizontal: 20 }]}>
-                    <Text style={styles.sectionHeader}>Event Planner</Text>
-                    {EVENTS_PLANNER.map((event) => (
-                        <EventDropdown
-                            key={event.id}
-                            item={event}
-                            expanded={expandedEventId === event.id}
-                            toggle={() => toggleEvent(event.id)}
-                        />
-                    ))}
-                </View>
 
-                {/* 4. FLOWER SELECTION */}
+
+
+
+                {/* 3. VENDOR DETAILS (Moved Up & Horizontal List) */}
                 <View style={styles.sectionContainer}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center' }}>
-                        <Text style={styles.sectionHeader}>Floral Selection</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center', marginBottom: 15 }}>
+                        <Text style={styles.sectionHeader}>Featured Vendors</Text>
                         <Text style={styles.seeAll}>See All</Text>
                     </View>
-                    <View style={styles.flowerGrid}>
-                        {FLOWERS.map((flower) => (
-                            <View key={flower.id} style={styles.flowerCard}>
-                                <Image source={flower.image} style={styles.flowerImage} />
-                                <View style={styles.flowerMeta}>
-                                    <Text style={styles.flowerName}>{flower.name}</Text>
-                                    <Text style={styles.flowerType}>{flower.type}</Text>
-                                    <View style={[styles.stockBadge, { backgroundColor: flower.stock === 'Low' ? colors.maroon : colors.gold }]}>
-                                        <Text style={styles.stockText}>{flower.stock} Stock</Text>
-                                    </View>
-                                </View>
-                            </View>
-                        ))}
+                    <FlatList
+                        data={VENDORS}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item }) => <VendorCard item={item} />}
+                        keyExtractor={item => item.id}
+                        contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
+                    />
+                </View>
+
+                {/* 4. REAL EVENTS & STORIES */}
+                <View style={styles.sectionContainer}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center', marginBottom: 15 }}>
+                        <Text style={styles.sectionHeader}>Real Events & Stories</Text>
+                        <Text style={styles.seeAll}>View All</Text>
                     </View>
+                    <FlatList
+                        data={REAL_STORIES}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item }) => <StoryCard item={item} />}
+                        keyExtractor={item => item.id}
+                        contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
+                    />
                 </View>
 
+                {/* 5. CLIENT LOVE (Testimonials) */}
+                <View style={[styles.sectionContainer, { marginTop: 10, marginBottom: 40 }]}>
+                    <Text style={[styles.sectionHeader, { marginBottom: 10 }]}>Client Love</Text>
+                    <FlatList
+                        data={TESTIMONIALS}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item }) => <TestimonialCard item={item} />}
+                        keyExtractor={item => item.id}
+                        contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
+                    />
+                </View>
 
-
-                {/* 5. VENUE BREAKDOWN */}
-                <View style={[styles.sectionContainer, { paddingHorizontal: 20 }]}>
-                    <Text style={styles.sectionHeader}>Venue Breakdown</Text>
-                    {VENUE_AREAS.map((area) => (
-                        <View key={area.id} style={styles.venueRow}>
-                            <View>
-                                <Text style={styles.venueArea}>{area.area}</Text>
-                                <Text style={styles.venueMix}>Rose • Marigold • Lights</Text>
+                {/* 6. WHY BOOK WITH US */}
+                <View style={[styles.sectionContainer, { paddingHorizontal: 20, marginBottom: 80 }]}>
+                    <Text style={styles.sectionHeader}>Why Book With Us?</Text>
+                    <View style={styles.whyUsContainer}>
+                        <View style={styles.whyUsItem}>
+                            <View style={[styles.whyUsIconBox, { backgroundColor: '#E3F2FD' }]}>
+                                <Ionicons name="shield-checkmark" size={24} color="#1565C0" />
                             </View>
-                            <View style={[styles.statusPill, { backgroundColor: area.status === 'Done' ? '#E8F5E9' : '#FFF3E0' }]}>
-                                <Text style={[styles.statusText, { color: area.status === 'Done' ? 'green' : colors.saffron }]}>{area.status}</Text>
-                            </View>
+                            <Text style={styles.whyUsTitle}>Trusted Vendors</Text>
+                            <Text style={styles.whyUsDesc}>Verified professionals for your big day.</Text>
                         </View>
-                    ))}
-                </View>
-
-                {/* 7. VENDOR DETAILS (Enhanced) */}
-                <View style={[styles.sectionContainer, { paddingHorizontal: 20, marginBottom: 40 }]}>
-                    <Text style={styles.sectionHeader}>Usage Vendor Profile</Text>
-                    <View style={styles.vendorCardEnhanced}>
-                        <Image
-                            source={{ uri: 'https://images.unsplash.com/photo-1544168190-79c11e018d4f?q=80&w=800&auto=format&fit=crop' }}
-                            style={styles.vendorCover}
-                        />
-                        <View style={styles.vendorInfo}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                <View>
-                                    <Text style={styles.vendorNameLarge}>Jay Decorators</Text>
-                                    <View style={styles.vendorMetaRow}>
-                                        <Ionicons name="location-outline" size={14} color={colors.textGrey} />
-                                        <Text style={styles.vendorMetaText}>Mumbai, India</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.ratingBadge}>
-                                    <Text style={styles.ratingText}>4.8</Text>
-                                    <Ionicons name="star" size={10} color={colors.white} />
-                                </View>
+                        <View style={styles.whyUsItem}>
+                            <View style={[styles.whyUsIconBox, { backgroundColor: '#E8F5E9' }]}>
+                                <Ionicons name="pricetag" size={24} color="#2E7D32" />
                             </View>
-
-                            <View style={styles.divider} />
-
-                            <View style={styles.vendorFooter}>
-                                <View>
-                                    <Text style={styles.vendorLabel}>Starting From</Text>
-                                    <Text style={styles.vendorPrice}>₹ 1,50,000</Text>
-                                </View>
-                                <TouchableOpacity style={styles.contactBtn}>
-                                    <Text style={styles.contactText}>Contact Vendor</Text>
-                                </TouchableOpacity>
+                            <Text style={styles.whyUsTitle}>Best Prices</Text>
+                            <Text style={styles.whyUsDesc}>Transparent pricing with no hidden costs.</Text>
+                        </View>
+                        <View style={styles.whyUsItem}>
+                            <View style={[styles.whyUsIconBox, { backgroundColor: '#FFF3E0' }]}>
+                                <Ionicons name="star" size={24} color="#EF6C00" />
                             </View>
+                            <Text style={styles.whyUsTitle}>Verified Reviews</Text>
+                            <Text style={styles.whyUsDesc}>Real feedback from real couples.</Text>
                         </View>
                     </View>
                 </View>
 
                 {/* 10. REVIEW CHEKLIST */}
-                <View style={[styles.sectionContainer, { paddingHorizontal: 20 }]}>
-                    <Text style={styles.sectionHeader}>Final Approval Checklist</Text>
-                    <View style={styles.checklistCard}>
-                        <View style={styles.checkRow}>
-                            <Ionicons name="checkmark-circle" size={20} color="green" />
-                            <Text style={styles.checkText}>Theme & Color Palette Approved</Text>
-                        </View>
-                        <View style={styles.checkRow}>
-                            <Ionicons name="ellipse-outline" size={20} color={colors.maroon} />
-                            <Text style={styles.checkText}>Flower Quantities Locked</Text>
-                        </View>
-                        <View style={styles.checkRow}>
-                            <Ionicons name="ellipse-outline" size={20} color={colors.maroon} />
-                            <Text style={styles.checkText}>Lighting Setup Reviewed</Text>
-                        </View>
-                    </View>
-                </View>
+
 
             </ScrollView>
 
@@ -303,37 +403,106 @@ const styles = StyleSheet.create({
     // Hero
     heroBanner: {
         width: width,
-        height: 280,
+        height: 480, // Increased height for new layout
         justifyContent: 'flex-end',
+        marginBottom: 50, // Space for the floating stats bar overlap if needed, or visual breathing room
     },
     heroOverlay: {
         flex: 1,
-        justifyContent: 'flex-end',
-        padding: 20,
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
+        justifyContent: 'flex-end', // Align content to bottom
+        paddingHorizontal: 20,
+        paddingBottom: 80, // Space for stats bar
     },
     backBtn: {
         position: 'absolute',
-        top: 40,
-        left: 0,
+        top: 50,
+        left: 20,
         padding: 10,
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        backgroundColor: 'rgba(0,0,0,0.4)', // Darker background for visibility
         borderRadius: 20,
+        zIndex: 10,
+    },
+    heroContent: {
+        alignItems: 'center',
+        paddingBottom: 20,
     },
     heroTitle: {
-        color: colors.ivory,
+        color: colors.white,
         fontSize: 32,
-        fontWeight: 'bold',
-        fontFamily: 'serif',
-        marginTop: 20,
+        fontWeight: '800', // Extra bold
+        textAlign: 'center',
+        lineHeight: 40,
+        marginBottom: 10,
+        textShadowColor: 'rgba(0,0,0,0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 10,
     },
     heroSubtitle: {
         color: colors.gold,
+        fontSize: 14,
+        fontWeight: '600',
+        textAlign: 'center',
+        marginBottom: 25,
+        textShadowColor: 'rgba(0,0,0,0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 5,
+    },
+    heroCTA: {
+        flexDirection: 'row',
+        backgroundColor: '#D32F2F', // Red color
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 25,
+        alignItems: 'center',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    heroCTAText: {
+        color: colors.white,
         fontSize: 16,
-        fontStyle: 'italic',
-        marginTop: 5,
-        fontWeight: '500',
+        fontWeight: 'bold',
+    },
+    // Stats Bar
+    statsBar: {
+        position: 'absolute',
+        bottom: -30, // Floating effect partial overlap
+        left: 20,
+        right: 20,
+        backgroundColor: colors.white,
+        borderRadius: 15,
+        flexDirection: 'row',
+        paddingVertical: 15,
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        elevation: 8, // High elevation for floating look
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4.65,
+        zIndex: 20,
+    },
+    statItem: {
+        alignItems: 'center',
+        flex: 1,
+    },
+    statNumber: {
+        color: '#D32F2F', // Red to match CTA
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 2,
+    },
+    statLabel: {
+        color: '#555',
+        fontSize: 10,
+        textAlign: 'center',
+    },
+    statDivider: {
+        width: 1,
+        height: '70%',
+        backgroundColor: '#eee',
     },
 
     // Sections
@@ -350,10 +519,10 @@ const styles = StyleSheet.create({
     },
     // Themes
     themeCard: {
-        width: 160,
-        height: 200,
+        width: 110,
+        height: 150,
         borderRadius: 15,
-        marginRight: 15,
+        marginRight: 10,
         overflow: 'hidden',
     },
     themeImage: {
@@ -417,7 +586,7 @@ const styles = StyleSheet.create({
         color: '#4A2C2A', // Darker brown/maroon for text
     },
     eventBody: {
-        padding: 15,
+        padding: 12,
         backgroundColor: colors.white,
     },
     eventItemRow: {
@@ -436,7 +605,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         paddingHorizontal: 20,
+        paddingHorizontal: 20,
         justifyContent: 'space-between',
+        paddingBottom: 10,
     },
     flowerCard: {
         width: (width - 55) / 2,
@@ -447,12 +618,18 @@ const styles = StyleSheet.create({
         shadowColor: colors.cardShadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
+        // Improved shadow/elevation
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 5,
+        elevation: 5,
     },
     flowerImage: {
         width: '100%',
-        height: 120,
+        height: 140,
         borderTopLeftRadius: 12,
         borderTopRightRadius: 12,
+        resizeMode: 'cover',
     },
     flowerMeta: {
         padding: 10,
@@ -611,46 +788,120 @@ const styles = StyleSheet.create({
     // Vendor Enhanced
     vendorCardEnhanced: {
         backgroundColor: colors.white,
-        borderRadius: 15,
+        borderRadius: 16,
         overflow: 'hidden',
-        elevation: 4,
-        shadowColor: colors.cardShadow,
+        elevation: 6,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        borderWidth: 1,
+        borderColor: '#f0f0f0',
     },
     vendorCover: {
         width: '100%',
-        height: 150,
+        height: 180,
+    },
+    vendorImageOverlay: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 60,
+    },
+    cardFloatingBadges: {
+        position: 'absolute',
+        top: 12,
+        left: 12,
+        right: 12,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    ratingBadgeFloating: {
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        backdropFilter: 'blur(10px)',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.2)',
+    },
+    favoriteBtn: {
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.2)',
+    },
+    ratingText: {
+        color: colors.white,
+        fontWeight: 'bold',
+        fontSize: 12,
+        marginRight: 4,
     },
     vendorInfo: {
         padding: 15,
     },
     vendorNameLarge: {
         fontSize: 18,
-        fontWeight: 'bold',
+        fontWeight: '800',
         color: colors.textMain,
+        marginBottom: 2,
     },
     vendorMetaRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 4,
+        marginBottom: 5,
     },
     vendorMetaText: {
         marginLeft: 4,
         color: colors.textGrey,
         fontSize: 13,
+        fontWeight: '500',
     },
-    ratingBadge: {
-        backgroundColor: colors.saffron,
+    vendorFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    vendorLabel: {
+        fontSize: 11,
+        color: colors.textGrey,
+        textTransform: 'uppercase',
+        letterSpacing: 0.5,
+    },
+    vendorPrice: {
+        fontSize: 18,
+        fontWeight: '800',
+        color: colors.maroon,
+    },
+    contactBtn: {
+        backgroundColor: colors.textMain,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 25,
+        elevation: 3,
+        shadowColor: colors.textMain,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 8,
     },
-    ratingText: {
+    contactBtnText: {
         color: colors.white,
-        fontWeight: 'bold',
-        fontSize: 12,
-        marginRight: 3,
+        fontWeight: '600',
+        fontSize: 13,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: '#F5F5F5',
+        marginVertical: 12,
     },
     vendorFooter: {
         flexDirection: 'row',
@@ -667,15 +918,17 @@ const styles = StyleSheet.create({
         color: colors.maroon,
     },
     contactBtn: {
-        backgroundColor: colors.textMain,
+        backgroundColor: colors.textMain, // Dark background
         paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: 15,
         borderRadius: 20,
+        elevation: 2,
     },
-    contactText: {
-        color: colors.white,
+    contactBtnText: {
+        color: colors.white, // White text for contrast
         fontWeight: 'bold',
-        fontSize: 14,
+        fontSize: 12, // Adjusted for better fit
+        textAlign: 'center',
     },
     divider: {
         height: 1,
@@ -733,9 +986,116 @@ const styles = StyleSheet.create({
     },
     previousWorkImage: {
         width: '100%',
-        height: 150,
-        borderRadius: 10,
+        height: 200,
+        borderRadius: 12,
         resizeMode: 'cover',
+    },
+    // Why Us
+    whyUsContainer: {
+        backgroundColor: colors.white,
+        borderRadius: 15,
+        padding: 20,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+    },
+    whyUsItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    whyUsIconBox: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 15,
+    },
+    whyUsTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: colors.textMain,
+        marginBottom: 2,
+    },
+    whyUsDesc: {
+        fontSize: 13,
+        color: colors.textGrey,
+        flex: 1,
+    },
+    // Real Stories
+    storyCard: {
+        width: 200,
+        height: 250,
+        borderRadius: 15,
+        marginRight: 15,
+        backgroundColor: colors.white,
+        elevation: 5,
+        shadowColor: colors.cardShadow,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        overflow: 'hidden',
+    },
+    storyImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+    },
+    storyOverlay: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 120,
+        justifyContent: 'flex-end',
+        padding: 15,
+    },
+    storyContent: {
+        justifyContent: 'flex-end',
+    },
+    storyTitle: {
+        color: colors.white,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 2,
+    },
+    storyCouple: {
+        color: colors.gold,
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    // Testimonials
+    testimonialCard: {
+        width: 260,
+        backgroundColor: '#FFF9E6', // Light cream/gold tint
+        borderRadius: 15,
+        padding: 20,
+        marginRight: 15,
+        borderWidth: 1,
+        borderColor: '#F5E6C1',
+    },
+    quoteIcon: {
+        marginBottom: 10,
+    },
+    testimonialText: {
+        fontSize: 14,
+        color: '#4A3B32',
+        fontStyle: 'italic',
+        lineHeight: 20,
+        marginBottom: 15,
+    },
+    testimonialFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    testimonialAuthor: {
+        fontWeight: 'bold',
+        color: colors.maroon,
+        fontSize: 14,
     },
 });
 

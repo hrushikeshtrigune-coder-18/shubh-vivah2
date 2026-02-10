@@ -54,6 +54,7 @@ const AppNavigator = () => {
             )}
             <Stack.Screen name="DecorationFloral" component={DecorationFloralScreen} />
             <Stack.Screen name="Services2" component={require('../screens/wedding/Services 2').default} />
+            <Stack.Screen name="JewelleryDetailsScreen" component={require('../screens/wedding/services/Jewellery Details').default} />
         </Stack.Navigator>
     );
 };
