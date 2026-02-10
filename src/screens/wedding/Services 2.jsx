@@ -137,34 +137,12 @@ const serviceCategories = [
     },
     {
         id: '10',
-        title: 'Entertainment',
-        icon: require('../../../assets/images/entertenment.jpg'),
-        screen: 'VendorListScreen',
-        params: { serviceName: 'Entertainment' },
-        suggestions: [
-            { id: 's1', title: 'DJ', icon: 'musical-notes-outline' },
-            { id: 's2', title: 'Live Band', icon: 'mic-outline' },
-        ]
-    },
-    {
-        id: '11',
         title: 'Honeymoon',
         icon: require('../../../assets/images/honeymoon planning.jpg'),
         screen: 'Honeymoon',
         suggestions: [
             { id: 's1', title: 'International', icon: 'earth-outline' },
             { id: 's2', title: 'Domestic', icon: 'car-outline' },
-        ]
-    },
-    {
-        id: '12',
-        title: 'Gifts & Returns',
-        icon: { uri: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=2000' },
-        screen: 'VendorListScreen',
-        params: { serviceName: 'Return Gifts' },
-        suggestions: [
-            { id: 's1', title: 'Luxury Hampers', icon: 'gift-outline' },
-            { id: 's2', title: 'Customized', icon: 'create-outline' },
         ]
     },
 ];
@@ -257,17 +235,16 @@ const Services2 = () => {
     const [filterModalVisible, setFilterModalVisible] = useState(false);
     const [activeCategory, setActiveCategory] = useState('All');
 
-    const filterCategories = ['All', 'Planning', 'Venue', 'Food', 'Fashion', 'Media', 'Decor', 'Entertainment'];
+    const filterCategories = ['All', 'Planning', 'Venue', 'Food', 'Fashion', 'Media', 'Decor'];
 
     // Mapping Services to Categories
     const getCategory = (title) => {
-        if (['Event Management', 'Honeymoon', 'Gifts & Returns'].includes(title)) return 'Planning';
+        if (['Event Management', 'Honeymoon'].includes(title)) return 'Planning';
         if (['Venues'].includes(title)) return 'Venue';
         if (['Catering'].includes(title)) return 'Food';
         if (['Jewellery', 'Mehandi', 'Makeup'].includes(title)) return 'Fashion';
         if (['Photography', 'E-Invites'].includes(title)) return 'Media';
         if (['Decor'].includes(title)) return 'Decor';
-        if (['Entertainment'].includes(title)) return 'Entertainment';
         return 'Other';
     };
 

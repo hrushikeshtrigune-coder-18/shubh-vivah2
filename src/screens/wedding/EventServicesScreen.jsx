@@ -102,7 +102,6 @@ const EventServicesScreen = ({ navigation }) => {
             (selectedCategory === 'Decor' && (service.title.includes('Decoration') || service.title.includes('Venue'))) ||
             (selectedCategory === 'Florist' && service.title.includes('Decoration')) ||
             (selectedCategory === 'Catering' && service.title.includes('Food')) ||
-            (selectedCategory === 'Music' && service.title.includes('Entertainment')) ||
             (selectedCategory === 'Photo' && service.title.includes('Photography')) ||
             (selectedCategory === 'Venue' && service.title.includes('Venue'));
 
@@ -119,15 +118,6 @@ const EventServicesScreen = ({ navigation }) => {
             description: 'Transform your venue with bespoke floral arrangements and immersive themes.',
             features: ['Theme Decor', 'Floral Styling'],
             icon: 'holly-berry'
-        },
-        {
-            id: 's3',
-            title: 'Return Gifts',
-            subtitle: 'Favors & Hampers',
-            image: { uri: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=2000&auto=format&fit=crop' },
-            description: 'Exclusive gift hampers and return favors to thank your guests.',
-            features: ['Custom Packing', 'Eco-friendly'],
-            icon: 'gift'
         },
         {
             id: 's4',
@@ -155,15 +145,6 @@ const EventServicesScreen = ({ navigation }) => {
             description: 'Exquisite bridal and wedding jewellery collections.',
             features: ['Gold & Diamond', 'Custom Designs'],
             icon: 'gem'
-        },
-        {
-            id: 's8',
-            title: 'Entertainment',
-            subtitle: 'Music & Dance',
-            image: require('../../../assets/images/entertenment.jpg'),
-            description: 'Live bands, DJs, and celebrity performances.',
-            features: ['Live DJ', 'Dancers'],
-            icon: 'music'
         }
     ];
 
