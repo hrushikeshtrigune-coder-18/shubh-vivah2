@@ -1,15 +1,19 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useRef } from 'react';
 import {
-    Animated,
     Dimensions,
     Image,
     ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
+
+// Local Image Imports
+const venue1 = require('../../../../assets/images/venue1.jpg');
+const venue2 = require('../../../../assets/images/venue2.jpg');
+const venue3 = require('../../../../assets/images/venue3.jpg');
 
 const { width } = Dimensions.get('window');
 
@@ -33,16 +37,66 @@ const SIMILAR_VENDORS = [
         image: 'https://images.unsplash.com/photo-1519225421980-715cb0202128?q=80&w=400&auto=format&fit=crop',
         rating: 4.9,
     },
+    {
+        id: '4',
+        name: 'The Grandeur',
+        image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=400&auto=format&fit=crop',
+        rating: 4.6,
+    },
+    {
+        id: '5',
+        name: 'Sapphire Inn',
+        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=400&auto=format&fit=crop',
+        rating: 4.5,
+    },
+    {
+        id: '6',
+        name: 'Crystal Ballroom',
+        image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=400&auto=format&fit=crop',
+        rating: 4.7,
+    },
 ];
 
-// Mock data for venue photos
+// Local assets for venue photos
 const VENUE_PHOTOS = [
-    'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200',
-    'https://images.unsplash.com/photo-1511285560982-1356c11d4606?q=80&w=1200',
-    'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1200',
-    'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=1200',
-    'https://images.unsplash.com/photo-1522673607200-1645062cd95c?q=80&w=1200',
-    'https://images.unsplash.com/photo-1510076857177-7470076d4098?q=80&w=1200',
+    { id: '1', source: venue1 },
+    { id: '2', source: venue2 },
+    { id: '3', source: venue3 },
+];
+
+// Mock data for Previous Events (reusing same images for demo, but logically distinct)
+const PREVIOUS_EVENTS = [
+    { id: '1', source: venue3 },
+    { id: '2', source: venue1 },
+    { id: '3', source: venue2 },
+    { id: '4', source: venue1 },
+];
+
+const VENDOR_PLANS = [
+    {
+        id: '1',
+        name: 'Pearl Plan',
+        price: '₹25,000',
+        features: ['Basic Decoration', 'Sound System', 'Standard Lighting'],
+        icon: 'diamond-outline',
+        color: '#95afc0'
+    },
+    {
+        id: '2',
+        name: 'Ruby Plan',
+        price: '₹50,000',
+        features: ['Premium Decoration', 'DJ System', 'Stage Lighting', 'Photography'],
+        icon: 'diamond',
+        color: '#eb4d4b'
+    },
+    {
+        id: '3',
+        name: 'Diamond Plan',
+        price: '₹1,00,000',
+        features: ['Luxury Decoration', 'Live Band', 'Cinematography', 'Catering Support'],
+        icon: 'sparkles',
+        color: '#f0932b'
+    }
 ];
 
 const VenuePortfolio = ({ navigation, route }) => {
@@ -58,37 +112,20 @@ const VenuePortfolio = ({ navigation, route }) => {
         location: 'Pune, MH',
     };
 
-    const [activeTab, setActiveTab] = React.useState('likes'); // State for tabs
-    const scrollY = useRef(new Animated.Value(0)).current;
+    const [activeShowcaseTab, setActiveShowcaseTab] = React.useState('venue');
 
-    // Header Animation Values
-    // When scrollY > 300, header fades in
-    const headerOpacity = scrollY.interpolate({
-        inputRange: [250, 350],
-        outputRange: [0, 1],
-        extrapolate: 'clamp',
-    });
-
-    // Profile on page fades out
-    const profilePageOpacity = scrollY.interpolate({
-        inputRange: [200, 300],
-        outputRange: [1, 0],
-        extrapolate: 'clamp',
-    });
-
-    // Auto-scroll logic for similar vendors
-    const similarVendorsRef = useRef(null);
+    // Auto-scroll logic for similar vendors (Suggested)
+    const suggestedVendorsRef = useRef(null);
     React.useEffect(() => {
         let scrollValue = 0;
         const intervalId = setInterval(() => {
-            if (similarVendorsRef.current) {
-                scrollValue += 160;
-                if (scrollValue > 160 * SIMILAR_VENDORS.length) {
+            if (suggestedVendorsRef.current) {
+                scrollValue += 95; // 80 card width + 15 gap
+                if (scrollValue > 95 * SIMILAR_VENDORS.length - width) {
                     scrollValue = 0;
                 }
-                const scrollToX = scrollValue;
-                if (similarVendorsRef.current.scrollTo) {
-                    similarVendorsRef.current.scrollTo({ x: scrollToX, animated: true });
+                if (suggestedVendorsRef.current.scrollTo) {
+                    suggestedVendorsRef.current.scrollTo({ x: scrollValue, animated: true });
                 }
             }
         }, 3000);
@@ -110,10 +147,13 @@ const VenuePortfolio = ({ navigation, route }) => {
                     heroCarouselRef.current.scrollTo({ x: nextIndex * width, animated: true });
                 }
             }
-        }, 4000); // 4 seconds per slide
+        }, 3000);
         return () => clearInterval(intervalId);
     }, [heroIndex]);
 
+    // --- ANIMATION INTERPOLATIONS ---
+
+    // --- ANIMATION REVERTED ---
 
     const renderHeroCarousel = () => (
         <View style={styles.heroCarouselContainer}>
@@ -131,7 +171,7 @@ const VenuePortfolio = ({ navigation, route }) => {
                 {VENUE_PHOTOS.map((photo, index) => (
                     <Image
                         key={index}
-                        source={{ uri: photo }}
+                        source={photo.source}
                         style={styles.heroImage}
                         resizeMode="cover"
                     />
@@ -160,58 +200,46 @@ const VenuePortfolio = ({ navigation, route }) => {
         </View>
     );
 
-    const renderStickyHeader = () => (
-        <Animated.View style={[styles.stickyHeader, { opacity: headerOpacity }]}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.stickyBackButton}>
-                <Ionicons name="arrow-back" size={24} color="#333" />
-            </TouchableOpacity>
-
-            <View style={styles.stickyProfileContainer}>
-                <Image
-                    source={vendor.image ? vendor.image : { uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=200' }}
-                    style={styles.stickyProfileImage}
-                />
-                <Text style={styles.stickyVendorName} numberOfLines={1}>{vendor.name}</Text>
-            </View>
-
-            <View style={styles.stickyActions}>
-                <TouchableOpacity>
-                    <Ionicons name="bookmark-outline" size={24} color="#333" />
-                </TouchableOpacity>
-            </View>
-        </Animated.View>
+    const renderSuggestedVendors = () => (
+        <View style={styles.suggestedContainer}>
+            <Text style={styles.suggestedTitle}>Suggested Vendors</Text>
+            <ScrollView
+                ref={suggestedVendorsRef}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.suggestedScrollContent}
+            >
+                {SIMILAR_VENDORS.map((v) => (
+                    <TouchableOpacity key={v.id} style={styles.suggestedCard}>
+                        <Image source={{ uri: v.image }} style={styles.suggestedImage} />
+                        <View style={styles.suggestedInfo}>
+                            <Text style={styles.suggestedName} numberOfLines={1}>{v.name}</Text>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        </View>
     );
 
-
     const renderProfileSection = () => (
-        <Animated.View style={[styles.profileSection, { opacity: profilePageOpacity }]}>
+        <View style={styles.profileSection}>
             <View style={styles.profileRow}>
-                {/* Left: Image */}
-                <View style={styles.profileImageContainer}>
+                <View style={[styles.profileImageContainer, { zIndex: 100 }]}>
                     <Image
                         source={vendor.image ? vendor.image : { uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=200' }}
                         style={styles.profileImage}
                     />
                 </View>
 
-                {/* Right: Info Column */}
                 <View style={styles.profileInfoColumn}>
                     <Text style={styles.vendorName}>{vendor.name}</Text>
-
-                    <Text style={styles.descriptionTextHero} numberOfLines={3}>
-                        Crafting timeless wedding celebrations in the heart of {vendor.location?.split(',')[0]} with royal architecture and curated luxury.
+                    <Text style={styles.locationText} numberOfLines={1}>
+                        <Ionicons name="location-outline" size={12} color="#666" /> Udaipur, Rajasthan
                     </Text>
-
-                    {/* Stats Row below description */}
+                    <Text style={styles.descriptionTextHero} numberOfLines={2}>
+                        Offering a royal experience with curated luxury events.
+                    </Text>
                     <View style={styles.statsRow}>
-                        <View style={styles.statItem}>
-                            <Ionicons name="heart-outline" size={16} color="#333" />
-                            <Text style={styles.statText}>2.5k</Text>
-                        </View>
-                        <View style={styles.statItem}>
-                            <Ionicons name="eye-outline" size={16} color="#333" />
-                            <Text style={styles.statText}>15k</Text>
-                        </View>
                         <View style={styles.statItem}>
                             <Ionicons name="star" size={16} color="#F29502" />
                             <Text style={styles.statText}>{vendor.rating} ({vendor.reviews})</Text>
@@ -219,175 +247,158 @@ const VenuePortfolio = ({ navigation, route }) => {
                     </View>
                 </View>
             </View>
-        </Animated.View>
-    );
 
-    const renderFloatingTabs = () => (
-        <View style={styles.tabContainerWrapper}>
-            <View style={styles.glassTabContainer}>
-                {['likes', 'views', 'interest'].map((tab) => {
-                    const isActive = activeTab === tab;
-                    const iconName = tab === 'likes' ? 'heart' : tab === 'views' ? 'eye' : 'bookmark';
-                    const count = tab === 'likes' ? '2.5k' : tab === 'views' ? '15k' : '850';
-
-                    return (
-                        <TouchableOpacity
-                            key={tab}
-                            style={[styles.tabItem, isActive && styles.activeTabItem]}
-                            onPress={() => setActiveTab(tab)}
-                            activeOpacity={0.7}
-                        >
-                            <Ionicons
-                                name={isActive ? iconName : `${iconName}-outline`}
-                                size={20}
-                                color={isActive ? '#CC0E0E' : '#888'}
-                            />
-                            {isActive && (
-                                <Text style={styles.tabText}>{count}</Text>
-                            )}
-                        </TouchableOpacity>
-                    );
-                })}
-            </View>
+            {/* Suggested Vendors Carousel */}
+            {renderSuggestedVendors()}
         </View>
     );
 
-    const renderInfoSection = () => (
-        <View style={styles.sectionContainer}>
-            <View style={styles.tagRow}>
-                {vendor.amenities && vendor.amenities.map((amenity, index) => (
-                    <View key={index} style={styles.tag}>
-                        <Ionicons
-                            name={amenity.includes('Alcohol') ? "wine-outline" : "leaf-outline"}
-                            size={14}
-                            color="#888"
-                            style={{ marginRight: 6 }}
-                        />
-                        <Text style={styles.tagText}>{amenity}</Text>
-                    </View>
-                ))}
-            </View>
-            <View style={styles.divider} />
-        </View>
-    );
 
-    const renderSimilarVendors = () => (
+    const renderVendorPlans = () => (
         <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Similar Vendors</Text>
+            <Text style={styles.sectionTitle}>Plans & Pricing</Text>
+            <Text style={styles.sectionSubtitle}>Choose a plan that fits your dream wedding</Text>
             <ScrollView
-                ref={similarVendorsRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingVertical: 20, paddingHorizontal: 20 }}
-                snapToInterval={180} // Card width + margin
-                decelerationRate="fast"
+                contentContainerStyle={styles.plansScrollContent}
             >
-                {SIMILAR_VENDORS.map((item) => (
-                    <TouchableOpacity key={item.id} style={styles.similarCardEditorial}>
-                        <Image source={{ uri: item.image }} style={styles.similarImageEditorial} />
-                        <View style={styles.similarOverlay}>
-                            <Text style={styles.similarNameEditorial}>{item.name}</Text>
-                            <View style={styles.similarRating}>
-                                <Ionicons name="star" size={12} color="#FFF" />
-                                <Text style={styles.similarRatingTextEditorial}>{item.rating}</Text>
-                            </View>
+                {VENDOR_PLANS.map((plan) => (
+                    <TouchableOpacity key={plan.id} style={styles.planCard}>
+                        <View style={[styles.planIconCircleVertical, { backgroundColor: plan.color + '15' }]}>
+                            <Ionicons name={plan.icon} size={32} color={plan.color} />
                         </View>
+
+                        <Text style={styles.planNameVertical}>{plan.name}</Text>
+                        <Text style={styles.planPriceVertical}>{plan.price}</Text>
+                        <Text style={styles.planPerEvent}>Per Event</Text>
+
+                        <View style={styles.featuresListVertical}>
+                            {plan.features.map((feature, idx) => (
+                                <View key={idx} style={styles.featureItemVertical}>
+                                    <Ionicons name="checkmark-circle" size={14} color={plan.color} />
+                                    <Text style={styles.featureTextVertical}>{feature}</Text>
+                                </View>
+                            ))}
+                        </View>
+
+                        <TouchableOpacity style={[styles.selectPlanBtn, { borderColor: plan.color }]}>
+                            <Text style={[styles.selectPlanText, { color: plan.color }]}>Select Plan</Text>
+                        </TouchableOpacity>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
         </View>
     );
 
-    const renderGallery = () => (
-        <View style={styles.sectionContainer}>
-            {/* Organic Blob Background for Gallery */}
-            <View style={styles.blobShape} />
+    const renderGallery = () => {
+        const imagesToShow = activeShowcaseTab === 'venue' ? VENUE_PHOTOS : PREVIOUS_EVENTS;
 
-            <Text style={styles.sectionTitle}>Venue Showcase</Text>
-            <View style={styles.galleryGrid}>
-                {VENUE_PHOTOS.slice(0, 1).map((photo, index) => (
-                    <TouchableOpacity key={index} style={styles.galleryItemHero}>
-                        <Image source={{ uri: photo }} style={styles.galleryImage} />
-                    </TouchableOpacity>
-                ))}
-                <View style={styles.galleryRow}>
-                    {VENUE_PHOTOS.slice(1, 3).map((photo, index) => (
-                        <TouchableOpacity key={index} style={styles.galleryItemMedium}>
-                            <Image source={{ uri: photo }} style={styles.galleryImage} />
+        return (
+            <View style={styles.sectionContainer}>
+                <View style={styles.blobShape} />
+
+                <View style={styles.showcaseHeader}>
+                    <Text style={styles.sectionTitle}>Venue Showcase</Text>
+
+                    <View style={styles.showcaseTabs}>
+                        <TouchableOpacity
+                            style={[styles.showcaseTabItem, activeShowcaseTab === 'venue' && styles.activeShowcaseTab]}
+                            onPress={() => setActiveShowcaseTab('venue')}
+                        >
+                            <Text style={[styles.showcaseTabText, activeShowcaseTab === 'venue' && styles.activeShowcaseTabText]}>
+                                Venue Images
+                            </Text>
                         </TouchableOpacity>
-                    ))}
+                        <TouchableOpacity
+                            style={[styles.showcaseTabItem, activeShowcaseTab === 'events' && styles.activeShowcaseTab]}
+                            onPress={() => setActiveShowcaseTab('events')}
+                        >
+                            <Text style={[styles.showcaseTabText, activeShowcaseTab === 'events' && styles.activeShowcaseTabText]}>
+                                Previous Events
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={styles.galleryRow}>
-                    {VENUE_PHOTOS.slice(3, 6).map((photo, index) => (
-                        <TouchableOpacity key={index} style={styles.galleryItemSmall}>
-                            <Image source={{ uri: photo }} style={styles.galleryImage} />
-                        </TouchableOpacity>
-                    ))}
+
+                <View style={styles.galleryGrid}>
+                    {activeShowcaseTab === 'venue' ? (
+                        <>
+                            {VENUE_PHOTOS.slice(0, 1).map((photo, index) => (
+                                <TouchableOpacity key={index} style={styles.galleryItemHero}>
+                                    <Image source={photo.source} style={styles.galleryImage} />
+                                </TouchableOpacity>
+                            ))}
+                            <View style={styles.galleryRow}>
+                                {VENUE_PHOTOS.slice(1, 3).map((photo, index) => (
+                                    <TouchableOpacity key={index} style={styles.galleryItemMedium}>
+                                        <Image source={photo.source} style={styles.galleryImage} />
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        </>
+                    ) : (
+                        <View style={styles.eventsGrid}>
+                            {PREVIOUS_EVENTS.map((photo, index) => (
+                                <TouchableOpacity key={index} style={styles.galleryItemMedium}>
+                                    <Image source={photo.source} style={styles.galleryImage} />
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
                 </View>
             </View>
-        </View>
-    );
+        );
+    };
 
     return (
         <View style={styles.container}>
-            {/* Floating Sticky Header (Initially Invisible) */}
-            {renderStickyHeader()}
-
             <ScrollView
                 showsVerticalScrollIndicator={false}
-                scrollEventThrottle={16}
-                onScroll={Animated.event(
-                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-                    { useNativeDriver: false } // Important for web
-                )}
             >
                 {renderHeroCarousel()}
 
-                <View style={styles.contentContainer}>
+                <View style={styles.mainContentWrapper}>
                     {renderProfileSection()}
-                    {renderFloatingTabs()}
-                    {renderInfoSection()}
-                    {renderSimilarVendors()}
                     {renderGallery()}
+                    {renderVendorPlans()}
+
+                    {/* Buttons at the end of the page */}
+                    <View style={styles.footerActions}>
+                        <TouchableOpacity style={styles.contactButtonOutline} onPress={() => { }}>
+                            <Text style={styles.contactButtonTextOutline}>Contact Vendor</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.bookButtonPremium} onPress={() => { }}>
+                            <Text style={styles.bookButtonTextPremium}>Book a Visit</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 <View style={{ height: 100 }} />
             </ScrollView>
-
-            {/* Bottom Floating Action Button */}
-            <View style={styles.bottomBar}>
-                <TouchableOpacity style={styles.contactButtonOutline} onPress={() => { }}>
-                    <Text style={styles.contactButtonTextOutline}>Contact Vendor</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.bookButtonPremium} onPress={() => { }}>
-                    <Text style={styles.bookButtonTextPremium}>Book a Visit</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFF0',
     },
-    contentContainer: {
+    mainContentWrapper: {
         backgroundColor: '#FFFFF0',
-        marginTop: 20,
-        borderTopLeftRadius: 30, // Slight visual separation
-        borderTopRightRadius: 30,
-        top: -30, // Pull up over carousel
-        paddingTop: 30,
+        zIndex: 1,
+        paddingTop: 10, // Small gap to show the floating effect
     },
     // Hero Carousel
     heroCarouselContainer: {
-        height: 400,
+        height: 280, // Reduced height (was 400)
         width: width,
     },
     heroImage: {
         width: width,
-        height: 400,
+        height: 280, // Reduced height
     },
     paginationContainer: {
         position: 'absolute',
@@ -426,56 +437,15 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         zIndex: 10,
     },
-    // Sticky Header
-    stickyHeader: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: 90,
-        backgroundColor: '#FFFFF0',
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        justifyContent: 'space-between',
-        paddingBottom: 15,
-        paddingHorizontal: 20,
-        zIndex: 100, // Top of everything
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    stickyBackButton: {
-        padding: 5,
-    },
-    stickyProfileContainer: {
-        flex: 1,
-        alignItems: 'center', // Center content in header
-        justifyContent: 'center',
-        flexDirection: 'row',
-    },
-    stickyVendorName: {
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 16,
-        color: '#222',
-        marginLeft: 8,
-    },
-    stickyActions: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 15,
-    },
-
     profileSection: {
         paddingHorizontal: 20,
-        marginBottom: 20,
+        paddingBottom: 30,
         zIndex: 20,
     },
     profileRow: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        marginTop: -50, // Floating overlap
+        marginTop: 15,
     },
     profileImageContainer: {
         marginRight: 15,
@@ -484,6 +454,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 10,
         elevation: 8,
+        marginTop: 15, // Push image down specifically
     },
     profileImage: {
         width: 90,
@@ -492,21 +463,75 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: '#FFFFF0',
     },
+    suggestedContainer: {
+        marginTop: 20,
+    },
+    suggestedTitle: {
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 14,
+        color: '#222',
+        marginBottom: 10,
+    },
+    suggestedScrollContent: {
+        gap: 15,
+        paddingRight: 20,
+    },
+    suggestedCard: {
+        width: 80,
+        height: 112,
+        borderRadius: 12,
+        backgroundColor: '#FFF',
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: '#EFEFEF',
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+    },
+    suggestedImage: {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+    },
+    suggestedInfo: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        paddingVertical: 4,
+        paddingHorizontal: 6,
+    },
+    suggestedName: {
+        fontFamily: 'Outfit_500Medium',
+        fontSize: 10,
+        color: '#FFF',
+        textAlign: 'center',
+    },
     profileInfoColumn: {
         flex: 1,
-        paddingTop: 55, // Push down to align with bottom of image roughly or just below overlap
+        paddingTop: 35, // Shifted upper (was 55)
+        justifyContent: 'center',
     },
     vendorName: {
         fontFamily: 'Outfit_700Bold',
         fontSize: 22,
         color: '#222',
+        marginBottom: 2,
+    },
+    locationText: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 13,
+        color: '#555',
         marginBottom: 4,
     },
     descriptionTextHero: {
         fontFamily: 'Outfit_400Regular',
-        fontSize: 13,
-        color: '#666',
-        lineHeight: 18,
+        fontSize: 12,
+        color: '#777',
+        lineHeight: 16,
         marginBottom: 8,
     },
     statsRow: {
@@ -524,6 +549,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#444',
     },
+    // Stats Removed
     professionText: {
         fontFamily: 'Outfit_500Medium',
         fontSize: 11,
@@ -604,9 +630,49 @@ const styles = StyleSheet.create({
         fontFamily: 'Outfit_600SemiBold',
         fontSize: 20,
         color: '#1a1a1a',
-        marginBottom: 15,
         letterSpacing: 0.5,
     },
+    // Showcase Tabs
+    showcaseHeader: {
+        flexDirection: 'column', // Changed from row to stack vertically
+        alignItems: 'flex-start',
+        marginBottom: 15,
+        gap: 10,
+    },
+    showcaseTabs: {
+        flexDirection: 'row',
+        gap: 12, // Gap between buttons
+        backgroundColor: 'transparent', // No background container
+        padding: 0,
+    },
+    showcaseTabItem: {
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderRadius: 20,
+        backgroundColor: '#FFF',
+        borderWidth: 1,
+        borderColor: '#E0E0E0',
+        elevation: 1,
+    },
+    activeShowcaseTab: {
+        backgroundColor: '#333', // Dark active button
+        borderColor: '#333',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 3,
+    },
+    showcaseTabText: {
+        fontFamily: 'Outfit_500Medium',
+        fontSize: 13,
+        color: '#666',
+    },
+    activeShowcaseTabText: {
+        color: '#FFF', // White text on active
+        fontFamily: 'Outfit_600SemiBold',
+    },
+
     tagRow: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -635,10 +701,10 @@ const styles = StyleSheet.create({
     },
     // Editorial Similar Vendors
     similarCardEditorial: {
-        width: 160,
-        height: 260,
-        marginRight: 15,
-        borderRadius: 16,
+        width: 80, // Micro-sized (was 100)
+        height: 110, // Micro-sized (was 140)
+        marginRight: 10,
+        borderRadius: 8,
         overflow: 'hidden',
         backgroundColor: '#000',
     },
@@ -652,20 +718,30 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        padding: 15,
-        backgroundColor: 'rgba(0,0,0,0.3)', // gradient effect
+        padding: 6,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+    },
+    similarRatingAbsolute: {
+        position: 'absolute',
+        top: 4,
+        right: 4,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: 4,
+        paddingHorizontal: 4,
+        paddingVertical: 2,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 2,
     },
     similarNameEditorial: {
         fontFamily: 'Outfit_600SemiBold',
-        fontSize: 16,
+        fontSize: 8, // Kept small
         color: '#FFF',
-        marginBottom: 4,
     },
     similarRatingTextEditorial: {
         fontFamily: 'Outfit_500Medium',
-        fontSize: 12,
+        fontSize: 8,
         color: '#FFF',
-        marginLeft: 4,
     },
     // Masonry Gallery
     galleryGrid: {
@@ -673,6 +749,11 @@ const styles = StyleSheet.create({
     },
     galleryRow: {
         flexDirection: 'row',
+        gap: 10,
+    },
+    eventsGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
         gap: 10,
     },
     galleryItemHero: {
@@ -705,21 +786,92 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(212, 175, 55, 0.05)', // Subtle gold blob
         zIndex: -1,
     },
-    // Bottom Bar
-    bottomBar: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        flexDirection: 'row',
-        paddingVertical: 20,
-        paddingHorizontal: 24,
-        backgroundColor: 'rgba(255,255,255,0.95)', // slight transparency
-        borderTopWidth: 1,
-        borderTopColor: '#F0F0F0',
+    sectionSubtitle: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 13,
+        color: '#666',
+        marginTop: 4,
+        marginBottom: 15,
+    },
+    plansScrollContent: {
+        paddingVertical: 10,
+        paddingRight: 20,
+        gap: 20,
+    },
+    planCard: {
+        width: 220,
+        backgroundColor: '#FFF',
+        padding: 24,
+        borderRadius: 24,
         alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#F5F5F5',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+    },
+    planIconCircleVertical: {
+        width: 70,
+        height: 70,
+        borderRadius: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    planNameVertical: {
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 20,
+        color: '#222',
+        marginBottom: 8,
+    },
+    planPriceVertical: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 28,
+        color: '#1A1A1A',
+    },
+    planPerEvent: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 12,
+        color: '#888',
+        marginBottom: 20,
+    },
+    featuresListVertical: {
+        width: '100%',
+        marginBottom: 25,
+        gap: 10,
+    },
+    featureItemVertical: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    featureTextVertical: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 12,
+        color: '#555',
+        flex: 1,
+    },
+    selectPlanBtn: {
+        width: '100%',
+        paddingVertical: 12,
+        borderRadius: 15,
+        borderWidth: 1.5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 'auto',
+    },
+    selectPlanText: {
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 14,
+    },
+    footerActions: {
+        flexDirection: 'row',
         gap: 15,
-        elevation: 20, // Stronger shadow for floating feel
+        marginTop: 30,
+        marginBottom: 20,
+        paddingHorizontal: 4,
     },
     contactButtonOutline: {
         flex: 1,
