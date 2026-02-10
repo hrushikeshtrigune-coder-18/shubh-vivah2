@@ -13,7 +13,6 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    UIManager,
     View
 } from 'react-native';
 import venue1 from '../../../../assets/images/venue1.jpg';
@@ -386,6 +385,12 @@ const WeddingVenue = ({ navigation }) => {
                     <Text style={styles.editorialPrice}>{item.price}</Text>
                     <Text style={styles.editorialCapacity}>{item.capacity} guests</Text>
                 </View>
+                <TouchableOpacity
+                    style={styles.viewVenuesButton}
+                    onPress={() => navigation.navigate('VenuePortfolio', { vendor: item })}
+                >
+                    <Text style={styles.viewVenuesButtonText}>View Venues</Text>
+                </TouchableOpacity>
             </View>
         </TouchableOpacity>
     );
@@ -762,6 +767,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 3,
         borderRadius: 8,
+    },
+    viewVenuesButton: {
+        marginTop: 12,
+        backgroundColor: '#CC0E0E',
+        paddingVertical: 10,
+        borderRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    viewVenuesButtonText: {
+        color: '#FFFFFF',
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 14,
     },
     footerContainer: {
         alignItems: 'center',

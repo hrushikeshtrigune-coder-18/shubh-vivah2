@@ -1,4 +1,3 @@
-import { Outfit_400Regular, Outfit_500Medium, Outfit_700Bold } from '@expo-google-fonts/outfit';
 import { PlayfairDisplay_700Bold, useFonts } from '@expo-google-fonts/playfair-display';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
@@ -254,9 +253,6 @@ const HoneymoonNeumorphic = ({ navigation }) => {
     // --- STATE & REFS ---
     const [fontsLoaded] = useFonts({
         PlayfairDisplay_700Bold,
-        Outfit_400Regular,
-        Outfit_500Medium,
-        Outfit_700Bold,
     });
 
     const [bookingStep, setBookingStep] = useState(0); // 0 = default, 1 = loading, 2 = confirmed
@@ -558,7 +554,16 @@ const HoneymoonNeumorphic = ({ navigation }) => {
                 </ScrollView>
 
                 {/* Sticky Planner */}
-
+                <View style={styles.plannerCard}>
+                    <Image source={{ uri: 'https://randomuser.me/api/portraits/women/44.jpg' }} style={styles.plannerImage} />
+                    <View>
+                        <Text style={styles.plannerName}>Sarah</Text>
+                        <Text style={styles.plannerStatus}>Available Now</Text>
+                    </View>
+                    <TouchableOpacity style={styles.plannerBtn}>
+                        <Ionicons name="chatbubble-ellipses-outline" size={20} color="#CC0E0E" />
+                    </TouchableOpacity>
+                </View>
 
                 {renderItineraryModal()}
 
@@ -825,15 +830,15 @@ const styles = StyleSheet.create({
     glassInfo: {
         position: 'absolute',
         bottom: 15, left: 15, right: 15,
-        // height: 160, // Removed fixed height
+        height: 160, // Fixed height for consistency
         borderRadius: 24,
         overflow: 'hidden',
         padding: 15, // Padding inside blur
-        // justifyContent: 'space-between', // Let content stack naturally
+        justifyContent: 'space-between',
         // Stronger fallbacks and overlay for readability
-        backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.5)',
+        backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.6)',
         borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.6)',
+        borderColor: 'rgba(255, 255, 255, 0.8)',
     },
     vendorHeader: {
         flexDirection: 'row',
@@ -888,7 +893,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#FFF',
-        paddingVertical: 6, // Increased from 4
+        paddingVertical: 4,
         paddingHorizontal: 8,
         borderRadius: 20,
         marginRight: 6,
@@ -900,9 +905,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Outfit_600SemiBold', // Bolder font
         color: '#333', // Darker text for contrast
         marginLeft: 3,
-        // fontWeight: '600', // Removed this as font family handles it
-        includeFontPadding: false, // Fix vertical alignment/cutting off on Android
-        textAlignVertical: 'center',
+        fontWeight: '600',
     },
     contactBtn: {
         backgroundColor: PRIMARY_COLOR,
