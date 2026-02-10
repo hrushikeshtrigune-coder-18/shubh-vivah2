@@ -42,55 +42,53 @@ const COLORS = {
 const VideoHero = memo(({ insets, onSearchPress, navigation }) => {
     const videoRef = useRef(null);
     return (
-        <View style={styles.heroContainer}>
-            <View style={StyleSheet.absoluteFill}>
-                <Video
-                    key="stable-hero-video"
-                    ref={videoRef}
-                    source={require('../../../../assets/EventMimg/Jewelary/jewelaryV (2).mp4')}
-                    style={styles.heroVideo}
-                    resizeMode={ResizeMode.COVER}
-                    shouldPlay
-                    isLooping
-                    isMuted
-                />
-            </View>
-            <View style={styles.heroOverlay} />
-
-            <View style={[styles.headerIconsRow, { top: insets.top + 10 }]}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtnWrapper}>
-                    <Ionicons name="arrow-back" size={24} color="#fff" />
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.heroContent}>
-                <Text style={styles.heroHeadline}>We Don't Just Sell Jewellery — {"\n"}We Create Legacies✨</Text>
-                <Text style={styles.heroSubtext}>Traditional • Modern • Destination Experiences</Text>
-
-                <TouchableOpacity style={styles.heroCTA} onPress={onSearchPress}>
-                    <Ionicons name="sparkles" size={20} color="#fff" style={{ marginRight: 10 }} />
-                    <Text style={styles.heroCTAText}>Explore Collections</Text>
-                </TouchableOpacity>
-            </View>
-
-            <View style={styles.trustStrip}>
-                <View style={styles.trustItem}>
-                    <View style={styles.trustIconCircle}>
-                        <Ionicons name="shield-checkmark-outline" size={20} color={COLORS.textRed} />
-                    </View>
-                    <Text style={styles.trustText}>Hallmarked</Text>
+        <View style={styles.heroWrapper}>
+            <View style={styles.heroContainer}>
+                <View style={StyleSheet.absoluteFill}>
+                    <Video
+                        key="stable-hero-video"
+                        ref={videoRef}
+                        source={require('../../../../assets/EventMimg/Jewelary/jewelaryV (2).mp4')}
+                        style={styles.heroVideo}
+                        resizeMode={ResizeMode.COVER}
+                        shouldPlay
+                        isLooping
+                        isMuted
+                    />
                 </View>
-                <View style={styles.trustItem}>
-                    <View style={styles.trustIconCircle}>
-                        <Ionicons name="ribbon-outline" size={20} color={COLORS.textRed} />
-                    </View>
-                    <Text style={styles.trustText}>Certified</Text>
+                <View style={styles.heroOverlay} />
+
+                <View style={[styles.headerIconsRow, { top: insets.top + 10 }]}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtnWrapper}>
+                        <Ionicons name="arrow-back" size={24} color="#fff" />
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.trustItem}>
-                    <View style={styles.trustIconCircle}>
-                        <Ionicons name="diamond-outline" size={20} color={COLORS.textRed} />
-                    </View>
-                    <Text style={styles.trustText}>Premium</Text>
+
+                <View style={styles.heroContent}>
+                    <Text style={styles.heroHeadline}>We Don't Just Sell Jewellery — {"\n"}We Create Legacies✨</Text>
+                    <Text style={styles.heroSubtext}>Traditional • Modern • Destination Experiences</Text>
+
+                    <TouchableOpacity style={styles.heroCTA} onPress={onSearchPress}>
+                        <Ionicons name="sparkles" size={20} color="#fff" style={{ marginRight: 10 }} />
+                        <Text style={styles.heroCTAText}>Explore Collections</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            <View style={styles.statsStrip}>
+                <View style={styles.statsSection}>
+                    <Text style={styles.statsValue}>500+</Text>
+                    <Text style={styles.statsLabel}>Verified{'\n'}Jewellers</Text>
+                </View>
+                <View style={styles.verticalDivider} />
+                <View style={styles.statsSection}>
+                    <Text style={styles.statsValue}>4.8 ★</Text>
+                    <Text style={styles.statsLabel}>Average{'\n'}Rating</Text>
+                </View>
+                <View style={styles.verticalDivider} />
+                <View style={styles.statsSection}>
+                    <Text style={styles.statsValue}>100%</Text>
+                    <Text style={styles.statsLabel}>Quality{'\n'}Guaranteed</Text>
                 </View>
             </View>
         </View>
@@ -123,14 +121,17 @@ const FEATURED_COLLECTIONS = [
     { id: '1', name: 'Temple Jewellery', image: { uri: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2070&auto=format&fit=crop' }, subtitle: 'Divine • Traditional • Gold', filterKey: 'Temple' },
     { id: '2', name: 'Kundan Sets', image: { uri: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop' }, subtitle: 'Royal • Polki • Heritage', filterKey: 'Kundan' },
     { id: '3', name: 'Diamond Love', image: { uri: 'https://images.unsplash.com/photo-1599643478518-17488fbbcd75?q=80&w=2070&auto=format&fit=crop' }, subtitle: 'Modern • Classy • Shine', filterKey: 'Diamond' },
+    { id: '4', name: 'Antique Gold', image: { uri: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=2070&auto=format&fit=crop' }, subtitle: 'Vintage • Heritage • Heavy', filterKey: 'Gold' },
+    { id: '5', name: 'Floral Jewellery', image: { uri: 'https://images.unsplash.com/photo-1588661845173-982163b2255e?q=80&w=1974&auto=format&fit=crop' }, subtitle: 'Haldi • Mehendi • Fresh', filterKey: 'Flower' },
+    { id: '6', name: 'Bridal Sets', image: { uri: 'https://images.unsplash.com/photo-1589139169229-87588019685a?q=80&w=1974&auto=format&fit=crop' }, subtitle: 'Complete • Wedding • Rent', filterKey: 'Bridal' },
 ];
 
 const VIBE_DATA = [
-    { id: 'Diamond', name: 'Diamond', icon: 'diamond-stone', lib: 'MCI' },
-    { id: 'Necklace', name: 'Necklace', icon: 'necklace', lib: 'MCI' },
-    { id: 'Gemstone', name: 'Gemstone', icon: 'octagram-outline', lib: 'MCI' },
-    { id: 'Earrings', name: 'Earrings', icon: 'star-four-points-outline', lib: 'MCI' },
-    { id: 'Bangles', name: 'Bangles', icon: 'circle-multiple-outline', lib: 'MCI' },
+    { id: 'All', name: 'View All', icon: 'apps', lib: 'Ionicons' },
+    { id: 'Jewellery', name: 'Jewellery', icon: 'diamond-stone', lib: 'MCI' },
+    { id: 'Flower Jewellery', name: 'Flower Jewellery', icon: 'flower-outline', lib: 'MCI' },
+    { id: 'Bridal Jewellery on Rent', name: 'Rental\nJewellery', icon: 'calendar-clock', lib: 'MCI' },
+    { id: 'Accessories', name: 'Accessories', icon: 'glasses', lib: 'Ionicons' },
 ];
 
 const JewelleryScreen = ({ navigation }) => {
@@ -236,7 +237,7 @@ const JewelleryScreen = ({ navigation }) => {
                     {filteredData.map((item) => {
                         const isLiked = !!likedItems[item.id];
                         return (
-                            <View key={item.id} style={styles.cardContainer}>
+                            <TouchableOpacity key={item.id} style={styles.cardContainer} onPress={() => navigation.navigate('JewelleryDetailsScreen', { item })}>
                                 <ImageBackground source={item.image} style={styles.cardImage} resizeMode="cover">
                                     <View style={styles.ratingBadge}><Text style={styles.ratingText}>{item.ratingValue}</Text></View>
                                     <TouchableOpacity style={styles.heartBtn} onPress={() => toggleLike(item.id)}>
@@ -251,7 +252,7 @@ const JewelleryScreen = ({ navigation }) => {
                                         </View>
                                     </View>
                                 </ImageBackground>
-                            </View>
+                            </TouchableOpacity>
                         );
                     })}
                 </View>
@@ -298,7 +299,8 @@ const JewelleryScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFFE4' },
     scrollContent: { paddingBottom: 100 },
-    heroContainer: { height: 550, marginBottom: 20, position: 'relative', overflow: 'hidden' },
+    heroWrapper: { height: 550, marginBottom: 20, position: 'relative', zIndex: 10 },
+    heroContainer: { width: '100%', height: '100%', overflow: 'hidden', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
     heroVideo: { width: '100%', height: '100%' },
     heroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.45)' },
     headerIconsRow: { position: 'absolute', left: 20, zIndex: 30 },
@@ -308,19 +310,59 @@ const styles = StyleSheet.create({
     heroSubtext: { color: '#eee', fontSize: 13, fontWeight: '500', marginBottom: 25 },
     heroCTA: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.kumkum, alignSelf: 'flex-start', paddingVertical: 14, paddingHorizontal: 35, borderRadius: 30, elevation: 4 },
     heroCTAText: { color: '#fff', fontSize: 15, fontWeight: 'bold' },
-    trustStrip: { position: 'absolute', bottom: -25, alignSelf: 'center', width: width * 0.92, backgroundColor: '#fff', borderRadius: 15, flexDirection: 'row', paddingVertical: 15, elevation: 8, zIndex: 40 },
-    trustItem: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-    trustIconCircle: { width: 42, height: 42, borderRadius: 21, backgroundColor: '#FFF8E1', alignItems: 'center', justifyContent: 'center', marginBottom: 6, borderWidth: 1, borderColor: '#FFD700' },
-    trustText: { fontSize: 10, fontWeight: '700', color: '#333' },
+    statsStrip: {
+        position: 'absolute',
+        bottom: -35,
+        alignSelf: 'center',
+        width: width * 0.92,
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        flexDirection: 'row',
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        elevation: 8,
+        zIndex: 40,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderWidth: 1,
+        borderColor: '#f0f0f0'
+    },
+    statsSection: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    statsValue: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: COLORS.textRed,
+        marginBottom: 2
+    },
+    statsLabel: {
+        fontSize: 10,
+        fontWeight: '500',
+        color: '#666',
+        textAlign: 'center',
+        lineHeight: 14
+    },
+    verticalDivider: {
+        width: 1,
+        height: '70%',
+        backgroundColor: '#eee'
+    },
     sectionContainer: { marginTop: 30, paddingHorizontal: 20 },
     sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textRed, marginBottom: 10 },
     horizontalScroll: { paddingRight: 20 },
-    featuredCard: { width: 140, height: 180, marginRight: 15 },
+    featuredCard: { width: width * 0.28, height: 140, marginRight: 10 },
     featuredImage: { width: '100%', height: '100%', justifyContent: 'flex-end' },
-    featuredOverlay: { padding: 10, backgroundColor: 'rgba(0,0,0,0.4)', borderBottomLeftRadius: 15, borderBottomRightRadius: 15 },
-    featuredName: { color: '#fff', fontWeight: 'bold' },
+    featuredOverlay: { padding: 10, borderBottomLeftRadius: 15, borderBottomRightRadius: 15, backgroundColor: 'rgba(0,0,0,0.1)' },
+    featuredName: { color: '#fff', fontWeight: 'bold', textShadowColor: 'rgba(0, 0, 0, 0.75)', textShadowOffset: { width: -1, height: 1 }, textShadowRadius: 10 },
     vibeScroll: { paddingRight: 20 },
-    vibeItem: { width: 70, height: 70, borderRadius: 35, backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#f29502', justifyContent: 'center', alignItems: 'center', marginRight: 15 },
+    vibeItem: { width: 70, height: 70, borderRadius: 35, backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#f29502', justifyContent: 'center', alignItems: 'center' },
     activeVibeItem: { backgroundColor: '#FFF8E1' },
     vibeText: { fontSize: 11, color: COLORS.textRed, marginTop: 5, fontWeight: '700', textAlign: 'center' },
     cardContainer: { marginBottom: 20, borderRadius: 20, overflow: 'hidden', height: 350, borderWidth: 1.5, borderColor: '#FFD700' },

@@ -8,8 +8,8 @@ import AppNavigator from './navigation/AppNavigator';
 
 export default function App() {
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <SafeAreaProvider>
+        <SafeAreaProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
                 <AuthProvider>
                     <RoleProvider>
                         <NavigationContainer>
@@ -18,7 +18,7 @@ export default function App() {
                         </NavigationContainer>
                     </RoleProvider>
                 </AuthProvider>
-            </SafeAreaProvider>
-        </GestureHandlerRootView>
+            </GestureHandlerRootView>
+        </SafeAreaProvider>
     );
 }
