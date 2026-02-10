@@ -166,7 +166,7 @@ const Photography = ({ navigation }) => {
 
                 <TouchableOpacity style={styles.portfolioButton}>
                     <Text style={styles.portfolioButtonText}>View Portfolio</Text>
-                    <Ionicons name="images-outline" size={16} color="#CC0E0E" />
+                    <Ionicons name="images-outline" size={16} color="#FFF" />
                 </TouchableOpacity>
             </View>
         </View>
@@ -479,15 +479,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 12,
-        borderWidth: 1,
-        borderColor: '#CC0E0E',
+        backgroundColor: '#CC0E0E',
         borderRadius: 12,
-        borderStyle: 'dashed',
     },
     portfolioButtonText: {
         fontFamily: 'Outfit_600SemiBold',
         fontSize: 14,
-        color: '#CC0E0E',
+        color: '#FFF',
         marginRight: 8,
     },
     testimonialCard: {
