@@ -6,21 +6,16 @@ import {
     Dimensions,
     FlatList,
     Image,
-    Platform,
     SafeAreaView,
     ScrollView,
     StatusBar,
     StyleSheet,
     Text,
     TouchableOpacity,
-    UIManager,
     View
 } from 'react-native';
 
-// Enable LayoutAnimation for expanding sections
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+
 
 const { width } = Dimensions.get('window');
 

@@ -12,7 +12,6 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    UIManager,
     useWindowDimensions,
     View
 } from 'react-native';
@@ -26,11 +25,7 @@ import Reanimated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-if (Platform.OS === 'android') {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-}
+
 
 // Team Card Constants
 const { width } = Dimensions.get('window');

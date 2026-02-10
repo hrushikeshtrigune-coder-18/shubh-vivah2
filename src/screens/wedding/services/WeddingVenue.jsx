@@ -26,10 +26,7 @@ import venue8 from '../../../../assets/images/venue8.jpg';
 
 const { width } = Dimensions.get('window');
 
-// Enable LayoutAnimation
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+
 
 const SERIF_FONT = Platform.select({ ios: 'Georgia', android: 'serif' });
 

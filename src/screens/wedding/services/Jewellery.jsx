@@ -12,16 +12,11 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    UIManager,
     View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-if (Platform.OS === 'android') {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-}
+
 
 const { width } = Dimensions.get('window');
 

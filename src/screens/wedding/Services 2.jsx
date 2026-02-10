@@ -19,17 +19,12 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    UIManager,
     View
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-if (Platform.OS === 'android') {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-}
+
 
 // Global Color System (Based on User Request)
 const COLORS = {
