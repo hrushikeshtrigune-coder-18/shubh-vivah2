@@ -22,7 +22,7 @@ const TabNavigator = () => {
                     if (route.name === 'Services') {
                         return (
                             <Image
-                                source={require('../../assets/images/image icon.png')}
+                                source={require('../../assets/images/icon.png')}
                                 style={{
                                     width: size,
                                     height: size,

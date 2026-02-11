@@ -14,6 +14,7 @@ import { ActivityIndicator, View } from 'react-native';
 import DecorationFloralScreen from '../screens/wedding/services/DecorationFloral';
 import MehandiScreen from '../screens/wedding/services/mehandi';
 
+import PhotographerPortfolio from '../screens/wedding/portfolio/photop';
 import VenuePortfolio from '../screens/wedding/portfolio/venuep';
 
 const Stack = createNativeStackNavigator();
@@ -50,6 +51,7 @@ const AppNavigator = () => {
                     <Stack.Screen name="ReceptionInviteScreen" component={require('../screens/wedding/services/ReceptionInviteScreen').default} />
                     <Stack.Screen name="MehandiScreen" component={MehandiScreen} />
                     <Stack.Screen name="VenuePortfolio" component={VenuePortfolio} />
+                    <Stack.Screen name="PhotographerPortfolio" component={PhotographerPortfolio} />
                 </>
             ) : (
                 <Stack.Screen name="Auth" component={AuthNavigator} />

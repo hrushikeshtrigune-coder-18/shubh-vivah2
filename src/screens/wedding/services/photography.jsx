@@ -164,7 +164,10 @@ const Photography = ({ navigation }) => {
                     ))}
                 </View>
 
-                <TouchableOpacity style={styles.portfolioButton}>
+                <TouchableOpacity
+                    style={styles.portfolioButton}
+                    onPress={() => navigation.navigate('PhotographerPortfolio', { vendor: item })}
+                >
                     <Text style={styles.portfolioButtonText}>View Portfolio</Text>
                     <Ionicons name="images-outline" size={16} color="#FFF" />
                 </TouchableOpacity>
