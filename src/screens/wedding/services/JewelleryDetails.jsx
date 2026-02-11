@@ -1,14 +1,17 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Dimensions,
-    FlatList,
     Image,
+    Modal,
     Platform,
+    ScrollView,
     StatusBar,
     StyleSheet,
     Text,
+    TextInput,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     View
 } from 'react-native';
 import Animated, {
@@ -28,7 +31,7 @@ const COLORS = {
     akshid: '#FFFFE4',       // Background / Soft sections
     textRed: '#CC0E0E',      // Text Highlight / Alerts
     haldi: '#F3D870',        // Secondary Accent
-    darkHaldi: '#F29502',    // Dark Accent / Icons / Circles
+    darkHaldi: '#f29502',    // Dark Accent / Icons / Circles
     white: '#FFFFFF',
     textDark: '#1A1A1A',     // Deep black for contrast
     textGray: '#666666',
@@ -46,23 +49,28 @@ const PORTFOLIO_IMAGES = [
     { id: '8', uri: 'https://images.unsplash.com/photo-1599643477877-53135311f9ae?q=80&w=2070&auto=format&fit=crop' }
 ];
 
+const HeroImg1 = require('../../../../assets/EventMimg/Jewelary/Djewellery.jpg');
+const HeroImg2 = require('../../../../assets/EventMimg/Jewelary/Djewellery1.jpg');
+const HeroImg3 = require('../../../../assets/EventMimg/Jewelary/Djewellery2.jpg');
+
+const HERO_IMAGES = [
+    { id: 'local-1', source: HeroImg1 },
+    { id: 'local-2', source: HeroImg2 },
+    { id: 'local-3', source: HeroImg3 },
+];
+
 const JewelleryDetails = ({ route, navigation }) => {
     const { item } = route.params || {};
     const insets = useSafeAreaInsets();
     const [activeTab, setActiveTab] = useState('PORTFOLIO');
     const [isBookmark, setIsBookmark] = useState(false);
+    const [bookModalVisible, setBookModalVisible] = useState(false);
 
     // Hero Carousel Logic
     const flatListRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const heroImages = React.useMemo(() => {
-        return [
-            { id: 'local-1', source: require('../../../../assets/EventMimg/Jewelary/Djewellery.jpg') },
-            { id: 'local-2', source: require('../../../../assets/EventMimg/Jewelary/Djewellery1.jpg') },
-            { id: 'local-3', source: require('../../../../assets/EventMimg/Jewelary/Djewellery2.jpg') },
-        ];
-    }, []);
+    const heroImages = HERO_IMAGES;
 
     useEffect(() => {
         if (heroImages.length <= 1) return;
@@ -70,8 +78,8 @@ const JewelleryDetails = ({ route, navigation }) => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => {
                 const nextIndex = (prevIndex + 1) % heroImages.length;
-                flatListRef.current?.scrollToIndex({
-                    index: nextIndex,
+                flatListRef.current?.scrollTo({
+                    x: nextIndex * width,
                     animated: true,
                 });
                 return nextIndex;
@@ -161,23 +169,7 @@ const JewelleryDetails = ({ route, navigation }) => {
         </View>
     );
 
-    const renderHighlights = () => (
-        <Animated.ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.highlightsContainer}>
-            <HighlightCard icon="diamond-stone" label="Diamond" color={COLORS.darkHaldi} />
-            <HighlightCard icon="gold" label="Gold" color={COLORS.kumkum} />
-            <HighlightCard icon="medal" label="Certified" color={COLORS.darkHaldi} />
-            <HighlightCard icon="hand-heart" label="Handmade" color={COLORS.kumkum} />
-        </Animated.ScrollView>
-    );
 
-    const HighlightCard = ({ icon, label, color }) => (
-        <View style={styles.highlightCard}>
-            <View style={[styles.highlightIconBox, { backgroundColor: color + '20' }]}>
-                <MaterialCommunityIcons name={icon} size={24} color={color} />
-            </View>
-            <Text style={styles.highlightText}>{label}</Text>
-        </View>
-    );
 
     return (
         <View style={styles.mainContainer}>
@@ -185,25 +177,28 @@ const JewelleryDetails = ({ route, navigation }) => {
 
             {/* Fixed Background Hero Slider */}
             <View style={styles.heroBackground}>
-                <FlatList
+                <ScrollView
                     ref={flatListRef}
-                    data={heroImages}
                     horizontal
                     pagingEnabled
                     showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item) => item.id}
-                    scrollEnabled={false} // Disable manual scroll to avoid conflict with auto-scroll? Or keep enabled? User said "auto scroll". Let's keep manual enabled but it might fight. User didn't ask to disable manual. Actually standard carousel allows manual.
-                    // But if user scrolls manually, currentIndex state needs update.
-                    // For simplicity and to match request exactly ("automatically after 3 sec"), let's stick to auto.
-                    // I will enable manual scroll but simplistic auto logic might jump if index mismatches.
-                    // Let's just implement auto scroll for now as requested.
-                    renderItem={({ item }) => (
-                        <Image source={item.source} style={{ width, height: '100%' }} resizeMode="cover" />
-                    )}
-                    getItemLayout={(data, index) => (
-                        { length: width, offset: width * index, index }
-                    )}
-                />
+                    scrollEventThrottle={16}
+                    scrollEnabled={true}
+                    style={StyleSheet.absoluteFill}
+                    onMomentumScrollEnd={(event) => {
+                        const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
+                        setCurrentIndex(newIndex);
+                    }}
+                >
+                    {HERO_IMAGES.map((item) => (
+                        <Image
+                            key={item.id}
+                            source={item.source}
+                            style={{ width, height: 450 }}
+                            resizeMode="cover"
+                        />
+                    ))}
+                </ScrollView>
                 <View style={styles.heroOverlay} />
             </View>
 
@@ -254,7 +249,7 @@ const JewelleryDetails = ({ route, navigation }) => {
                     <View style={styles.divider} />
 
                     {/* Highlights Scroll */}
-                    {renderHighlights()}
+
 
                     {/* Tabs */}
                     <View style={styles.tabsWrapper}>
@@ -274,14 +269,93 @@ const JewelleryDetails = ({ route, navigation }) => {
                         </View>
                     )}
 
-                    {/* CTA Button */}
-                    <TouchableOpacity style={styles.contactBtn}>
-                        <Text style={styles.contactBtnText}>Contact Vendor</Text>
-                        <Ionicons name="arrow-forward" size={18} color={COLORS.white} />
-                    </TouchableOpacity>
+                    {/* CTA Buttons */}
+                    <View style={styles.ctaRow}>
+                        <TouchableOpacity style={[styles.contactBtn, styles.bookBtn]} onPress={() => setBookModalVisible(true)}>
+                            <Text style={styles.contactBtnText}>Book Visit</Text>
+                            <Ionicons name="calendar-outline" size={18} color={COLORS.white} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={[styles.contactBtn, styles.viewPhotosBtn]}>
+                            <Text style={[styles.contactBtnText, { color: COLORS.textDark }]}>View Photos</Text>
+                            <Ionicons name="images-outline" size={18} color={COLORS.textDark} />
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
             </Animated.ScrollView>
+
+            {/* Book Visit Modal */}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={bookModalVisible}
+                onRequestClose={() => setBookModalVisible(false)}
+            >
+                <TouchableWithoutFeedback onPress={() => setBookModalVisible(false)}>
+                    <View style={styles.modalOverlay}>
+                        <TouchableWithoutFeedback onPress={() => { }}>
+                            <View style={styles.modalContent}>
+                                <View style={styles.modalHeader}>
+                                    <Text style={styles.modalTitle}>Book a Visit</Text>
+                                    <TouchableOpacity onPress={() => setBookModalVisible(false)} style={styles.closeBtn}>
+                                        <Ionicons name="close" size={20} color={COLORS.darkHaldi} />
+                                    </TouchableOpacity>
+                                </View>
+                                <Text style={styles.modalSubtitle}>Schedule a tour of {item?.name || 'Royal Orchid Palace'}</Text>
+
+                                <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
+                                    <View style={styles.formCard}>
+                                        <View style={styles.inputGroup}>
+                                            <Text style={styles.label}>Full Name</Text>
+                                            <View style={styles.inputWrapper}>
+                                                <Ionicons name="person-outline" size={20} color={COLORS.textGray} style={styles.inputIcon} />
+                                                <TextInput placeholder="Enter your full name" style={styles.input} placeholderTextColor={COLORS.textGray + '99'} />
+                                            </View>
+                                        </View>
+
+                                        <View style={styles.inputGroup}>
+                                            <Text style={styles.label}>Mobile Number (OTP optional)</Text>
+                                            <View style={styles.inputWrapper}>
+                                                <Ionicons name="call-outline" size={20} color={COLORS.textGray} style={styles.inputIcon} />
+                                                <TextInput placeholder="Enter mobile number" keyboardType="phone-pad" style={styles.input} placeholderTextColor={COLORS.textGray + '99'} />
+                                            </View>
+                                        </View>
+
+                                        <View style={styles.rowInputs}>
+                                            <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
+                                                <Text style={styles.label}>Preferred Date</Text>
+                                                <View style={styles.inputWrapper}>
+                                                    <Ionicons name="calendar-outline" size={20} color={COLORS.textGray} style={styles.inputIcon} />
+                                                    <TextInput placeholder="DD/MM/YYYY" style={styles.input} placeholderTextColor={COLORS.textGray + '99'} />
+                                                </View>
+                                            </View>
+                                            <View style={[styles.inputGroup, { flex: 1 }]}>
+                                                <Text style={styles.label}>Time Slot</Text>
+                                                <View style={styles.inputWrapper}>
+                                                    <Ionicons name="time-outline" size={20} color={COLORS.textGray} style={styles.inputIcon} />
+                                                    <TextInput placeholder="e.g. 2:00 PM" style={styles.input} placeholderTextColor={COLORS.textGray + '99'} />
+                                                </View>
+                                            </View>
+                                        </View>
+
+                                        <Text style={styles.disclaimer}>* Our relationship manager will call you to confirm the appointment.</Text>
+
+                                        <View style={styles.modalFooter}>
+                                            <TouchableOpacity style={styles.backBtnModal} onPress={() => setBookModalVisible(false)}>
+                                                <Text style={styles.backBtnText}>Back</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={styles.confirmBtn}>
+                                                <Text style={styles.confirmBtnText}>Confirm Visit</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </ScrollView>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
         </View>
     );
 };
@@ -355,17 +429,7 @@ const styles = StyleSheet.create({
 
     divider: { height: 1, backgroundColor: 'rgba(0,0,0,0.05)', marginBottom: 20 },
 
-    // Highlights
-    highlightsContainer: { paddingBottom: 20, gap: 10 },
-    highlightCard: {
-        backgroundColor: COLORS.white, padding: 10, borderRadius: 14, width: 90, alignItems: 'center', marginRight: 8,
-        ...Platform.select({
-            web: { borderWidth: 1, borderColor: '#eee' },
-            default: { elevation: 2, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 3 }
-        })
-    },
-    highlightIconBox: { width: 36, height: 36, borderRadius: 10, justifyContent: 'center', alignItems: 'center', marginBottom: 6 },
-    highlightText: { fontSize: 11, fontWeight: '600', color: COLORS.textDark },
+
 
     // Tabs
     tabsWrapper: { flexDirection: 'row', gap: 10, marginBottom: 20 },
@@ -384,15 +448,72 @@ const styles = StyleSheet.create({
     gridImage: { width: '100%', height: '100%' },
 
     // Bottom CTA
+    ctaRow: { marginTop: 30, flexDirection: 'row', gap: 15 },
     contactBtn: {
-        marginTop: 30, backgroundColor: COLORS.kumkum, paddingVertical: 15, borderRadius: 30,
+        flex: 1, paddingVertical: 15, borderRadius: 30,
         flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10,
         ...Platform.select({
-            web: { boxShadow: '0px 4px 10px rgba(167,0,2,0.3)' },
-            default: { elevation: 5, shadowColor: COLORS.kumkum, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8 }
+            web: { boxShadow: '0px 4px 10px rgba(0,0,0,0.1)' },
+            default: { elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 }
         }),
     },
-    contactBtnText: { color: COLORS.white, fontSize: 16, fontWeight: 'bold' }
+    bookBtn: { backgroundColor: COLORS.kumkum },
+    viewPhotosBtn: { backgroundColor: '#F5F5F5', borderWidth: 1, borderColor: '#eee' },
+    contactBtnText: { color: COLORS.white, fontSize: 16, fontWeight: 'bold' },
+
+    // Modal
+    modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+    modalContent: {
+        backgroundColor: COLORS.akshid,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        padding: 24,
+        maxHeight: '85%'
+    },
+    modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 },
+    modalTitle: { fontSize: 22, fontWeight: 'bold', color: COLORS.kumkum },
+    closeBtn: { padding: 5, backgroundColor: '#f0f0f0', borderRadius: 20 },
+    modalSubtitle: { fontSize: 13, color: COLORS.darkHaldi, marginBottom: 25 },
+    formContainer: {},
+    formCard: {
+        backgroundColor: COLORS.white,
+        borderRadius: 16,
+        padding: 20,
+        ...Platform.select({
+            web: { boxShadow: '0px 6px 20px rgba(0,0,0,0.06)' },
+            default: { elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.06, shadowRadius: 10 }
+        })
+    },
+    inputGroup: { marginBottom: 18 },
+    label: { fontSize: 14, fontWeight: '600', color: COLORS.textGray, marginBottom: 8 },
+    inputWrapper: {
+        flexDirection: 'row', alignItems: 'center',
+        borderWidth: 1, borderColor: COLORS.haldi, borderRadius: 12,
+        paddingHorizontal: 15, height: 50, backgroundColor: '#F9F9F9'
+    },
+    inputIcon: { marginRight: 10 },
+    input: {
+        flex: 1, color: '#2B2B2B', fontSize: 15,
+        ...Platform.select({
+            web: { outlineStyle: 'none' }
+        })
+    },
+    rowInputs: { flexDirection: 'row' },
+    disclaimer: { fontSize: 11, color: COLORS.darkHaldi, fontStyle: 'italic', marginBottom: 25, lineHeight: 16 },
+    modalFooter: { flexDirection: 'row', gap: 15, marginTop: 10 },
+    backBtnModal: {
+        flex: 0.4, backgroundColor: 'transparent', borderRadius: 12, borderWidth: 1, borderColor: COLORS.darkHaldi,
+        justifyContent: 'center', alignItems: 'center', paddingVertical: 14
+    },
+    backBtnText: { color: COLORS.darkHaldi, fontWeight: '600', fontSize: 16 },
+    confirmBtn: {
+        flex: 1, backgroundColor: COLORS.kumkum, borderRadius: 12,
+        justifyContent: 'center', alignItems: 'center', paddingVertical: 14,
+        ...Platform.select({
+            default: { elevation: 3 }
+        })
+    },
+    confirmBtnText: { color: COLORS.white, fontWeight: 'bold', fontSize: 16 }
 });
 
 export default JewelleryDetails;

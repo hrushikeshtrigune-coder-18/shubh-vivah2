@@ -1,9 +1,9 @@
-// Version 7.1 - ISOLATED HERO FIX & Full Bleed Video
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { ResizeMode, Video } from 'expo-av';
 import React, { memo, useMemo, useRef, useState } from 'react';
 import {
     Dimensions,
+    Image,
     ImageBackground,
     LayoutAnimation,
     Platform,
@@ -15,6 +15,13 @@ import {
     UIManager,
     View
 } from 'react-native';
+import Animated, {
+    Extrapolation,
+    interpolate,
+    useAnimatedScrollHandler,
+    useAnimatedStyle,
+    useSharedValue
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 if (Platform.OS === 'android') {
@@ -23,7 +30,7 @@ if (Platform.OS === 'android') {
     }
 }
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 const COLORS = {
     kumkum: '#A70002',
@@ -145,7 +152,49 @@ const JewelleryScreen = ({ navigation }) => {
 
     const [likedItems, setLikedItems] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const scrollViewRef = useRef(null);
+
+    const [contentHeight, setContentHeight] = useState(1); // Avoid div by zero
+
+    // Scroll Animation Logic
+    const scrollY = useSharedValue(0);
+    const scrollHandler = useAnimatedScrollHandler((event) => {
+        scrollY.value = event.contentOffset.y;
+    });
+
+    // Indicator Animation (Ring moving down line)
+    const wrapperStyle = useAnimatedStyle(() => {
+        // Calculate progress based on scrollable height
+        const scrollableHeight = contentHeight - height;
+        const progress = interpolate(
+            scrollY.value,
+            [0, scrollableHeight > 0 ? scrollableHeight : 1],
+            [0, height * 0.6], // Visual height of the line (approx 60% of screen)
+            Extrapolation.CLAMP
+        );
+        return {
+            transform: [{ translateY: progress }]
+        };
+    });
+
+    const imageStyle = useAnimatedStyle(() => {
+        // Rotation Calculation (Wheel spin / Z-axis)
+        const rotation = interpolate(
+            scrollY.value,
+            [0, 1000], // Full rotation every 1000px
+            [0, 360],
+            Extrapolation.EXTEND
+        );
+        return {
+            transform: [{ rotateZ: `${rotation}deg` }]
+        };
+    });
+
+    // Fade in text or line based on scroll
+    const lineOpacityStyle = useAnimatedStyle(() => {
+        return {
+            opacity: interpolate(scrollY.value, [0, 100], [0, 1], Extrapolation.CLAMP)
+        };
+    });
 
     const [modalVisible, setModalVisible] = useState(false);
     const [activeFilterTab, setActiveFilterTab] = useState('Locality');
@@ -189,74 +238,98 @@ const JewelleryScreen = ({ navigation }) => {
         <View style={styles.container}>
             {Platform.OS !== 'web' && <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />}
 
-            <ScrollView
-                ref={scrollViewRef}
+            {/* Scroll Progress Indicator */}
+            <Animated.View style={[styles.scrollIndicatorContainer, lineOpacityStyle]}>
+                <View style={styles.scrollLine} />
+                <Animated.View style={[styles.scrollIconWrapper, wrapperStyle]}>
+                    <Animated.Image
+                        source={require('../../../../assets/EventMimg/Jewelary/RING 3.jpeg')}
+                        style={[styles.scrollRingImage, imageStyle]}
+                        resizeMode="cover"
+                    />
+                </Animated.View>
+            </Animated.View>
+
+            <Animated.ScrollView
+                onScroll={scrollHandler}
+                onContentSizeChange={(w, h) => setContentHeight(h)}
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
                 scrollEventThrottle={16}
             >
-                <VideoHero
-                    insets={insets}
-                    onSearchPress={() => setModalVisible(true)}
-                    navigation={navigation}
-                />
+                {/* Hero Section */}
+                <VideoHero insets={insets} onSearchPress={() => { }} navigation={navigation} />
 
-                <View style={[styles.sectionContainer, { marginTop: 40 }]}>
+                {/* Filter Tabs */}
+                <View style={styles.sectionContainer}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.vibeScroll}>
+                        {VIBE_DATA.map((item) => (
+                            <TouchableOpacity key={item.id} style={{ marginRight: 15, alignItems: 'center' }} onPress={() => setSelectedCategory(item.id)}>
+                                <View style={[styles.vibeItem, selectedCategory === item.id && styles.activeVibeItem]}>
+                                    {item.lib === 'Ionicons' ? (
+                                        <Ionicons name={item.icon} size={28} color={COLORS.textRed} />
+                                    ) : (
+                                        <MaterialCommunityIcons name={item.icon} size={28} color={COLORS.textRed} />
+                                    )}
+                                </View>
+                                <Text style={styles.vibeText}>{item.name}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
+
+                {/* Featured Collections */}
+                <View style={styles.sectionContainer}>
                     <Text style={styles.sectionTitle}>Featured Collections</Text>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScroll}>
-                        {FEATURED_COLLECTIONS.map(item => (
-                            <TouchableOpacity key={item.id} style={styles.featuredCard} onPress={() => setSelectedCategory(item.filterKey)}>
+                        {FEATURED_COLLECTIONS.map((item) => (
+                            <TouchableOpacity key={item.id} style={styles.featuredCard}>
                                 <ImageBackground source={item.image} style={styles.featuredImage} imageStyle={{ borderRadius: 15 }}>
-                                    <View style={styles.featuredOverlay}><Text style={styles.featuredName}>{item.name}</Text></View>
+                                    <View style={styles.featuredOverlay}>
+                                        <Text style={styles.featuredName}>{item.name}</Text>
+                                    </View>
                                 </ImageBackground>
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
                 </View>
 
+                {/* Top Picks Grid */}
                 <View style={styles.sectionContainer}>
-                    <Text style={[styles.sectionTitle, { marginBottom: 15 }]}>Choose Your Vibe</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.vibeScroll}>
-                        {VIBE_DATA.map((vibe) => {
-                            const IconComponent = vibe.lib === 'MCI' ? MaterialCommunityIcons : Ionicons;
-                            const isActive = selectedCategory === vibe.id;
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
+                        <Text style={styles.sectionTitle}>Top Picks For You</Text>
+                        <TouchableOpacity onPress={() => setModalVisible(true)}>
+                            <Ionicons name="filter" size={24} color={COLORS.textRed} />
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.gridContainer}>
+                        {filteredData.map((item) => {
+                            const isLiked = likedItems[item.id];
                             return (
-                                <View key={vibe.id} style={{ alignItems: 'center', marginRight: 15 }}>
-                                    <TouchableOpacity style={[styles.vibeItem, isActive && styles.activeVibeItem]} onPress={() => setSelectedCategory(isActive ? 'All' : vibe.id)}>
-                                        <IconComponent name={vibe.icon} size={32} color="#f29502" />
-                                    </TouchableOpacity>
-                                    <Text style={styles.vibeText}>{vibe.name}</Text>
-                                </View>
+                                <TouchableOpacity key={item.id} style={styles.gridCard} onPress={() => navigation.navigate('JewelleryDetails', { item })}>
+                                    <View style={styles.gridImageContainer}>
+                                        <Image source={item.image} style={styles.gridImage} resizeMode="cover" />
+                                        <TouchableOpacity style={styles.gridHeartBtn} onPress={() => toggleLike(item.id)}>
+                                            <Ionicons name={isLiked ? "heart" : "heart-outline"} size={18} color={isLiked ? "red" : "#333"} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View style={styles.gridContent}>
+                                        <View style={styles.gridHeaderRow}>
+                                            <Text style={styles.gridTitle} numberOfLines={1}>{item.name}</Text>
+                                            <View style={styles.gridRatingContainer}>
+                                                <Ionicons name="star" size={10} color="#F29502" />
+                                                <Text style={styles.gridRatingText}>{item.ratingValue}</Text>
+                                            </View>
+                                        </View>
+                                        <Text style={styles.gridPrice}>{item.price}</Text>
+                                    </View>
+                                </TouchableOpacity>
                             );
                         })}
-                    </ScrollView>
+                    </View>
                 </View>
-
-                <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>Top Picks</Text>
-                    {filteredData.map((item) => {
-                        const isLiked = !!likedItems[item.id];
-                        return (
-                            <TouchableOpacity key={item.id} style={styles.cardContainer} onPress={() => navigation.navigate('JewelleryDetailsScreen', { item })}>
-                                <ImageBackground source={item.image} style={styles.cardImage} resizeMode="cover">
-                                    <View style={styles.ratingBadge}><Text style={styles.ratingText}>{item.ratingValue}</Text></View>
-                                    <TouchableOpacity style={styles.heartBtn} onPress={() => toggleLike(item.id)}>
-                                        <Ionicons name={isLiked ? "heart" : "heart-outline"} size={22} color={isLiked ? "red" : COLORS.kumkum} />
-                                    </TouchableOpacity>
-                                    <View style={styles.floatingContent}>
-                                        <Text style={styles.cardTitle}>{item.name}</Text>
-                                        <Text style={styles.cardLocation}>{item.locality} • {item.type}</Text>
-                                        <View style={styles.rowBetween}>
-                                            <Text style={styles.cardPrice}>{item.price}</Text>
-                                            <View style={styles.capacityBadge}><Text style={styles.capacityText}>Available Now</Text></View>
-                                        </View>
-                                    </View>
-                                </ImageBackground>
-                            </TouchableOpacity>
-                        );
-                    })}
-                </View>
-            </ScrollView>
+            </Animated.ScrollView>
 
             {modalVisible && (
                 <View style={[styles.modalOverlay, { zIndex: 999 }]}>
@@ -299,6 +372,47 @@ const JewelleryScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFFE4' },
     scrollContent: { paddingBottom: 100 },
+
+    // Scroll Indicator Styles
+    scrollIndicatorContainer: {
+        position: 'absolute',
+        right: 10,
+        top: 100, // Start below header
+        bottom: 100, // End above bottom nav area
+        width: 30,
+        alignItems: 'center',
+        zIndex: 50,
+        pointerEvents: 'none', // Allow clicks to pass through
+    },
+    scrollLine: {
+        width: 2,
+        height: '100%',
+        backgroundColor: 'rgba(243, 216, 112, 0.5)', // Color: Haldi with opacity
+        borderRadius: 1,
+    },
+    scrollIconWrapper: {
+        position: 'absolute',
+        top: 0,
+        width: 50,
+        height: 50,
+        borderRadius: 25, // Circular mask for icon look
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#FFF', // White background to show jpeg clearly
+        borderWidth: 2,
+        borderColor: COLORS.gold,
+        shadowColor: COLORS.kumkum,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
+        overflow: 'hidden'
+    },
+    scrollRingImage: {
+        width: '100%',
+        height: '100%',
+    },
+
     heroWrapper: { height: 550, marginBottom: 20, position: 'relative', zIndex: 10 },
     heroContainer: { width: '100%', height: '100%', overflow: 'hidden', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
     heroVideo: { width: '100%', height: '100%' },
@@ -377,6 +491,18 @@ const styles = StyleSheet.create({
     cardPrice: { fontSize: 14, fontWeight: 'bold', color: COLORS.textRed },
     capacityBadge: { backgroundColor: '#FFF8E1', paddingHorizontal: 8, borderRadius: 10 },
     capacityText: { fontSize: 10, color: '#f29502' },
+    gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+    gridCard: { width: (width - 50) / 2, marginBottom: 20, backgroundColor: 'transparent' }, // width calculation: (screen width - padding*2 - gap)/2
+    gridImageContainer: { height: 160, borderRadius: 12, overflow: 'hidden', marginBottom: 8 },
+    gridImage: { width: '100%', height: '100%' },
+    gridHeartBtn: { position: 'absolute', top: 8, right: 8, backgroundColor: '#fff', width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center', elevation: 2 },
+    gridContent: { paddingHorizontal: 2 },
+    gridHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
+    gridTitle: { fontSize: 13, fontWeight: '600', color: '#333', flex: 1, marginRight: 5 },
+    gridRatingContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF8E1', paddingHorizontal: 4, paddingVertical: 2, borderRadius: 4 },
+    gridRatingText: { fontSize: 10, fontWeight: 'bold', color: '#F29502', marginLeft: 2 },
+    gridPrice: { fontSize: 13, fontWeight: '700', color: '#333' },
+
     modalOverlay: { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
     modalContainer: { backgroundColor: '#fff', height: '65%', borderTopLeftRadius: 20, borderTopRightRadius: 20 },
     modalHeader: { flexDirection: 'row', justifyContent: 'space-between', padding: 15, borderBottomWidth: 1, borderBottomColor: '#eee' },
