@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
     Animated,
     Dimensions,
+    FlatList,
     Image,
     KeyboardAvoidingView,
     Modal,
@@ -17,113 +18,134 @@ import {
     View
 } from 'react-native';
 
-// Local Image Imports
-const venue1 = require('../../../../assets/images/venue1.jpg');
-const venue2 = require('../../../../assets/images/venue2.jpg');
-const venue3 = require('../../../../assets/images/venue3.jpg');
-
 const { width } = Dimensions.get('window');
 
-// Mock data for similar vendors
-const SIMILAR_VENDORS = [
+// Mock data for similar photographers
+const SIMILAR_PHOTOGRAPHERS = [
     {
         id: '1',
-        name: 'Royal Heritage',
-        image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=400&auto=format&fit=crop',
+        name: 'The Wedding Filmer',
+        image: 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=400&auto=format&fit=crop',
         rating: 4.8,
     },
     {
         id: '2',
-        name: 'Grand Bloom',
-        image: 'https://images.unsplash.com/photo-1561026483-edab5b0eee37?q=80&w=400&auto=format&fit=crop',
+        name: 'Stories by Joseph',
+        image: 'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?q=80&w=400&auto=format&fit=crop',
         rating: 4.7,
     },
     {
         id: '3',
-        name: 'Elite Gardens',
-        image: 'https://images.unsplash.com/photo-1519225421980-715cb0202128?q=80&w=400&auto=format&fit=crop',
+        name: 'Twogether Studios',
+        image: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=400&auto=format&fit=crop',
         rating: 4.9,
     },
     {
         id: '4',
-        name: 'The Grandeur',
-        image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?q=80&w=400&auto=format&fit=crop',
+        name: 'Wedding Tales',
+        image: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=80&w=400&auto=format&fit=crop',
         rating: 4.6,
     },
     {
         id: '5',
-        name: 'Sapphire Inn',
-        image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=400&auto=format&fit=crop',
+        name: 'Candid Shots',
+        image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=400&auto=format&fit=crop',
         rating: 4.5,
     },
-    {
-        id: '6',
-        name: 'Crystal Ballroom',
-        image: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=400&auto=format&fit=crop',
-        rating: 4.7,
-    },
 ];
 
-// Local assets for venue photos
-const VENUE_PHOTOS = [
-    { id: '1', source: venue1 },
-    { id: '2', source: venue2 },
-    { id: '3', source: venue3 },
-    { id: '4', source: { uri: 'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=600' } },
-    { id: '5', source: { uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600' } },
-    { id: '6', source: { uri: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=600' } },
-    { id: '7', source: { uri: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=600' } },
+// Mock data for photography showcase with categories
+const PHOTOGRAPHY_PHOTOS = [
+    { id: '1', category: 'Candid', type: 'image', source: { uri: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=600' } },
+    { id: '2', category: 'Cinematic', type: 'image', source: { uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600' } },
+    { id: '3', category: 'Videos', type: 'video', source: { uri: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=600' } },
+    { id: '4', category: 'Candid', type: 'image', source: { uri: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=600' } },
+    { id: '5', category: 'Cinematic', type: 'image', source: { uri: 'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=600' } },
+    { id: '6', category: 'Videos', type: 'video', source: { uri: 'https://images.unsplash.com/photo-1522673607200-164883eeba44?q=80&w=600' } },
+    { id: '7', category: 'Candid', type: 'image', source: { uri: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=600' } },
+    { id: '8', category: 'Cinematic', type: 'image', source: { uri: 'https://images.unsplash.com/photo-1465495910483-0d674b17906d?q=80&w=600' } },
 ];
 
-// Mock data for Previous Events (reusing same images for demo, but logically distinct)
-const PREVIOUS_EVENTS = [
-    { id: '1', source: venue3 },
-    { id: '2', source: venue1 },
-    { id: '3', source: venue2 },
-    { id: '4', source: venue1 },
-];
+const GALLERY_CATEGORIES = ['All', 'Candid', 'Cinematic', 'Videos'];
 
-const VENDOR_PLANS = [
+const PACKAGES = [
     {
         id: '1',
-        name: 'Pearl Plan',
-        price: '₹25,000',
-        features: ['Basic Decoration', 'Sound System', 'Standard Lighting'],
-        icon: 'diamond-outline',
+        name: 'Standard Package',
+        price: '₹50,000',
+        features: ['1 Day Coverage', 'Digital Delivery', '100 Edited Photos'],
+        icon: 'camera-outline',
         color: '#95afc0'
     },
     {
         id: '2',
-        name: 'Ruby Plan',
-        price: '₹50,000',
-        features: ['Premium Decoration', 'DJ System', 'Stage Lighting', 'Photography'],
-        icon: 'diamond',
+        name: 'Premium Package',
+        price: '₹1,20,000',
+        features: ['2 Days Coverage', 'Cinematography', 'Album Included', 'Drone Shots'],
+        icon: 'camera',
         color: '#eb4d4b'
     },
     {
         id: '3',
-        name: 'Diamond Plan',
-        price: '₹1,00,000',
-        features: ['Luxury Decoration', 'Live Band', 'Cinematography', 'Catering Support'],
-        icon: 'sparkles',
+        name: 'Signature Package',
+        price: '₹2,50,000',
+        features: ['Pre-wedding Shoot', 'Luxury Album', 'Same-day Edit Video', 'Drone + Crane'],
+        icon: 'videocam',
         color: '#f0932b'
     }
 ];
 
-const VenuePortfolio = ({ navigation, route }) => {
+const AnimatedCard = ({ children, style, delay = 0 }) => {
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const translateY = useRef(new Animated.Value(60)).current; // Increased offset for more "pop"
+    const scaleAnim = useRef(new Animated.Value(0.75)).current; // Smaller starting point
+
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 600,
+                delay: delay,
+                useNativeDriver: true,
+            }),
+            Animated.spring(translateY, {
+                toValue: 0,
+                friction: 5, // Bouncier
+                tension: 30,
+                delay: delay,
+                useNativeDriver: true,
+            }),
+            Animated.spring(scaleAnim, {
+                toValue: 1,
+                friction: 4, // Even bouncier for the pop effect
+                tension: 40,
+                delay: delay,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    }, [delay]);
+
+    return (
+        <Animated.View style={[style, { opacity: fadeAnim, transform: [{ translateY }, { scale: scaleAnim }] }]}>
+            {children}
+        </Animated.View>
+    );
+};
+
+const PhotographerPortfolio = ({ navigation, route }) => {
     // Default data if no params provided
     const params = route.params || {};
-    const vendor = params.vendor || {
-        name: 'Royal Orchid Palace',
-        type: 'Venue',
+    const photographer = params.vendor || {
+        name: 'Stories by Joseph',
+        type: 'Photographer',
         image: null,
-        amenities: ['Outdoor', 'Alcohol'],
-        rating: 4.8,
+        rating: 4.9,
         reviews: 320,
-        location: 'Pune, MH',
+        location: 'Goa, India',
     };
 
-    const [activeShowcaseTab, setActiveShowcaseTab] = React.useState('venue');
+    const [activeShowcaseTab, setActiveShowcaseTab] = React.useState('photos');
+    const [activeCategory, setActiveCategory] = React.useState('All');
     const [showBookingModal, setShowBookingModal] = React.useState(false);
     const [bookingForm, setBookingForm] = React.useState({
         name: '',
@@ -135,14 +157,14 @@ const VenuePortfolio = ({ navigation, route }) => {
         note: ''
     });
 
-    // Auto-scroll logic for similar vendors (Suggested)
+    // Auto-scroll logic for similar vendors
     const suggestedVendorsRef = useRef(null);
     React.useEffect(() => {
         let scrollValue = 0;
         const intervalId = setInterval(() => {
             if (suggestedVendorsRef.current) {
-                scrollValue += 95; // 80 card width + 15 gap
-                if (scrollValue > 95 * SIMILAR_VENDORS.length - width) {
+                scrollValue += 95;
+                if (scrollValue > 95 * SIMILAR_PHOTOGRAPHERS.length - width) {
                     scrollValue = 0;
                 }
                 if (suggestedVendorsRef.current.scrollTo) {
@@ -153,8 +175,6 @@ const VenuePortfolio = ({ navigation, route }) => {
         return () => clearInterval(intervalId);
     }, []);
 
-    // --- ANIMATION STATES ---
-    const tabScale = useRef(new Animated.Value(1)).current;
     const tabTranslateX = useRef(new Animated.Value(0)).current;
     const heroImageScale = useRef(new Animated.Value(1)).current;
     const galleryFadeAnim = useRef(new Animated.Value(0)).current;
@@ -167,8 +187,8 @@ const VenuePortfolio = ({ navigation, route }) => {
         const intervalId = setInterval(() => {
             if (heroCarouselRef.current) {
                 let nextIndex = heroIndex + 1;
-                if (nextIndex >= VENUE_PHOTOS.length) {
-                    nextIndex = 0; // Loop back
+                if (nextIndex >= PHOTOGRAPHY_PHOTOS.length) {
+                    nextIndex = 0;
                 }
                 setHeroIndex(nextIndex);
                 if (heroCarouselRef.current.scrollTo) {
@@ -194,7 +214,7 @@ const VenuePortfolio = ({ navigation, route }) => {
 
     const handleTabPress = (tab) => {
         setActiveShowcaseTab(tab);
-        const toValue = tab === 'venue' ? 0 : 1;
+        const toValue = tab === 'photos' ? 0 : 1;
 
         Animated.parallel([
             Animated.timing(tabTranslateX, {
@@ -214,10 +234,6 @@ const VenuePortfolio = ({ navigation, route }) => {
         }).start();
     }, [activeShowcaseTab]);
 
-    // --- ANIMATION INTERPOLATIONS ---
-
-    // --- ANIMATION REVERTED ---
-
     const renderHeroCarousel = () => (
         <View style={styles.heroCarouselContainer}>
             <ScrollView
@@ -231,7 +247,7 @@ const VenuePortfolio = ({ navigation, route }) => {
                     setHeroIndex(newIndex);
                 }}
             >
-                {VENUE_PHOTOS.map((photo, index) => (
+                {PHOTOGRAPHY_PHOTOS.map((photo, index) => (
                     <View key={index} style={{ width: width, height: 280, overflow: 'hidden' }}>
                         <Animated.Image
                             source={photo.source}
@@ -246,7 +262,7 @@ const VenuePortfolio = ({ navigation, route }) => {
             </ScrollView>
 
             <View style={styles.paginationContainer}>
-                {VENUE_PHOTOS.map((_, index) => (
+                {PHOTOGRAPHY_PHOTOS.map((_, index) => (
                     <View
                         key={index}
                         style={[
@@ -269,14 +285,14 @@ const VenuePortfolio = ({ navigation, route }) => {
 
     const renderSuggestedVendors = () => (
         <View style={styles.suggestedContainer}>
-            <Text style={styles.suggestedTitle}>Suggested Vendors</Text>
+            <Text style={styles.suggestedTitle}>Similar Photographers</Text>
             <ScrollView
                 ref={suggestedVendorsRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.suggestedScrollContent}
             >
-                {SIMILAR_VENDORS.map((v) => (
+                {SIMILAR_PHOTOGRAPHERS.map((v) => (
                     <TouchableOpacity key={v.id} style={styles.suggestedCard}>
                         <Image source={{ uri: v.image }} style={styles.suggestedImage} />
                         <View style={styles.suggestedInfo}>
@@ -293,32 +309,31 @@ const VenuePortfolio = ({ navigation, route }) => {
             <View style={styles.profileRow}>
                 <View style={[styles.profileImageContainer, { zIndex: 100 }]}>
                     <Image
-                        source={vendor.image ? vendor.image : { uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=200' }}
+                        source={photographer.image ? (typeof photographer.image === 'number' ? photographer.image : { uri: photographer.image }) : { uri: 'https://images.unsplash.com/photo-1554048612-b6a482bc67e5?q=80&w=200' }}
                         style={styles.profileImage}
                     />
                 </View>
 
                 <View style={styles.profileInfoColumn}>
-                    <Text style={styles.vendorName}>{vendor.name}</Text>
+                    <Text style={styles.vendorName}>{photographer.name}</Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
                         <Ionicons name="location-outline" size={12} color="#666" style={{ marginRight: 4 }} />
                         <Text style={[styles.locationText, { marginBottom: 0 }]} numberOfLines={1}>
-                            Udaipur, Rajasthan
+                            {photographer.location || photographer.city}
                         </Text>
                     </View>
                     <Text style={styles.descriptionTextHero} numberOfLines={2}>
-                        Offering a royal experience with curated luxury events.
+                        Preserving your most cherished memories with artistic storytelling and candid captures.
                     </Text>
                     <View style={styles.statsRow}>
                         <View style={styles.statItem}>
                             <Ionicons name="star" size={16} color="#F29502" />
-                            <Text style={styles.statText}>{vendor.rating} ({vendor.reviews})</Text>
+                            <Text style={styles.statText}>{photographer.rating} ({photographer.reviews})</Text>
                         </View>
                     </View>
                 </View>
             </View>
 
-            {/* Suggested Vendors Carousel */}
             {renderSuggestedVendors()}
         </View>
     );
@@ -341,8 +356,8 @@ const VenuePortfolio = ({ navigation, route }) => {
                 <View style={styles.bookingModalContent}>
                     <View style={styles.modalHeader}>
                         <View>
-                            <Text style={styles.modalTitle}>Book a Visit</Text>
-                            <Text style={styles.modalSubtitle}>Schedule a tour of {vendor.name}</Text>
+                            <Text style={styles.modalTitle}>Book a Session</Text>
+                            <Text style={styles.modalSubtitle}>Inquire about session with {photographer.name}</Text>
                         </View>
                         <TouchableOpacity
                             onPress={() => setShowBookingModal(false)}
@@ -353,7 +368,6 @@ const VenuePortfolio = ({ navigation, route }) => {
                     </View>
 
                     <ScrollView showsVerticalScrollIndicator={false} style={styles.modalForm}>
-                        {/* Full Name */}
                         <View style={styles.inputGroup}>
                             <Text style={styles.inputLabel}>Full Name</Text>
                             <View style={styles.inputWrapper}>
@@ -368,9 +382,8 @@ const VenuePortfolio = ({ navigation, route }) => {
                             </View>
                         </View>
 
-                        {/* Mobile Number */}
                         <View style={styles.inputGroup}>
-                            <Text style={styles.inputLabel}>Mobile Number (OTP optional)</Text>
+                            <Text style={styles.inputLabel}>Mobile Number</Text>
                             <View style={styles.inputWrapper}>
                                 <Ionicons name="call-outline" size={18} color="#666" style={styles.inputIcon} />
                                 <TextInput
@@ -384,12 +397,11 @@ const VenuePortfolio = ({ navigation, route }) => {
                             </View>
                         </View>
 
-                        {/* Event Type & City Row */}
                         <View style={styles.formRow}>
                             <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
                                 <Text style={styles.inputLabel}>Event Type</Text>
                                 <View style={styles.inputWrapper}>
-                                    <Ionicons name="list-outline" size={18} color="#666" style={styles.inputIcon} />
+                                    <Ionicons name="camera-outline" size={18} color="#666" style={styles.inputIcon} />
                                     <TextInput
                                         style={styles.textInput}
                                         placeholder="e.g. Wedding"
@@ -415,10 +427,9 @@ const VenuePortfolio = ({ navigation, route }) => {
                             </View>
                         </View>
 
-                        {/* Preferred Date & Time Row */}
                         <View style={styles.formRow}>
                             <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
-                                <Text style={styles.inputLabel}>Preferred Date</Text>
+                                <Text style={styles.inputLabel}>Event Date</Text>
                                 <View style={styles.inputWrapper}>
                                     <Ionicons name="calendar-outline" size={18} color="#666" style={styles.inputIcon} />
                                     <TextInput
@@ -432,12 +443,12 @@ const VenuePortfolio = ({ navigation, route }) => {
                             </View>
 
                             <View style={[styles.inputGroup, { flex: 1 }]}>
-                                <Text style={styles.inputLabel}>Time Slot</Text>
+                                <Text style={styles.inputLabel}>Preferred Time</Text>
                                 <View style={styles.inputWrapper}>
                                     <Ionicons name="time-outline" size={18} color="#666" style={styles.inputIcon} />
                                     <TextInput
                                         style={styles.textInput}
-                                        placeholder="e.g. 2:00 PM"
+                                        placeholder="e.g. 10:00 AM"
                                         placeholderTextColor="#888"
                                         value={bookingForm.timeSlot}
                                         onChangeText={(val) => setBookingForm({ ...bookingForm, timeSlot: val })}
@@ -446,14 +457,13 @@ const VenuePortfolio = ({ navigation, route }) => {
                             </View>
                         </View>
 
-                        {/* Add a Note */}
                         <View style={styles.inputGroup}>
-                            <Text style={styles.inputLabel}>Add a Note</Text>
+                            <Text style={styles.inputLabel}>Tell us more</Text>
                             <View style={[styles.inputWrapper, styles.noteInputWrapper]}>
                                 <Ionicons name="document-text-outline" size={18} color="#666" style={[styles.inputIcon, { alignSelf: 'flex-start', marginTop: 15 }]} />
                                 <TextInput
                                     style={[styles.textInput, styles.noteInput]}
-                                    placeholder="Any special requests or instructions?"
+                                    placeholder="Any theme or specific requirements?"
                                     placeholderTextColor="#888"
                                     multiline={true}
                                     numberOfLines={4}
@@ -463,10 +473,6 @@ const VenuePortfolio = ({ navigation, route }) => {
                                 />
                             </View>
                         </View>
-
-                        <Text style={styles.bookingNote}>
-                            * Our relationship manager will call you to confirm the appointment.
-                        </Text>
                     </ScrollView>
 
                     <View style={styles.modalFooter}>
@@ -478,16 +484,13 @@ const VenuePortfolio = ({ navigation, route }) => {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.confirmBookingBtn}
-                            onPress={() => {
-                                // Add booking logic here
-                                setShowBookingModal(false);
-                            }}
+                            onPress={() => setShowBookingModal(false)}
                         >
                             <LinearGradient
                                 colors={['#CC0E0E', '#E31E1E']}
                                 style={styles.confirmGradient}
                             >
-                                <Text style={styles.confirmButtonText}>Confirm Visit</Text>
+                                <Text style={styles.confirmButtonText}>Send Inquiry</Text>
                             </LinearGradient>
                         </TouchableOpacity>
                     </View>
@@ -497,38 +500,149 @@ const VenuePortfolio = ({ navigation, route }) => {
     );
 
     const renderGallery = () => {
-        const galleryLabels = [
-            "Wedding Decor",
-            "Entrance Setup",
-            "Evening Lighting",
-            "Mandap View",
-            "Stage Setup",
-            "Buffet Area"
-        ];
-
         const microBadges = [
-            { icon: "🌸", text: "Floral Theme" },
-            { icon: "✨", text: "Premium Setup" },
-            { icon: "🌙", text: "Night Event" },
-            { icon: "💍", text: "Bridal Suite" },
-            { icon: "🎉", text: "Grand Entry" },
-            { icon: "🏰", text: "Heritage Look" }
+            { icon: "📷", text: "High Res" },
+            { icon: "✨", text: "Signature" },
+            { icon: "🎬", text: "Cinematic" },
+            { icon: "🖤", text: "Mono" },
+            { icon: "🌅", text: "Golden" },
+            { icon: "🏰", text: "Palatial" }
         ];
 
-        // Sliding Indicator Width (assuming roughly equal tabs)
         const tabWidth = 100;
         const translateX = tabTranslateX.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, tabWidth + 12], // tabWidth + gap
+            outputRange: [0, tabWidth + 12],
         });
+
+        const filteredPhotos = activeCategory === 'All'
+            ? PHOTOGRAPHY_PHOTOS
+            : PHOTOGRAPHY_PHOTOS.filter(p => p.category === activeCategory);
+
+        const renderCard = (photo, variant) => {
+            if (!photo) return null;
+            const badge = microBadges[Math.floor(Math.random() * microBadges.length)];
+
+            let cardStyle = styles.minimalCard;
+            let imageStyle = styles.minimalImage;
+
+            if (variant === 'tall') cardStyle = [styles.minimalCard, styles.tallCard];
+            if (variant === 'wide' || variant === 'video') cardStyle = [styles.minimalCard, styles.videoCard];
+            if (variant === 'square') cardStyle = [styles.minimalCard, styles.squareCard];
+            if (variant === 'circle') {
+                return (
+                    <AnimatedCard key={photo.id || Math.random()} style={styles.circleFrame} delay={100}>
+                        <View style={styles.circularCard}>
+                            <Image source={photo.source} style={styles.minimalImage} />
+                        </View>
+                        <Text style={styles.circleTitle}>{photo.category || 'Featured'} Spotlight</Text>
+                    </AnimatedCard>
+                );
+            }
+
+            return (
+                <AnimatedCard key={photo.id || Math.random()} style={cardStyle} delay={100}>
+                    <View style={styles.minimalImageWrapper}>
+                        <Image source={photo.source} style={imageStyle} />
+                        <View style={styles.minimalTag}>
+                            <Text style={styles.minimalTagText}>{badge.text}</Text>
+                        </View>
+                        {photo.type === 'video' && (
+                            <View style={styles.minimalPlayIcon}>
+                                <Ionicons name="play" size={16} color="#FFF" />
+                            </View>
+                        )}
+                    </View>
+                    <View style={styles.minimalTitleArea}>
+                        <Text style={styles.minimalCardTitle}>{photo.category || 'Portfolio'} Selection</Text>
+                    </View>
+                </AnimatedCard>
+            );
+        };
+
+        const getGridData = () => {
+            const rows = [];
+            let i = 0;
+            const data = filteredPhotos || [];
+
+            while (i < data.length) {
+                const currentItem = data[i];
+                if (!currentItem) {
+                    i++;
+                    continue;
+                }
+
+                // If it's a video, it gets a full row
+                if (currentItem.type === 'video') {
+                    rows.push({
+                        id: `video-row-${currentItem.id || i}`,
+                        type: 'video_row',
+                        content: renderCard(data[i], 'video', i)
+                    });
+                    i++;
+                    continue;
+                }
+
+                // Grid pattern for images
+                // Row 1: Tall Rectangle + Square
+                if (i < data.length && data[i] && data[i].type !== 'video') {
+                    const row1Items = [];
+                    row1Items.push({ item: data[i], variant: 'tall', index: i });
+                    i++;
+                    if (i < data.length && data[i] && data[i].type !== 'video') {
+                        row1Items.push({ item: data[i], variant: 'square', index: i });
+                        i++;
+                    }
+                    rows.push({
+                        id: `row-1-${i}`,
+                        type: 'grid_row',
+                        content: row1Items.map(ri => renderCard(ri.item, ri.variant, ri.index))
+                    });
+                }
+
+                // Featured Circle (every few items)
+                if (i < data.length && i % 4 === 0 && data[i] && data[i].type !== 'video') {
+                    rows.push({
+                        id: `featured-${i}`,
+                        type: 'featured_highlight',
+                        content: renderCard(data[i], 'circle', i)
+                    });
+                    i++;
+                }
+
+                // Row 2: Two Squares
+                if (i < data.length && data[i] && data[i].type !== 'video') {
+                    const row2Items = [];
+                    row2Items.push({ item: data[i], variant: 'square', index: i });
+                    i++;
+                    if (i < data.length && data[i] && data[i].type !== 'video') {
+                        row2Items.push({ item: data[i], variant: 'square', index: i });
+                        i++;
+                    }
+                    rows.push({
+                        id: `row-2-${i}`,
+                        type: 'grid_row',
+                        content: row2Items.map(ri => renderCard(ri.item, ri.variant, ri.index))
+                    });
+                }
+
+                // Row 3: Wide Rectangle
+                if (i < data.length && data[i] && data[i].type !== 'video') {
+                    rows.push({
+                        id: `row-3-${i}`,
+                        type: 'grid_row',
+                        content: renderCard(data[i], 'wide', i)
+                    });
+                    i++;
+                }
+            }
+            return rows;
+        };
 
         return (
             <View style={styles.sectionContainer}>
-                <View style={styles.showcaseHeaderRadial} />
-                <View style={styles.blobShape} />
-
                 <View style={styles.showcaseHeader}>
-                    <Text style={styles.sectionTitle}>Venue Showcase</Text>
+                    <Text style={styles.sectionTitle}>Portfolio Showcase</Text>
 
                     <View style={styles.showcaseTabsContainer}>
                         <Animated.View style={[
@@ -538,16 +652,16 @@ const VenuePortfolio = ({ navigation, route }) => {
 
                         <TouchableOpacity
                             style={styles.showcaseTabItemNew}
-                            onPress={() => handleTabPress('venue')}
+                            onPress={() => handleTabPress('photos')}
                         >
                             <Ionicons
-                                name="image-outline"
+                                name="images-outline"
                                 size={14}
-                                color={activeShowcaseTab === 'venue' ? '#FFF' : '#666'}
+                                color={activeShowcaseTab === 'photos' ? '#FFF' : '#666'}
                                 style={{ marginRight: 6 }}
                             />
-                            <Text style={[styles.showcaseTabTextNew, activeShowcaseTab === 'venue' && styles.activeShowcaseTabTextNew]}>
-                                Venue
+                            <Text style={[styles.showcaseTabTextNew, activeShowcaseTab === 'photos' && styles.activeShowcaseTabTextNew]}>
+                                Photos
                             </Text>
                         </TouchableOpacity>
 
@@ -562,61 +676,59 @@ const VenuePortfolio = ({ navigation, route }) => {
                                 style={{ marginRight: 6 }}
                             />
                             <Text style={[styles.showcaseTabTextNew, activeShowcaseTab === 'plans' && styles.activeShowcaseTabTextNew]}>
-                                Plans
+                                Packages
                             </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
 
-                <Animated.View style={[styles.galleryContainer, { opacity: galleryFadeAnim }]}>
-                    {activeShowcaseTab === 'venue' ? (
-                        <View style={styles.galleryGrid}>
-                            <View style={styles.masonryColumn}>
-                                {VENUE_PHOTOS.filter((_, i) => i % 2 === 0).map((photo, index) => {
-                                    const originalIndex = index * 2;
-                                    const height = 240;
-                                    const badge = microBadges[originalIndex % microBadges.length];
+                {activeShowcaseTab === 'photos' && (
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={styles.categoryBar}
+                        contentContainerStyle={styles.categoryBarContent}
+                    >
+                        {GALLERY_CATEGORIES.map((cat) => (
+                            <TouchableOpacity
+                                key={cat}
+                                style={[
+                                    styles.categoryItem,
+                                    activeCategory === cat && styles.categoryItemActive
+                                ]}
+                                onPress={() => setActiveCategory(cat)}
+                            >
+                                <Text style={[
+                                    styles.categoryText,
+                                    activeCategory === cat && styles.categoryTextActive
+                                ]}>{cat}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                )}
 
+                <Animated.View style={[styles.galleryContainer, { opacity: galleryFadeAnim }]}>
+                    {activeShowcaseTab === 'photos' ? (
+                        <FlatList
+                            data={getGridData()}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => {
+                                if (item.type === 'featured_highlight') {
                                     return (
-                                        <View key={originalIndex} style={[styles.storyCardLuxury, { height }]}>
-                                            <Image source={photo.source} style={styles.galleryImage} />
-                                            <View style={styles.microBadge}>
-                                                <Text style={styles.microBadgeText}>{badge.icon} {badge.text}</Text>
-                                            </View>
-                                            <LinearGradient
-                                                colors={['transparent', 'rgba(0,0,0,0.85)']}
-                                                style={styles.storyGradientLuxury}
-                                            >
-                                                <View style={styles.stylisticLine} />
-                                                <Text style={styles.storyLabelLuxury}>{galleryLabels[originalIndex % galleryLabels.length]}</Text>
-                                            </LinearGradient>
+                                        <View style={styles.featuredHighlight}>
+                                            {item.content}
                                         </View>
                                     );
-                                })}
-                            </View>
-                            <View style={styles.masonryColumn}>
-                                {VENUE_PHOTOS.filter((_, i) => i % 2 !== 0).map((photo, index) => {
-                                    const originalIndex = index * 2 + 1;
-                                    const height = 240;
-                                    const badge = microBadges[originalIndex % microBadges.length];
-                                    return (
-                                        <View key={originalIndex} style={[styles.storyCardLuxury, { height }]}>
-                                            <Image source={photo.source} style={styles.galleryImage} />
-                                            <View style={styles.microBadge}>
-                                                <Text style={styles.microBadgeText}>{badge.icon} {badge.text}</Text>
-                                            </View>
-                                            <LinearGradient
-                                                colors={['transparent', 'rgba(0,0,0,0.85)']}
-                                                style={styles.storyGradientLuxury}
-                                            >
-                                                <View style={styles.stylisticLine} />
-                                                <Text style={styles.storyLabelLuxury}>{galleryLabels[originalIndex % galleryLabels.length]}</Text>
-                                            </LinearGradient>
-                                        </View>
-                                    );
-                                })}
-                            </View>
-                        </View>
+                                }
+                                return (
+                                    <View style={styles.gridRow}>
+                                        {item.content}
+                                    </View>
+                                );
+                            }}
+                            scrollEnabled={false} // Managed by parent ScrollView
+                            contentContainerStyle={styles.minimalGridContainer}
+                        />
                     ) : (
                         <ScrollView
                             horizontal
@@ -624,7 +736,7 @@ const VenuePortfolio = ({ navigation, route }) => {
                             style={styles.packagesScroll}
                             contentContainerStyle={styles.packagesScrollContent}
                         >
-                            {VENDOR_PLANS.map((plan) => {
+                            {PACKAGES.map((plan) => {
                                 const isPremium = plan.id === '2';
                                 return (
                                     <View
@@ -666,37 +778,29 @@ const VenuePortfolio = ({ navigation, route }) => {
 
     return (
         <View style={styles.container}>
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-            >
+            <ScrollView showsVerticalScrollIndicator={false}>
                 {renderHeroCarousel()}
-
                 <View style={styles.mainContentWrapper}>
                     {renderProfileSection()}
                     {renderGallery()}
-
-                    {/* Buttons at the end of the page */}
                     <View style={styles.footerActions}>
                         <TouchableOpacity style={styles.contactButtonOutline} onPress={() => { }}>
-                            <Text style={styles.contactButtonTextOutline}>Contact Vendor</Text>
+                            <Text style={styles.contactButtonTextOutline}>Contact Photographer</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.bookButtonPremium}
                             onPress={() => setShowBookingModal(true)}
                         >
-                            <Text style={styles.bookButtonTextPremium}>Book a Visit</Text>
+                            <Text style={styles.bookButtonTextPremium}>Book a Session</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
-
                 {renderBookingModal()}
-
                 <View style={{ height: 100 }} />
             </ScrollView>
         </View>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
@@ -706,16 +810,15 @@ const styles = StyleSheet.create({
     mainContentWrapper: {
         backgroundColor: '#FFFFF0',
         zIndex: 1,
-        paddingTop: 10, // Small gap to show the floating effect
+        paddingTop: 10,
     },
-    // Hero Carousel
     heroCarouselContainer: {
-        height: 280, // Reduced height (was 400)
+        height: 280,
         width: width,
     },
     heroImage: {
         width: width,
-        height: 280, // Reduced height
+        height: 280,
     },
     paginationContainer: {
         position: 'absolute',
@@ -771,7 +874,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 10,
         elevation: 8,
-        marginTop: 15, // Push image down specifically
+        marginTop: 15,
     },
     profileImage: {
         width: 90,
@@ -829,7 +932,7 @@ const styles = StyleSheet.create({
     },
     profileInfoColumn: {
         flex: 1,
-        paddingTop: 35, // Shifted upper (was 55)
+        paddingTop: 35,
         justifyContent: 'center',
     },
     vendorName: {
@@ -866,79 +969,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#f29502',
     },
-    // Stats Removed
-    professionText: {
-        fontFamily: 'Outfit_500Medium',
-        fontSize: 11,
-        color: '#f29502',
-        textTransform: 'uppercase',
-        letterSpacing: 2,
-    },
-    descriptionTextHero: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 14,
-        color: '#f29502',
-        lineHeight: 22,
-    },
-    ratingRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#FFF',
-        paddingHorizontal: 10,
-        paddingVertical: 4,
-        borderRadius: 15,
-        borderWidth: 1,
-        borderColor: '#EEE',
-        alignSelf: 'flex-start',
-    },
-    ratingText: {
-        fontFamily: 'Outfit_500Medium',
-        color: '#f29502',
-        marginLeft: 6,
-        fontSize: 12,
-    },
-
-    // Tabs (Same as before)
-    tabContainerWrapper: {
-        alignItems: 'center',
-        marginTop: 0,
-        marginBottom: 20,
-        zIndex: 30,
-    },
-    glassTabContainer: {
-        flexDirection: 'row',
-        backgroundColor: 'rgba(255,255,255,0.8)',
-        borderRadius: 30,
-        padding: 4,
-        borderWidth: 1,
-        borderColor: '#FFF',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 5,
-        elevation: 2,
-    },
-    tabItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 25,
-    },
-    activeTabItem: {
-        backgroundColor: '#FFF',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        elevation: 1,
-    },
-    tabText: {
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 12,
-        color: '#f29502',
-        marginLeft: 6,
-    },
     sectionContainer: {
         paddingHorizontal: 20,
         marginBottom: 25,
@@ -949,18 +979,11 @@ const styles = StyleSheet.create({
         color: '#CC0E0E',
         letterSpacing: 0.5,
     },
-    // Showcase Tabs
     showcaseHeader: {
-        flexDirection: 'column', // Changed from row to stack vertically
+        flexDirection: 'column',
         alignItems: 'flex-start',
         marginBottom: 15,
         gap: 10,
-    },
-    showcaseTabs: {
-        flexDirection: 'row',
-        gap: 12, // Gap between buttons
-        backgroundColor: 'transparent', // No background container
-        padding: 0,
     },
     showcaseTabsContainer: {
         flexDirection: 'row',
@@ -975,7 +998,7 @@ const styles = StyleSheet.create({
         top: 4,
         left: 4,
         width: 100,
-        height: 34, // Matches container padding/height
+        height: 34,
         borderRadius: 25,
         backgroundColor: '#CC0E0E',
         shadowColor: '#000',
@@ -1001,72 +1024,151 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontFamily: 'Outfit_600SemiBold',
     },
-    showcaseHeaderRadial: {
-        position: 'absolute',
-        top: -40,
-        left: -20,
-        width: width,
-        height: 180,
-        backgroundColor: 'rgba(212, 175, 55, 0.08)',
-        borderRadius: width / 2,
-        transform: [{ scaleX: 1.5 }],
-        zIndex: -1,
+    minimalGridContainer: {
+        marginTop: 10,
     },
-    // Luxury Story Cards
-    storyCardLuxury: {
-        borderRadius: 20,
-        borderTopLeftRadius: 40,
-        borderBottomRightRadius: 40,
-        overflow: 'hidden',
+    gridRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: 15,
-        backgroundColor: '#EEE',
-        elevation: 6,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 8,
+        gap: 15,
     },
-    storyGradientLuxury: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: '45%',
-        justifyContent: 'flex-end',
-        padding: 15,
-    },
-    storyLabelLuxury: {
-        fontFamily: 'Outfit_700Bold',
-        fontSize: 15,
-        color: '#FFF',
-        textShadowColor: 'rgba(0,0,0,0.5)',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 3,
-        marginBottom: 5,
-    },
-    stylisticLine: {
-        width: 30,
-        height: 2,
-        backgroundColor: 'rgba(255,255,255,0.6)',
-        marginBottom: 8,
-    },
-    microBadge: {
-        position: 'absolute',
-        top: 12,
-        right: 12,
-        backgroundColor: 'rgba(255,255,255,0.8)',
-        paddingVertical: 4,
-        paddingHorizontal: 10,
+    minimalCard: {
+        backgroundColor: '#FFF',
         borderRadius: 20,
-        zIndex: 10,
+        overflow: 'hidden',
+        borderWidth: 2.5, // Thicker for more impact
+        borderColor: '#FFD700', // Vibrant Gold/Yellow
+        elevation: 8,
+        shadowColor: '#f29502', // Colored shadow for extra depth
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.2,
+        shadowRadius: 12,
     },
-    microBadgeText: {
+    tallCard: {
+        flex: 1.2,
+        height: 280,
+    },
+    squareCard: {
+        flex: 1,
+        aspectRatio: 1,
+    },
+    wideCard: {
+        flex: 1,
+        height: 180,
+    },
+    videoCard: {
+        flex: 1,
+        height: 220,
+    },
+    featuredHighlight: {
+        alignItems: 'center',
+        marginVertical: 20,
+    },
+    circleFrame: {
+        alignItems: 'center',
+    },
+    circularCard: {
+        width: 160,
+        height: 160,
+        borderRadius: 80,
+        overflow: 'hidden',
+        borderWidth: 3,
+        borderColor: '#FFD700', // Standardized Vibrant Yellow
+    },
+    circleTitle: {
+        marginTop: 10,
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 14,
+        color: '#CC0E0E',
+    },
+    minimalImageWrapper: {
+        flex: 1,
+        overflow: 'hidden',
+    },
+    minimalImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
+    },
+    minimalTag: {
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        backgroundColor: 'rgba(255, 235, 59, 0.9)',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 6,
+    },
+    minimalTagText: {
         fontFamily: 'Outfit_600SemiBold',
         fontSize: 10,
         color: '#333',
     },
+    minimalPlayIcon: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        width: 32,
+        height: 32,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    minimalTitleArea: {
+        padding: 10,
+        backgroundColor: '#FFF',
+    },
+    minimalCardTitle: {
+        fontFamily: 'Outfit_500Medium',
+        fontSize: 13,
+        color: '#333',
+    },
     galleryContainer: {
         marginTop: 5,
+    },
+    categoryBar: {
+        marginBottom: 15,
+        marginTop: 5,
+    },
+    categoryBarContent: {
+        paddingRight: 20,
+        gap: 10,
+    },
+    categoryItem: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+        backgroundColor: '#F5F5F5',
+        borderWidth: 1,
+        borderColor: '#EEE',
+    },
+    categoryItemActive: {
+        backgroundColor: '#CC0E0E',
+        borderColor: '#CC0E0E',
+    },
+    categoryText: {
+        fontFamily: 'Outfit_500Medium',
+        fontSize: 13,
+        color: '#666',
+    },
+    categoryTextActive: {
+        color: '#FFF',
+        fontFamily: 'Outfit_600SemiBold',
+    },
+    playButtonOverlay: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: [{ translateX: -20 }, { translateY: -20 }],
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 5,
     },
     plansTabContent: {
         gap: 15,
@@ -1144,68 +1246,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Outfit_600SemiBold',
         fontSize: 13,
     },
-    // Hero Overlay Card
-    heroOverlayCard: {
-        position: 'absolute',
-        bottom: 60,
-        left: 20,
-        zIndex: 20,
-    },
-    overlayGlass: {
-        backgroundColor: 'rgba(255,255,255,0.85)',
-        padding: 12,
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.5)',
-        ...Platform.select({
-            ios: {
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 10 },
-                shadowOpacity: 0.1,
-                shadowRadius: 20,
-            },
-            android: {
-                elevation: 5,
-            },
-        }),
-    },
-    overlayVenueName: {
-        fontFamily: 'Outfit_700Bold',
-        fontSize: 16,
-        color: '#CC0E0E',
-        marginBottom: 2,
-    },
-    overlayDetailsRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 4,
-    },
-    overlayLocation: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 12,
-        color: '#f29502',
-    },
-    overlayRatingRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 4,
-    },
-    overlayRatingText: {
-        fontFamily: 'Outfit_500Medium',
-        fontSize: 11,
-        color: '#444',
-    },
-    swipeHintContainer: {
-        position: 'absolute',
-        bottom: 35,
-        right: 20,
-    },
-    swipeHintText: {
-        fontFamily: 'Outfit_500Medium',
-        fontSize: 10,
-        color: 'rgba(255,255,255,0.8)',
-        letterSpacing: 0.5,
-    },
     galleryGrid: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -1214,135 +1254,10 @@ const styles = StyleSheet.create({
     masonryColumn: {
         width: (width - 50) / 2,
     },
-    storyCard: {
-        borderRadius: 20,
-        overflow: 'hidden',
-        marginBottom: 15,
-        backgroundColor: '#EEE',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-    },
     galleryImage: {
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
-    },
-    storyGradient: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: '40%',
-        justifyContent: 'flex-end',
-        padding: 12,
-    },
-    storyLabel: {
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 14,
-        color: '#FFF',
-        textShadowColor: 'rgba(0,0,0,0.3)',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 2,
-    },
-
-    tagRow: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-    },
-    tag: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#F9F9F9',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 20,
-        borderWidth: 1.5,
-        borderColor: '#f29502',
-    },
-    tagText: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 12,
-        color: '#f29502',
-    },
-    divider: {
-        height: 1,
-        backgroundColor: '#EFEFEF',
-        marginTop: 20,
-        width: '100%',
-    },
-    // Editorial Similar Vendors
-    similarCardEditorial: {
-        width: 80, // Micro-sized (was 100)
-        height: 110, // Micro-sized (was 140)
-        marginRight: 10,
-        borderRadius: 8,
-        overflow: 'hidden',
-        backgroundColor: '#000',
-    },
-    similarImageEditorial: {
-        width: '100%',
-        height: '100%',
-        opacity: 0.8,
-    },
-    similarOverlay: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        padding: 6,
-        backgroundColor: 'rgba(0,0,0,0.6)',
-    },
-    similarRatingAbsolute: {
-        position: 'absolute',
-        top: 4,
-        right: 4,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        borderRadius: 4,
-        paddingHorizontal: 4,
-        paddingVertical: 2,
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 2,
-    },
-    similarNameEditorial: {
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 8, // Kept small
-        color: '#FFF',
-    },
-    similarRatingTextEditorial: {
-        fontFamily: 'Outfit_500Medium',
-        fontSize: 8,
-        color: '#FFF',
-    },
-    // Masonry Gallery
-    eventsGrid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 10,
-    },
-    galleryItemHero: {
-        width: '100%',
-        height: 220,
-        borderRadius: 12,
-        overflow: 'hidden',
-        marginBottom: 10,
-    },
-    galleryItemMedium: {
-        flex: 1,
-        height: 160,
-        borderRadius: 12,
-        overflow: 'hidden',
-        marginBottom: 10,
-    },
-    galleryItemSmall: {
-        flex: 1,
-        height: 100,
-        borderRadius: 12, // Softer corners
-        overflow: 'hidden',
     },
     blobShape: {
         position: 'absolute',
@@ -1351,88 +1266,8 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         borderRadius: 100,
-        backgroundColor: 'rgba(212, 175, 55, 0.05)', // Subtle gold blob
+        backgroundColor: 'rgba(212, 175, 55, 0.05)',
         zIndex: -1,
-    },
-    sectionSubtitle: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 13,
-        color: '#f29502',
-        marginTop: 4,
-        marginBottom: 15,
-    },
-    plansScrollContent: {
-        paddingVertical: 10,
-        paddingRight: 20,
-        gap: 20,
-    },
-    planCard: {
-        width: 220,
-        backgroundColor: '#FFF',
-        padding: 24,
-        borderRadius: 24,
-        alignItems: 'center',
-        borderWidth: 1.5,
-        borderColor: '#f29502',
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-    },
-    planIconCircleVertical: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    planNameVertical: {
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 20,
-        color: '#CC0E0E',
-        marginBottom: 8,
-    },
-    planPriceVertical: {
-        fontFamily: 'Outfit_700Bold',
-        fontSize: 28,
-        color: '#CC0E0E',
-    },
-    planPerEvent: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 12,
-        color: '#f29502',
-        marginBottom: 20,
-    },
-    featuresListVertical: {
-        width: '100%',
-        marginBottom: 25,
-        gap: 10,
-    },
-    featureItemVertical: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 8,
-    },
-    featureTextVertical: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 12,
-        color: '#f29502',
-        flex: 1,
-    },
-    selectPlanBtn: {
-        width: '100%',
-        paddingVertical: 12,
-        borderRadius: 15,
-        borderWidth: 1.5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 'auto',
-    },
-    selectPlanText: {
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 14,
     },
     footerActions: {
         flexDirection: 'row',
@@ -1446,15 +1281,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'transparent',
-        paddingVertical: 14,
-        borderRadius: 30, // Pill
+        paddingVertical: 10,
+        borderRadius: 30,
         borderWidth: 1.5,
         borderColor: '#f29502',
     },
     contactButtonTextOutline: {
         color: '#f29502',
         fontFamily: 'Outfit_500Medium',
-        fontSize: 13,
+        fontSize: 12,
         textTransform: 'uppercase',
         letterSpacing: 1,
     },
@@ -1463,8 +1298,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#CC0E0E',
-        paddingVertical: 14,
-        borderRadius: 30, // Pill
+        paddingVertical: 10,
+        borderRadius: 30,
         shadowColor: '#CC0E0E',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
@@ -1474,11 +1309,10 @@ const styles = StyleSheet.create({
     bookButtonTextPremium: {
         color: '#FFF',
         fontFamily: 'Outfit_600SemiBold',
-        fontSize: 13,
+        fontSize: 12,
         textTransform: 'uppercase',
         letterSpacing: 1,
     },
-    // Modal Styles
     modalOverlay: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.6)',
@@ -1493,17 +1327,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 30,
         padding: 24,
         maxHeight: '85%',
-        ...Platform.select({
-            ios: {
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: -10 },
-                shadowOpacity: 0.1,
-                shadowRadius: 20,
-            },
-            android: {
-                elevation: 20,
-            },
-        }),
+        elevation: 20,
     },
     modalHeader: {
         flexDirection: 'row',
@@ -1573,20 +1397,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    bookingNote: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 12,
-        color: '#666',
-        fontStyle: 'italic',
-        marginTop: 10,
-        textAlign: 'center',
-    },
     modalFooter: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 12,
         marginTop: 10,
-        paddingBottom: Platform.OS === 'ios' ? 20 : 0,
     },
     cancelButton: {
         flex: 1,
@@ -1694,4 +1509,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default VenuePortfolio;
+export default PhotographerPortfolio;

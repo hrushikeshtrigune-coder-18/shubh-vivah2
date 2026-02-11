@@ -151,10 +151,10 @@ const popularSearches = ['Photography', 'E-Invites', 'Catering', 'Venues', 'Make
 
 // Data: Planning Tools (Saffron, Gold, Maroon Theme)
 const planningTools = [
-    { id: 't1', title: 'Budget', desc: 'Track expenses', icon: 'calculator', color: '#FFF8E1', iconColor: '#D4AF37' }, // Gold Tint
-    { id: 't2', title: 'Guest List', desc: 'Manage invites', icon: 'people', color: '#FFF3E0', iconColor: '#FF9933' }, // Saffron Tint
-    { id: 't3', title: 'Checklist', desc: 'Stay organized', icon: 'checkbox', color: '#FFEBEE', iconColor: '#800000' }, // Maroon Tint
-    { id: 't4', title: 'Inspiration', desc: 'Discover trends', icon: 'bulb', color: '#F3E5F5', iconColor: '#7B1FA2' }, // Purple Tint (Accent)
+    { id: 't1', title: 'Budget', desc: 'Track expenses', icon: 'wallet-outline', color: '#FFF8E1', iconColor: '#D4AF37' }, // Gold Tint
+    { id: 't2', title: 'Guest List', desc: 'Manage invites', icon: 'people-outline', color: '#FFF3E0', iconColor: '#FF9933' }, // Saffron Tint
+    { id: 't3', title: 'Checklist', desc: 'Stay organized', icon: 'checkmark-done-circle-outline', color: '#FFEBEE', iconColor: '#800000' }, // Maroon Tint
+    { id: 't4', title: 'Inspiration', desc: 'Discover trends', icon: 'bulb-outline', color: '#F3E5F5', iconColor: '#7B1FA2' }, // Purple Tint (Accent)
 ];
 
 const AnimatedToolCard = ({ tool, onPress }) => {
@@ -183,14 +183,16 @@ const AnimatedToolCard = ({ tool, onPress }) => {
             style={styles.toolCardWrapper}
         >
             <Animated.View style={[styles.toolCard, { backgroundColor: tool.color, transform: [{ scale: scaleAnim }] }]}>
-                <View style={[styles.toolIconContainer, { backgroundColor: 'rgba(255,255,255,0.8)' }]}>
-                    <Ionicons name={tool.icon} size={28} color={tool.iconColor} />
+                <View style={styles.toolHeader}>
+                    <View style={[styles.toolIconContainer, { backgroundColor: 'rgba(255,255,255,0.6)' }]}>
+                        <Ionicons name={tool.icon} size={26} color={tool.iconColor} />
+                    </View>
+                    <Ionicons name="arrow-forward" size={20} color={tool.iconColor} style={{ opacity: 0.7 }} />
                 </View>
                 <View style={styles.toolTextContainer}>
                     <Text style={[styles.toolTitle, { color: tool.iconColor }]}>{tool.title}</Text>
                     <Text style={styles.toolDesc}>{tool.desc}</Text>
                 </View>
-                <Ionicons name="arrow-forward-circle" size={24} color={tool.iconColor} style={{ opacity: 0.5 }} />
             </Animated.View>
         </TouchableOpacity>
     );
@@ -893,22 +895,16 @@ const styles = StyleSheet.create({
     },
     suggestionItemCircle: {
         alignItems: 'center',
-        marginBottom: 15,
-        width: '30%', // 3 items per row approx
+        marginBottom: 12,
+        width: '30%',
     },
     suggestionIconContainer: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        marginBottom: 5,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        backgroundColor: '#FFF',
+        width: 50,
+        height: 50,
+        borderRadius: 25,
         overflow: 'hidden',
-        borderWidth: 1.5,
+        marginBottom: 5,
+        borderWidth: 1,
         borderColor: COLORS.gold,
     },
     suggestionIconImage: {
@@ -919,43 +915,43 @@ const styles = StyleSheet.create({
     suggestionTextCircle: {
         fontSize: 11,
         color: COLORS.textMain,
-        fontWeight: '600',
         textAlign: 'center',
+        fontWeight: '500',
     },
     searchInput: {
         flex: 1,
-        fontSize: 14,
+        height: 40,
         color: COLORS.textMain,
-        paddingVertical: 5,
-        marginLeft: 8,
+        marginHorizontal: 10,
+    },
+    closeButton: {
+        padding: 5,
     },
     iconButton: {
-        width: 40,
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#FFF',
+        padding: 10,
+        backgroundColor: COLORS.surface,
         borderRadius: 20,
+        marginLeft: 5,
         elevation: 2,
-        shadowColor: COLORS.gold,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
     },
 
-    // Progress
+    // Progress Section
     progressSection: {
         paddingHorizontal: 20,
         marginBottom: 25,
     },
     progressCard: {
-        borderRadius: 25,
+        borderRadius: 20,
         padding: 20,
-        elevation: 6,
+        elevation: 5,
         shadowColor: COLORS.maroon,
-        shadowOffset: { width: 0, height: 6 },
+        shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
-        shadowRadius: 10,
+        shadowRadius: 5,
     },
     progressContent: {
         flexDirection: 'row',
@@ -964,55 +960,55 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     progressLabel: {
-        color: COLORS.gold,
-        fontSize: 12,
+        color: '#FFD700', // Gold Text
+        fontSize: 14,
         fontWeight: '600',
-        textTransform: 'uppercase',
+        marginBottom: 5,
         letterSpacing: 1,
     },
     progressValue: {
         color: '#FFF',
         fontSize: 24,
         fontWeight: 'bold',
-        marginTop: 4,
+        fontFamily: 'serif',
     },
     progressCircle: {
         width: 60,
         height: 60,
         borderRadius: 30,
         borderWidth: 3,
-        borderColor: COLORS.gold,
+        borderColor: '#FFD700',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0,0,0,0.2)',
     },
     progressPercent: {
         color: '#FFF',
-        fontWeight: 'bold',
         fontSize: 16,
+        fontWeight: 'bold',
     },
     progressDone: {
-        color: 'rgba(255,255,255,0.8)',
+        color: '#FFD700',
         fontSize: 10,
     },
     progressBarContainer: {
-        height: 8,
+        height: 6,
         backgroundColor: 'rgba(255,255,255,0.2)',
-        borderRadius: 4,
-        marginBottom: 8,
+        borderRadius: 3,
+        marginBottom: 10,
     },
     progressBar: {
         height: '100%',
-        backgroundColor: COLORS.gold,
-        borderRadius: 4,
+        backgroundColor: '#FFD700',
+        borderRadius: 3,
     },
     progressFooter: {
-        color: 'rgba(255,255,255,0.9)',
-        fontSize: 13,
-        fontWeight: '500',
+        color: 'rgba(255,255,255,0.8)',
+        fontSize: 12,
     },
 
-    // Recommendations
+
+    // Section Headers
     sectionContainer: {
         marginBottom: 30,
     },
@@ -1025,31 +1021,31 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         fontSize: 20,
-        fontWeight: '700',
-        color: COLORS.textMain,
+        fontWeight: 'bold',
+        color: COLORS.maroon,
         fontFamily: 'serif',
     },
     seeAllText: {
-        fontSize: 14,
-        color: COLORS.maroon,
+        color: COLORS.gold,
         fontWeight: '600',
     },
+
+    // Recommendations (Horizontal Scroll)
     horizontalScroll: {
-        paddingHorizontal: 20,
-        paddingBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 10,
     },
     recCard: {
-        width: 200,
-        height: 250, // Vertical Stance
+        width: 280,
+        height: 180,
         marginRight: 15,
-        borderRadius: 24, // More rounded
+        borderRadius: 16,
+        overflow: 'hidden',
         elevation: 4,
-        backgroundColor: '#FFF',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
-        shadowRadius: 5,
-        overflow: 'hidden', // Added to clip image
+        shadowRadius: 4,
     },
     recImage: {
         width: '100%',
@@ -1058,228 +1054,132 @@ const styles = StyleSheet.create({
     },
     recGradient: {
         padding: 15,
-        paddingTop: 40,
     },
     recTitle: {
         color: '#FFF',
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
     },
     recSubtitle: {
-        color: COLORS.gold,
+        color: '#FFD700',
+        marginTop: 4,
         fontSize: 12,
-        fontWeight: '600',
-        marginTop: 2,
+        fontWeight: '500',
     },
 
-    // Grid (Circular)
+
+    // Grid Layout
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
     },
     gridItem: {
-        width: '25%',
-        alignItems: 'center',
+        width: '33.33%',
         marginBottom: 20,
+        alignItems: 'center',
     },
     gridIconContainer: {
         width: 70,
         height: 70,
         borderRadius: 35,
         marginBottom: 8,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
+        elevation: 4,
+        shadowColor: COLORS.maroon,
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
-        shadowRadius: 4,
+        shadowRadius: 3,
         backgroundColor: '#FFF',
-        overflow: 'hidden',
-        borderWidth: 2,
-        borderColor: COLORS.gold,
+        padding: 2,
     },
     gridIconImage: {
         width: '100%',
         height: '100%',
+        borderRadius: 35,
         resizeMode: 'cover',
     },
     gridLabel: {
-        fontSize: 11,
+        fontSize: 12,
+        fontWeight: '600',
         color: COLORS.textMain,
         textAlign: 'center',
-        fontWeight: '600',
-        maxWidth: 70,
     },
 
-    // Tools
+
+    // Planning Tools Grid
     toolsGrid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-between',
         paddingHorizontal: 15,
-    },
-
-    // Config Modal
-    configModalContainer: {
-        flex: 1,
-        backgroundColor: '#FFF',
-        marginTop: 100, // Sheet style
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        padding: 20,
-        paddingBottom: 40,
-        elevation: 20,
-    },
-    configSectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: COLORS.textMain,
-        marginTop: 20,
-        marginBottom: 15,
-        fontFamily: 'serif',
-    },
-    datePickerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        backgroundColor: COLORS.surface,
-        padding: 15,
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: COLORS.gold,
-    },
-    dateControl: {
-        alignItems: 'center',
-    },
-    dateValue: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: COLORS.maroon,
-        marginVertical: 5,
-    },
-    checklistContainer: {
-        backgroundColor: '#FFF',
-    },
-    checklistItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#EEE',
-    },
-    filterChipContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginBottom: 20,
-    },
-    filterChip: {
-        paddingHorizontal: 15,
-        paddingVertical: 8,
-        borderRadius: 20,
-        backgroundColor: COLORS.surface,
-        marginRight: 10,
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: '#EEE',
-    },
-    filterChipActive: {
-        backgroundColor: COLORS.maroon,
-        borderColor: COLORS.maroon,
-    },
-    filterChipText: {
-        fontSize: 14,
-        color: COLORS.textMain,
-    },
-    filterChipTextActive: {
-        color: '#FFF',
-        fontWeight: 'bold',
-    },
-    checklistLabel: {
-        fontSize: 16,
-        color: COLORS.textMain,
-    },
-    saveConfigButton: {
-        backgroundColor: COLORS.maroon,
-        paddingVertical: 15,
-        borderRadius: 25,
-        alignItems: 'center',
-        marginTop: 30,
-        marginBottom: 50,
-        elevation: 5,
-    },
-    saveConfigText: {
-        color: '#FFF',
-        fontSize: 16,
-        fontWeight: 'bold',
     },
     toolCardWrapper: {
-        width: '48%',
-        marginBottom: 15,
+        width: (width - 50) / 2,
+        padding: 5,
     },
     toolCard: {
-        borderRadius: 24,
-        padding: 20,
-        height: 160,
+        padding: 15,
+        borderRadius: 16,
+        height: 150,
         justifyContent: 'space-between',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
+        elevation: 2,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+    },
+    toolHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: 10,
     },
     toolIconContainer: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        backgroundColor: 'rgba(255,255,255,0.6)',
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom: 10,
     },
     toolTextContainer: {
         flex: 1,
-        justifyContent: 'flex-end',
-        marginBottom: 10,
     },
     toolTitle: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
-        color: COLORS.textMain,
         marginBottom: 4,
-        fontFamily: 'serif',
     },
     toolDesc: {
-        fontSize: 13,
+        fontSize: 11,
         color: COLORS.textLight,
-        fontWeight: '500',
         opacity: 0.8,
     },
 
-    // Modal
+
+    // Modals
     modalOverlay: {
         flex: 1,
-        justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0,0,0,0.3)',
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        justifyContent: 'flex-end', // For bottom sheet effect
     },
     modalDismiss: {
         flex: 1,
     },
     glassModal: {
-        backgroundColor: 'rgba(255,255,255,0.95)', // Whiter background
+        backgroundColor: COLORS.surface,
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         padding: 25,
-        overflow: 'hidden',
-        borderTopWidth: 1,
-        borderLeftWidth: 1,
-        borderRightWidth: 1,
-        borderColor: 'rgba(255,255,255,0.6)',
+        maxHeight: '80%',
+        minHeight: '50%',
     },
     modalHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 20,
     },
     modalTitle: {
         fontSize: 22,
@@ -1292,61 +1192,13 @@ const styles = StyleSheet.create({
         color: COLORS.textLight,
         marginBottom: 20,
     },
-    closeModalButton: {
-        padding: 5,
-    },
-    modalGrid: {
-        paddingBottom: 20,
-    },
-    modalItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#FFF',
-        padding: 15,
-        borderRadius: 15,
-        marginBottom: 12,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-        borderWidth: 1,
-        borderColor: '#EEE',
-    },
-    modalIconContainer: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: '#FFEBEE',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 15,
-    },
-    modalItemText: {
-        fontSize: 16,
-        color: COLORS.textMain,
-        fontWeight: '600',
-        flex: 1,
-    },
-    viewAllButton: {
-        backgroundColor: COLORS.maroon,
-        paddingVertical: 15,
-        borderRadius: 25,
-        alignItems: 'center',
-        marginTop: 10,
-    },
-    viewAllText: {
-        color: '#FFF',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
     suggestionsList: {
-        marginBottom: 20,
+        // marginBottom: 20,
     },
     suggestionItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 12,
+        paddingVertical: 15,
         borderBottomWidth: 1,
         borderBottomColor: 'rgba(0,0,0,0.05)',
     },
@@ -1362,9 +1214,155 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 16,
         color: COLORS.textMain,
+    },
+    viewAllButton: {
+        backgroundColor: COLORS.maroon,
+        paddingVertical: 15,
+        borderRadius: 12,
+        alignItems: 'center',
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    viewAllBtnText: { // Renamed from viewAllText to avoid confusion
+        color: '#FFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    // New Modal Grid Styles
+    modalGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        paddingBottom: 20,
+    },
+    modalItem: {
+        width: '48%', // 2 Columns
+        backgroundColor: '#FFF',
+        borderRadius: 16,
+        padding: 15,
+        marginBottom: 15,
+        alignItems: 'center',
+        elevation: 2,
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.05)',
+    },
+    modalIconContainer: {
+        width: 50,
+        height: 50,
+        backgroundColor: COLORS.surface,
+        borderRadius: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    modalItemText: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: COLORS.textMain,
+        marginBottom: 5,
+        textAlign: 'center',
+    },
+    closeModalButton: {
+        padding: 5,
+    },
+    viewAllText: {
+        color: '#FFF',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+
+    // Config Modal Styles (New)
+    configModalContainer: {
+        flex: 1, // Full screen for config
+        backgroundColor: COLORS.surface, // Or just white
+        paddingHorizontal: 20,
+        paddingTop: Platform.OS === 'android' ? 50 : 60,
+    },
+    configSectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: COLORS.maroon,
+        marginTop: 20,
+        marginBottom: 15,
+        fontFamily: 'serif',
+    },
+    datePickerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: '#FFF',
+        padding: 15,
+        borderRadius: 16,
+        elevation: 2,
+    },
+    dateControl: {
+        alignItems: 'center',
+        width: '30%',
+    },
+    dateValue: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: COLORS.textMain,
+        marginVertical: 5,
+    },
+    checklistContainer: {
+        backgroundColor: '#FFF',
+        borderRadius: 16,
+        padding: 10,
+        elevation: 2,
+        marginBottom: 30,
+    },
+    checklistItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+    },
+    checklistLabel: {
+        fontSize: 16,
+        color: COLORS.textMain,
+    },
+    saveConfigButton: {
+        backgroundColor: COLORS.gold,
+        paddingVertical: 16,
+        borderRadius: 30,
+        alignItems: 'center',
+        marginBottom: 40,
+        elevation: 3,
+    },
+    saveConfigText: {
+        color: COLORS.maroon,
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+
+    // Filter Chips
+    filterChipContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 30,
+    },
+    filterChip: {
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        backgroundColor: '#e5e5e5', // Light gray default
+        borderRadius: 20,
+        marginRight: 10,
+        marginBottom: 10,
+    },
+    filterChipActive: {
+        backgroundColor: COLORS.maroon,
+    },
+    filterChipText: {
+        color: COLORS.textLight,
         fontWeight: '500',
     },
-    // Remapping duplications if any, keeping unique styles
+    filterChipTextActive: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    },
 });
 
 export default Services2;

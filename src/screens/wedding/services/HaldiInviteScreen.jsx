@@ -17,6 +17,7 @@ const COLORS = {
     textRed: '#CC0E0E',
     haldi: '#F3D870',
     darkHaldi: '#F29502',
+    maroon: '#800000',
 };
 
 const Tabs = [
@@ -28,6 +29,7 @@ const TEXT_COLORS = [
     COLORS.textRed,
     COLORS.kumkum,
     COLORS.darkHaldi,
+    COLORS.maroon,
     '#000000',
     '#FFFFFF',
     '#1A237E',
@@ -58,7 +60,7 @@ const HaldiInviteScreen = ({ navigation, route }) => {
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
     const [customStyle, setCustomStyle] = useState({
-        textColor: COLORS.textRed,
+        textColor: COLORS.maroon,
         fontFamily: 'System'
     });
     const [modalVisible, setModalVisible] = useState(false);
@@ -567,7 +569,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 14,
         fontWeight: 'bold',
-        color: '#2c3e50',
+        color: '#800000',
         marginBottom: 5,
     },
     input: {

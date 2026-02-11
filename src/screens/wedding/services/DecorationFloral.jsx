@@ -6,7 +6,6 @@ import {
     Dimensions,
     FlatList,
     Image,
-    SafeAreaView,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -14,6 +13,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
@@ -24,6 +24,7 @@ const colors = {
     saffron: '#FF9933',  // Primary CTAs, highlights
     gold: '#D4AF37',     // Premium accents
     maroon: '#800000',   // Section headers
+    kumkum: '#A70002',   // Kumkum Red
     ivory: '#FFFFF0',    // Backgrounds
     textMain: '#2C1810', // Readable text
     white: '#FFFFFF',
@@ -356,23 +357,23 @@ const DecorationFloralScreen = ({ navigation }) => {
                 <View style={[styles.sectionContainer, { paddingHorizontal: 20, marginBottom: 80 }]}>
                     <Text style={styles.sectionHeader}>Why Book With Us?</Text>
                     <View style={styles.whyUsContainer}>
-                        <View style={styles.whyUsItem}>
-                            <View style={[styles.whyUsIconBox, { backgroundColor: '#E3F2FD' }]}>
-                                <Ionicons name="shield-checkmark" size={24} color="#1565C0" />
+                        <View style={[styles.whyUsItem, { backgroundColor: '#F0F8FF' }]}>
+                            <View style={[styles.whyUsIconBox, { backgroundColor: '#FFFFFF' }]}>
+                                <Ionicons name="ribbon-outline" size={26} color="#1565C0" />
                             </View>
                             <Text style={styles.whyUsTitle}>Trusted Vendors</Text>
                             <Text style={styles.whyUsDesc}>Verified professionals for your big day.</Text>
                         </View>
-                        <View style={styles.whyUsItem}>
-                            <View style={[styles.whyUsIconBox, { backgroundColor: '#E8F5E9' }]}>
-                                <Ionicons name="pricetag" size={24} color="#2E7D32" />
+                        <View style={[styles.whyUsItem, { backgroundColor: '#F1F8E9' }]}>
+                            <View style={[styles.whyUsIconBox, { backgroundColor: '#FFFFFF' }]}>
+                                <Ionicons name="wallet-outline" size={26} color="#2E7D32" />
                             </View>
                             <Text style={styles.whyUsTitle}>Best Prices</Text>
                             <Text style={styles.whyUsDesc}>Transparent pricing with no hidden costs.</Text>
                         </View>
-                        <View style={styles.whyUsItem}>
-                            <View style={[styles.whyUsIconBox, { backgroundColor: '#FFF3E0' }]}>
-                                <Ionicons name="star" size={24} color="#EF6C00" />
+                        <View style={[styles.whyUsItem, { backgroundColor: '#FFF8E1' }]}>
+                            <View style={[styles.whyUsIconBox, { backgroundColor: '#FFFFFF' }]}>
+                                <Ionicons name="chatbubbles-outline" size={26} color="#EF6C00" />
                             </View>
                             <Text style={styles.whyUsTitle}>Verified Reviews</Text>
                             <Text style={styles.whyUsDesc}>Real feedback from real couples.</Text>
@@ -422,13 +423,13 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     heroTitle: {
-        color: colors.white,
+        color: colors.white, // Reverted to White as per request
         fontSize: 32,
         fontWeight: '800', // Extra bold
         textAlign: 'center',
         lineHeight: 40,
         marginBottom: 10,
-        textShadowColor: 'rgba(0,0,0,0.75)',
+        textShadowColor: 'rgba(255,255,255,0.3)', // Lighter shadow for contrast
         textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 10,
     },
@@ -605,7 +606,7 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
     },
     flowerCard: {
-        width: (width - 55) / 2,
+        width: (width - 70) / 3, // Changed to 3 columns
         backgroundColor: colors.white,
         borderRadius: 12,
         marginBottom: 15,
@@ -987,19 +988,21 @@ const styles = StyleSheet.create({
     },
     // Why Us
     whyUsContainer: {
+        flexDirection: 'row', // Horizontal layout
+        justifyContent: 'space-between', // Distribute items
+        paddingHorizontal: 5, // Slight padding for shadows
+    },
+    whyUsItem: {
+        width: (width - 60) / 3, // 3 items with padding
         backgroundColor: colors.white,
-        borderRadius: 15,
-        padding: 20,
-        elevation: 2,
+        borderRadius: 16,
+        padding: 15,
+        alignItems: 'center', // Center content
+        elevation: 3,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 3,
-    },
-    whyUsItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
     },
     whyUsIconBox: {
         width: 50,
@@ -1007,18 +1010,20 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 15,
+        marginBottom: 10,
     },
     whyUsTitle: {
-        fontSize: 16,
+        fontSize: 12, // Reduced size for grid
         fontWeight: 'bold',
-        color: colors.textMain,
-        marginBottom: 2,
+        color: colors.kumkum, // Updated to Kumkum color
+        marginBottom: 4,
+        textAlign: 'center', // Center text
     },
     whyUsDesc: {
-        fontSize: 13,
+        fontSize: 10, // Reduced size for grid
         color: colors.textGrey,
-        flex: 1,
+        textAlign: 'center', // Center text
+        lineHeight: 14,
     },
     // Real Stories
     storyCard: {
