@@ -17,6 +17,7 @@ import MehandiScreen from '../screens/wedding/services/mehandi';
 
 import PhotographerPortfolio from '../screens/wedding/portfolio/photop';
 import VenuePortfolio from '../screens/wedding/portfolio/venuep';
+import FoodV from '../screens/wedding/portfolio/FoodV';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +56,7 @@ const AppNavigator = () => {
                     <Stack.Screen name="MehandiScreen" component={MehandiScreen} />
                     <Stack.Screen name="VenuePortfolio" component={VenuePortfolio} />
                     <Stack.Screen name="PhotographerPortfolio" component={PhotographerPortfolio} />
+                    <Stack.Screen name="FoodV" component={FoodV} />
                 </>
             ) : (
                 <Stack.Screen name="Auth" component={AuthNavigator} />

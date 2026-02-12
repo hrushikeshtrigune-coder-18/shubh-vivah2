@@ -245,7 +245,7 @@ const Food = ({ navigation }) => {
                     ))}
                 </View>
 
-                <TouchableOpacity style={styles.ctaButton} onPress={() => { }}>
+                <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('FoodV')}>
                     <Text style={styles.ctaText}>View Menu & Packages</Text>
                     <Ionicons name="arrow-forward" size={16} color="#FFF" />
                 </TouchableOpacity>
