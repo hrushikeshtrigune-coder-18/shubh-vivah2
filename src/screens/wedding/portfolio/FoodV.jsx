@@ -1,26 +1,23 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    Image,
-    ScrollView,
-    TouchableOpacity,
-    Dimensions,
-    Animated,
-    StatusBar,
-    Pressable,
-    Platform,
-    Easing,
-    Modal,
-    TextInput,
-    KeyboardAvoidingView,
-    FlatList
-} from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { Video, ResizeMode } from 'expo-av';
+import { ResizeMode, Video } from 'expo-av';
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+    Animated,
+    Dimensions,
+    Image,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -113,26 +110,15 @@ const SECTION_SPACING = 30;
 // --- Components ---
 
 const HeroImage = ({ uri, index }) => {
-    const scaleAnim = useRef(new Animated.Value(1)).current;
-
-    useEffect(() => {
-        Animated.loop(
-            Animated.sequence([
-                Animated.timing(scaleAnim, { toValue: 1.05, duration: 8000, useNativeDriver: true }),
-                Animated.timing(scaleAnim, { toValue: 1, duration: 8000, useNativeDriver: true })
-            ])
-        ).start();
-    }, []);
-
     return (
-        <Animated.View style={[styles.heroImageWrapper, { transform: [{ scale: scaleAnim }] }]}>
+        <View style={styles.heroImageWrapper}>
             <Image source={{ uri }} style={styles.heroImage} resizeMode="cover" />
             <LinearGradient
                 colors={['transparent', 'rgba(255, 255, 240, 0.4)', COLORS.overlayIvory]}
                 locations={[0, 0.7, 1]}
                 style={styles.heroGradient}
             />
-        </Animated.View>
+        </View>
     );
 };
 
@@ -306,41 +292,17 @@ const FoodV = () => {
     );
 
     const renderVendorProfile = () => {
-        // Animation Interpolations
-        const imageTranslateX = scrollY.interpolate({
-            inputRange: [0, 200],
-            outputRange: [0, width / 2 - 70], // Moves from left (0) to center (width/2 - 50 - 20)
-            extrapolate: 'clamp',
-        });
-
-        const imageScale = scrollY.interpolate({
-            inputRange: [0, 200],
-            outputRange: [1, 1.2], // Slightly larger when centered
-            extrapolate: 'clamp',
-        });
-
         return (
             <View style={styles.profileContainer}>
-                <Animated.View
-                    style={[
-                        styles.profileImageWrapper,
-                        {
-                            transform: [
-                                { translateX: imageTranslateX },
-                                { scale: imageScale }
-                            ]
-                        }
-                    ]}
-                >
+                <View style={styles.profileImageWrapper}>
                     {/* REPLACED LOGO WITH CATERING IMAGE */}
                     <Image
                         source={{ uri: 'https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=300&auto=format&fit=crop' }}
                         style={styles.profileImage}
                     />
-                </Animated.View>
+                </View>
 
-                {/* Spacer to push name down since image is absolute */}
-                <View style={{ height: 60 }} />
+                {/* Spacer removed as image is no longer absolute */}
 
                 <Text style={styles.vendorName}>Maharaja Catering Co.</Text>
 
@@ -724,26 +686,22 @@ const styles = StyleSheet.create({
         marginTop: 0,
         backgroundColor: COLORS.ivory,
         marginHorizontal: 15,
-        paddingTop: 70, // Adjust for image position
+        paddingTop: 20, // Reduced from 70
         paddingBottom: 25,
+        paddingHorizontal: 20, // Added for inner alignment
         borderRadius: 20,
         elevation: 6,
         shadowColor: COLORS.gold,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.2,
         shadowRadius: 6,
-        alignItems: 'center',
+        alignItems: 'flex-start', // Changed from center
         borderWidth: 1,
         borderColor: 'rgba(212, 175, 55, 0.2)',
     },
     profileImageWrapper: {
-        position: 'absolute',
-        top: 15, // Moved up slightly
-        left: 0,
-        right: 0,
-        alignItems: 'flex-start',
-        zIndex: 10,
-        paddingHorizontal: 20,
+        marginBottom: 15, // Added spacing
+        // Removed absolute positioning and flex alignment
     },
     profileImage: {
         width: 100,
@@ -759,12 +717,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.maroon,
         marginBottom: 8,
-        textAlign: 'center',
+        textAlign: 'left', // Changed from center
     },
     locationRatingRow: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
+        // Aligns left by default in flex-start container
     },
     iconTextRow: {
         flexDirection: 'row',
@@ -784,7 +743,7 @@ const styles = StyleSheet.create({
     },
     actionIconsRow: {
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'flex-start', // Changed from center
         gap: 25,
         marginBottom: 20,
     },
@@ -846,9 +805,9 @@ const styles = StyleSheet.create({
     highlightsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'center',
+        justifyContent: 'flex-start', // Changed from center
         gap: 10,
-        marginHorizontal: 20,
+        marginHorizontal: 0, // Removed horizontal margin to align with parent padding
         marginBottom: SECTION_SPACING,
     },
     highlightChip: {

@@ -55,7 +55,7 @@ const serviceCategories = [
     {
         id: '2',
         title: 'Event Management',
-        icon: { uri: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069' },
+        icon: require('../../../assets/images/Gust Mangment.jpg'),
         screen: 'EventManagementScreen',
         suggestions: [
             { id: 's1', title: 'Full Planning', icon: 'list-outline' },
@@ -213,6 +213,12 @@ const renderPlanningTools = () => (
     </View>
 );
 
+// Floating Animation Component for 3D Icon Effect
+// Floating Animation Component for 3D Icon Effect
+// Floating Animation Removed
+
+
+
 // Data: Recommendations (Updated as per User Request)
 const recommendations = [
     { id: 'r1', title: 'E-Invites', subtitle: 'Digital & Animated', image: require('../../../assets/images/invite.jpg'), screen: 'EInviteScreen' },
@@ -221,6 +227,41 @@ const recommendations = [
     { id: 'r4', title: 'Food & Catering', subtitle: 'Gourmet Menu', image: require('../../../assets/images/Food.jpg'), screen: 'Food' },
     { id: 'r5', title: 'Photography', subtitle: 'Capture Moments', image: require('../../../assets/images/photo.jpg'), screen: 'Photography' },
     { id: 'r6', title: 'Honeymoon Planning', subtitle: 'Romantic Getaways', image: require('../../../assets/images/honeymoon planning.jpg'), screen: 'Honeymoon' },
+];
+
+const VENUE_SHOWCASE = [
+    {
+        id: 'v1',
+        title: 'Wedding Decor',
+        badgeText: 'Floral Theme',
+        badgeIcon: '🌸',
+        image: require('../../../assets/images/decor.jpg'),
+        screen: 'DecorationFloral'
+    },
+    {
+        id: 'v2',
+        title: 'Entrance Setup',
+        badgeText: 'Premium Setup',
+        badgeIcon: '✨',
+        image: require('../../../assets/images/venue1.jpg'),
+        screen: 'WeddingVenue'
+    },
+    {
+        id: 'v3',
+        title: 'Evening Lighting',
+        badgeText: 'Night Event',
+        badgeIcon: '🌙',
+        image: require('../../../assets/images/venue2.jpg'),
+        screen: 'WeddingVenue'
+    },
+    {
+        id: 'v4',
+        title: 'Mandap View',
+        badgeText: 'Bridal Suite',
+        badgeIcon: '💍',
+        image: require('../../../assets/images/venue3.jpg'),
+        screen: 'WeddingVenue'
+    },
 ];
 
 const Services2 = () => {
@@ -582,6 +623,71 @@ const Services2 = () => {
         );
     };
 
+    const renderVenueShowcase = () => (
+        <View style={styles.sectionContainer}>
+            <View style={styles.showcaseHeader}>
+                <Text style={styles.showcaseHeaderTitle}>Venue Showcase</Text>
+                <View style={styles.showcaseTabs}>
+                    <TouchableOpacity style={styles.activeShowcaseTab}>
+                        <Ionicons name="images" size={16} color="#FFF" />
+                        <Text style={styles.activeShowcaseTabText}>Venue</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.inactiveShowcaseTab}>
+                        <Ionicons name="pricetag-outline" size={16} color={COLORS.maroon} />
+                        <Text style={styles.inactiveShowcaseTabText}>Plans</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScroll}>
+                {VENUE_SHOWCASE.map((item) => (
+                    <TouchableOpacity
+                        key={item.id}
+                        style={styles.showcaseCardWrapper}
+                        activeOpacity={0.9}
+                        onPress={() => item.screen && navigation.navigate(item.screen)}
+                    >
+                        <View style={styles.glassBorderContainer}>
+                            <BlurView intensity={35} tint="light" style={StyleSheet.absoluteFill} />
+
+                            {/* Inner Glass Bevel/Sheen for 3D Frame Effect */}
+                            <LinearGradient
+                                colors={['rgba(255, 255, 255, 0.6)', 'transparent', 'rgba(255, 255, 255, 0.3)']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 1 }}
+                                style={StyleSheet.absoluteFill}
+                                pointerEvents="none"
+                            />
+
+                            <ImageBackground
+                                source={item.image}
+                                style={styles.showcaseImage}
+                                imageStyle={{ borderRadius: 24 }}
+                            >
+                                {/* Glass Sheen Overlay for Depth */}
+                                <LinearGradient
+                                    colors={['rgba(255, 255, 255, 0.3)', 'transparent', 'rgba(255, 255, 255, 0.1)']}
+                                    start={{ x: -0.2, y: -0.2 }}
+                                    end={{ x: 1.2, y: 1.2 }}
+                                    style={StyleSheet.absoluteFill}
+                                    pointerEvents="none"
+                                />
+
+                                <View style={styles.showcaseBadge}>
+                                    <Text style={styles.showcaseBadgeIcon}>{item.badgeIcon}</Text>
+                                    <Text style={styles.showcaseBadgeText}>{item.badgeText}</Text>
+                                </View>
+                                <BlurView intensity={45} tint="dark" style={styles.showcaseTitleOverlay}>
+                                    <Text style={styles.showcaseTitle}>{item.title}</Text>
+                                    <View style={styles.showcaseDecorator} />
+                                </BlurView>
+                            </ImageBackground>
+                        </View>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+        </View>
+    );
+
     const renderRecommendations = () => {
         if (filteredRecommendations.length === 0) return null;
 
@@ -616,7 +722,7 @@ const Services2 = () => {
                         </TouchableOpacity>
                     ))}
                 </ScrollView>
-            </View>
+            </View >
         );
     };
 
@@ -743,6 +849,7 @@ const Services2 = () => {
                 contentContainerStyle={{ paddingBottom: 100 }}
             >
                 {renderProgressTracker()}
+                {renderVenueShowcase()}
                 {renderRecommendations()}
                 {renderServiceGrid()}
                 {renderPlanningTools()}
@@ -804,28 +911,28 @@ const Services2 = () => {
     );
 };
 
+
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.ivory, // Ivory Background
+        backgroundColor: COLORS.surface,
     },
     scrollView: {
         flex: 1,
     },
-
-    // Header
-    headerContainer: {
+    headerContainer: { // Corrected from 'header'
         flexDirection: 'row',
-        alignItems: 'center',
-        paddingTop: Platform.OS === 'android' ? 50 : 60,
-        paddingBottom: 20,
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
         paddingHorizontal: 20,
-        backgroundColor: COLORS.ivory,
-        zIndex: 100,
+        paddingTop: 50, // More padding for status bar alignment
+        marginBottom: 20,
     },
-    titleContainer: {
+    titleContainer: { // Added missing style
         flex: 1,
-        justifyContent: 'center',
+        marginRight: 15,
     },
     headerTitle: {
         fontSize: 28,
@@ -834,68 +941,88 @@ const styles = StyleSheet.create({
         fontFamily: 'serif',
     },
     headerSubtitle: {
-        fontSize: 12,
+        fontSize: 14,
         color: COLORS.textLight,
         fontWeight: '500',
+        marginTop: 5,
+        lineHeight: 20,
     },
-    headerRight: {
+    headerRight: { // Added missing style
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-end',
-        // flex: 1, // Removed to let title take more space
+        paddingTop: 5,
     },
-    searchContainer: {
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'flex-end',
-    },
-    glassSearch: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: 'rgba(255,255,255,0.7)',
+    searchContainer: { // Corrected for animation
+        height: 45,
+        backgroundColor: 'rgba(255,255,255,0.95)',
         borderRadius: 25,
         borderWidth: 1,
-        borderColor: COLORS.gold, // Gold Border
-        flex: 1,
-        paddingHorizontal: 12,
-        width: '100%',
-    },
-    glassSearchExpanded: {
-        backgroundColor: 'rgba(255,255,255,0.95)',
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: COLORS.gold,
-        width: '100%',
-        padding: 10,
+        borderColor: 'rgba(212, 175, 55, 0.5)', // Gold
+        justifyContent: 'center',
         overflow: 'hidden',
+        elevation: 3,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
     },
-    searchRow: {
+    glassSearchExpanded: { // Added missing
+        flex: 1,
+        width: '100%',
+    },
+    searchRow: { // Added missing
         flexDirection: 'row',
         alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: 'rgba(0,0,0,0.05)',
-        paddingBottom: 8,
-        marginBottom: 8,
+        paddingHorizontal: 15,
+        height: 45,
+    },
+    searchIconInside: { // Added missing
+        marginRight: 10,
+    },
+    searchInput: {
+        flex: 1,
+        height: '100%',
+        color: COLORS.textMain,
+        fontSize: 16,
+    },
+    closeButton: {
+        padding: 5,
+    },
+    iconButton: { // Corrected for search toggle and filter
+        width: 45,
+        height: 45,
+        borderRadius: 22.5,
+        backgroundColor: '#FFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 3,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        borderWidth: 1,
+        borderColor: 'rgba(212, 175, 55, 0.3)', // Gold light
     },
     suggestionContainer: {
-        paddingTop: 5,
+        padding: 15,
+        width: '100%',
+        backgroundColor: 'rgba(255,255,255,0.9)',
     },
     suggestionHeader: {
         fontSize: 12,
         color: COLORS.textLight,
-        marginBottom: 8,
-        marginLeft: 4,
+        marginBottom: 10,
         fontWeight: '600',
+        marginLeft: 5,
     },
     suggestionChipsWrapper: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        justifyContent: 'space-around', // Distribute evenly
-        paddingHorizontal: 5,
+        justifyContent: 'space-around',
     },
     suggestionItemCircle: {
         alignItems: 'center',
-        marginBottom: 12,
+        marginBottom: 15,
         width: '30%',
     },
     suggestionIconContainer: {
@@ -906,6 +1033,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         borderWidth: 1,
         borderColor: COLORS.gold,
+        backgroundColor: '#FFF',
     },
     suggestionIconImage: {
         width: '100%',
@@ -918,28 +1046,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: '500',
     },
-    searchInput: {
-        flex: 1,
-        height: 40,
-        color: COLORS.textMain,
-        marginHorizontal: 10,
-    },
-    closeButton: {
-        padding: 5,
-    },
-    iconButton: {
-        padding: 10,
-        backgroundColor: COLORS.surface,
-        borderRadius: 20,
-        marginLeft: 5,
-        elevation: 2,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
-    },
-
-    // Progress Section
     progressSection: {
         paddingHorizontal: 20,
         marginBottom: 25,
@@ -952,6 +1058,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 5,
+        backgroundColor: COLORS.maroon,
     },
     progressContent: {
         flexDirection: 'row',
@@ -960,7 +1067,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
     },
     progressLabel: {
-        color: '#FFD700', // Gold Text
+        color: '#FFD700',
         fontSize: 14,
         fontWeight: '600',
         marginBottom: 5,
@@ -1006,9 +1113,6 @@ const styles = StyleSheet.create({
         color: 'rgba(255,255,255,0.8)',
         fontSize: 12,
     },
-
-
-    // Section Headers
     sectionContainer: {
         marginBottom: 30,
     },
@@ -1029,11 +1133,127 @@ const styles = StyleSheet.create({
         color: COLORS.gold,
         fontWeight: '600',
     },
-
-    // Recommendations (Horizontal Scroll)
     horizontalScroll: {
         paddingLeft: 20,
-        paddingRight: 10,
+        paddingRight: 20, // Increased
+        paddingVertical: 20, // Added to allow shadows to breathe
+    },
+    showcaseHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        marginBottom: 20,
+    },
+    showcaseHeaderTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: COLORS.maroon,
+        fontFamily: 'serif',
+        textShadowColor: 'rgba(212, 175, 55, 0.2)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
+    },
+    showcaseTabs: {
+        flexDirection: 'row',
+        backgroundColor: '#FFF',
+        borderRadius: 25,
+        padding: 4,
+        borderWidth: 1,
+        borderColor: 'rgba(212, 175, 55, 0.3)',
+    },
+    activeShowcaseTab: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: COLORS.maroon,
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+        gap: 6,
+    },
+    activeShowcaseTabText: {
+        color: '#FFF',
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
+    inactiveShowcaseTab: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        gap: 6,
+    },
+    inactiveShowcaseTabText: {
+        color: COLORS.maroon,
+        fontSize: 12,
+        fontWeight: '600',
+    },
+    showcaseCardWrapper: {
+        width: 240, // Slightly wider
+        height: 320, // Slightly taller
+        marginRight: 25, // Increased spacing
+        marginVertical: 10, // Added to separate from shadows
+    },
+    glassBorderContainer: {
+        flex: 1,
+        borderRadius: 35,
+        padding: 16, // Thicker glass frame for 3D casing look
+        backgroundColor: 'rgba(255, 255, 255, 0.12)',
+        borderWidth: 2,
+        borderColor: 'rgba(255, 255, 255, 0.9)',
+        overflow: 'hidden', // Required for BlurView absoluteFill
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.15,
+        shadowRadius: 15,
+        elevation: 15,
+    },
+    showcaseImage: {
+        flex: 1,
+        justifyContent: 'space-between',
+        padding: 15,
+    },
+    showcaseBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255,255,255,0.95)',
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 15,
+        alignSelf: 'flex-end',
+        gap: 4,
+        borderWidth: 1,
+        borderColor: 'rgba(212, 175, 55, 0.2)',
+    },
+    showcaseBadgeIcon: {
+        fontSize: 12,
+    },
+    showcaseBadgeText: {
+        fontSize: 11,
+        fontWeight: 'bold',
+        color: COLORS.textMain,
+    },
+    showcaseTitleOverlay: {
+        padding: 15,
+        borderRadius: 20,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.2)',
+    },
+    showcaseTitle: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textShadowColor: 'rgba(0,0,0,0.3)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 4,
+    },
+    showcaseDecorator: {
+        width: 30,
+        height: 3,
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        borderRadius: 2,
+        marginTop: 8,
     },
     recCard: {
         width: 280,
@@ -1046,6 +1266,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
+        backgroundColor: '#FFF',
     },
     recImage: {
         width: '100%',
@@ -1069,9 +1290,6 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '500',
     },
-
-
-    // Grid Layout
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -1094,6 +1312,8 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         backgroundColor: '#FFF',
         padding: 2,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     gridIconImage: {
         width: '100%',
@@ -1107,9 +1327,6 @@ const styles = StyleSheet.create({
         color: COLORS.textMain,
         textAlign: 'center',
     },
-
-
-    // Planning Tools Grid
     toolsGrid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -1156,13 +1373,109 @@ const styles = StyleSheet.create({
         color: COLORS.textLight,
         opacity: 0.8,
     },
-
-
-    // Modals
+    // Configuration & Filter Modal Styles
+    configModalContainer: {
+        backgroundColor: COLORS.surface,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        padding: 25,
+        maxHeight: '85%',
+        minHeight: '60%',
+    },
+    configSectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: COLORS.maroon,
+        marginTop: 15,
+        marginBottom: 15,
+        fontFamily: 'serif',
+    },
+    datePickerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        backgroundColor: '#FFF',
+        padding: 15,
+        borderRadius: 16,
+        marginBottom: 20,
+        elevation: 2,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+    },
+    dateControl: {
+        alignItems: 'center',
+    },
+    dateValue: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: COLORS.textMain,
+        marginVertical: 5,
+    },
+    checklistContainer: {
+        marginBottom: 20,
+    },
+    checklistItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0,0,0,0.05)',
+    },
+    checklistLabel: {
+        fontSize: 16,
+        color: COLORS.textMain,
+    },
+    filterChipContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginBottom: 20,
+    },
+    filterChip: {
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+        backgroundColor: '#FFF',
+        borderWidth: 1,
+        borderColor: COLORS.gold,
+        marginRight: 10,
+        marginBottom: 10,
+    },
+    filterChipActive: {
+        backgroundColor: COLORS.maroon,
+        borderColor: COLORS.maroon,
+    },
+    filterChipText: {
+        color: COLORS.textMain,
+        fontWeight: '500',
+    },
+    filterChipTextActive: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    },
+    saveConfigButton: {
+        backgroundColor: COLORS.maroon,
+        paddingVertical: 15,
+        borderRadius: 16,
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 30,
+        elevation: 3,
+        shadowColor: COLORS.maroon,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+    },
+    saveConfigText: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
     modalOverlay: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.4)',
-        justifyContent: 'flex-end', // For bottom sheet effect
+        justifyContent: 'flex-end',
     },
     modalDismiss: {
         flex: 1,
@@ -1223,12 +1536,11 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
     },
-    viewAllBtnText: { // Renamed from viewAllText to avoid confusion
+    viewAllBtnText: {
         color: '#FFF',
         fontSize: 16,
         fontWeight: 'bold',
     },
-    // New Modal Grid Styles
     modalGrid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -1236,7 +1548,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     modalItem: {
-        width: '48%', // 2 Columns
+        width: '48%',
         backgroundColor: '#FFF',
         borderRadius: 16,
         padding: 15,
@@ -1269,100 +1581,7 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
         fontWeight: 'bold',
-    },
-
-    // Config Modal Styles (New)
-    configModalContainer: {
-        flex: 1, // Full screen for config
-        backgroundColor: COLORS.surface, // Or just white
-        paddingHorizontal: 20,
-        paddingTop: Platform.OS === 'android' ? 50 : 60,
-    },
-    configSectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: COLORS.maroon,
-        marginTop: 20,
-        marginBottom: 15,
-        fontFamily: 'serif',
-    },
-    datePickerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        backgroundColor: '#FFF',
-        padding: 15,
-        borderRadius: 16,
-        elevation: 2,
-    },
-    dateControl: {
-        alignItems: 'center',
-        width: '30%',
-    },
-    dateValue: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: COLORS.textMain,
-        marginVertical: 5,
-    },
-    checklistContainer: {
-        backgroundColor: '#FFF',
-        borderRadius: 16,
-        padding: 10,
-        elevation: 2,
-        marginBottom: 30,
-    },
-    checklistItem: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
-    },
-    checklistLabel: {
-        fontSize: 16,
-        color: COLORS.textMain,
-    },
-    saveConfigButton: {
-        backgroundColor: COLORS.gold,
-        paddingVertical: 16,
-        borderRadius: 30,
-        alignItems: 'center',
-        marginBottom: 40,
-        elevation: 3,
-    },
-    saveConfigText: {
-        color: COLORS.maroon,
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-
-    // Filter Chips
-    filterChipContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginBottom: 30,
-    },
-    filterChip: {
-        paddingHorizontal: 16,
-        paddingVertical: 10,
-        backgroundColor: '#e5e5e5', // Light gray default
-        borderRadius: 20,
-        marginRight: 10,
-        marginBottom: 10,
-    },
-    filterChipActive: {
-        backgroundColor: COLORS.maroon,
-    },
-    filterChipText: {
-        color: COLORS.textLight,
-        fontWeight: '500',
-    },
-    filterChipTextActive: {
-        color: '#FFF',
-        fontWeight: 'bold',
-    },
+    }
 });
 
 export default Services2;

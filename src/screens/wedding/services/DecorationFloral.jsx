@@ -1,11 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { ResizeMode, Video } from 'expo-av';
+import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import {
+    Animated,
     Dimensions,
-    FlatList,
-    Image,
+    ImageBackground,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -33,59 +34,9 @@ const colors = {
 };
 
 // --- DATA MOCKS ---
-const THEMES = [
-    { id: '1', name: 'Royal Heritage', image: require('../../../../assets/DF images/Royal Heritage.jpg') },
-    { id: '2', name: 'Floral Pastel', image: require('../../../../assets/DF images/Floral Pastel.jpg') },
-    { id: '3', name: 'Traditional Marigold', image: require('../../../../assets/DF images/Traditional Marigold.jpg') },
-    { id: '4', name: 'Modern Minimal', image: require('../../../../assets/DF images/Modern Minimal.jpg') },
-];
 
 
 
-const REAL_STORIES = [
-    {
-        id: '1',
-        title: 'Royal Heritage',
-        couple: 'Aditi & Rahul',
-        image: require('../../../../assets/images/Royal Heritage 2.jpg'),
-        icon: 'heart'
-    },
-    {
-        id: '2',
-        title: 'Beachside Bliss',
-        couple: 'Priya & Arjun',
-        image: require('../../../../assets/images/Beachside Bliss.jpg'),
-        icon: 'sunny'
-    },
-    {
-        id: '3',
-        title: 'Floral Fantasy',
-        couple: 'Sita & Ram',
-        image: require('../../../../assets/images/Floral Fantasy.jpg'),
-        icon: 'leaf'
-    },
-];
-
-const TESTIMONIALS = [
-    {
-        id: '1',
-        text: "Absolutely dreamy decor! The team understood our vision perfectly.",
-        author: "Ananya S.",
-        rating: 5
-    },
-    {
-        id: '2',
-        text: "Professional, timely, and stunningly beautiful work.",
-        author: "Vikram R.",
-        rating: 5
-    },
-    {
-        id: '3',
-        text: "They transformed the venue into a fairytale. Highly recommended!",
-        author: "Meera K.",
-        rating: 4
-    }
-];
 
 const VENDORS = [
     {
@@ -122,104 +73,139 @@ const VENDORS = [
     }
 ];
 
-// --- COMPONENTS ---
+const VendorCard = ({ item }) => {
+    const scale = useRef(new Animated.Value(1)).current;
+    const imgScale = useRef(new Animated.Value(1)).current;
+    const tilt = useRef(new Animated.Value(0)).current;
 
-const StoryCard = ({ item }) => (
-    <View style={styles.storyCard}>
-        <Image source={item.image} style={styles.storyImage} />
-        <LinearGradient
-            colors={['transparent', 'rgba(0,0,0,0.8)']}
-            style={styles.storyOverlay}
+    const handlePressIn = () => {
+        Animated.parallel([
+            Animated.spring(scale, {
+                toValue: 1.05,
+                friction: 4,
+                useNativeDriver: true,
+            }),
+            Animated.spring(imgScale, {
+                toValue: 1.15,
+                friction: 6,
+                useNativeDriver: true,
+            }),
+            Animated.spring(tilt, {
+                toValue: 1,
+                friction: 8,
+                useNativeDriver: true,
+            })
+        ]).start();
+    };
+
+    const handlePressOut = () => {
+        Animated.parallel([
+            Animated.spring(scale, {
+                toValue: 1,
+                friction: 4,
+                useNativeDriver: true,
+            }),
+            Animated.spring(imgScale, {
+                toValue: 1,
+                friction: 6,
+                useNativeDriver: true,
+            }),
+            Animated.spring(tilt, {
+                toValue: 0,
+                friction: 8,
+                useNativeDriver: true,
+            })
+        ]).start();
+    };
+
+    const rotateX = tilt.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '-6deg'],
+    });
+
+    const shadowOpacity = scale.interpolate({
+        inputRange: [1, 1.05],
+        outputRange: [0.25, 0.45],
+    });
+
+    const shadowRadius = scale.interpolate({
+        inputRange: [1, 1.05],
+        outputRange: [18, 28],
+    });
+
+    const elevation = scale.interpolate({
+        inputRange: [1, 1.05],
+        outputRange: [20, 30],
+    });
+
+    return (
+        <TouchableOpacity
+            activeOpacity={1}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            style={styles.showcaseCardWrapper}
         >
-            <View style={styles.storyContent}>
-                <Ionicons name={item.icon} size={20} color={colors.gold} style={{ marginBottom: 5 }} />
-                <Text style={styles.storyTitle}>{item.title}</Text>
-                <Text style={styles.storyCouple}>{item.couple}</Text>
-            </View>
-        </LinearGradient>
-    </View>
-);
+            <Animated.View style={[
+                styles.glassBorderContainer,
+                {
+                    shadowOpacity,
+                    shadowRadius,
+                    elevation,
+                    transform: [
+                        { perspective: 1000 },
+                        { scale },
+                        { rotateX }
+                    ]
+                }
+            ]}>
+                <BlurView intensity={45} tint="light" style={StyleSheet.absoluteFill} />
 
-const TestimonialCard = ({ item }) => (
-    <View style={styles.testimonialCard}>
-        <View style={styles.quoteIcon}>
-            <Ionicons name="chatbox-ellipses-outline" size={24} color={colors.saffron} />
-        </View>
-        <Text style={styles.testimonialText}>"{item.text}"</Text>
-        <View style={styles.testimonialFooter}>
-            <Text style={styles.testimonialAuthor}>- {item.author}</Text>
-            <View style={{ flexDirection: 'row' }}>
-                {[...Array(item.rating)].map((_, i) => (
-                    <Ionicons key={i} name="star" size={12} color={colors.gold} />
-                ))}
-            </View>
-        </View>
-    </View>
-);
+                {/* Thin Light-Catching Sheen Edge for 3D Definition */}
+                <View style={styles.glassEdgeGlow} />
 
-const VendorCard = ({ item }) => (
-    <View style={[styles.vendorCardEnhanced, { width: 280, marginRight: 20 }]}>
-        <View>
-            <Image
-                source={item.image}
-                style={styles.vendorCover}
-            />
-            <LinearGradient
-                colors={['transparent', 'rgba(0,0,0,0.6)']}
-                style={styles.vendorImageOverlay}
-            />
-            <View style={styles.cardFloatingBadges}>
-                <View style={styles.ratingBadgeFloating}>
-                    <Text style={styles.ratingText}>{item.rating}</Text>
-                    <Ionicons name="star" size={10} color={colors.white} />
+                {/* Inner Glass Bevel/Sheen */}
+                <LinearGradient
+                    colors={['rgba(255, 255, 255, 0.5)', 'transparent', 'rgba(255, 255, 255, 0.2)']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={StyleSheet.absoluteFill}
+                    pointerEvents="none"
+                />
+
+                <Animated.View style={{ flex: 1, transform: [{ scale: imgScale }] }}>
+                    <ImageBackground
+                        source={item.image}
+                        style={styles.showcaseImage}
+                        imageStyle={{ borderRadius: 40 }}
+                    >
+                        {/* Glass Sheen Overlay for Depth */}
+                        <LinearGradient
+                            colors={['rgba(255, 255, 255, 0.3)', 'transparent', 'rgba(255, 255, 255, 0.1)']}
+                            start={{ x: -0.2, y: -0.2 }}
+                            end={{ x: 1.2, y: 1.2 }}
+                            style={StyleSheet.absoluteFill}
+                            pointerEvents="none"
+                        />
+                    </ImageBackground>
+                </Animated.View>
+
+                {/* Static Overlay for Name - Positioned absolutely so it doesn't zoom with image */}
+                <View style={styles.nameOverlayContainer}>
+                    <BlurView intensity={50} tint="dark" style={styles.showcaseTitleOverlay}>
+                        <Text style={styles.showcaseTitle}>{item.name}</Text>
+                    </BlurView>
                 </View>
-                <TouchableOpacity style={styles.favoriteBtn}>
-                    <Ionicons name="heart-outline" size={18} color={colors.white} />
-                </TouchableOpacity>
-            </View>
-        </View>
-
-        <View style={styles.vendorInfo}>
-            <Text style={styles.vendorNameLarge}>{item.name}</Text>
-            <View style={styles.vendorMetaRow}>
-                <Ionicons name="location-sharp" size={14} color={colors.saffron} />
-                <Text style={styles.vendorMetaText}>{item.location}</Text>
-            </View>
-
-            <View style={styles.divider} />
-
-            <View style={styles.vendorFooter}>
-                <View>
-                    <Text style={styles.vendorLabel}>Starting from</Text>
-                    <Text style={styles.vendorPrice}>{item.price}</Text>
-                </View>
-                <TouchableOpacity style={styles.contactBtn}>
-                    <Text style={styles.contactBtnText}>View Portfolio</Text>
-                    <Ionicons name="arrow-forward" size={14} color={colors.white} style={{ marginLeft: 5 }} />
-                </TouchableOpacity>
-            </View>
-        </View>
-    </View>
-);
-
-const ThemeCard = ({ item }) => (
-    <View style={styles.themeCard}>
-        <Image source={item.image} style={styles.themeImage} />
-        <LinearGradient colors={['transparent', 'rgba(44,24,16,0.8)']} style={styles.themeOverlay}>
-            <Text style={styles.themeText}>{item.name}</Text>
-        </LinearGradient>
-    </View>
-);
-
-
+            </Animated.View>
+        </TouchableOpacity>
+    );
+};
 
 const DecorationFloralScreen = ({ navigation }) => {
     const scrollViewRef = useRef(null);
-    const [themesY, setThemesY] = useState(0);
 
-    const scrollToThemes = () => {
+    const scrollToVendors = () => {
         if (scrollViewRef.current) {
-            scrollViewRef.current.scrollTo({ y: themesY, animated: true });
+            scrollViewRef.current.scrollTo({ y: 400, animated: true });
         }
     };
 
@@ -253,10 +239,10 @@ const DecorationFloralScreen = ({ navigation }) => {
                             <Text style={styles.heroTitle}>Because Some Moments Deserve to be Beautiful</Text>
 
                             <Text style={styles.heroSubtitle}>
-                                <Text style={{ color: colors.gold }}>Floral</Text> • <Text style={{ color: colors.gold }}>Thematic</Text> • <Text style={{ color: colors.gold }}>Luxury</Text> • <Text style={{ color: colors.gold }}>Destination</Text>
+                                Floral • Thematic • Luxury • Destination
                             </Text>
 
-                            <TouchableOpacity style={styles.heroCTA} onPress={scrollToThemes}>
+                            <TouchableOpacity style={styles.heroCTA} onPress={scrollToVendors}>
                                 <Ionicons name="heart" size={20} color={colors.white} style={{ marginRight: 8 }} />
                                 <Text style={styles.heroCTAText}>Plan My Decor</Text>
                             </TouchableOpacity>
@@ -284,73 +270,17 @@ const DecorationFloralScreen = ({ navigation }) => {
 
 
 
-                {/* 2. WEDDING THEMES */}
-                <View
-                    style={styles.sectionContainer}
-                    onLayout={(event) => {
-                        const layout = event.nativeEvent.layout;
-                        setThemesY(layout.y);
-                    }}
-                >
-                    <Text style={styles.sectionHeader}>Curated Themes</Text>
-                    <FlatList
-                        data={THEMES}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => <ThemeCard item={item} />}
-                        keyExtractor={item => item.id}
-                        contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
-                    />
-                </View>
-
-                {/* 3. EVENT PLANNER */}
-
-
-
-
-                {/* 3. VENDOR DETAILS (Moved Up & Horizontal List) */}
+                {/* 2. VENDORS */}
                 <View style={styles.sectionContainer}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center', marginBottom: 15 }}>
-                        <Text style={styles.sectionHeader}>Featured Vendors</Text>
+                        <Text style={styles.sectionHeader}>Vendors</Text>
                         <Text style={styles.seeAll}>See All</Text>
                     </View>
-                    <FlatList
-                        data={VENDORS}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => <VendorCard item={item} />}
-                        keyExtractor={item => item.id}
-                        contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
-                    />
-                </View>
-
-                {/* 4. REAL EVENTS & STORIES */}
-                <View style={styles.sectionContainer}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center', marginBottom: 15 }}>
-                        <Text style={styles.sectionHeader}>Real Events & Stories</Text>
-                        <Text style={styles.seeAll}>View All</Text>
-                    </View>
-                    <FlatList
-                        data={REAL_STORIES}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => <StoryCard item={item} />}
-                        keyExtractor={item => item.id}
-                        contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
-                    />
-                </View>
-
-                {/* 5. CLIENT LOVE (Testimonials) */}
-                <View style={[styles.sectionContainer, { marginTop: 10, marginBottom: 40 }]}>
-                    <Text style={[styles.sectionHeader, { marginBottom: 10 }]}>Client Love</Text>
-                    <FlatList
-                        data={TESTIMONIALS}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => <TestimonialCard item={item} />}
-                        keyExtractor={item => item.id}
-                        contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
-                    />
+                    {VENDORS.map((item) => (
+                        <View key={item.id} style={{ paddingHorizontal: 20, marginBottom: 20 }}>
+                            <VendorCard item={item} />
+                        </View>
+                    ))}
                 </View>
 
                 {/* 6. WHY BOOK WITH US */}
@@ -407,7 +337,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end', // Align content to bottom
         paddingHorizontal: 20,
-        paddingBottom: 80, // Space for stats bar
+        paddingBottom: 40, // Adjusted padding for lower placement
     },
     backBtn: {
         position: 'absolute',
@@ -419,42 +349,38 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     heroContent: {
-        alignItems: 'center',
+        alignItems: 'flex-start', // Left aligned titles
         paddingBottom: 20,
     },
     heroTitle: {
-        color: colors.white, // Reverted to White as per request
-        fontSize: 32,
-        fontWeight: '800', // Extra bold
-        textAlign: 'center',
-        lineHeight: 40,
-        marginBottom: 10,
-        textShadowColor: 'rgba(255,255,255,0.3)', // Lighter shadow for contrast
-        textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 10,
+        color: colors.white,
+        fontSize: 36,
+        fontWeight: '900', // Extra bold
+        textAlign: 'left', // Left aligned
+        lineHeight: 44,
+        marginBottom: 8,
     },
     heroSubtitle: {
-        color: colors.gold,
-        fontSize: 14,
-        fontWeight: '600',
-        textAlign: 'center',
-        marginBottom: 25,
-        textShadowColor: 'rgba(0,0,0,0.75)',
-        textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 5,
+        color: '#FFEA00', // Bright Yellow
+        fontSize: 16,
+        fontWeight: '700',
+        textAlign: 'left',
+        marginBottom: 30,
     },
     heroCTA: {
         flexDirection: 'row',
-        backgroundColor: '#D32F2F', // Red color
-        paddingVertical: 12,
-        paddingHorizontal: 30,
-        borderRadius: 25,
+        backgroundColor: '#D32F2F', // High visibility red
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        borderRadius: 30,
         alignItems: 'center',
-        elevation: 5,
+        justifyContent: 'center',
+        width: '100%', // Full width as per image
+        elevation: 10,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
     },
     heroCTAText: {
         color: colors.white,
@@ -782,17 +708,78 @@ const styles = StyleSheet.create({
         color: colors.textMain,
     },
     // Vendor Enhanced
-    vendorCardEnhanced: {
-        backgroundColor: colors.white,
-        borderRadius: 16,
+    showcaseCardWrapper: {
+        width: '100%',
+        height: 400, // Taller cards for vertical list
+        marginVertical: 15,
+    },
+    glassBorderContainer: {
+        flex: 1,
+        borderRadius: 40,
+        backgroundColor: 'rgba(255, 255, 255, 0.12)', // Slightly more transparent for floating effect
         overflow: 'hidden',
-        elevation: 6,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 15 },
+        shadowOpacity: 0.25,
+        shadowRadius: 20,
+        elevation: 20,
+    },
+    glassEdgeGlow: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: 40,
+        borderWidth: 1.5,
+        borderColor: 'rgba(255, 255, 255, 0.4)', // Light-catching edge
+        opacity: 0.8,
+    },
+    showcaseImage: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        padding: 15,
+    },
+    nameOverlayContainer: {
+        position: 'absolute',
+        bottom: 15,
+        left: 15,
+        right: 15,
+    },
+    showcaseTitleOverlay: {
+        padding: 18,
+        borderRadius: 22,
+        overflow: 'hidden',
+        backgroundColor: 'rgba(0,0,0,0.35)',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#f0f0f0',
+        borderColor: 'rgba(255,255,255,0.1)',
+    },
+    showcaseTitle: {
+        color: '#FFF',
+        fontSize: 22,
+        fontWeight: 'bold',
+        textShadowColor: 'rgba(0,0,0,0.3)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 4,
+    },
+    showcaseSubtitle: {
+        color: 'rgba(255,255,255,0.8)',
+        fontSize: 12,
+        marginTop: 2,
+    },
+    showcasePriceContainer: {
+        alignItems: 'flex-end',
+    },
+    showcasePrice: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    showcaseDecorator: {
+        width: 30,
+        height: 3,
+        backgroundColor: 'rgba(255,255,255,0.8)',
+        borderRadius: 2,
+        marginTop: 8,
     },
     vendorCover: {
         width: '100%',
