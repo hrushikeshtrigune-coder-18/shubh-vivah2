@@ -16,6 +16,7 @@ const COLORS = {
     textRed: '#CC0E0E',
     haldi: '#F3D870',
     darkHaldi: '#F29502',
+    maroon: '#800000',
 };
 
 const Tabs = [
@@ -28,6 +29,7 @@ const TEXT_COLORS = [
     COLORS.textRed,
     COLORS.kumkum,
     COLORS.darkHaldi,
+    COLORS.maroon,
     '#000000', // Black
     '#FFFFFF', // White
     '#1A237E', // Navy Blue
@@ -55,7 +57,7 @@ const InviteStudioScreen = ({ navigation, route }) => {
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
     const [customStyle, setCustomStyle] = useState({
-        textColor: COLORS.textRed,
+        textColor: COLORS.maroon,
         fontFamily: 'System' // Default
     });
     const [modalVisible, setModalVisible] = useState(false);
@@ -272,11 +274,7 @@ const InviteStudioScreen = ({ navigation, route }) => {
                     <Ionicons name="arrow-back" size={24} color={COLORS.kumkum} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Invite Studio:{eventType}</Text>
-                <TouchableOpacity
-                    style={styles.saveButton}
-                >
-                    <Text style={styles.saveText}>Save</Text>
-                </TouchableOpacity>
+
             </View>
 
             {/* Main Content Area */}
@@ -339,6 +337,12 @@ const InviteStudioScreen = ({ navigation, route }) => {
                         </TouchableOpacity>
                         <View style={styles.modalContent}>
                             {renderPreviewCard()}
+                            <TouchableOpacity style={styles.modalSaveButton} onPress={() => {
+                                // Save functionality to be implemented
+                                alert('Card Saved!');
+                            }}>
+                                <Text style={styles.modalSaveButtonText}>Save Card</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
@@ -385,25 +389,7 @@ const styles = StyleSheet.create({
         marginRight: 10, // Small gap between arrow and title
         padding: 5,
     },
-    saveButton: {
-        position: 'absolute',
-        right: 20,
-        bottom: -15, // Move down to overlap header edge (half of approx 30-40px height)
-        paddingVertical: 8,
-        paddingHorizontal: 20,
-        backgroundColor: COLORS.kumkum,
-        borderRadius: 20,
-        elevation: 5, // Shadow for Android
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-    },
-    saveText: {
-        color: '#fff',
-        fontWeight: '600',
-        fontSize: 14,
-    },
+
     viewCardButton: {
         backgroundColor: COLORS.kumkum,
         flexDirection: 'row',
@@ -464,6 +450,19 @@ const styles = StyleSheet.create({
         elevation: 5,
         borderWidth: 1,
         borderColor: COLORS.haldi,
+    },
+    modalSaveButton: {
+        backgroundColor: COLORS.kumkum,
+        paddingHorizontal: 30,
+        paddingVertical: 12,
+        borderRadius: 25,
+        marginTop: 20,
+        elevation: 5,
+    },
+    modalSaveButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
     },
     contentArea: {
         padding: 20,
@@ -573,7 +572,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 14,
         fontWeight: 'bold',
-        color: '#2c3e50',
+        color: '#800000',
         marginBottom: 5,
     },
     input: {
@@ -675,6 +674,7 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
+        marginTop: 60, // Added space from top close button
     },
     closeButton: {
         position: 'absolute',

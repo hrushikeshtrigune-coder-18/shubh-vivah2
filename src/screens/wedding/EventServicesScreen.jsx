@@ -1,9 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     Animated,
     Dimensions,
     Image,
+    ImageBackground,
     Modal,
     ScrollView,
     StatusBar,
@@ -11,8 +13,7 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View,
-    useWindowDimensions
+    View
 } from 'react-native';
 import Card from '../../components/Card/Card';
 
@@ -78,46 +79,9 @@ const services = [
         description: 'Romantic getaways to the world\'s most beautiful destinations.',
         features: ['Custom Packages', 'Luxury Stays'],
         icon: 'plane'
-    }
+    },
+
 ];
-
-// Backdrop Component
-const Backdrop = ({ data, scrollX }) => {
-    const { width, height } = useWindowDimensions();
-    const ITEM_WIDTH = width * 0.75;
-
-    return (
-        <View style={{ position: 'absolute', width, height }}>
-            {data.map((item, index) => {
-                const inputRange = [
-                    (index - 1) * ITEM_WIDTH,
-                    index * ITEM_WIDTH,
-                    (index + 1) * ITEM_WIDTH,
-                ];
-
-                const opacity = scrollX.interpolate({
-                    inputRange,
-                    outputRange: [0, 1, 0],
-                    extrapolate: 'clamp',
-                });
-
-                return (
-                    <Animated.Image
-                        key={item.id} // Use item.id as key for better tracking
-                        source={typeof item.image === 'string' ? { uri: item.image } : item.image}
-                        style={{
-                            width: width,
-                            height: height,
-                            position: 'absolute',
-                            opacity,
-                        }}
-                        blurRadius={5}
-                    />
-                );
-            })}
-        </View>
-    );
-};
 
 const EventServicesScreen = ({ navigation }) => {
     const [searchText, setSearchText] = useState('');
@@ -138,7 +102,6 @@ const EventServicesScreen = ({ navigation }) => {
             (selectedCategory === 'Decor' && (service.title.includes('Decoration') || service.title.includes('Venue'))) ||
             (selectedCategory === 'Florist' && service.title.includes('Decoration')) ||
             (selectedCategory === 'Catering' && service.title.includes('Food')) ||
-            (selectedCategory === 'Music' && service.title.includes('Entertainment')) ||
             (selectedCategory === 'Photo' && service.title.includes('Photography')) ||
             (selectedCategory === 'Venue' && service.title.includes('Venue'));
 
@@ -155,15 +118,6 @@ const EventServicesScreen = ({ navigation }) => {
             description: 'Transform your venue with bespoke floral arrangements and immersive themes.',
             features: ['Theme Decor', 'Floral Styling'],
             icon: 'holly-berry'
-        },
-        {
-            id: 's3',
-            title: 'Return Gifts',
-            subtitle: 'Favors & Hampers',
-            image: { uri: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=2000&auto=format&fit=crop' },
-            description: 'Exclusive gift hampers and return favors to thank your guests.',
-            features: ['Custom Packing', 'Eco-friendly'],
-            icon: 'gift'
         },
         {
             id: 's4',
@@ -191,15 +145,6 @@ const EventServicesScreen = ({ navigation }) => {
             description: 'Exquisite bridal and wedding jewellery collections.',
             features: ['Gold & Diamond', 'Custom Designs'],
             icon: 'gem'
-        },
-        {
-            id: 's8',
-            title: 'Entertainment',
-            subtitle: 'Music & Dance',
-            image: require('../../../assets/images/entertenment.jpg'),
-            description: 'Live bands, DJs, and celebrity performances.',
-            features: ['Live DJ', 'Dancers'],
-            icon: 'music'
         }
     ];
 
@@ -273,44 +218,49 @@ const EventServicesScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar hidden={false} barStyle="dark-content" backgroundColor="#FFFFE4" />
+            <StatusBar hidden={false} barStyle="light-content" translucent backgroundColor="transparent" />
 
-            {/* Dynamic Background */}
-            <Backdrop data={services} scrollX={scrollX} />
+            {/* Premium Glassmorphic Header */}
+            <ImageBackground
+                source={require('../../../assets/images/decor.jpg')}
+                style={styles.heroContainer}
+                imageStyle={styles.heroImage}
+            >
+                {/* Dark overlay for better text visibility */}
+                <View style={styles.overlay} />
 
-            {/* Luxury Glass Header (No Curve) */}
-            {/* Cream & Maroon Header (Reference Image Style) */}
-            <View style={styles.heroContainer}>
-                <View style={styles.heroGradient}>
-                    <View style={styles.heroContent}>
-                        <Text style={styles.heroTitle}>WEDDING SERVICES</Text>
-                    </View>
-
-                    <View style={styles.searchContainer}>
-                        <View style={styles.searchBar}>
-                            <Ionicons name="search" size={24} color="#800000" style={{ marginRight: 10 }} />
-                            <TextInput
-                                placeholder="Find a service..."
-                                value={searchText}
-                                onChangeText={setSearchText}
-                                placeholderTextColor="#999"
-                                onFocus={() => setShowSuggestions(true)}
-                                underlineColorAndroid="transparent"
-                                style={styles.searchInput}
-                            />
-                            {searchText.length > 0 && (
-                                <TouchableOpacity onPress={() => setSearchText('')}>
-                                    <Ionicons name="close-circle" size={20} color="#800000" />
-                                </TouchableOpacity>
-                            )}
+                <View style={styles.heroContentContainer}>
+                    <BlurView intensity={30} tint="light" style={styles.glassHeader}>
+                        <View style={styles.headerTextContainer}>
+                            <Text style={styles.heroTitle}>Wedding Services</Text>
+                            <Text style={styles.heroSubtitle}>Everything for your perfect day</Text>
                         </View>
-                    </View>
+
+                        <View style={styles.searchContainer}>
+                            <View style={styles.searchBar}>
+                                <Ionicons name="search" size={22} color="#800000" style={styles.searchIcon} />
+                                <TextInput
+                                    placeholder="Find a service..."
+                                    value={searchText}
+                                    onChangeText={setSearchText}
+                                    placeholderTextColor="#666"
+                                    onFocus={() => setShowSuggestions(true)}
+                                    style={styles.searchInput}
+                                />
+                                {searchText.length > 0 && (
+                                    <TouchableOpacity onPress={() => setSearchText('')}>
+                                        <Ionicons name="close-circle" size={20} color="#800000" />
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        </View>
+                    </BlurView>
                 </View>
-            </View>
+            </ImageBackground>
 
             {/* Search Suggestions (Absolute on top) */}
             {showSuggestions && (
-                <View style={[styles.suggestionsDropdown, { top: 190 }]}>
+                <View style={[styles.suggestionsDropdown, { top: 280 }]}>
                     <View style={styles.chipsContainer}>
                         {filteredSuggestions.map((item) => (
                             <TouchableOpacity
@@ -335,7 +285,8 @@ const EventServicesScreen = ({ navigation }) => {
                 </View>
             )}
 
-            <View style={{ flex: 1, justifyContent: 'flex-start', paddingTop: 10, zIndex: 1 }}>
+            {/* Content Container - Pushing it down to respect the larger header */}
+            <View style={{ flex: 1, paddingVertical: 20 }}>
                 <Animated.FlatList
                     ref={flatListRef}
                     data={services}
@@ -424,6 +375,10 @@ const EventServicesScreen = ({ navigation }) => {
                                                     case '5': // Photography
                                                         navigation.navigate('Photography');
                                                         break;
+                                                    case '7': // Jewellery
+                                                    case 's6': // Jewellery (from suggestions)
+                                                        navigation.navigate('JewelleryScreen');
+                                                        break;
                                                     case '6': // Honeymoon Planning
                                                         navigation.navigate('Honeymoon');
                                                         break;
@@ -458,61 +413,81 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff', // Ivory
     },
     heroContainer: {
-        height: 180, // Compact but elegant
+        height: 280, // Taller for hero impact
         width: '100%',
         position: 'relative',
-        marginBottom: 20,
-        overflow: 'hidden',
-        elevation: 0, // No shadow for flat look
-        zIndex: 100,
-        backgroundColor: '#FFFFE4', // Cream/Ivory background
+        justifyContent: 'flex-end',
     },
-    heroGradient: {
-        flex: 1,
-        justifyContent: 'center',
+    heroImage: {
+        resizeMode: 'cover',
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0,0,0,0.3)', // Dark overlay for text readability
+    },
+    heroContentContainer: {
         paddingHorizontal: 20,
-        paddingBottom: 20,
-        paddingTop: 10,
+        paddingBottom: 30,
+        justifyContent: 'flex-end',
+        flex: 1,
     },
-    heroContent: {
+    glassHeader: {
+        borderRadius: 25,
+        overflow: 'hidden',
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.3)',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)', // Glass effect base
+    },
+    headerTextContainer: {
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 15,
     },
     heroTitle: {
-        fontSize: 28, // Slightly larger
+        fontSize: 28,
         fontWeight: 'bold',
-        color: '#800000', // Deep Maroon/Red
+        color: '#FFFFFF',
         fontFamily: 'serif',
         marginBottom: 5,
-        letterSpacing: 1.5,
-        // Removed heavy shadow for cleaner look
+        letterSpacing: 1,
+        textShadowColor: 'rgba(0, 0, 0, 0.5)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
     },
-    // Subtitle removed as per reference image
+    heroSubtitle: {
+        fontSize: 16,
+        color: '#F0F0F0',
+        fontWeight: '500',
+        fontFamily: 'serif',
+        textShadowColor: 'rgba(0, 0, 0, 0.5)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
+    },
     searchContainer: {
         width: '100%',
         alignItems: 'center',
     },
     searchBar: {
         width: '100%',
-        maxWidth: 400,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#FFFFFF',
-        borderRadius: 30, // Pill shape
-        paddingHorizontal: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.9)', // High opacity for input readability
+        borderRadius: 30,
+        paddingHorizontal: 15,
         height: 50,
-        elevation: 3, // Subtle shadow
-        shadowColor: '#DAA520', // Golden shadow
+        elevation: 5,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-        borderWidth: 1.5,
-        borderColor: '#DAA520', // Goldenrod border
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    searchIcon: {
+        marginRight: 10,
     },
     searchInput: {
         flex: 1,
-        marginLeft: 10,
-        fontSize: 15,
+        fontSize: 16,
         color: '#333',
     },
     suggestionsDropdown: {

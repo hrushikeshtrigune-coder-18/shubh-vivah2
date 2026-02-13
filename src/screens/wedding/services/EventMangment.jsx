@@ -12,7 +12,6 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    UIManager,
     useWindowDimensions,
     View
 } from 'react-native';
@@ -26,11 +25,7 @@ import Reanimated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-if (Platform.OS === 'android') {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-}
+
 
 // Team Card Constants
 const { width } = Dimensions.get('window');
@@ -87,13 +82,14 @@ const EventManagement = ({ navigation }) => {
                     isMuted
                 />
 
-                <View style={styles.heroContent}>
-                    <View style={styles.headerRow}>
-                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                            <Ionicons name="arrow-back" size={24} color="#fff" />
-                        </TouchableOpacity>
-                    </View>
+                {/* Header with Back Button */}
+                <View style={styles.headerRow}>
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                        <Ionicons name="arrow-back" size={24} color="#fff" />
+                    </TouchableOpacity>
+                </View>
 
+                <View style={styles.heroContent}>
                     <Text style={styles.heroHeadline}>We Don’t Just Plan Events — We Create Experiences ✨</Text>
                     <Text style={styles.heroSubtext}>Weddings • Social Events • Corporate Experiences • Destination Events</Text>
 
@@ -162,65 +158,63 @@ const EventManagement = ({ navigation }) => {
                 </ScrollView>
             </View>
 
-            {/* 5. Meet Your Team (Revamped) */}
+            {/* 5. Our Vendors */}
             <View
-                style={[styles.sectionContainer, { backgroundColor: '#fff', paddingBottom: 40 }]}
+                style={[styles.sectionContainer, { backgroundColor: '#fff', paddingBottom: 20, paddingTop: 30 }]}
                 onLayout={(event) => {
                     teamSectionY.value = event.nativeEvent.layout.y;
                 }}
             >
-                <View style={styles.sectionHeaderCentered}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', opacity: 0.6, marginTop: 5 }}>
-                        <View style={{ height: 1, backgroundColor: COLORS.haldi, width: 40, marginRight: 10 }} />
-                        <FontAwesome5 name="spa" size={14} color={COLORS.haldi} />
-                        <View style={{ height: 1, backgroundColor: COLORS.haldi, width: 40, marginLeft: 10 }} />
-                    </View>
+                <Text style={styles.sectionTitle}>Our Vendors</Text>
+                <Text style={styles.sectionSubtitle}>Handpicked experts for your perfect event</Text>
+
+                <View style={{ height: 420, marginHorizontal: -20 }}>
+                    <Animated.FlatList
+                        data={vendorData}
+                        keyExtractor={item => item.id}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        snapToInterval={CARD_WIDTH + SPACING * 2}
+                        decelerationRate="fast"
+                        contentContainerStyle={{
+                            paddingHorizontal: (width - CARD_WIDTH) / 2 - SPACING,
+                            paddingVertical: 15,
+                        }}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                            { useNativeDriver: true }
+                        )}
+                        scrollEventThrottle={16}
+                        renderItem={({ item, index }) => {
+                            const inputRange = [
+                                (index - 1) * (CARD_WIDTH + SPACING * 2),
+                                index * (CARD_WIDTH + SPACING * 2),
+                                (index + 1) * (CARD_WIDTH + SPACING * 2),
+                            ];
+
+                            const scale = scrollX.interpolate({
+                                inputRange,
+                                outputRange: [0.93, 1, 0.93],
+                                extrapolate: 'clamp',
+                            });
+
+                            const opacity = scrollX.interpolate({
+                                inputRange,
+                                outputRange: [0.7, 1, 0.7],
+                                extrapolate: 'clamp',
+                            });
+
+                            return (
+                                <VendorCard
+                                    item={item}
+                                    scale={scale}
+                                    opacity={opacity}
+                                    navigation={navigation}
+                                />
+                            );
+                        }}
+                    />
                 </View>
-
-                <Animated.FlatList
-                    data={teamData}
-                    keyExtractor={item => item.id}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    snapToInterval={CARD_WIDTH + SPACING * 2}
-                    decelerationRate="fast"
-                    contentContainerStyle={{
-                        paddingHorizontal: SIDECARD_LENGTH - SPACING,
-                        paddingBottom: 20
-                    }}
-                    onScroll={Animated.event(
-                        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                        { useNativeDriver: true }
-                    )}
-                    scrollEventThrottle={16}
-                    renderItem={({ item, index }) => {
-                        const inputRange = [
-                            (index - 1) * (CARD_WIDTH + SPACING * 2),
-                            index * (CARD_WIDTH + SPACING * 2),
-                            (index + 1) * (CARD_WIDTH + SPACING * 2),
-                        ];
-
-                        const scale = scrollX.interpolate({
-                            inputRange,
-                            outputRange: [0.9, 1.1, 0.9], // Center card scales up to 1.1x
-                            extrapolate: 'clamp',
-                        });
-
-                        const opacity = scrollX.interpolate({
-                            inputRange,
-                            outputRange: [0.6, 1, 0.6], // Side cards fade out
-                            extrapolate: 'clamp',
-                        });
-
-                        return (
-                            <TeamCard
-                                item={item}
-                                scale={scale}
-                                opacity={opacity}
-                            />
-                        );
-                    }}
-                />
             </View>
 
             {/* 6. Emotional Storytelling */}
@@ -270,37 +264,57 @@ const EventManagement = ({ navigation }) => {
 
 // --- Components ---
 
-const TeamCard = ({ item, scale, opacity }) => {
+const VendorCard = ({ item, scale, opacity, navigation }) => {
     const [liked, setLiked] = useState(false);
     return (
         <TouchableOpacity
-            activeOpacity={0.9}
+            activeOpacity={1}
             style={{ width: CARD_WIDTH, marginHorizontal: SPACING }}
+            onPress={() => navigation.navigate('VendorDetailScreen', { vendor: item })}
         >
-            <Animated.View style={[styles.teamCardContainer, { transform: [{ scale }], opacity }]}>
-                {/* Full Image Background */}
-                <Image
-                    source={item.image}
-                    style={styles.teamImageBg}
-                    resizeMode="cover"
-                />
+            <Animated.View style={[styles.vendorCardContainer, { transform: [{ scale }], opacity }]}>
+                {/* Image with clipping */}
+                <View style={styles.vendorImageWrapper}>
+                    <Image
+                        source={item.image}
+                        style={styles.vendorImageBg}
+                        resizeMode="cover"
+                    />
 
-                {/* Top Row: Rating & Heart */}
-                <View style={styles.cardTopRow}>
-                    <View style={styles.ratingBadge}>
-                        <Text style={styles.ratingText}>{item.rating}</Text>
+                    {/* Top Row: Rating & Heart */}
+                    <View style={styles.cardTopRow}>
+                        <View style={styles.ratingBadge}>
+                            <Text style={styles.ratingText}>{item.rating}</Text>
+                        </View>
+                        <TouchableOpacity
+                            style={styles.heartBtn}
+                            onPress={(e) => {
+                                e.stopPropagation && e.stopPropagation();
+                                setLiked(!liked);
+                            }}
+                            activeOpacity={0.7}
+                        >
+                            <Ionicons
+                                name={liked ? 'heart' : 'heart-outline'}
+                                size={20}
+                                color={liked ? COLORS.kumkum : '#999'}
+                            />
+                        </TouchableOpacity>
                     </View>
                 </View>
 
-                {/* Bottom Overlay */}
-                <View style={styles.cardBottomOverlay}>
-                    <View style={{ flex: 1 }}>
-                        <Text style={styles.cardTitle}>{item.name}</Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <FontAwesome5 name={item.roleIcon} size={10} color={COLORS.darkHaldi} style={{ marginRight: 5 }} />
-                            <Text style={styles.cardSubtitle}>{item.role}</Text>
+                {/* Bottom Overlay Card */}
+                <View style={styles.vendorBottomOverlay}>
+                    <Text style={styles.vendorName}>{item.name}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                        <Ionicons name="location-outline" size={14} color={COLORS.darkHaldi} style={{ marginRight: 4 }} />
+                        <Text style={styles.vendorLocation}>{item.location}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <Text style={styles.vendorPrice}>{item.price}</Text>
+                        <View style={styles.capacityBadge}>
+                            <Text style={styles.capacityText}>{item.capacity}</Text>
                         </View>
-                        <Text style={styles.cardPrice}>{item.experience}</Text>
                     </View>
                 </View>
             </Animated.View>
@@ -533,46 +547,90 @@ const servicesData = [
     { id: '5', title: 'Logistics', icon: 'bus', details: ['Transport management', 'Vendor coordination', 'On-ground support'] },
 ];
 
-const teamData = [
+const vendorData = [
     {
         id: '1',
-        name: 'Aarav Planner',
-        role: 'Event Planner',
-        roleIcon: 'clipboard-list',
-        experience: '10+ Years',
-        rating: '4.9',
-        phone: '9876543210',
-        image: require('../../../../assets/images/decor.jpg')
+        name: 'Royal Orchid Palace',
+        location: 'Pune, MH',
+        price: '\u20b92.5L',
+        capacity: '500-1500 guests',
+        rating: '4.8',
+        description: 'Premium wedding venue offering royal heritage ambiance with modern amenities and impeccable hospitality.',
+        likes: '2.5k',
+        views: '15k',
+        reviews: '45',
+        image: require('../../../../assets/images/decor.jpg'),
+        portfolio: [
+            require('../../../../assets/images/decor.jpg'),
+            require('../../../../assets/images/venue1.jpg'),
+            require('../../../../assets/images/venue2.jpg'),
+            require('../../../../assets/images/venue3.jpg'),
+            require('../../../../assets/images/venue4.jpg'),
+            require('../../../../assets/images/venue5.jpg'),
+        ]
     },
     {
         id: '2',
-        name: 'Sneha Event Management',
-        role: 'Event Planner',
-        roleIcon: 'palette',
-        experience: '8+ Years',
-        rating: '4.8',
-        phone: '9876543211',
-        image: require('../../../../assets/images/decor.jpg')
+        name: 'Grand Celebration',
+        location: 'Mumbai, MH',
+        price: '\u20b93.2L',
+        capacity: '300-1000 guests',
+        rating: '4.9',
+        description: 'Exquisite event management with world-class catering and stunning floral arrangements.',
+        likes: '3.1k',
+        views: '22k',
+        reviews: '68',
+        image: require('../../../../assets/images/Food.jpg'),
+        portfolio: [
+            require('../../../../assets/images/Food.jpg'),
+            require('../../../../assets/images/food1.jpg'),
+            require('../../../../assets/images/food2.jpg'),
+            require('../../../../assets/images/food3.jpg'),
+            require('../../../../assets/images/food4.jpg'),
+            require('../../../../assets/images/decor.jpg'),
+        ]
     },
     {
         id: '3',
-        name: 'Rohan Event Management',
-        role: 'Event Planner',
-        roleIcon: 'cogs',
-        experience: '6+ Years',
+        name: 'Majestic Events',
+        location: 'Nashik, MH',
+        price: '\u20b91.8L',
+        capacity: '200-800 guests',
         rating: '4.7',
-        phone: '9876543212',
-        image: require('../../../../assets/images/decor.jpg')
+        description: 'Affordable yet elegant event planning with creative themes and seamless coordination.',
+        likes: '1.8k',
+        views: '10k',
+        reviews: '32',
+        image: require('../../../../assets/images/entertenment.jpg'),
+        portfolio: [
+            require('../../../../assets/images/entertenment.jpg'),
+            require('../../../../assets/images/photo.jpg'),
+            require('../../../../assets/images/venue6.jpg'),
+            require('../../../../assets/images/venue7.jpg'),
+            require('../../../../assets/images/venue8.jpg'),
+            require('../../../../assets/images/decor.jpg'),
+        ]
     },
     {
         id: '4',
-        name: 'Priya Event Management',
-        role: 'Event Planner',
-        roleIcon: 'users',
-        experience: '5+ Years',
+        name: 'Dream Wedding Co.',
+        location: 'Jaipur, RJ',
+        price: '\u20b94.0L',
+        capacity: '500-2000 guests',
         rating: '4.9',
-        phone: '9876543213',
-        image: require('../../../../assets/images/decor.jpg')
+        description: 'Luxury destination wedding specialists creating fairytale celebrations in royal Rajasthani settings.',
+        likes: '4.2k',
+        views: '28k',
+        reviews: '89',
+        image: require('../../../../assets/images/photo.jpg'),
+        portfolio: [
+            require('../../../../assets/images/photo.jpg'),
+            require('../../../../assets/images/ph2.jpg'),
+            require('../../../../assets/images/ph3.jpg'),
+            require('../../../../assets/images/photography1.jpg'),
+            require('../../../../assets/images/venue1.jpg'),
+            require('../../../../assets/images/venue2.jpg'),
+        ]
     },
 ];
 
@@ -595,7 +653,7 @@ const styles = StyleSheet.create({
     },
     headerRow: {
         position: 'absolute',
-        top: 0,
+        top: 20, // Adjusted top margin
         left: 20,
         zIndex: 10
     },
@@ -723,7 +781,7 @@ const styles = StyleSheet.create({
 
     // Services
     serviceCard: {
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.akshid,
         borderRadius: 10,
         marginBottom: 10,
         padding: 15,
@@ -819,22 +877,29 @@ const styles = StyleSheet.create({
         tintColor: '#D4AF37', // Gold
         opacity: 0.8,
     },
-    teamCardContainer: {
+    vendorCardContainer: {
         width: '100%',
-        height: 380, // Taller card for image
-        borderRadius: 20,
-        backgroundColor: '#fff',
-        overflow: 'hidden',
+        height: 380,
+        borderRadius: 22,
+        backgroundColor: COLORS.akshid,
         elevation: 8,
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 4 },
+        shadowColor: COLORS.darkHaldi,
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 6 },
+        borderWidth: 2,
+        borderColor: COLORS.haldi,
     },
-    teamImageBg: {
+    vendorImageBg: {
         width: '100%',
         height: '100%',
         position: 'absolute',
+    },
+    vendorImageWrapper: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 20,
+        overflow: 'hidden',
     },
     cardTopRow: {
         flexDirection: 'row',
@@ -843,66 +908,79 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     ratingBadge: {
-        backgroundColor: '#F29502',
-        width: 36,
-        height: 36,
-        borderRadius: 18,
+        backgroundColor: COLORS.darkHaldi,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
     },
     ratingText: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 12,
+        fontSize: 13,
     },
     heartBtn: {
         backgroundColor: '#fff',
-        width: 36,
-        height: 36,
-        borderRadius: 18,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+        shadowOffset: { width: 0, height: 2 },
     },
-    cardBottomOverlay: {
+    vendorBottomOverlay: {
         position: 'absolute',
         bottom: 15,
         left: 15,
         right: 15,
         backgroundColor: '#fff',
-        borderRadius: 15,
+        borderRadius: 16,
         padding: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        elevation: 5,
+        elevation: 6,
+        shadowColor: '#000',
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 3 },
     },
-    cardTitle: {
-        fontSize: 16,
+    vendorName: {
+        fontSize: 18,
         fontWeight: 'bold',
-        color: COLORS.textRed,
-        marginBottom: 2,
+        color: '#1E1E2D',
+        fontFamily: 'serif',
+        marginBottom: 4,
     },
-    cardSubtitle: {
-        fontSize: 12,
-        color: '#666',
+    vendorLocation: {
+        fontSize: 13,
+        color: COLORS.kumkum,
         fontWeight: '500',
     },
-    cardPrice: {
-        fontSize: 12,
+    vendorPrice: {
+        fontSize: 20,
         fontWeight: 'bold',
         color: COLORS.kumkum,
-        marginTop: 4,
     },
-    bookBtn: {
-        backgroundColor: COLORS.kumkum,
-        paddingHorizontal: 15,
-        paddingVertical: 8,
+    capacityBadge: {
+        backgroundColor: COLORS.akshid,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
         borderRadius: 20,
+        borderWidth: 1,
+        borderColor: COLORS.haldi,
     },
-    bookBtnText: {
-        color: '#fff',
-        fontSize: 12,
-        fontWeight: 'bold',
+    capacityText: {
+        fontSize: 11,
+        fontWeight: '600',
+        color: COLORS.darkHaldi,
     },
 
     // Emotional

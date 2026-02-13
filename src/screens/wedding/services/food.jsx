@@ -100,6 +100,17 @@ const Food = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalContent, setModalContent] = useState(null);
 
+    // Filter Logic
+    const filteredCuisines = CUISINES.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const filteredCaterers = CATERERS_DATA.filter(item =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.specialties.some(spec => spec.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+
     const renderHeader = () => (
         <View style={styles.headerContainer}>
             <ImageBackground
@@ -158,29 +169,35 @@ const Food = ({ navigation }) => {
         </View>
     );
 
-    const renderCuisines = () => (
-        <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Explore by Cuisine</Text>
-            <FlatList
-                data={CUISINES}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 15 }}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.cuisineCard}>
-                        <Image source={{ uri: item.image }} style={styles.cuisineImage} />
-                        <LinearGradient
-                            colors={['transparent', 'rgba(0,0,0,0.8)']}
-                            style={styles.cuisineGradient}
-                        >
-                            <Text style={styles.cuisineName}>{item.name}</Text>
-                        </LinearGradient>
-                    </TouchableOpacity>
-                )}
-            />
-        </View>
-    );
+    const renderCuisines = () => {
+        if (filteredCuisines.length === 0) return null;
+
+        return (
+            <View style={styles.sectionContainer}>
+                <Text style={styles.sectionTitle}>
+                    {searchQuery ? 'Matching Cuisines' : 'Explore by Cuisine'}
+                </Text>
+                <FlatList
+                    data={filteredCuisines}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingHorizontal: 15 }}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity style={styles.cuisineCard}>
+                            <Image source={{ uri: item.image }} style={styles.cuisineImage} />
+                            <LinearGradient
+                                colors={['transparent', 'rgba(0,0,0,0.8)']}
+                                style={styles.cuisineGradient}
+                            >
+                                <Text style={styles.cuisineName}>{item.name}</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
+        );
+    };
 
     const renderCatererCard = ({ item }) => (
         <View style={styles.card}>
@@ -228,7 +245,7 @@ const Food = ({ navigation }) => {
                     ))}
                 </View>
 
-                <TouchableOpacity style={styles.ctaButton} onPress={() => { }}>
+                <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('FoodV')}>
                     <Text style={styles.ctaText}>View Menu & Packages</Text>
                     <Ionicons name="arrow-forward" size={16} color="#FFF" />
                 </TouchableOpacity>
@@ -327,13 +344,30 @@ const Food = ({ navigation }) => {
                 {renderCuisines()}
 
                 <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>Top Rated Caterers</Text>
-                    {CATERERS_DATA.map(item => (
-                        <View key={item.id}>
-                            {renderCatererCard({ item })}
-                        </View>
-                    ))}
+                    <Text style={styles.sectionTitle}>
+                        {searchQuery ? 'Matching Caterers' : 'Top Rated Caterers'}
+                    </Text>
+                    {filteredCaterers.length > 0 ? (
+                        filteredCaterers.map(item => (
+                            <View key={item.id}>
+                                {renderCatererCard({ item })}
+                            </View>
+                        ))
+                    ) : (
+                        <Text style={{ textAlign: 'center', color: '#888', marginTop: 20, fontFamily: 'Outfit_400Regular' }}>
+                            {searchQuery && filteredCuisines.length === 0 ? 'No caterers found matching your search.' : ''}
+                        </Text>
+                    )}
                 </View>
+
+                {searchQuery && filteredCuisines.length === 0 && filteredCaterers.length === 0 && (
+                    <View style={{ alignItems: 'center', marginTop: 50 }}>
+                        <MaterialCommunityIcons name="food-off" size={64} color="#ccc" />
+                        <Text style={{ marginTop: 10, color: '#888', fontFamily: 'Outfit_500Medium' }}>
+                            No results found for "{searchQuery}"
+                        </Text>
+                    </View>
+                )}
 
                 {renderTestimonials()}
                 {renderInteractiveTools()}

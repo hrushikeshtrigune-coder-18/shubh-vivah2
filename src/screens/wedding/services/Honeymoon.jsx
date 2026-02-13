@@ -322,9 +322,7 @@ const HoneymoonNeumorphic = ({ navigation }) => {
         setModalVisible(true);
     };
 
-    if (!fontsLoaded) {
-        return null; // Or a splash screen
-    }
+    /* Fonts checked in App.jsx */
 
     // --- RENDER SECTIONS ---
 
@@ -555,17 +553,7 @@ const HoneymoonNeumorphic = ({ navigation }) => {
                     {renderTrust()}
                 </ScrollView>
 
-                {/* Sticky Planner */}
-                <View style={styles.plannerCard}>
-                    <Image source={{ uri: 'https://randomuser.me/api/portraits/women/44.jpg' }} style={styles.plannerImage} />
-                    <View>
-                        <Text style={styles.plannerName}>Sarah</Text>
-                        <Text style={styles.plannerStatus}>Available Now</Text>
-                    </View>
-                    <TouchableOpacity style={styles.plannerBtn}>
-                        <Ionicons name="chatbubble-ellipses-outline" size={20} color="#CC0E0E" />
-                    </TouchableOpacity>
-                </View>
+
 
                 {renderItineraryModal()}
 
@@ -808,11 +796,11 @@ const styles = StyleSheet.create({
     },
     heroCard: {
         width: 300,
-        height: 380, // Taller, Pinterest style
+        height: 420,
     },
     standardCard: {
         width: 240,
-        height: 380,
+        height: 420,
     },
 
     priceTag: {
@@ -831,13 +819,11 @@ const styles = StyleSheet.create({
     },
     glassInfo: {
         position: 'absolute',
-        bottom: 15, left: 15, right: 15,
-        height: 160, // Fixed height for consistency
-        borderRadius: 24,
+        bottom: 12, left: 12, right: 12,
+        borderRadius: 20,
         overflow: 'hidden',
-        padding: 15, // Padding inside blur
-        justifyContent: 'space-between',
-        // Stronger fallbacks and overlay for readability
+        paddingVertical: 12,
+        paddingHorizontal: 14,
         backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.6)',
         borderWidth: 1,
         borderColor: 'rgba(255, 255, 255, 0.8)',
@@ -846,7 +832,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 5,
+        marginBottom: 2,
     },
     vendorNameSerif: {
         fontFamily: 'PlayfairDisplay_700Bold', // Elegant font
@@ -860,7 +846,7 @@ const styles = StyleSheet.create({
     ratingRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 8,
+        marginBottom: 4,
     },
     ratingText: {
         color: ACCENT_COLOR,
@@ -911,11 +897,11 @@ const styles = StyleSheet.create({
     },
     contactBtn: {
         backgroundColor: PRIMARY_COLOR,
-        paddingVertical: 8,
-        paddingHorizontal: 12,
+        paddingVertical: 7,
+        paddingHorizontal: 14,
         borderRadius: 20,
         alignSelf: 'flex-start',
-        marginTop: 10,
+        marginTop: 8,
         flexDirection: 'row',
         alignItems: 'center',
     },
