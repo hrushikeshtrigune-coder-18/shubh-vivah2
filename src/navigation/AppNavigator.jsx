@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import Food from '../screens/wedding/services/food';
 import Honeymoon from '../screens/wedding/services/Honeymoon';
 import HoneymoonVendorDetails from '../screens/wedding/services/HoneymoonVendorDetails';
-import WeddingVenue from '../screens/wedding/services/WeddingVenue';
-import Food from '../screens/wedding/services/food';
 import Photography from '../screens/wedding/services/photography';
+import WeddingVenue from '../screens/wedding/services/WeddingVenue';
 import AuthNavigator from './AuthNavigator';
 import TabNavigator from './TabNavigator';
 
@@ -15,6 +15,7 @@ import { ActivityIndicator, View } from 'react-native';
 import DecorationFloralScreen from '../screens/wedding/services/DecorationFloral';
 import MehandiScreen from '../screens/wedding/services/mehandi';
 
+import DecorPortfolio from '../screens/wedding/portfolio/decorV';
 import FoodV from '../screens/wedding/portfolio/FoodV';
 import PhotographerPortfolio from '../screens/wedding/portfolio/photop';
 import VenuePortfolio from '../screens/wedding/portfolio/venuep';
@@ -57,6 +58,7 @@ const AppNavigator = () => {
                     <Stack.Screen name="VenuePortfolio" component={VenuePortfolio} />
                     <Stack.Screen name="PhotographerPortfolio" component={PhotographerPortfolio} />
                     <Stack.Screen name="FoodV" component={FoodV} />
+                    <Stack.Screen name="DecorPortfolio" component={DecorPortfolio} />
                 </>
             ) : (
                 <Stack.Screen name="Auth" component={AuthNavigator} />

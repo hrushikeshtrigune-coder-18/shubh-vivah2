@@ -269,22 +269,22 @@ const WeddingVenue = ({ navigation }) => {
                 </LinearGradient>
             </ImageBackground>
 
-            {/* Trust Signals - Pills */}
-            <View style={styles.trustSignalsContainer}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.trustSignalsScroll}>
-                    <View style={styles.trustPill}>
-                        <MaterialCommunityIcons name="check-decagram" size={16} color={COLORS.primary} />
-                        <Text style={styles.trustPillText}>500+ Verified Venues</Text>
-                    </View>
-                    <View style={styles.trustPill}>
-                        <MaterialCommunityIcons name="phone-off" size={16} color={COLORS.primary} />
-                        <Text style={styles.trustPillText}>Zero Broker Spam</Text>
-                    </View>
-                    <View style={styles.trustPill}>
-                        <MaterialCommunityIcons name="camera-outline" size={16} color={COLORS.primary} />
-                        <Text style={styles.trustPillText}>100% Real Photos</Text>
-                    </View>
-                </ScrollView>
+            {/* Trust Indicators Card */}
+            <View style={styles.trustContainer}>
+                <View style={styles.trustItem}>
+                    <Text style={styles.trustNumber}>500+</Text>
+                    <Text style={styles.trustLabel}>Verified Venue</Text>
+                </View>
+                <View style={styles.verticalDivider} />
+                <View style={styles.trustItem}>
+                    <Text style={styles.trustNumber}>Zero</Text>
+                    <Text style={styles.trustLabel}>Broker Spam</Text>
+                </View>
+                <View style={styles.verticalDivider} />
+                <View style={styles.trustItem}>
+                    <Text style={styles.trustNumber}>100%</Text>
+                    <Text style={styles.trustLabel}>Real Photos</Text>
+                </View>
             </View>
         </View>
     );
@@ -363,7 +363,7 @@ const WeddingVenue = ({ navigation }) => {
     );
 
     const renderEditorialVenueCard = ({ item }) => (
-        <TouchableOpacity style={styles.editorialCard} activeOpacity={0.9}>
+        <TouchableOpacity style={styles.editorialCard} activeOpacity={0.9} onPress={() => navigation.navigate('VenuePortfolio', { vendor: item })}>
             <Image source={item.image} style={styles.editorialImage} />
             <View style={styles.cardHeaderOverlay}>
                 <View style={styles.ratingPill}>
@@ -373,21 +373,26 @@ const WeddingVenue = ({ navigation }) => {
                     <Ionicons name="heart-outline" size={20} color={COLORS.primary} />
                 </View>
             </View>
-            {/* Floating Info Card */}
-            <View style={styles.floatingInfoCard}>
-                <Text style={styles.editorialVenueName}>{item.name}</Text>
-                <Text style={styles.editorialVenueLoc}>{item.city}, MH</Text>
-                <View style={styles.divider} />
-                <View style={styles.editorialMetaRow}>
-                    <Text style={styles.editorialPrice}>{item.price}</Text>
-                    <Text style={styles.editorialCapacity}>{item.capacity} guests</Text>
+
+            <View style={styles.floatingCardWrapper}>
+                <View style={styles.floatingInfoCard}>
+                    <Text style={styles.editorialVenueName}>{item.name}</Text>
+                    <Text style={styles.editorialVenueLoc}>{item.city}, MH</Text>
+
+                    <View style={styles.editorialMetaRow}>
+                        <Text style={styles.editorialPrice}>{item.price}</Text>
+                        <View style={styles.capacityBadge}>
+                            <Text style={styles.editorialCapacity}>{item.capacity} guests</Text>
+                        </View>
+                    </View>
+
+                    <TouchableOpacity
+                        style={styles.viewVenuesButton}
+                        onPress={() => navigation.navigate('VenuePortfolio', { vendor: item })}
+                    >
+                        <Text style={styles.viewVenuesButtonText}>View Venues</Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                    style={styles.viewVenuesButton}
-                    onPress={() => navigation.navigate('VenuePortfolio', { vendor: item })}
-                >
-                    <Text style={styles.viewVenuesButtonText}>View Venues</Text>
-                </TouchableOpacity>
             </View>
         </TouchableOpacity>
     );
@@ -534,35 +539,43 @@ const styles = StyleSheet.create({
     },
 
     // --- Trust Signals ---
-    trustSignalsContainer: {
-        marginTop: -25, // Overlap the image slightly
-        marginBottom: 10,
-    },
-    trustSignalsScroll: {
-        paddingHorizontal: 15,
-        paddingVertical: 10, // Avoid clipping shadow
-    },
-    trustPill: {
+    trustContainer: {
         flexDirection: 'row',
+        backgroundColor: '#FFF',
+        marginHorizontal: 15,
+        marginTop: -30,
+        borderRadius: 15,
+        padding: 15,
+        justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: COLORS.white,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        borderRadius: 20,
-        marginRight: 12,
+        elevation: 4,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
-        elevation: 3,
         borderWidth: 1,
-        borderColor: '#F0F0F0',
+        borderColor: COLORS.secondary,
     },
-    trustPillText: {
-        fontFamily: 'Outfit_500Medium',
-        fontSize: 13,
-        color: COLORS.textDark,
-        marginLeft: 6,
+    trustItem: {
+        alignItems: 'center',
+        flex: 1,
+    },
+    trustNumber: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 16,
+        color: COLORS.primary,
+    },
+    trustLabel: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 10,
+        color: '#555',
+        textAlign: 'center',
+        marginTop: 2,
+    },
+    verticalDivider: {
+        width: 1,
+        height: 30,
+        backgroundColor: '#EEE',
     },
 
     // --- City Grid ---
@@ -687,7 +700,7 @@ const styles = StyleSheet.create({
     },
     editorialImage: {
         width: '100%',
-        height: 350,
+        height: 280,
         borderRadius: 32,
         resizeMode: 'cover',
     },
@@ -718,52 +731,60 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    floatingInfoCard: {
+    floatingCardWrapper: {
         position: 'absolute',
         bottom: -20,
         left: 20,
         right: 20,
-        backgroundColor: COLORS.white,
-        borderRadius: 20,
-        padding: 20,
+        borderRadius: 24,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.08,
+        shadowOpacity: 0.1,
         shadowRadius: 10,
-        elevation: 5,
+        elevation: 8,
+    },
+    floatingInfoCard: {
+        backgroundColor: COLORS.white,
+        borderRadius: 24,
+        padding: 20,
         borderWidth: 1,
         borderColor: COLORS.secondary,
     },
     editorialVenueName: {
         fontFamily: SERIF_FONT,
-        fontSize: 20,
+        fontSize: 22,
+        fontWeight: '700',
         color: COLORS.primary,
-        marginBottom: 4,
+        marginBottom: 2,
     },
     editorialVenueLoc: {
         fontFamily: 'Outfit_400Regular',
-        fontSize: 13,
+        fontSize: 14,
         color: COLORS.secondary,
-        marginBottom: 10,
+        marginBottom: 12,
+        fontWeight: '600',
     },
     editorialMetaRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        marginBottom: 15,
     },
     editorialPrice: {
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 16,
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 18,
         color: COLORS.primary,
     },
+    capacityBadge: {
+        backgroundColor: 'rgba(204, 14, 14, 0.05)',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 8,
+    },
     editorialCapacity: {
-        fontFamily: 'Outfit_400Regular',
+        fontFamily: 'Outfit_600SemiBold',
         fontSize: 12,
         color: COLORS.secondary,
-        backgroundColor: '#FFF5F5',
-        paddingHorizontal: 8,
-        paddingVertical: 3,
-        borderRadius: 8,
     },
     viewVenuesButton: {
         marginTop: 12,

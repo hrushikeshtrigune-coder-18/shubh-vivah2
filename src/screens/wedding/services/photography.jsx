@@ -1,4 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useRef } from 'react';
 import {
@@ -133,46 +134,58 @@ const Photography = ({ navigation }) => {
     );
 
     const renderPhotographerCard = ({ item }) => (
-        <View style={styles.card}>
-            <View style={styles.cardHeader}>
-                <Text style={styles.studioName}>{item.name}</Text>
-                <View style={styles.ratingBadge}>
-                    <Ionicons name="star" size={12} color="#FFF" />
-                    <Text style={styles.ratingText}>{item.rating} ({item.reviews})</Text>
-                </View>
-            </View>
-
-            <Image source={item.image} style={styles.cardImage} />
-            <TouchableOpacity style={styles.saveButton}>
-                <Ionicons name="heart-outline" size={24} color="#FFF" />
-            </TouchableOpacity>
-
-            <View style={styles.cardContent}>
-                <View style={styles.infoRow}>
-                    <View style={styles.locationContainer}>
-                        <Ionicons name="location-outline" size={16} color="#F29502" />
-                        <Text style={styles.locationText}>{item.city}</Text>
+        <TouchableOpacity
+            style={styles.cinematicCard}
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('PhotographerPortfolio', { vendor: item })}
+        >
+            <View style={styles.architecturalFrame}>
+                <Image source={item.image} style={styles.cinematicImage} />
+                <View style={styles.goldInnerFrame} />
+                <View style={styles.cardHeaderOverlay}>
+                    <View style={styles.luxuryRating}>
+                        <Ionicons name="star" size={12} color="#F29502" />
+                        <Text style={styles.luxuryRatingText}>{item.rating}</Text>
                     </View>
-                    <Text style={styles.priceText}>Starts {item.price}</Text>
+                    <TouchableOpacity style={styles.luxuryHeart}>
+                        <Ionicons name="heart-outline" size={20} color="#CC0E0E" />
+                    </TouchableOpacity>
                 </View>
-
-                <View style={styles.tagContainer}>
-                    {item.tags.map((tag, index) => (
-                        <View key={index} style={styles.tag}>
-                            <Text style={styles.tagText}>{tag}</Text>
-                        </View>
-                    ))}
-                </View>
-
-                <TouchableOpacity
-                    style={styles.portfolioButton}
-                    onPress={() => navigation.navigate('PhotographerPortfolio', { vendor: item })}
-                >
-                    <Text style={styles.portfolioButtonText}>View Portfolio</Text>
-                    <Ionicons name="images-outline" size={16} color="#FFF" />
-                </TouchableOpacity>
             </View>
-        </View>
+
+            <View style={styles.prismaticTabletWrapper}>
+                <BlurView intensity={5} tint="dark" style={styles.glassTablet}>
+                    <LinearGradient
+                        colors={['rgba(255,255,255,0.2)', 'transparent', 'rgba(255,255,255,0.1)']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.prismSheen}
+                    />
+
+                    <View style={styles.luxuryTabletContent}>
+                        <Text style={styles.luxuryStudioName}>{item.name.toUpperCase()}</Text>
+                        <View style={styles.luxuryMetaRow}>
+                            <View style={styles.luxuryLocationBadge}>
+                                <Ionicons name="location" size={12} color="#F29502" />
+                                <Text style={styles.luxuryLocationText}>{item.city.toUpperCase()}</Text>
+                            </View>
+                            <View style={styles.luxuryDivider} />
+                            <Text style={styles.luxuryStatus}>PREMIUM VENDOR</Text>
+                        </View>
+
+                        <TouchableOpacity
+                            style={styles.cinematicAction}
+                            onPress={() => navigation.navigate('PhotographerPortfolio', { vendor: item })}
+                        >
+                            <Text style={styles.cinematicActionText}>DISCOVER PORTFOLIO</Text>
+                            <View style={styles.actionArrowCircle}>
+                                <Ionicons name="chevron-forward" size={14} color="#FFF" />
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </BlurView>
+            </View>
+        </TouchableOpacity>
     );
 
     const renderTestimonials = () => (
@@ -385,111 +398,165 @@ const styles = StyleSheet.create({
         color: '#CC0E0E',
         marginBottom: 15,
     },
-    card: {
-        backgroundColor: '#FFF',
-        borderRadius: 20,
-        marginBottom: 25,
-        overflow: 'hidden',
-        borderWidth: 1,
-        borderColor: '#F29502',
-        elevation: 3,
+    cinematicCard: {
+        marginHorizontal: 15,
+        marginBottom: 60,
+        backgroundColor: 'transparent',
     },
-    cardHeader: {
-        padding: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#FDF3F3',
-    },
-    studioName: {
-        fontFamily: 'Outfit_700Bold',
-        fontSize: 18,
-        color: '#CC0E0E',
-    },
-    ratingBadge: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#F29502',
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 8,
-    },
-    ratingText: {
-        color: '#FFF',
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 12,
-        marginLeft: 4,
-    },
-    cardImage: {
+    architecturalFrame: {
         width: '100%',
         height: 250,
-        resizeMode: 'cover',
+        borderTopLeftRadius: 60,
+        borderBottomRightRadius: 60,
+        borderTopRightRadius: 20,
+        borderBottomLeftRadius: 20,
+        overflow: 'hidden',
+        backgroundColor: '#000',
     },
-    saveButton: {
+    cinematicImage: {
+        width: '100%',
+        height: '100%',
+        opacity: 0.9,
+    },
+    goldInnerFrame: {
+        ...StyleSheet.absoluteFillObject,
+        borderWidth: 1,
+        borderColor: 'rgba(242, 149, 2, 0.2)',
+        borderRadius: 60, // approximate
+    },
+    cardHeaderOverlay: {
         position: 'absolute',
-        top: 70, // Adjusted below header
-        right: 15,
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        padding: 8,
-        borderRadius: 20,
-    },
-    cardContent: {
-        padding: 15,
-    },
-    infoRow: {
+        top: 25,
+        left: 30,
+        right: 30,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 12,
     },
-    locationContainer: {
+    luxuryRating: {
         flexDirection: 'row',
         alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(242, 149, 2, 0.4)',
     },
-    locationText: {
-        fontFamily: 'Outfit_500Medium',
+    luxuryRatingText: {
+        color: '#FFF',
+        fontFamily: 'Outfit_700Bold',
         fontSize: 14,
-        color: '#555',
         marginLeft: 4,
     },
-    priceText: {
-        fontFamily: 'Outfit_700Bold',
-        fontSize: 16,
-        color: '#CC0E0E',
-    },
-    tagContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-        marginBottom: 15,
-    },
-    tag: {
-        backgroundColor: '#FFF5F5',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 6,
-        borderWidth: 1,
-        borderColor: '#FFD1D1',
-    },
-    tagText: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 12,
-        color: '#CC0E0E',
-    },
-    portfolioButton: {
-        flexDirection: 'row',
+    luxuryHeart: {
+        backgroundColor: '#FFF',
+        width: 36,
+        height: 36,
+        borderRadius: 18,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 12,
-        backgroundColor: '#CC0E0E',
-        borderRadius: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+        elevation: 4,
     },
-    portfolioButtonText: {
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 14,
+    prismaticTabletWrapper: {
+        position: 'absolute',
+        bottom: -35,
+        left: '5%',
+        right: '5%',
+        borderRadius: 50,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 20 },
+        shadowOpacity: 0.6,
+        shadowRadius: 30,
+        elevation: 25,
+    },
+    glassTablet: {
+        backgroundColor: 'rgba(255,255,255,0.05)', // Ultra-transparent liquid look
+        borderTopLeftRadius: 40,
+        borderBottomRightRadius: 40,
+        borderTopRightRadius: 15,
+        borderBottomLeftRadius: 15,
+        padding: 2,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.6)', // Bright sharp liquid edge
+    },
+    prismSheen: {
+        ...StyleSheet.absoluteFillObject,
+        opacity: 0.8,
+    },
+    luxuryTabletContent: {
+        padding: 12, // Significantly reduced height
+        alignItems: 'center',
+    },
+    luxuryStudioName: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 20, // Slightly more compact
         color: '#FFF',
-        marginRight: 8,
+        textAlign: 'center',
+        letterSpacing: 3,
+        marginBottom: 4,
+        textShadowColor: 'rgba(0,0,0,0.6)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 6,
+    },
+    luxuryMetaRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 12, // Tightened spacing
+    },
+    luxuryLocationBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    luxuryLocationText: {
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 10,
+        color: '#F29502',
+        marginLeft: 4,
+        letterSpacing: 1,
+    },
+    luxuryDivider: {
+        width: 1,
+        height: 10,
+        backgroundColor: 'rgba(255,255,255,0.3)',
+        marginHorizontal: 12,
+    },
+    luxuryStatus: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 10,
+        color: '#FFF',
+        letterSpacing: 1,
+        opacity: 0.7,
+    },
+    cinematicAction: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        paddingVertical: 8, // Compact height
+        paddingHorizontal: 20,
+        borderRadius: 40,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.2)',
+    },
+    cinematicActionText: {
+        color: '#FFF',
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 12,
+        letterSpacing: 2,
+        marginRight: 10,
+    },
+    actionArrowCircle: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        backgroundColor: '#CC0E0E',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     testimonialCard: {
         width: 300,

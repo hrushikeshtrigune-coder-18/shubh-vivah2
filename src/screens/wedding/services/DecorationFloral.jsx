@@ -157,7 +157,7 @@ const TestimonialCard = ({ item }) => (
     </View>
 );
 
-const VendorCard = ({ item }) => (
+const VendorCard = ({ item, navigation }) => (
     <View style={[styles.vendorCardEnhanced, { width: 280, marginRight: 20 }]}>
         <View>
             <Image
@@ -193,7 +193,10 @@ const VendorCard = ({ item }) => (
                     <Text style={styles.vendorLabel}>Starting from</Text>
                     <Text style={styles.vendorPrice}>{item.price}</Text>
                 </View>
-                <TouchableOpacity style={styles.contactBtn}>
+                <TouchableOpacity
+                    style={styles.contactBtn}
+                    onPress={() => navigation.navigate('DecorPortfolio', { vendor: item })}
+                >
                     <Text style={styles.contactBtnText}>View Portfolio</Text>
                     <Ionicons name="arrow-forward" size={14} color={colors.white} style={{ marginLeft: 5 }} />
                 </TouchableOpacity>
@@ -318,7 +321,7 @@ const DecorationFloralScreen = ({ navigation }) => {
                         data={VENDORS}
                         horizontal
                         showsHorizontalScrollIndicator={false}
-                        renderItem={({ item }) => <VendorCard item={item} />}
+                        renderItem={({ item }) => <VendorCard item={item} navigation={navigation} />}
                         keyExtractor={item => item.id}
                         contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}
                     />
