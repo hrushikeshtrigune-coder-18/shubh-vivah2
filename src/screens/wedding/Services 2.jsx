@@ -11,7 +11,6 @@ import {
     ImageBackground,
     Modal,
     Platform,
-    Pressable,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -50,16 +49,6 @@ const serviceCategories = [
             { id: 's1', title: 'Video Invites', icon: 'videocam-outline' },
             { id: 's2', title: 'Save the Date', icon: 'calendar-outline' },
             { id: 's3', title: 'Caricature', icon: 'happy-outline' },
-        ]
-    },
-    {
-        id: '2',
-        title: 'Event Management',
-        icon: require('../../../assets/images/Gust Mangment.jpg'),
-        screen: 'EventManagementScreen',
-        suggestions: [
-            { id: 's1', title: 'Full Planning', icon: 'list-outline' },
-            { id: 's2', title: 'Day-of Coord', icon: 'time-outline' },
         ]
     },
     {
@@ -128,7 +117,7 @@ const serviceCategories = [
         id: '9',
         title: 'Makeup',
         icon: require('../../../assets/images/makeup.jpg'),
-        screen: 'VendorListScreen',
+        screen: 'MakeupScreen',
         params: { serviceName: 'Bridal Makeup' },
         suggestions: [
             { id: 's1', title: 'HD Makeup', icon: 'brush-outline' },
@@ -222,47 +211,75 @@ const renderPlanningTools = () => (
 // Data: Recommendations (Updated as per User Request)
 const recommendations = [
     { id: 'r1', title: 'E-Invites', subtitle: 'Digital & Animated', image: require('../../../assets/images/invite.jpg'), screen: 'EInviteScreen' },
-    { id: 'r2', title: 'Event Management', subtitle: 'Planning & Execution', image: require('../../../assets/images/Gust Mangment.jpg'), screen: 'EventManagementScreen' },
     { id: 'r3', title: 'Wedding Venue', subtitle: 'Luxury Locations', image: require('../../../assets/images/venue1.jpg'), screen: 'WeddingVenue' },
     { id: 'r4', title: 'Food & Catering', subtitle: 'Gourmet Menu', image: require('../../../assets/images/Food.jpg'), screen: 'Food' },
     { id: 'r5', title: 'Photography', subtitle: 'Capture Moments', image: require('../../../assets/images/photo.jpg'), screen: 'Photography' },
     { id: 'r6', title: 'Honeymoon Planning', subtitle: 'Romantic Getaways', image: require('../../../assets/images/honeymoon planning.jpg'), screen: 'Honeymoon' },
 ];
 
-const VENUE_SHOWCASE = [
-    {
-        id: 'v1',
-        title: 'Wedding Decor',
-        badgeText: 'Floral Theme',
-        badgeIcon: '🌸',
-        image: require('../../../assets/images/decor.jpg'),
-        screen: 'DecorationFloral'
-    },
-    {
-        id: 'v2',
-        title: 'Entrance Setup',
-        badgeText: 'Premium Setup',
-        badgeIcon: '✨',
-        image: require('../../../assets/images/venue1.jpg'),
-        screen: 'WeddingVenue'
-    },
-    {
-        id: 'v3',
-        title: 'Evening Lighting',
-        badgeText: 'Night Event',
-        badgeIcon: '🌙',
-        image: require('../../../assets/images/venue2.jpg'),
-        screen: 'WeddingVenue'
-    },
-    {
-        id: 'v4',
-        title: 'Mandap View',
-        badgeText: 'Bridal Suite',
-        badgeIcon: '💍',
-        image: require('../../../assets/images/venue3.jpg'),
-        screen: 'WeddingVenue'
-    },
-];
+
+const EventManagementUniqueCard = ({ onPress }) => {
+    const rotateX = useRef(new Animated.Value(0)).current;
+    const rotateY = useRef(new Animated.Value(0)).current;
+    const scale = useRef(new Animated.Value(1)).current;
+
+    const handlePressIn = () => {
+        Animated.parallel([
+            Animated.spring(scale, { toValue: 1.05, useNativeDriver: true }),
+            Animated.spring(rotateY, { toValue: 15, useNativeDriver: true }),
+            Animated.spring(rotateX, { toValue: -10, useNativeDriver: true }),
+        ]).start();
+    };
+
+    const handlePressOut = () => {
+        Animated.parallel([
+            Animated.spring(scale, { toValue: 1, useNativeDriver: true }),
+            Animated.spring(rotateY, { toValue: 0, useNativeDriver: true }),
+            Animated.spring(rotateX, { toValue: 0, useNativeDriver: true }),
+        ]).start();
+    };
+
+    const rX = rotateX.interpolate({ inputRange: [-20, 20], outputRange: ['-20deg', '20deg'] });
+    const rY = rotateY.interpolate({ inputRange: [-20, 20], outputRange: ['-20deg', '20deg'] });
+
+    return (
+        <TouchableOpacity
+            activeOpacity={0.9}
+            style={styles.uniqueCardWrapper}
+            onPressIn={handlePressIn}
+            onPressOut={handlePressOut}
+            onPress={onPress}
+        >
+            <Animated.View style={[
+                styles.uniqueCard,
+                {
+                    transform: [
+                        { perspective: 1000 },
+                        { scale },
+                        { rotateX: rX },
+                        { rotateY: rY }
+                    ]
+                }
+            ]}>
+                <LinearGradient
+                    colors={['#800000', '#D4AF37', '#800000']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.uniqueCardGradient}
+                >
+                    <Image
+                        source={require('../../../assets/images/Gust Mangment.jpg')}
+                        style={styles.uniqueCardImage}
+                    />
+                    <View style={styles.uniqueCardContent}>
+                        <Text style={styles.uniqueCardTitle}>Event Management</Text>
+                        <Text style={styles.uniqueCardTag}>VIP Experience</Text>
+                    </View>
+                </LinearGradient>
+            </Animated.View>
+        </TouchableOpacity>
+    );
+};
 
 const Services2 = () => {
     const navigation = useNavigation();
@@ -271,8 +288,6 @@ const Services2 = () => {
     // State
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedService, setSelectedService] = useState(null);
-    const [modalVisible, setModalVisible] = useState(false);
 
     // Filter State
     const [filterModalVisible, setFilterModalVisible] = useState(false);
@@ -341,22 +356,8 @@ const Services2 = () => {
 
     // Modal Handler
     const handleServicePress = (item) => {
-        if (item.suggestions && item.suggestions.length > 0) {
-            setSelectedService(item);
-            setModalVisible(true);
-        } else if (item.screen) {
+        if (item.screen) {
             navigation.navigate(item.screen, item.params);
-        }
-    };
-
-    const handleSuggestionPress = (suggestion) => {
-        setModalVisible(false);
-        if (selectedService?.screen) {
-            // Pass suggestion as param if needed, for now just navigate
-            navigation.navigate(selectedService.screen, {
-                ...selectedService.params,
-                suggestion: suggestion.title
-            });
         }
     };
 
@@ -623,68 +624,36 @@ const Services2 = () => {
         );
     };
 
-    const renderVenueShowcase = () => (
+    const renderAgenciesAndManagement = () => (
         <View style={styles.sectionContainer}>
-            <View style={styles.showcaseHeader}>
-                <Text style={styles.showcaseHeaderTitle}>Venue Showcase</Text>
-                <View style={styles.showcaseTabs}>
-                    <TouchableOpacity style={styles.activeShowcaseTab}>
-                        <Ionicons name="images" size={16} color="#FFF" />
-                        <Text style={styles.activeShowcaseTabText}>Venue</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.inactiveShowcaseTab}>
-                        <Ionicons name="pricetag-outline" size={16} color={COLORS.maroon} />
-                        <Text style={styles.inactiveShowcaseTabText}>Plans</Text>
-                    </TouchableOpacity>
-                </View>
+            <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Elite Management & Agencies</Text>
             </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScroll}>
-                {VENUE_SHOWCASE.map((item) => (
-                    <TouchableOpacity
-                        key={item.id}
-                        style={styles.showcaseCardWrapper}
-                        activeOpacity={0.9}
-                        onPress={() => item.screen && navigation.navigate(item.screen)}
+            <View style={styles.agenciesRow}>
+                {/* Agency Card */}
+                <TouchableOpacity
+                    style={styles.agencyCard}
+                    activeOpacity={0.9}
+                    onPress={() => navigation.navigate('DAngenciesScreen')}
+                >
+                    <ImageBackground
+                        source={require('../../../assets/images/venue1.jpg')}
+                        style={styles.agencyCardBg}
+                        imageStyle={{ borderRadius: 24 }}
                     >
-                        <View style={styles.glassBorderContainer}>
-                            <BlurView intensity={35} tint="light" style={StyleSheet.absoluteFill} />
+                        <BlurView intensity={40} tint="dark" style={styles.agencyCardOverlay}>
+                            <Text style={styles.agencyCardTitle}>Wedding Agencies</Text>
 
-                            {/* Inner Glass Bevel/Sheen for 3D Frame Effect */}
-                            <LinearGradient
-                                colors={['rgba(255, 255, 255, 0.6)', 'transparent', 'rgba(255, 255, 255, 0.3)']}
-                                start={{ x: 0, y: 0 }}
-                                end={{ x: 1, y: 1 }}
-                                style={StyleSheet.absoluteFill}
-                                pointerEvents="none"
-                            />
+                            <Ionicons name="chevron-forward-circle" size={24} color="#FFD700" style={{ marginTop: 10 }} />
+                        </BlurView>
+                    </ImageBackground>
+                </TouchableOpacity>
 
-                            <ImageBackground
-                                source={item.image}
-                                style={styles.showcaseImage}
-                                imageStyle={{ borderRadius: 24 }}
-                            >
-                                {/* Glass Sheen Overlay for Depth */}
-                                <LinearGradient
-                                    colors={['rgba(255, 255, 255, 0.3)', 'transparent', 'rgba(255, 255, 255, 0.1)']}
-                                    start={{ x: -0.2, y: -0.2 }}
-                                    end={{ x: 1.2, y: 1.2 }}
-                                    style={StyleSheet.absoluteFill}
-                                    pointerEvents="none"
-                                />
-
-                                <View style={styles.showcaseBadge}>
-                                    <Text style={styles.showcaseBadgeIcon}>{item.badgeIcon}</Text>
-                                    <Text style={styles.showcaseBadgeText}>{item.badgeText}</Text>
-                                </View>
-                                <BlurView intensity={45} tint="dark" style={styles.showcaseTitleOverlay}>
-                                    <Text style={styles.showcaseTitle}>{item.title}</Text>
-                                    <View style={styles.showcaseDecorator} />
-                                </BlurView>
-                            </ImageBackground>
-                        </View>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
+                {/* Unique Event Management Card */}
+                <EventManagementUniqueCard
+                    onPress={() => navigation.navigate('EventManagementScreen')}
+                />
+            </View>
         </View>
     );
 
@@ -704,7 +673,7 @@ const Services2 = () => {
                             key={item.id}
                             style={styles.recCard}
                             activeOpacity={0.9}
-                            onPress={() => item.screen && navigation.navigate(item.screen, item.params)}
+                            onPress={() => handleServicePress(item)}
                         >
                             <ImageBackground
                                 source={typeof item.image === 'string' ? { uri: item.image } : item.image}
@@ -788,55 +757,6 @@ const Services2 = () => {
             </View>
         </Animated.View>
     );
-
-    const renderSuggestionModal = () => (
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
-        >
-            <View style={styles.modalOverlay}>
-                <Pressable style={styles.modalDismiss} onPress={() => setModalVisible(false)} />
-                <BlurView intensity={80} tint="light" style={styles.glassModal}>
-                    <View style={styles.modalHeader}>
-                        <Text style={styles.modalTitle}>{selectedService?.title} Options</Text>
-                        <TouchableOpacity onPress={() => setModalVisible(false)}>
-                            <Ionicons name="close" size={24} color={COLORS.textMain} />
-                        </TouchableOpacity>
-                    </View>
-
-                    <Text style={styles.modalSubtitle}>Select a category to explore:</Text>
-
-                    <View style={styles.suggestionsList}>
-                        {selectedService?.suggestions?.map((suggestion) => (
-                            <TouchableOpacity
-                                key={suggestion.id}
-                                style={styles.suggestionItem}
-                                onPress={() => handleSuggestionPress(suggestion)}
-                            >
-                                <View style={[styles.suggestionIcon, { backgroundColor: COLORS.ivory }]}>
-                                    <Ionicons name={suggestion.icon} size={24} color={COLORS.maroon} />
-                                </View>
-                                <Text style={styles.suggestionText}>{suggestion.title}</Text>
-                                <Ionicons name="chevron-forward" size={16} color={COLORS.textLight} />
-                            </TouchableOpacity>
-                        ))}
-                        <TouchableOpacity
-                            style={styles.viewAllButton}
-                            onPress={() => {
-                                setModalVisible(false);
-                                if (selectedService?.screen) navigation.navigate(selectedService.screen, selectedService.params);
-                            }}
-                        >
-                            <Text style={styles.viewAllBtnText}>View All {selectedService?.title}</Text>
-                        </TouchableOpacity>
-                    </View>
-                </BlurView>
-            </View>
-        </Modal>
-    );
-
     return (
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#FFF" />
@@ -849,9 +769,9 @@ const Services2 = () => {
                 contentContainerStyle={{ paddingBottom: 100 }}
             >
                 {renderProgressTracker()}
-                {renderVenueShowcase()}
                 {renderRecommendations()}
                 {renderServiceGrid()}
+                {renderAgenciesAndManagement()}
                 {renderPlanningTools()}
             </ScrollView>
 
@@ -860,53 +780,6 @@ const Services2 = () => {
 
             {/* Filter Modal */}
             {renderFilterModal()}
-
-            {/* Service Selection Modal */}
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.modalOverlay}>
-                    <BlurView intensity={90} tint="light" style={styles.glassModal}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>{selectedService?.title} Options</Text>
-                            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeModalButton}>
-                                <Ionicons name="close" size={24} color={COLORS.maroon} />
-                            </TouchableOpacity>
-                        </View>
-
-                        <Text style={styles.modalSubtitle}>Select a category to explore:</Text>
-
-                        <ScrollView contentContainerStyle={styles.modalGrid}>
-                            {selectedService?.suggestions?.map((item) => (
-                                <TouchableOpacity
-                                    key={item.id}
-                                    style={styles.modalItem}
-                                    onPress={() => handleSuggestionPress(item)}
-                                >
-                                    <View style={styles.modalIconContainer}>
-                                        <Ionicons name={item.icon} size={28} color={COLORS.maroon} />
-                                    </View>
-                                    <Text style={styles.modalItemText}>{item.title}</Text>
-                                    <Ionicons name="chevron-forward" size={20} color={COLORS.textLight} />
-                                </TouchableOpacity>
-                            ))}
-                        </ScrollView>
-
-                        <TouchableOpacity
-                            style={styles.viewAllButton}
-                            onPress={() => {
-                                setModalVisible(false);
-                                if (selectedService?.screen) navigation.navigate(selectedService.screen, selectedService.params);
-                            }}
-                        >
-                            <Text style={styles.viewAllText}>View All {selectedService?.title}</Text>
-                        </TouchableOpacity>
-                    </BlurView>
-                </View>
-            </Modal>
         </View>
     );
 };
@@ -1581,6 +1454,102 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    agenciesRow: {
+        flexDirection: 'row',
+        paddingHorizontal: 20,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    agencyCard: {
+        width: '48%',
+        height: 200,
+        borderRadius: 24,
+        overflow: 'hidden',
+        elevation: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+    },
+    agencyCardBg: {
+        flex: 1,
+    },
+    agencyCardOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 15,
+    },
+    agencyCardTitle: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        fontFamily: 'serif',
+    },
+    agencyCardSubtitle: {
+        color: '#FFD700',
+        fontSize: 12,
+        fontWeight: '600',
+        marginTop: 5,
+        textAlign: 'center',
+    },
+    uniqueCardWrapper: {
+        width: '48%',
+        height: 200,
+    },
+    uniqueCard: {
+        flex: 1,
+        borderRadius: 24,
+        overflow: 'hidden',
+        elevation: 15,
+        shadowColor: COLORS.maroon,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.4,
+        shadowRadius: 10,
+    },
+    uniqueCardGradient: {
+        flex: 1,
+        padding: 2, // Border effect
+        borderRadius: 24,
+    },
+    uniqueCardImage: {
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        borderRadius: 22,
+        opacity: 0.6,
+    },
+    uniqueCardContent: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(128, 0, 0, 0.4)',
+        borderRadius: 22,
+    },
+    uniqueCardTitle: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        textShadowColor: 'rgba(0,0,0,0.5)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+        fontFamily: 'serif',
+    },
+    uniqueCardTag: {
+        color: '#FFD700',
+        fontSize: 11,
+        fontWeight: '800',
+        marginTop: 5,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#FFD700',
+        letterSpacing: 1,
     }
 });
 
