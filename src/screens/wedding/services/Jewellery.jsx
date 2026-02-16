@@ -1,3 +1,4 @@
+
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { ResizeMode, Video } from 'expo-av';
 import React, { memo, useMemo, useRef, useState } from 'react';
@@ -15,20 +16,10 @@ import {
     UIManager,
     View
 } from 'react-native';
-import Animated, {
-    Extrapolation,
-    interpolate,
-    useAnimatedScrollHandler,
-    useAnimatedStyle,
-    useSharedValue
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-if (Platform.OS === 'android') {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-}
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -153,48 +144,6 @@ const JewelleryScreen = ({ navigation }) => {
     const [likedItems, setLikedItems] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('All');
 
-    const [contentHeight, setContentHeight] = useState(1); // Avoid div by zero
-
-    // Scroll Animation Logic
-    const scrollY = useSharedValue(0);
-    const scrollHandler = useAnimatedScrollHandler((event) => {
-        scrollY.value = event.contentOffset.y;
-    });
-
-    // Indicator Animation (Ring moving down line)
-    const wrapperStyle = useAnimatedStyle(() => {
-        // Calculate progress based on scrollable height
-        const scrollableHeight = contentHeight - height;
-        const progress = interpolate(
-            scrollY.value,
-            [0, scrollableHeight > 0 ? scrollableHeight : 1],
-            [0, height * 0.6], // Visual height of the line (approx 60% of screen)
-            Extrapolation.CLAMP
-        );
-        return {
-            transform: [{ translateY: progress }]
-        };
-    });
-
-    const imageStyle = useAnimatedStyle(() => {
-        // Rotation Calculation (Wheel spin / Z-axis)
-        const rotation = interpolate(
-            scrollY.value,
-            [0, 1000], // Full rotation every 1000px
-            [0, 360],
-            Extrapolation.EXTEND
-        );
-        return {
-            transform: [{ rotateZ: `${rotation}deg` }]
-        };
-    });
-
-    // Fade in text or line based on scroll
-    const lineOpacityStyle = useAnimatedStyle(() => {
-        return {
-            opacity: interpolate(scrollY.value, [0, 100], [0, 1], Extrapolation.CLAMP)
-        };
-    });
 
     const [modalVisible, setModalVisible] = useState(false);
     const [activeFilterTab, setActiveFilterTab] = useState('Locality');
@@ -238,21 +187,7 @@ const JewelleryScreen = ({ navigation }) => {
         <View style={styles.container}>
             {Platform.OS !== 'web' && <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />}
 
-            {/* Scroll Progress Indicator */}
-            <Animated.View style={[styles.scrollIndicatorContainer, lineOpacityStyle]}>
-                <View style={styles.scrollLine} />
-                <Animated.View style={[styles.scrollIconWrapper, wrapperStyle]}>
-                    <Animated.Image
-                        source={require('../../../../assets/EventMimg/Jewelary/RING 3.jpeg')}
-                        style={[styles.scrollRingImage, imageStyle]}
-                        resizeMode="cover"
-                    />
-                </Animated.View>
-            </Animated.View>
-
-            <Animated.ScrollView
-                onScroll={scrollHandler}
-                onContentSizeChange={(w, h) => setContentHeight(h)}
+            <ScrollView
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
                 scrollEventThrottle={16}
@@ -329,43 +264,45 @@ const JewelleryScreen = ({ navigation }) => {
                         })}
                     </View>
                 </View>
-            </Animated.ScrollView>
+            </ScrollView>
 
-            {modalVisible && (
-                <View style={[styles.modalOverlay, { zIndex: 999 }]}>
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>Filters</Text>
-                            <TouchableOpacity onPress={() => setModalVisible(false)}><Ionicons name="close" size={24} color={COLORS.textDark} /></TouchableOpacity>
-                        </View>
-                        <View style={styles.modalBody}>
-                            <View style={styles.sidebar}>
-                                {DETAILED_FILTERS.map(filter => (
-                                    <TouchableOpacity key={filter.id} style={[styles.sidebarItem, activeFilterTab === filter.id && styles.activeSidebarItem]} onPress={() => setActiveFilterTab(filter.id)}>
-                                        <Text style={[styles.sidebarText, activeFilterTab === filter.id && styles.activeSidebarText]}>{filter.name}</Text>
-                                    </TouchableOpacity>
-                                ))}
+            {
+                modalVisible && (
+                    <View style={[styles.modalOverlay, { zIndex: 999 }]}>
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalHeader}>
+                                <Text style={styles.modalTitle}>Filters</Text>
+                                <TouchableOpacity onPress={() => setModalVisible(false)}><Ionicons name="close" size={24} color={COLORS.textDark} /></TouchableOpacity>
                             </View>
-                            <ScrollView style={styles.optionsArea}>
-                                {DETAILED_FILTERS.find(f => f.id === activeFilterTab)?.options.map(option => {
-                                    const isSelected = selectedFilters[activeFilterTab].includes(option);
-                                    return (
-                                        <TouchableOpacity key={option} style={styles.optionItem} onPress={() => toggleFilterOption(activeFilterTab, option)}>
-                                            <Ionicons name={isSelected ? 'checkbox' : 'square-outline'} size={20} color={isSelected ? COLORS.kumkum : '#888'} />
-                                            <Text style={[styles.optionText, isSelected && styles.activeOptionText]}>{option}</Text>
+                            <View style={styles.modalBody}>
+                                <View style={styles.sidebar}>
+                                    {DETAILED_FILTERS.map(filter => (
+                                        <TouchableOpacity key={filter.id} style={[styles.sidebarItem, activeFilterTab === filter.id && styles.activeSidebarItem]} onPress={() => setActiveFilterTab(filter.id)}>
+                                            <Text style={[styles.sidebarText, activeFilterTab === filter.id && styles.activeSidebarText]}>{filter.name}</Text>
                                         </TouchableOpacity>
-                                    );
-                                })}
-                            </ScrollView>
-                        </View>
-                        <View style={styles.modalFooter}>
-                            <TouchableOpacity onPress={clearFilters}><Text style={styles.clearText}>Clear</Text></TouchableOpacity>
-                            <TouchableOpacity style={styles.applyButton} onPress={() => setModalVisible(false)}><Text style={styles.applyText}>Apply</Text></TouchableOpacity>
+                                    ))}
+                                </View>
+                                <ScrollView style={styles.optionsArea}>
+                                    {DETAILED_FILTERS.find(f => f.id === activeFilterTab)?.options.map(option => {
+                                        const isSelected = selectedFilters[activeFilterTab].includes(option);
+                                        return (
+                                            <TouchableOpacity key={option} style={styles.optionItem} onPress={() => toggleFilterOption(activeFilterTab, option)}>
+                                                <Ionicons name={isSelected ? 'checkbox' : 'square-outline'} size={20} color={isSelected ? COLORS.kumkum : '#888'} />
+                                                <Text style={[styles.optionText, isSelected && styles.activeOptionText]}>{option}</Text>
+                                            </TouchableOpacity>
+                                        );
+                                    })}
+                                </ScrollView>
+                            </View>
+                            <View style={styles.modalFooter}>
+                                <TouchableOpacity onPress={clearFilters}><Text style={styles.clearText}>Clear</Text></TouchableOpacity>
+                                <TouchableOpacity style={styles.applyButton} onPress={() => setModalVisible(false)}><Text style={styles.applyText}>Apply</Text></TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-            )}
-        </View>
+                )
+            }
+        </View >
     );
 };
 
@@ -373,46 +310,7 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: '#FFFFE4' },
     scrollContent: { paddingBottom: 100 },
 
-    // Scroll Indicator Styles
-    scrollIndicatorContainer: {
-        position: 'absolute',
-        right: 10,
-        top: 100, // Start below header
-        bottom: 100, // End above bottom nav area
-        width: 30,
-        alignItems: 'center',
-        zIndex: 50,
-        pointerEvents: 'none', // Allow clicks to pass through
-    },
-    scrollLine: {
-        width: 2,
-        height: '100%',
-        backgroundColor: 'rgba(243, 216, 112, 0.5)', // Color: Haldi with opacity
-        borderRadius: 1,
-    },
-    scrollIconWrapper: {
-        position: 'absolute',
-        top: 0,
-        width: 50,
-        height: 50,
-        borderRadius: 25, // Circular mask for icon look
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#FFF', // White background to show jpeg clearly
-        borderWidth: 2,
-        borderColor: COLORS.gold,
-        shadowColor: COLORS.kumkum,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 5,
-        overflow: 'hidden'
-    },
-    scrollRingImage: {
-        width: '100%',
-        height: '100%',
-    },
-
+    // Scroll Indicator Styles - Removed
     heroWrapper: { height: 550, marginBottom: 20, position: 'relative', zIndex: 10 },
     heroContainer: { width: '100%', height: '100%', overflow: 'hidden', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
     heroVideo: { width: '100%', height: '100%' },
@@ -502,7 +400,6 @@ const styles = StyleSheet.create({
     gridRatingContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF8E1', paddingHorizontal: 4, paddingVertical: 2, borderRadius: 4 },
     gridRatingText: { fontSize: 10, fontWeight: 'bold', color: '#F29502', marginLeft: 2 },
     gridPrice: { fontSize: 13, fontWeight: '700', color: '#333' },
-
     modalOverlay: { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
     modalContainer: { backgroundColor: '#fff', height: '65%', borderTopLeftRadius: 20, borderTopRightRadius: 20 },
     modalHeader: { flexDirection: 'row', justifyContent: 'space-between', padding: 15, borderBottomWidth: 1, borderBottomColor: '#eee' },

@@ -7,7 +7,7 @@ import HomeScreen from '../screens/home/HomeScreen';
 import MatchListScreen from '../screens/matchmaking/MatchListScreen';
 import UserProfileScreen from '../screens/profile/UserProfileScreen';
 import VendorListScreen from '../screens/vendor/VendorListScreen';
-import EventServicesScreen from '../screens/wedding/EventServicesScreen';
+import Services2 from '../screens/wedding/Services 2';
 import { colors } from '../theme/colors';
 
 const Tab = createBottomTabNavigator();
@@ -52,7 +52,7 @@ const TabNavigator = () => {
             <Tab.Screen name="Home" component={HomeScreen} />
             <Tab.Screen name="Matches" component={MatchListScreen} options={{ tabBarLabel: 'Match' }} />
             <Tab.Screen name="Vendors" component={VendorListScreen} options={{ tabBarLabel: 'Vendor' }} />
-            <Tab.Screen name="Services" component={EventServicesScreen} options={{ tabBarLabel: 'Service' }} />
+            <Tab.Screen name="Services" component={Services2} options={{ tabBarLabel: 'Service' }} />
             <Tab.Screen name="Profile" component={UserProfileScreen} options={{ tabBarLabel: 'Profile' }} />
         </Tab.Navigator>
     );

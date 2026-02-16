@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { colors } from '../../theme/colors';
 
-const Card = React.memo(({ item, index, scrollX, itemWidth, itemHeight, onPress }) => {
+const Card = ({ item, index, scrollX, itemWidth, itemHeight, onPress }) => {
     const inputRange = [(index - 1) * itemWidth, index * itemWidth, (index + 1) * itemWidth];
 
     const scale = scrollX.interpolate({
@@ -58,7 +58,7 @@ const Card = React.memo(({ item, index, scrollX, itemWidth, itemHeight, onPress 
                 <View style={styles.contentContainer}>
                     <View style={styles.iconWrapper}>
                         <View style={styles.iconContainer}>
-                            <FontAwesome5 name={item.icon} size={20} color={colors.akshada} />
+                            <FontAwesome5 name={item.icon} size={20} color="#D4AF37" />
                         </View>
                     </View>
 
@@ -76,7 +76,7 @@ const Card = React.memo(({ item, index, scrollX, itemWidth, itemHeight, onPress 
             </Pressable>
         </Animated.View>
     );
-});
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 25,
-        backgroundColor: colors.darkHaldi, // Dark/Circle Haldi (#f29502)
+        backgroundColor: '#FFFFFF', // White background to highlight the Gold icon
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
