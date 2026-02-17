@@ -274,14 +274,8 @@ const PremiumVendorCard = ({ vendor, onPress }) => {
     };
 
     return (
-        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-            <TouchableOpacity
-                style={styles.premiumVendorCard}
-                activeOpacity={1}
-                onPressIn={handlePressIn}
-                onPressOut={handlePressOut}
-                onPress={() => onPress(vendor)}
-            >
+        <View style={styles.premiumVendorCardContainer}>
+            <View style={styles.premiumVendorCard}>
                 <ImageBackground source={vendor.image} style={styles.vendorMainImg}>
                     <View style={styles.tagWrapper}>
                         <View style={styles.premiumTag}>
@@ -319,8 +313,8 @@ const PremiumVendorCard = ({ vendor, onPress }) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-            </TouchableOpacity>
-        </Animated.View>
+            </View>
+        </View>
     );
 };
 
@@ -330,6 +324,7 @@ const DecorationFloralScreen = ({ navigation }) => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchFocused, setSearchFocused] = useState(false);
+    const [selectedMediaCategory, setSelectedMediaCategory] = useState('Floral');
     const [scrollY] = useState(new Animated.Value(0));
     const [selectedVendor, setSelectedVendor] = useState(FEATURED_VENDORS[0]);
     const [isVendorProfileVisible, setIsVendorProfileVisible] = useState(false);
@@ -364,7 +359,7 @@ const DecorationFloralScreen = ({ navigation }) => {
     const handleTabPress = (section, ref, index) => {
         setActiveSection(section);
         const tabWidth = 70;
-        const gap = 20;
+        const gap = 12;
         Animated.spring(tabUnderlineTranslateX, {
             toValue: index * (tabWidth + gap),
             useNativeDriver: true,
@@ -526,7 +521,6 @@ const DecorationFloralScreen = ({ navigation }) => {
                             <PremiumVendorCard
                                 key={vendor.id}
                                 vendor={vendor}
-                                onPress={openVendorProfile}
                             />
                         ))}
                     </ScrollView>
@@ -672,16 +666,16 @@ const DecorationFloralScreen = ({ navigation }) => {
 
                         <View style={styles.stickyNavWrapper}>
                             <View style={styles.shortcutNavBar}>
-                                <TouchableOpacity onPress={() => handleTabPress('Projects', portfolioRef, 0)}>
+                                <TouchableOpacity style={styles.shortcutNavTab} onPress={() => handleTabPress('Projects', portfolioRef, 0)}>
                                     <Text style={[styles.shortcutNavText, activeSection === 'Projects' && styles.shortcutNavTextActive]}>Projects</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleTabPress('Pricing', pricingRef, 1)}>
+                                <TouchableOpacity style={styles.shortcutNavTab} onPress={() => handleTabPress('Pricing', pricingRef, 1)}>
                                     <Text style={[styles.shortcutNavText, activeSection === 'Pricing' && styles.shortcutNavTextActive]}>Pricing</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleTabPress('About', aboutRef, 2)}>
+                                <TouchableOpacity style={styles.shortcutNavTab} onPress={() => handleTabPress('About', aboutRef, 2)}>
                                     <Text style={[styles.shortcutNavText, activeSection === 'About' && styles.shortcutNavTextActive]}>About</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleTabPress('Reviews', reviewsRef, 3)}>
+                                <TouchableOpacity style={styles.shortcutNavTab} onPress={() => handleTabPress('Reviews', reviewsRef, 3)}>
                                     <Text style={[styles.shortcutNavText, activeSection === 'Reviews' && styles.shortcutNavTextActive]}>Reviews</Text>
                                 </TouchableOpacity>
 
@@ -689,7 +683,7 @@ const DecorationFloralScreen = ({ navigation }) => {
                                     style={[
                                         styles.tabUnderline,
                                         {
-                                            width: 70,
+                                            width: 80,
                                             transform: [{ translateX: tabUnderlineTranslateX }]
                                         }
                                     ]}
@@ -702,7 +696,7 @@ const DecorationFloralScreen = ({ navigation }) => {
                                 <View style={styles.mediaHeaderRow}>
                                     <Text style={styles.profileSectionLabel}>Portfolio</Text>
                                     <View style={styles.mediaMainTabs}>
-                                        {['Photos', 'Videos'].map(mTab => (
+                                        {['Photos', 'Videos', 'Media'].map(mTab => (
                                             <TouchableOpacity
                                                 key={mTab}
                                                 style={[styles.mediaMainTab, activeMediaTab === mTab && styles.mediaMainTabActive]}
@@ -743,11 +737,7 @@ const DecorationFloralScreen = ({ navigation }) => {
                                                     { title: 'Modern Entrance Decor', type: 'Entrance', likes: 89, images: [venue3, venue5, venue6], height: 200 }
                                                 ].map((proj, idx) => (
                                                     <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
-                                                        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
-                                                            {proj.images.map((img, i) => (
-                                                                <Image key={i} source={img} style={[styles.projectImage, { width: (width - 63) / 2 }]} />
-                                                            ))}
-                                                        </ScrollView>
+                                                        <Image source={proj.images[0]} style={styles.projectImage} />
                                                         <View style={styles.typeBadge}><Text style={styles.typeBadgeText}>{proj.type}</Text></View>
                                                         <View style={styles.projectCardFooter}>
                                                             <View style={styles.likesRow}>
@@ -765,11 +755,7 @@ const DecorationFloralScreen = ({ navigation }) => {
                                                     { title: 'Pastel Theme Mehendi', type: 'Mehendi', likes: 156, images: [venue1, venue4, venue7], height: 250 }
                                                 ].map((proj, idx) => (
                                                     <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
-                                                        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
-                                                            {proj.images.map((img, i) => (
-                                                                <Image key={i} source={img} style={[styles.projectImage, { width: (width - 63) / 2 }]} />
-                                                            ))}
-                                                        </ScrollView>
+                                                        <Image source={proj.images[0]} style={styles.projectImage} />
                                                         <View style={styles.typeBadge}><Text style={styles.typeBadgeText}>{proj.type}</Text></View>
                                                         <View style={styles.projectCardFooter}>
                                                             <View style={styles.likesRow}>
@@ -783,11 +769,66 @@ const DecorationFloralScreen = ({ navigation }) => {
                                             </View>
                                         </View>
                                     </View>
-                                ) : (
+                                ) : activeMediaTab === 'Videos' ? (
                                     <View style={styles.videoPlaceholder}>
                                         <Ionicons name="play-circle-outline" size={48} color={COLORS.secondary} />
                                         <Text style={styles.videoPlaceholderText}>Video walkthroughs coming soon</Text>
                                     </View>
+                                ) : (
+                                    <View style={styles.mediaFieldsContainer}>
+                                        <View style={styles.mediaSubTabsWrapper}>
+                                            {[
+                                                { label: 'Floral', value: 'Floral', icon: 'sunny' },
+                                                { label: 'Theme', value: 'Theme', icon: 'diamond' },
+                                                { label: 'Traditional', value: 'Traditional', icon: 'infinite' }
+                                            ].map((subTab) => (
+                                                <TouchableOpacity
+                                                    key={subTab.value}
+                                                    style={[styles.mediaSubTab, selectedMediaCategory === subTab.value && styles.mediaSubTabActive]}
+                                                    onPress={() => setSelectedMediaCategory(subTab.value)}
+                                                >
+                                                    <Ionicons
+                                                        name={subTab.icon}
+                                                        size={16}
+                                                        color={selectedMediaCategory === subTab.value ? '#FFF' : '#666'}
+                                                    />
+                                                    <Text style={[styles.mediaSubTabText, selectedMediaCategory === subTab.value && styles.mediaSubTabTextActive]}>
+                                                        {subTab.label}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            ))}
+                                        </View>
+
+                                        <View style={styles.fullMediaGallery}>
+                                            <View style={styles.pinterestGrid}>
+                                                <View style={styles.gridColumn}>
+                                                    {[
+                                                        { img: venue7, h: 220 },
+                                                        { img: dfMarigold, h: 280 },
+                                                        { img: venue1, h: 200 },
+                                                        { img: venue6, h: 250 }
+                                                    ].map((item, i) => (
+                                                        <View key={i} style={[styles.galleryImageCard, { height: item.h }]}>
+                                                            <Image source={item.img} style={styles.mosaicImageFull} />
+                                                        </View>
+                                                    ))}
+                                                </View>
+                                                <View style={styles.gridColumn}>
+                                                    {[
+                                                        { img: dfPastel, h: 260 },
+                                                        { img: venue5, h: 200 },
+                                                        { img: dfRoyal, h: 270 },
+                                                        { img: venue8, h: 230 }
+                                                    ].map((item, i) => (
+                                                        <View key={i} style={[styles.galleryImageCard, { height: item.h }]}>
+                                                            <Image source={item.img} style={styles.mosaicImageFull} />
+                                                        </View>
+                                                    ))}
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+
                                 )}
                             </View>
 
@@ -896,8 +937,8 @@ const DecorationFloralScreen = ({ navigation }) => {
                             </View>
                         </View>
                     </Animated.ScrollView>
-                </View>
-            </Modal>
+                </View >
+            </Modal >
         );
     };
 
@@ -951,23 +992,25 @@ const styles = StyleSheet.create({
     topBar: { position: 'absolute', top: 50, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', zIndex: 10 },
     backButton: { backgroundColor: 'rgba(0,0,0,0.35)', padding: 10, borderRadius: 24 },
     utilityBtn: { backgroundColor: 'rgba(0,0,0,0.35)', padding: 10, borderRadius: 24 },
-    heroHeadline: { fontSize: 36, color: COLORS.white, lineHeight: 44, marginBottom: 12 },
-    heroSubhead: { fontSize: 16, color: '#FFEB3B', marginBottom: 24, opacity: 0.95 },
+    heroHeadline: { fontSize: 38, color: COLORS.white, lineHeight: 46, marginBottom: 12, fontWeight: '900', textShadowColor: 'rgba(0,0,0,0.25)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 4 },
+    heroSubhead: { fontSize: 17, color: '#FFEB3B', marginBottom: 24, opacity: 0.9, fontWeight: '600', letterSpacing: 0.3 },
 
     premiumSearchContainer: {
         flexDirection: 'row',
-        backgroundColor: '#FFF',
+        backgroundColor: 'rgba(255, 255, 255, 0.98)',
         marginHorizontal: 20,
-        height: 60,
-        borderRadius: 24,
+        height: 64,
+        borderRadius: 22,
         alignItems: 'center',
-        marginTop: -30,
-        elevation: 12,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.15,
-        shadowRadius: 12,
-        paddingHorizontal: 18,
+        marginTop: -32,
+        elevation: 15,
+        shadowColor: '#800000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.12,
+        shadowRadius: 15,
+        paddingHorizontal: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(212, 136, 6, 0.1)',
     },
     premiumSearchActive: { borderWidth: 1.5, borderColor: COLORS.secondary },
     locationSelector: { flexDirection: 'row', alignItems: 'center', gap: 6, width: 110 },
@@ -994,19 +1037,21 @@ const styles = StyleSheet.create({
     popularTag: { backgroundColor: '#FFF9F0', paddingHorizontal: 16, paddingVertical: 9, borderRadius: 24, borderWidth: 1, borderColor: '#FFECB3' },
     popularTagText: { fontSize: 14, color: '#D48806', fontWeight: 'bold' },
 
-    premiumVendorCard: {
+    premiumVendorCardContainer: {
         width: width * 0.82,
         marginRight: 24,
+    },
+    premiumVendorCard: {
         backgroundColor: '#FFF',
-        borderRadius: 32,
-        elevation: 10,
+        borderRadius: 28,
+        elevation: 8,
         overflow: 'hidden',
         borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.03)',
-        shadowColor: '#000',
+        borderColor: 'rgba(212, 136, 6, 0.08)',
+        shadowColor: COLORS.primary,
         shadowOffset: { width: 0, height: 12 },
         shadowOpacity: 0.1,
-        shadowRadius: 20,
+        shadowRadius: 18,
     },
     vendorMainImg: { width: '100%', height: 200, position: 'relative', overflow: 'hidden' },
     tagWrapper: { position: 'absolute', top: 15, left: 15, zIndex: 10 },
@@ -1023,9 +1068,20 @@ const styles = StyleSheet.create({
     locationContainerPremium: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 16 },
     locationTextPremium: { fontSize: 13, color: '#666' },
     previewsRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-    miniThumb: { width: 44, height: 44, backgroundColor: '#F0F0F0', borderRadius: 10, borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)' },
-    followBtnGold: { marginLeft: 'auto', borderWidth: 1.5, borderColor: COLORS.secondary, paddingHorizontal: 18, paddingVertical: 8, borderRadius: 14, backgroundColor: 'rgba(212, 175, 55, 0.05)' },
-    followTextGold: { color: COLORS.secondary, fontWeight: 'bold', fontSize: 13 },
+    miniThumb: { width: 46, height: 46, backgroundColor: '#F0F0F0', borderRadius: 12, borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)' },
+    followBtnGold: {
+        marginLeft: 'auto',
+        backgroundColor: COLORS.secondary,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 16,
+        elevation: 3,
+        shadowColor: COLORS.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+    },
+    followTextGold: { color: '#FFF', fontWeight: 'bold', fontSize: 13, letterSpacing: 0.5 },
 
     sectionContainer: { marginTop: 40 },
     sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 20 },
@@ -1033,16 +1089,16 @@ const styles = StyleSheet.create({
     seeAllText: { fontWeight: 'bold', fontSize: 14, color: COLORS.secondary },
 
     postCardCompact: {
-        borderRadius: 24,
+        borderRadius: 22,
         backgroundColor: '#FFF',
         overflow: 'hidden',
-        borderWidth: 1.5,
-        borderColor: 'rgba(212, 175, 55, 0.15)',
-        elevation: 5,
+        borderWidth: 1,
+        borderColor: 'rgba(212, 136, 6, 0.12)',
+        elevation: 4,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.08,
-        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
     },
     dotContainerCompact: { position: 'absolute', bottom: 10, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 4 },
     dotSmall: { width: 4, height: 4, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.4)' },
@@ -1086,11 +1142,12 @@ const styles = StyleSheet.create({
     profileBusinessName: { fontSize: 16, color: COLORS.secondary, marginTop: 4, fontWeight: 'bold' },
     profileLocationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8, gap: 4 },
     profileLocationText: { fontSize: 13, color: '#777' },
-    stickyNavWrapper: { backgroundColor: 'rgba(255,255,248,0.95)', borderBottomWidth: 1, borderBottomColor: '#F0F0F0' },
-    shortcutNavBar: { flexDirection: 'row', gap: 30, paddingHorizontal: 24, paddingVertical: 18, alignItems: 'center' },
+    stickyNavWrapper: { backgroundColor: 'rgba(253, 252, 240, 0.96)', borderBottomWidth: 1, borderBottomColor: 'rgba(212, 136, 6, 0.15)', elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8 },
+    shortcutNavBar: { flexDirection: 'row', gap: 12, paddingHorizontal: 20, paddingVertical: 16, alignItems: 'center' },
+    shortcutNavTab: { width: 70, alignItems: 'center', justifyContent: 'center' },
     shortcutNavText: { fontSize: 15, color: '#999', fontWeight: 'bold' },
     shortcutNavTextActive: { color: COLORS.secondary },
-    tabUnderline: { position: 'absolute', bottom: 12, left: 24, width: 60, height: 3, backgroundColor: COLORS.secondary, borderRadius: 2 },
+    tabUnderline: { position: 'absolute', bottom: 12, left: 20, width: 70, height: 3, backgroundColor: COLORS.secondary, borderRadius: 2 },
     profileInfoContent: { backgroundColor: '#FFF', paddingHorizontal: 24, paddingTop: 20, paddingBottom: 40 },
     profileSectionLabel: { fontSize: 20, color: '#222', marginBottom: 16, fontWeight: 'bold' },
     mediaHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
@@ -1109,10 +1166,8 @@ const styles = StyleSheet.create({
     featuredMetaText: { fontSize: 13, color: '#DDD' },
     viewProjectBtn: { backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: '#FFF' },
     viewProjectBtnText: { fontSize: 12, color: '#FFF', fontWeight: 'bold' },
-    pinterestGrid: { flexDirection: 'row', gap: 15 },
-    gridColumn: { flex: 1, gap: 15 },
-    projectCard: { width: '100%', borderRadius: 20, backgroundColor: '#FFF', overflow: 'hidden', elevation: 3 },
-    projectImage: { width: '100%', height: '100%', resizeMode: 'cover' },
+    projectCard: { width: '100%', borderRadius: 20, backgroundColor: '#FFF', overflow: 'hidden', elevation: 3, marginBottom: 15 },
+    projectImage: { width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, resizeMode: 'cover' },
     cardCarousel: { flex: 1 },
     typeBadge: { position: 'absolute', top: 12, left: 12, backgroundColor: 'rgba(0,0,0,0.4)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, zIndex: 10 },
     typeBadgeText: { fontSize: 9, color: '#FFF', fontWeight: 'bold' },
@@ -1128,22 +1183,37 @@ const styles = StyleSheet.create({
     verifiedPriceBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#FFF9F0', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, borderWidth: 1, borderColor: '#FFECB3' },
     verifiedPriceText: { fontSize: 11, color: '#D48806', fontWeight: 'bold' },
     pricingCardsScroll: { paddingVertical: 10 },
-    eventPriceCard: { width: width * 0.75, backgroundColor: '#FFF', borderRadius: 24, marginRight: 20, padding: 24, paddingTop: 45, elevation: 5, overflow: 'hidden' },
+    eventPriceCard: {
+        width: width * 0.78,
+        backgroundColor: '#FFF',
+        borderRadius: 28,
+        marginRight: 20,
+        padding: 26,
+        paddingTop: 48,
+        elevation: 8,
+        overflow: 'hidden',
+        borderWidth: 1,
+        borderColor: 'rgba(212, 136, 6, 0.12)',
+        shadowColor: '#800000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.08,
+        shadowRadius: 15,
+    },
     eventCardTopTag: { position: 'absolute', top: 0, right: 0, paddingHorizontal: 20, paddingVertical: 10, borderBottomLeftRadius: 20 },
     eventCardTagText: { color: '#FFF', fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5, fontWeight: 'bold' },
     eventCardIdentity: { marginBottom: 15 },
     eventPackageTitle: { fontSize: 22, color: '#222', marginBottom: 5, fontWeight: 'bold' },
     eventPriceTag: { flexDirection: 'row', alignItems: 'baseline', gap: 6 },
-    eventMainPrice: { fontSize: 28, color: COLORS.primary, fontWeight: 'bold' },
-    eventPricePer: { fontSize: 14, color: '#666' },
-    pricingDivider: { height: 1.5, backgroundColor: '#F0F0F0', marginVertical: 15, borderStyle: 'dashed' },
+    eventMainPrice: { fontSize: 32, color: COLORS.primary, fontWeight: '900' },
+    eventPricePer: { fontSize: 13, color: '#888', fontWeight: '600' },
+    pricingDivider: { height: 1, backgroundColor: 'rgba(212, 136, 6, 0.2)', marginVertical: 20, borderStyle: 'dotted' },
     pricingInclusions: { gap: 10, marginBottom: 25 },
     inclusionLine: { flexDirection: 'row', alignItems: 'center', gap: 8 },
     inclusionText: { fontSize: 14, color: '#555' },
     bookNowMinBtn: { height: 50, borderRadius: 15, borderWidth: 1.5, justifyContent: 'center', alignItems: 'center' },
     bookNowMinText: { fontSize: 14, fontWeight: 'bold' },
-    ticketPunchLeft: { position: 'absolute', left: -12, top: '48%', width: 24, height: 24, borderRadius: 12, backgroundColor: '#FFF' },
-    ticketPunchRight: { position: 'absolute', right: -12, top: '48%', width: 24, height: 24, borderRadius: 12, backgroundColor: '#FFF' },
+    ticketPunchLeft: { position: 'absolute', left: -14, top: '50%', width: 28, height: 28, borderRadius: 14, backgroundColor: '#FFF', borderWidth: 1, borderColor: 'rgba(212, 136, 6, 0.12)' },
+    ticketPunchRight: { position: 'absolute', right: -14, top: '50%', width: 28, height: 28, borderRadius: 14, backgroundColor: '#FFF', borderWidth: 1, borderColor: 'rgba(212, 136, 6, 0.12)' },
 
     profileAboutContainer: { marginTop: 40 },
     storyQuoteSection: { flexDirection: 'row', gap: 15, marginVertical: 20 },
@@ -1153,7 +1223,21 @@ const styles = StyleSheet.create({
 
     profileReviewsSection: { marginTop: 40 },
     ratingOverview: { flexDirection: 'row', gap: 20, alignItems: 'center', marginVertical: 30 },
-    bigRatingBadge: { width: 140, height: 140, borderRadius: 70, backgroundColor: 'rgba(242,149,2,0.05)', borderWidth: 2, borderColor: COLORS.secondary, alignItems: 'center', justifyContent: 'center', gap: 4 },
+    bigRatingBadge: {
+        width: 150,
+        height: 150,
+        borderRadius: 75,
+        backgroundColor: '#FFF',
+        borderWidth: 8,
+        borderColor: 'rgba(212, 136, 6, 0.05)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 10,
+        shadowColor: COLORS.secondary,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+    },
     bigRatingScore: { fontSize: 38, color: COLORS.secondary, fontWeight: 'bold' },
     bigRatingStatus: { fontSize: 12, color: COLORS.secondary, textTransform: 'uppercase', fontWeight: 'bold' },
     bigRatingStars: { flexDirection: 'row', gap: 2, marginVertical: 4 },
@@ -1172,6 +1256,45 @@ const styles = StyleSheet.create({
     stickyButtonText: { fontSize: 14, color: COLORS.white, marginRight: 12, letterSpacing: 1.2, textTransform: 'uppercase', fontWeight: 'bold' },
     noResults: { padding: 60, alignItems: 'center' },
     noResultsText: { color: '#999', fontSize: 15 },
+
+    // Media Section Styles
+    mediaFieldsContainer: { paddingVertical: 10 },
+    mediaFieldBlock: {
+        backgroundColor: '#FFF',
+        borderRadius: 20,
+        padding: 16,
+        marginBottom: 16,
+        borderWidth: 1,
+        borderColor: '#F0F0F0',
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 5,
+    },
+    mediaFieldHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 15, gap: 12 },
+    mediaIconCircle: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+    mediaFieldTitle: { fontSize: 18, color: '#333', fontWeight: 'bold' },
+    mediaSubTabsWrapper: { flexDirection: 'row', gap: 10, marginBottom: 20 },
+    mediaSubTab: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 20,
+        backgroundColor: '#F5F5F5',
+        borderWidth: 1,
+        borderColor: '#EEE'
+    },
+    mediaSubTabActive: { backgroundColor: COLORS.secondary, borderColor: COLORS.secondary },
+    mediaSubTabText: { fontSize: 13, color: '#666', fontWeight: '600' },
+    mediaSubTabTextActive: { color: '#FFF' },
+    fullMediaGallery: { paddingTop: 10 },
+    pinterestGrid: { flexDirection: 'row', gap: 15, width: '100%' },
+    gridColumn: { flex: 1, gap: 15 },
+    galleryImageCard: { borderRadius: 20, overflow: 'hidden', backgroundColor: '#F0F0F0' },
+    mosaicImageFull: { width: '100%', height: '100%', resizeMode: 'cover' },
 });
 
 export default DecorationFloralScreen;
