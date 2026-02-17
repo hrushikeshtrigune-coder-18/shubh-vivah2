@@ -213,7 +213,7 @@ const FoodV = () => {
     const closeBookingModal = () => {
         setShowBookingModal(false);
         setBookingStatus('idle');
-        setBookingForm({ name: '', mobile: '', date: '' });
+        setBookingForm({ name: '', mobile: '', date: '', time: '' });
     };
 
     // Filter Logic
@@ -337,48 +337,55 @@ const FoodV = () => {
             animationType="slide"
             transparent={true}
             visible={showBookingModal}
-            onRequestClose={() => setShowBookingModal(false)}
+            onRequestClose={closeBookingModal}
         >
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalOverlay}>
                 <View style={styles.modalContent}>
                     {bookingStatus === 'success' ? (
-                        <View style={{ alignItems: 'center', paddingVertical: 20 }}>
-                            <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: '#E8F5E9', justifyContent: 'center', alignItems: 'center', marginBottom: 15 }}>
-                                <Ionicons name="checkmark" size={30} color="green" />
+                        <View style={{ alignItems: 'center', paddingVertical: 40 }}>
+                            <View style={{ width: 70, height: 70, borderRadius: 35, backgroundColor: '#E8F5E9', justifyContent: 'center', alignItems: 'center', marginBottom: 20 }}>
+                                <Ionicons name="checkmark" size={40} color="green" />
                             </View>
-                            <Text style={styles.modalTitle}>Request Sent!</Text>
-                            <Text style={[styles.modalSubtitle, { textAlign: 'center' }]}>
-                                Thank you, {bookingForm.name}.{"\n"}The caterer will contact you shortly.
+                            <Text style={styles.modalTitle}>Visit Scheduled!</Text>
+                            <Text style={[styles.modalSubtitle, { textAlign: 'center', marginTop: 10 }]}>
+                                Your visit is confirmed for {bookingForm.date} at {bookingForm.time}.{"\n"}Our manager will contact you shortly.
                             </Text>
-                            <TouchableOpacity style={styles.modalSubmitBtn} onPress={closeBookingModal}>
-                                <Text style={styles.modalSubmitText}>Close</Text>
+                            <TouchableOpacity style={[styles.modalConfirmBtn, { marginTop: 30, width: '100%' }]} onPress={closeBookingModal}>
+                                <Text style={styles.modalConfirmText}>Done</Text>
                             </TouchableOpacity>
                         </View>
                     ) : (
                         <>
-                            <View style={styles.modalHeader}>
-                                <Text style={styles.modalTitle}>Book a Tasting</Text>
-                                <TouchableOpacity onPress={closeBookingModal}>
-                                    <Ionicons name="close" size={24} color={COLORS.textMain} />
+                            <View style={styles.modalHeaderRow}>
+                                <View>
+                                    <Text style={styles.modalTitle}>Book a Visit</Text>
+                                    <Text style={styles.modalSubtitle}>Schedule a tasting at महाराजा Catering</Text>
+                                </View>
+                                <TouchableOpacity onPress={closeBookingModal} style={styles.closeBtn}>
+                                    <Ionicons name="close" size={20} color={COLORS.textMain} />
                                 </TouchableOpacity>
                             </View>
-                            <Text style={styles.modalSubtitle}>Experience the royal taste before your big day.</Text>
 
-                            <View style={styles.inputContainer}>
-                                <Text style={styles.inputLabel}>Your Name</Text>
+                            {/* Name Input */}
+                            <Text style={styles.inputLabel}>Full Name</Text>
+                            <View style={styles.inputWrapper}>
+                                <Ionicons name="person-outline" size={20} color="#666" style={styles.inputIcon} />
                                 <TextInput
                                     style={styles.modalInput}
-                                    placeholder="Enter Name"
+                                    placeholder="Enter your full name"
                                     placeholderTextColor="#999"
                                     value={bookingForm.name}
                                     onChangeText={t => setBookingForm({ ...bookingForm, name: t })}
                                 />
                             </View>
-                            <View style={styles.inputContainer}>
-                                <Text style={styles.inputLabel}>Mobile Number</Text>
+
+                            {/* Mobile Input */}
+                            <Text style={styles.inputLabel}>Mobile Number (OTP optional)</Text>
+                            <View style={styles.inputWrapper}>
+                                <Ionicons name="call-outline" size={20} color="#666" style={styles.inputIcon} />
                                 <TextInput
                                     style={styles.modalInput}
-                                    placeholder="Enter Mobile"
+                                    placeholder="Enter mobile number"
                                     placeholderTextColor="#999"
                                     keyboardType="phone-pad"
                                     value={bookingForm.mobile}
@@ -386,15 +393,55 @@ const FoodV = () => {
                                 />
                             </View>
 
-                            <TouchableOpacity
-                                style={[styles.modalSubmitBtn, bookingStatus === 'submitting' && { opacity: 0.7 }]}
-                                onPress={handleBookingSubmit}
-                                disabled={bookingStatus === 'submitting'}
-                            >
-                                <Text style={styles.modalSubmitText}>
-                                    {bookingStatus === 'submitting' ? 'Sending...' : 'Confirm Request'}
-                                </Text>
-                            </TouchableOpacity>
+                            {/* Date & Time Row */}
+                            <View style={styles.rowInputs}>
+                                <View style={{ flex: 1, marginRight: 10 }}>
+                                    <Text style={styles.inputLabel}>Preferred Date</Text>
+                                    <View style={styles.inputWrapper}>
+                                        <Ionicons name="calendar-outline" size={20} color="#666" style={styles.inputIcon} />
+                                        <TextInput
+                                            style={styles.modalInput}
+                                            placeholder="DD/MM/YYYY"
+                                            placeholderTextColor="#999"
+                                            value={bookingForm.date}
+                                            onChangeText={t => setBookingForm({ ...bookingForm, date: t })}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.inputLabel}>Time Slot</Text>
+                                    <View style={styles.inputWrapper}>
+                                        <Ionicons name="time-outline" size={20} color="#666" style={styles.inputIcon} />
+                                        <TextInput
+                                            style={styles.modalInput}
+                                            placeholder="e.g. 2:00 PM"
+                                            placeholderTextColor="#999"
+                                            value={bookingForm.time}
+                                            onChangeText={t => setBookingForm({ ...bookingForm, time: t })}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+
+                            <Text style={styles.disclaimerText}>
+                                * Our relationship manager will call you to confirm the appointment.
+                            </Text>
+
+                            <View style={styles.modalActions}>
+                                <TouchableOpacity style={styles.modalBackBtn} onPress={closeBookingModal}>
+                                    <Text style={styles.modalBackText}>Back</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={[styles.modalConfirmBtn, bookingStatus === 'submitting' && { opacity: 0.7 }]}
+                                    onPress={handleBookingSubmit}
+                                    disabled={bookingStatus === 'submitting'}
+                                >
+                                    <Text style={styles.modalConfirmText}>
+                                        {bookingStatus === 'submitting' ? 'Booking...' : 'Confirm Visit'}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                         </>
                     )}
                 </View>
@@ -1197,60 +1244,111 @@ const styles = StyleSheet.create({
     // Modal
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(44, 24, 16, 0.7)',
+        backgroundColor: 'rgba(0,0,0,0.6)',
         justifyContent: 'flex-end',
     },
     modalContent: {
         backgroundColor: COLORS.white,
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
         padding: 25,
+        minHeight: 500,
     },
-    modalHeader: {
+    modalHeaderRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 10,
+        alignItems: 'flex-start',
+        marginBottom: 20,
     },
     modalTitle: {
         fontSize: 22,
-        fontFamily: FONTS.serif,
         fontWeight: 'bold',
-        color: COLORS.maroon,
+        color: '#1a1a1a',
+        fontFamily: FONTS.serif,
+        marginBottom: 5,
     },
     modalSubtitle: {
         fontSize: 14,
-        color: COLORS.textMain,
-        marginBottom: 20,
+        color: '#666',
+        maxWidth: 250,
+        lineHeight: 20,
     },
-    inputContainer: {
-        marginBottom: 15,
+    closeBtn: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: '#f5f5f5',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     inputLabel: {
-        fontSize: 13,
+        fontSize: 14,
         fontWeight: '600',
-        color: COLORS.textMain,
-        marginBottom: 6,
+        color: '#333',
+        marginBottom: 8,
+        marginTop: 15,
+    },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#eee',
+        borderRadius: 12,
+        backgroundColor: '#fafafa',
+        height: 50,
+        paddingHorizontal: 15,
+    },
+    inputIcon: {
+        marginRight: 10,
     },
     modalInput: {
-        borderWidth: 1,
-        borderColor: COLORS.gold,
-        borderRadius: 12,
-        paddingHorizontal: 15,
-        paddingVertical: 12,
-        fontSize: 14,
-        color: COLORS.textMain,
-        backgroundColor: '#FFF8E1',
+        flex: 1,
+        fontSize: 16,
+        color: '#333',
+        height: '100%',
     },
-    modalSubmitBtn: {
-        backgroundColor: COLORS.maroon,
-        paddingVertical: 15,
-        borderRadius: 12,
-        alignItems: 'center',
+    rowInputs: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 5,
+    },
+    disclaimerText: {
+        fontSize: 12,
+        color: '#999',
+        fontStyle: 'italic',
+        textAlign: 'center',
+        marginVertical: 20,
+    },
+    modalActions: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginTop: 10,
+        marginBottom: 10,
     },
-    modalSubmitText: {
-        color: COLORS.ivory,
+    modalBackBtn: {
+        flex: 1,
+        backgroundColor: '#f0f0f0',
+        height: 50,
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 10,
+    },
+    modalBackText: {
+        color: '#666',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    modalConfirmBtn: {
+        flex: 2,
+        backgroundColor: '#D32F2F', // Red color from reference
+        height: 50,
+        borderRadius: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalConfirmText: {
+        color: COLORS.white,
         fontSize: 16,
         fontWeight: 'bold',
     },

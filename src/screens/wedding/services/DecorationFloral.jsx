@@ -1,1089 +1,1177 @@
 import { Ionicons } from '@expo/vector-icons';
-import { ResizeMode, Video } from 'expo-av';
-import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Animated,
     Dimensions,
+    Image,
     ImageBackground,
+    Modal,
     ScrollView,
     StatusBar,
     StyleSheet,
     Text,
+    TextInput,
     TouchableOpacity,
     View
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import venue1 from '../../../../assets/images/venue1.jpg';
+import venue2 from '../../../../assets/images/venue2.jpg';
+import venue3 from '../../../../assets/images/venue3.jpg';
+import venue4 from '../../../../assets/images/venue4.jpg';
+import venue5 from '../../../../assets/images/venue5.jpg';
+import venue6 from '../../../../assets/images/venue6.jpg';
+import venue7 from '../../../../assets/images/venue7.jpg';
+import venue8 from '../../../../assets/images/venue8.jpg';
 
+// New Floral Images
+import dfMarigold from '../../../../assets/DF images/Traditional Marigold.jpg';
+import dfPastel from '../../../../assets/DF images/Floral Pastel.jpg';
+import dfMinimal from '../../../../assets/DF images/Modern Minimal.jpg';
+import dfRoyal from '../../../../assets/DF images/Royal Heritage.jpg';
 
+const { width, height } = Dimensions.get('window');
 
-const { width } = Dimensions.get('window');
-
-// --- 1. DESIGN SYSTEM COLORS ---
-const colors = {
-    saffron: '#FF9933',  // Primary CTAs, highlights
-    gold: '#D4AF37',     // Premium accents
-    maroon: '#800000',   // Section headers
-    kumkum: '#A70002',   // Kumkum Red
-    ivory: '#FFFFF0',    // Backgrounds
-    textMain: '#2C1810', // Readable text
+const COLORS = {
+    background: '#FDFCF0',
+    primary: '#800000',
+    secondary: '#D48806',
     white: '#FFFFFF',
-    overlay: 'rgba(0,0,0,0.3)',
-    cardShadow: '#2C1810'
 };
 
-// --- DATA MOCKS ---
-
-
-
-
-const VENDORS = [
+const FEATURED_VENDORS = [
     {
-        id: '1',
-        name: 'Rohan Mehta',
-        location: 'Mumbai, India',
+        id: 'v1',
+        name: 'Traditional Marigold',
         rating: 4.9,
-        price: '₹1,50,000',
-        image: { uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop' }
+        tag: 'Heritage Decor',
+        location: 'Worli, Mumbai',
+        city: 'Mumbai',
+        image: dfMarigold,
+        previews: [venue6, venue7, venue8],
+        featuredProject: { image: dfMarigold, title: 'Heritage Marigold Wedding 2024' }
     },
     {
-        id: '2',
-        name: 'Kavya Singh',
-        location: 'Delhi, India',
-        rating: 4.7,
-        price: '₹2,00,000',
-        image: require('../../../../assets/images/venue1.jpg')
+        id: 'v2',
+        name: 'Floral Pastel',
+        rating: 4.8,
+        tag: 'Boutique Floral',
+        location: 'Koregaon Park, Pune',
+        city: 'Pune',
+        image: dfPastel,
+        previews: [venue5, venue3, venue4],
+        featuredProject: { image: dfPastel, title: 'Enchanted Pastel Dream' }
     },
     {
-        id: '3',
-        name: 'Ishaan Malhotra',
-        location: 'Udaipur, India',
-        rating: 5.0,
-        price: '₹5,00,000',
-        image: require('../../../../assets/images/venue2.jpg')
-    },
-    {
-        id: '4',
-        name: 'Aarav joshi',
-        location: 'Bangalore, India',
+        id: 'v3',
+        name: 'Modern Minimal',
         rating: 4.6,
-        price: '₹1,20,000',
-        image: require('../../../../assets/images/venue3.jpg')
-    }
+        tag: 'Minimalist Decor',
+        location: 'Civil Lines, Jaipur',
+        city: 'Jaipur',
+        image: dfMinimal,
+        previews: [venue1, venue2, venue8],
+        featuredProject: { image: dfMinimal, title: 'Zen Garden Ceremony' }
+    },
+    {
+        id: 'v4',
+        name: 'Royal Heritage',
+        rating: 4.9,
+        tag: 'Grand Palatial',
+        location: 'Viman Nagar, Pune',
+        city: 'Pune',
+        image: dfRoyal,
+        previews: [venue2, venue6, venue7],
+        featuredProject: { image: dfRoyal, title: 'Kings Heritage Reception' }
+    },
 ];
 
-const VendorCard = ({ item }) => {
-    const scale = useRef(new Animated.Value(1)).current;
-    const imgScale = useRef(new Animated.Value(1)).current;
-    const tilt = useRef(new Animated.Value(0)).current;
+const POSTS_DATA = [
+    {
+        id: 'p1',
+        displayName: 'Traditional Marigold',
+        vendorLogo: dfMarigold,
+        images: [dfMarigold, venue1, venue6],
+        likes: 1200,
+        city: 'Mumbai',
+        description: 'Vibrant marigold setup for a traditional Indian wedding vibe.',
+        rating: 4.9,
+        eventType: 'Wedding Ceremony',
+        locationDetail: 'Palace Grounds',
+        imageHeight: 220
+    },
+    {
+        id: 'p2',
+        displayName: 'Floral Pastel',
+        vendorLogo: dfPastel,
+        images: [dfPastel, venue2, venue5],
+        likes: 850,
+        city: 'Pune',
+        description: 'Soft pastel hues with fresh roses and lilies.',
+        rating: 4.8,
+        eventType: 'Reception',
+        locationDetail: 'JW Marriott',
+        imageHeight: 180
+    },
+    {
+        id: 'p3',
+        displayName: 'Modern Minimal',
+        vendorLogo: dfMinimal,
+        images: [dfMinimal, venue3, venue2],
+        likes: 640,
+        city: 'Jaipur',
+        description: 'Clean lines and greenery for the modern couple.',
+        rating: 4.6,
+        eventType: 'Engagement',
+        locationDetail: 'Rambagh Palace',
+        imageHeight: 250
+    },
+    {
+        id: 'p4',
+        displayName: 'Royal Heritage',
+        vendorLogo: dfRoyal,
+        images: [dfRoyal, venue4, venue7],
+        likes: 2100,
+        city: 'Delhi',
+        description: 'Grandiose heritage decor with antique floral arrangements.',
+        rating: 4.9,
+        eventType: 'Reception',
+        locationDetail: 'The Leela',
+        imageHeight: 160
+    },
+];
+
+const POPULAR_SEARCHES = ['Floral Mandap', 'Entrance Decor', 'Thematic Stage', 'Marigold Themes'];
+const TRENDING_TAGS = ['Pastel', 'Royal', 'Eco-friendly', 'Minimalist'];
+
+// Post Component (Dynamic Widths for Editorial Layout)
+const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const scrollX = useRef(new Animated.Value(0)).current;
+    const scrollRef = useRef(null);
+    const scaleAnim = useRef(new Animated.Value(1)).current;
+
+    const cardWidth = isFullWidth ? (width - 20) : (width - 28) / 2;
+    const imageHeight = isFullWidth ? 200 : (post.imageHeight * 0.75);
 
     const handlePressIn = () => {
-        Animated.parallel([
-            Animated.spring(scale, {
-                toValue: 1.05,
-                friction: 4,
-                useNativeDriver: true,
-            }),
-            Animated.spring(imgScale, {
-                toValue: 1.15,
-                friction: 6,
-                useNativeDriver: true,
-            }),
-            Animated.spring(tilt, {
-                toValue: 1,
-                friction: 8,
-                useNativeDriver: true,
-            })
-        ]).start();
+        Animated.spring(scaleAnim, {
+            toValue: 0.98,
+            useNativeDriver: true,
+        }).start();
     };
 
     const handlePressOut = () => {
-        Animated.parallel([
-            Animated.spring(scale, {
-                toValue: 1,
-                friction: 4,
-                useNativeDriver: true,
-            }),
-            Animated.spring(imgScale, {
-                toValue: 1,
-                friction: 6,
-                useNativeDriver: true,
-            }),
-            Animated.spring(tilt, {
-                toValue: 0,
-                friction: 8,
-                useNativeDriver: true,
-            })
-        ]).start();
+        Animated.spring(scaleAnim, {
+            toValue: 1,
+            friction: 4,
+            tension: 40,
+            useNativeDriver: true,
+        }).start();
     };
 
-    const rotateX = tilt.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '-6deg'],
-    });
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const nextIndex = (activeIndex + 1) % post.images.length;
+            setActiveIndex(nextIndex);
+            scrollRef.current?.scrollTo({ x: nextIndex * cardWidth, animated: true });
+        }, 5000);
 
-    const shadowOpacity = scale.interpolate({
-        inputRange: [1, 1.05],
-        outputRange: [0.25, 0.45],
-    });
+        return () => clearInterval(interval);
+    }, [activeIndex, post.images.length, cardWidth]);
 
-    const shadowRadius = scale.interpolate({
-        inputRange: [1, 1.05],
-        outputRange: [18, 28],
-    });
-
-    const elevation = scale.interpolate({
-        inputRange: [1, 1.05],
-        outputRange: [20, 30],
-    });
+    const handleScroll = Animated.event(
+        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+        {
+            useNativeDriver: false, listener: (event) => {
+                const index = Math.round(event.nativeEvent.contentOffset.x / cardWidth);
+                if (index !== activeIndex) {
+                    setActiveIndex(index);
+                }
+            }
+        }
+    );
 
     return (
-        <TouchableOpacity
-            activeOpacity={1}
-            onPressIn={handlePressIn}
-            onPressOut={handlePressOut}
-            style={styles.showcaseCardWrapper}
-        >
-            <Animated.View style={[
-                styles.glassBorderContainer,
-                {
-                    shadowOpacity,
-                    shadowRadius,
-                    elevation,
-                    transform: [
-                        { perspective: 1000 },
-                        { scale },
-                        { rotateX }
-                    ]
-                }
-            ]}>
-                <BlurView intensity={45} tint="light" style={StyleSheet.absoluteFill} />
-
-                {/* Thin Light-Catching Sheen Edge for 3D Definition */}
-                <View style={styles.glassEdgeGlow} />
-
-                {/* Inner Glass Bevel/Sheen */}
-                <LinearGradient
-                    colors={['rgba(255, 255, 255, 0.5)', 'transparent', 'rgba(255, 255, 255, 0.2)']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={StyleSheet.absoluteFill}
-                    pointerEvents="none"
-                />
-
-                <Animated.View style={{ flex: 1, transform: [{ scale: imgScale }] }}>
-                    <ImageBackground
-                        source={item.image}
-                        style={styles.showcaseImage}
-                        imageStyle={{ borderRadius: 40 }}
+        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+            <TouchableOpacity
+                style={[styles.postCardCompact, { width: cardWidth, marginBottom: 20 }]}
+                onPress={() => onPostPress(post)}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                activeOpacity={1}
+            >
+                <View style={{ height: imageHeight, width: '100%', overflow: 'hidden' }}>
+                    <ScrollView
+                        ref={scrollRef}
+                        horizontal
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}
+                        onScroll={handleScroll}
+                        scrollEventThrottle={16}
+                        decelerationRate="fast"
+                        snapToInterval={cardWidth}
                     >
-                        {/* Glass Sheen Overlay for Depth */}
-                        <LinearGradient
-                            colors={['rgba(255, 255, 255, 0.3)', 'transparent', 'rgba(255, 255, 255, 0.1)']}
-                            start={{ x: -0.2, y: -0.2 }}
-                            end={{ x: 1.2, y: 1.2 }}
-                            style={StyleSheet.absoluteFill}
-                            pointerEvents="none"
-                        />
-                    </ImageBackground>
-                </Animated.View>
+                        {post.images.map((img, index) => (
+                            <Image key={index} source={img} style={{ width: cardWidth, height: imageHeight }} resizeMode="cover" />
+                        ))}
+                    </ScrollView>
 
-                {/* Static Overlay for Name - Positioned absolutely so it doesn't zoom with image */}
-                <View style={styles.nameOverlayContainer}>
-                    <BlurView intensity={50} tint="dark" style={styles.showcaseTitleOverlay}>
-                        <Text style={styles.showcaseTitle}>{item.name}</Text>
-                    </BlurView>
+                    <View style={styles.dotContainerCompact}>
+                        {post.images.map((_, index) => (
+                            <View key={index} style={[styles.dotSmall, activeIndex === index && styles.dotActiveSmall]} />
+                        ))}
+                    </View>
+
+                    <TouchableOpacity style={styles.likeBtnSmall}>
+                        <Ionicons name="heart-outline" size={14} color="#FFF" />
+                    </TouchableOpacity>
                 </View>
-            </Animated.View>
-        </TouchableOpacity>
+
+                <View style={[styles.infoPanelCompact, isFullWidth && { paddingHorizontal: 15, paddingVertical: 18 }]}>
+                    <View style={styles.panelHeaderCompact}>
+                        <TouchableOpacity onPress={() => onVendorPress && onVendorPress(post)}>
+                            <Text style={[styles.vendorNameCompact, isFullWidth && { fontSize: 16 }]} numberOfLines={1}>{post.displayName}</Text>
+                        </TouchableOpacity>
+                        <View style={styles.ratingCompact}>
+                            <Ionicons name="star" size={10} color={COLORS.secondary} />
+                            <Text style={styles.ratingTextCompact}>{post.rating}</Text>
+                        </View>
+                    </View>
+
+                    {isFullWidth && <Text style={styles.postDescriptionFull} numberOfLines={2}>{post.description}</Text>}
+
+                    <Text style={styles.eventTypeCompact}>{post.eventType} • {post.city}</Text>
+                    <Text style={styles.locationCompact} numberOfLines={1}>{post.locationDetail}</Text>
+
+                    <View style={styles.metaRowCompact}>
+                        <Text style={styles.metaLikesCompact}>{post.likes} likes</Text>
+                        <Ionicons name="bookmark-outline" size={13} color="#AAA" />
+                    </View>
+                </View>
+            </TouchableOpacity>
+        </Animated.View>
+    );
+};
+
+const PremiumVendorCard = ({ vendor, onPress }) => {
+    const scaleAnim = useRef(new Animated.Value(1)).current;
+
+    const handlePressIn = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 0.98,
+            useNativeDriver: true,
+        }).start();
+    };
+
+    const handlePressOut = () => {
+        Animated.spring(scaleAnim, {
+            toValue: 1,
+            friction: 4,
+            tension: 40,
+            useNativeDriver: true,
+        }).start();
+    };
+
+    return (
+        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+            <TouchableOpacity
+                style={styles.premiumVendorCard}
+                activeOpacity={1}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+                onPress={() => onPress(vendor)}
+            >
+                <ImageBackground source={vendor.image} style={styles.vendorMainImg}>
+                    <View style={styles.tagWrapper}>
+                        <View style={styles.premiumTag}>
+                            <Text style={styles.premiumTagText}>{vendor.tag}</Text>
+                        </View>
+                    </View>
+                    <LinearGradient
+                        colors={['rgba(255,255,255,0.08)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.04)']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.lustreOverlay}
+                    />
+                    <TouchableOpacity style={styles.premiumLikeBtn}>
+                        <Ionicons name="heart-outline" size={20} color="#FFF" />
+                    </TouchableOpacity>
+                </ImageBackground>
+                <View style={styles.vendorDetails}>
+                    <View style={styles.detailsTop}>
+                        <Text style={styles.vendorNamePremium}>{vendor.name}</Text>
+                        <View style={styles.ratingBadgePremium}>
+                            <Ionicons name="star" size={12} color="#FFF" />
+                            <Text style={styles.ratingTextPremium}>{vendor.rating}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.locationContainerPremium}>
+                        <Ionicons name="location-outline" size={14} color="#666" />
+                        <Text style={styles.locationTextPremium}>{vendor.location}</Text>
+                    </View>
+                    <View style={styles.previewsRow}>
+                        {vendor.previews.map((img, idx) => (
+                            <Image key={idx} source={img} style={styles.miniThumb} />
+                        ))}
+                        <TouchableOpacity style={styles.followBtnGold}>
+                            <Text style={styles.followTextGold}>Follow</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        </Animated.View>
     );
 };
 
 const DecorationFloralScreen = ({ navigation }) => {
-    const scrollViewRef = useRef(null);
+    const scrollRef = useRef(null);
+    const featuredScrollRef = useRef(null);
 
-    const scrollToVendors = () => {
-        if (scrollViewRef.current) {
-            scrollViewRef.current.scrollTo({ y: 400, animated: true });
-        }
+    const [searchQuery, setSearchQuery] = useState('');
+    const [isSearchFocused, setSearchFocused] = useState(false);
+    const [scrollY] = useState(new Animated.Value(0));
+    const [selectedVendor, setSelectedVendor] = useState(FEATURED_VENDORS[0]);
+    const [isVendorProfileVisible, setIsVendorProfileVisible] = useState(false);
+    const [activeTab, setActiveTab] = useState('About');
+    const [activeMediaTab, setActiveMediaTab] = useState('Photos');
+
+
+    const [selectedCity, setSelectedCity] = useState('Mumbai');
+    const [featuredIndex, setFeaturedIndex] = useState(0);
+
+    const openVendorProfile = (vendor) => {
+        setSelectedVendor(vendor);
+        setIsVendorProfileVisible(true);
+    };
+
+    const closeVendorProfile = () => {
+        setIsVendorProfileVisible(false);
+    };
+    const [activeSection, setActiveSection] = useState('Projects');
+
+    // Animation Values for Sticky Tabs
+    const tabUnderlineTranslateX = useRef(new Animated.Value(0)).current;
+    const profileScrollY = useRef(new Animated.Value(0)).current;
+
+    // Refs for profile section scrolling
+    const profileScrollRef = useRef(null);
+    const portfolioRef = useRef(null);
+    const pricingRef = useRef(null);
+    const aboutRef = useRef(null);
+    const reviewsRef = useRef(null);
+
+    const handleTabPress = (section, ref, index) => {
+        setActiveSection(section);
+        const tabWidth = 70;
+        const gap = 20;
+        Animated.spring(tabUnderlineTranslateX, {
+            toValue: index * (tabWidth + gap),
+            useNativeDriver: true,
+            bounciness: 0
+        }).start();
+
+        scrollToProfileSection(ref);
+    };
+
+    const scrollToProfileSection = (ref) => {
+        ref.current?.measureLayout(
+            profileScrollRef.current,
+            (x, y) => {
+                profileScrollRef.current?.scrollTo({ y: y - 80, animated: true });
+            },
+            () => { }
+        );
     };
 
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="dark-content" backgroundColor={colors.ivory} />
+    // Auto-scroll logic for Featured Collections
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (!isSearchFocused) {
+                const nextIndex = (featuredIndex + 1) % FEATURED_VENDORS.length;
+                setFeaturedIndex(nextIndex);
+                featuredScrollRef.current?.scrollTo({
+                    x: nextIndex * (width * 0.82 + 24),
+                    animated: true,
+                });
+            }
+        }, 4000);
 
-            <ScrollView
-                ref={scrollViewRef}
-                contentContainerStyle={{ paddingBottom: 100 }}
-                showsVerticalScrollIndicator={false}
-            >
+        return () => clearInterval(interval);
+    }, [featuredIndex, isSearchFocused]);
 
-                {/* 1. HERO BANNER (VIDEO) */}
-                <View style={styles.heroBanner}>
-                    <Video
-                        source={require('../../../../assets/videos/decoration_hero.mp4')}
-                        style={StyleSheet.absoluteFill}
-                        resizeMode={ResizeMode.COVER}
-                        shouldPlay
-                        isLooping
-                        isMuted
-                    />
-                    <LinearGradient colors={['rgba(0,0,0,0.3)', 'rgba(0,0,0,0.8)']} style={styles.heroOverlay}>
-                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                            <Ionicons name="arrow-back" size={24} color={colors.ivory} />
+    const getFilteredVendors = () => {
+        const query = searchQuery.toLowerCase();
+        return FEATURED_VENDORS.filter(v => {
+            return v.city.toLowerCase().includes(query) ||
+                v.name.toLowerCase().includes(query) ||
+                v.location.toLowerCase().includes(query);
+        });
+    };
+
+    const getFilteredPosts = () => {
+        const query = searchQuery.toLowerCase();
+        return POSTS_DATA.filter(p => {
+            return p.city.toLowerCase().includes(query) ||
+                p.displayName.toLowerCase().includes(query) ||
+                p.description.toLowerCase().includes(query) ||
+                p.eventType.toLowerCase().includes(query);
+        });
+    };
+
+
+
+    const renderActionHero = () => (
+        <View style={styles.heroContainer}>
+            <ImageBackground source={venue7} style={styles.heroImage} imageStyle={{ borderBottomLeftRadius: 36, borderBottomRightRadius: 36 }}>
+                <LinearGradient colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)']} style={styles.heroGradient}>
+                    <View style={styles.topBar}>
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                            <Ionicons name="arrow-back" size={24} color="#FFF" />
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.utilityBtn}><Ionicons name="notifications-outline" size={20} color="#FFF" /></TouchableOpacity>
+                    </View>
+                    <View style={{ marginBottom: 60, paddingHorizontal: 25 }}>
+                        <Text style={styles.heroHeadline}>Finding Your{"\n"}Perfect Decor 🌸</Text>
+                        <Text style={styles.heroSubhead}>Explore exclusive high-end decoration themes</Text>
+                    </View>
+                </LinearGradient>
+            </ImageBackground>
 
-                        <View style={styles.heroContent}>
-                            <Text style={styles.heroTitle}>Because Some Moments Deserve to be Beautiful</Text>
+            <View style={[styles.premiumSearchContainer, isSearchFocused && styles.premiumSearchActive]}>
+                <TouchableOpacity style={styles.locationSelector}>
+                    <Text style={styles.locationTextPin}>📍 {selectedCity}</Text>
+                    <Ionicons name="chevron-down" size={14} color={COLORS.secondary} />
+                </TouchableOpacity>
+                <View style={styles.searchDivider} />
+                <View style={styles.searchInputWrapper}>
+                    <TextInput
+                        style={styles.premiumInput}
+                        placeholder="Search decor, areas…"
+                        placeholderTextColor="#999"
+                        onFocus={() => setSearchFocused(true)}
+                        onChangeText={setSearchQuery}
+                        value={searchQuery}
+                    />
+                </View>
+            </View>
 
-                            <Text style={styles.heroSubtitle}>
-                                Floral • Thematic • Luxury • Destination
-                            </Text>
+            <View style={styles.trustIndicatorRow}>
+                <View style={styles.trustBadge}><Ionicons name="shield-checkmark" size={14} color={COLORS.primary} /><Text style={styles.trustBadgeText}>Verified</Text></View>
+                <View style={styles.trustBadge}><Ionicons name="sparkles" size={14} color={COLORS.primary} /><Text style={styles.trustBadgeText}>Premium Quality</Text></View>
+            </View>
+        </View>
+    );
 
-                            <TouchableOpacity style={styles.heroCTA} onPress={scrollToVendors}>
-                                <Ionicons name="heart" size={20} color={colors.white} style={{ marginRight: 8 }} />
-                                <Text style={styles.heroCTAText}>Plan My Decor</Text>
+    const renderSearchOverlay = () => (
+        <Modal visible={isSearchFocused} animationType="fade" transparent onRequestClose={() => setSearchFocused(false)}>
+            <View style={styles.overlayContainer}>
+                <View style={styles.overlayHeader}>
+                    <View style={styles.overlaySearchBox}>
+                        <TextInput
+                            style={styles.overlayInput}
+                            autoFocus
+                            placeholder="Search decor, areas…"
+                            onChangeText={setSearchQuery}
+                            value={searchQuery}
+                        />
+                        <TouchableOpacity onPress={() => { setSearchFocused(false); }}>
+                            <Text style={styles.cancelText}>Done</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <ScrollView style={styles.overlayContent}>
+                    <Text style={styles.overlaySectionTitle}>Recent Discoveries</Text>
+                    <View style={styles.recentList}>
+                        {['Mumbai', 'Pune', 'Jaipur'].map((item, idx) => (
+                            <TouchableOpacity key={idx} style={styles.recentItem} onPress={() => { setSearchQuery(item); setSearchFocused(false); setSelectedCity(item); }}>
+                                <Ionicons name="search-outline" size={18} color="#999" />
+                                <Text style={styles.recentText}>{item}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+
+                    <Text style={styles.overlaySectionTitle}>Popular Collections</Text>
+                    <View style={styles.popularRow}>
+                        {POPULAR_SEARCHES.map((item, idx) => (
+                            <TouchableOpacity key={idx} style={styles.popularTag} onPress={() => { setSearchQuery(item); setSearchFocused(false); }}>
+                                <Text style={styles.popularTagText}>{item}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </ScrollView>
+            </View>
+        </Modal>
+    );
+
+    const renderLargePremiumVendorCards = () => {
+        const filteredVendors = getFilteredVendors();
+        return (
+            <View style={styles.sectionContainer}>
+                <View style={styles.sectionHeader}>
+                    <Text style={styles.sectionTitle}>Our Vendors</Text>
+                    <TouchableOpacity><Text style={styles.seeAllText}>Explore All</Text></TouchableOpacity>
+                </View>
+                {filteredVendors.length > 0 ? (
+                    <ScrollView
+                        ref={featuredScrollRef}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 20 }}
+                        snapToInterval={width * 0.82 + 24}
+                        decelerationRate="fast"
+                    >
+                        {filteredVendors.map((vendor) => (
+                            <PremiumVendorCard
+                                key={vendor.id}
+                                vendor={vendor}
+                                onPress={openVendorProfile}
+                            />
+                        ))}
+                    </ScrollView>
+                ) : (
+                    <View style={styles.noResults}><Text style={styles.noResultsText}>No vendors found</Text></View>
+                )}
+            </View>
+        );
+    };
+
+    const renderVendorPostsFeed = () => {
+        const filteredPosts = getFilteredPosts();
+
+        const renderRhythmicPattern = () => {
+            const pattern = [];
+            let i = 0;
+            while (i < filteredPosts.length) {
+                pattern.push(
+                    <View key={`full-${filteredPosts[i].id}`} style={{ paddingHorizontal: 10 }}>
+                        <PostCard
+                            post={filteredPosts[i]}
+                            onPostPress={(p) => {
+                                const vendor = FEATURED_VENDORS.find(v => v.name === p.displayName);
+                                if (vendor) openVendorProfile(vendor);
+                            }}
+                            onVendorPress={(p) => {
+                                const vendor = FEATURED_VENDORS.find(v => v.name === p.displayName);
+                                if (vendor) openVendorProfile(vendor);
+                            }}
+                            isFullWidth={true}
+                        />
+                    </View>
+                );
+                i++;
+                if (i >= filteredPosts.length) break;
+
+                const pair = [];
+                if (i < filteredPosts.length) {
+                    pair.push(
+                        <PostCard
+                            key={`half-${filteredPosts[i].id}`}
+                            post={filteredPosts[i]}
+                            onPostPress={(p) => {
+                                const vendor = FEATURED_VENDORS.find(v => v.name === p.displayName);
+                                if (vendor) openVendorProfile(vendor);
+                            }}
+                            onVendorPress={(p) => {
+                                const vendor = FEATURED_VENDORS.find(v => v.name === p.displayName);
+                                if (vendor) openVendorProfile(vendor);
+                            }}
+                            isFullWidth={false}
+                        />
+                    );
+                    i++;
+                }
+                if (i < filteredPosts.length) {
+                    pair.push(
+                        <PostCard
+                            key={`half-${filteredPosts[i].id}`}
+                            post={filteredPosts[i]}
+                            onPostPress={(p) => {
+                                const vendor = FEATURED_VENDORS.find(v => v.name === p.displayName);
+                                if (vendor) openVendorProfile(vendor);
+                            }}
+                            onVendorPress={(p) => {
+                                const vendor = FEATURED_VENDORS.find(v => v.name === p.displayName);
+                                if (vendor) openVendorProfile(vendor);
+                            }}
+                            isFullWidth={false}
+                        />
+                    );
+                    i++;
+                }
+
+                pattern.push(
+                    <View key={`pair-${i}`} style={styles.editorialRow}>
+                        {pair}
+                    </View>
+                );
+            }
+            return pattern;
+        };
+
+        return (
+            <View style={styles.sectionContainer}>
+                <View style={[styles.sectionHeader, { marginBottom: 25, paddingHorizontal: 10 }]}>
+                    <Text style={styles.sectionTitle}>Recent Posts</Text>
+
+                </View>
+                {renderRhythmicPattern()}
+            </View>
+        );
+    };
+
+    const renderVendorProfileModal = () => {
+        if (!selectedVendor) return null;
+
+        return (
+            <Modal
+                visible={isVendorProfileVisible}
+                animationType="slide"
+                onRequestClose={() => setIsVendorProfileVisible(false)}
+            >
+                <View style={styles.profileContainer}>
+                    <Animated.ScrollView
+                        ref={profileScrollRef}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ paddingBottom: 120 }}
+                        stickyHeaderIndices={[2]}
+                        onScroll={Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: profileScrollY } } }],
+                            { useNativeDriver: false }
+                        )}
+                        scrollEventThrottle={16}
+                    >
+                        <View style={styles.profileHeader}>
+                            <Image source={selectedVendor.image || venue1} style={styles.coverImage} />
+                            <LinearGradient
+                                colors={['rgba(0,0,0,0.5)', 'transparent']}
+                                style={styles.headerOverlay}
+                            />
+                            <TouchableOpacity
+                                style={styles.closeBtnProfile}
+                                onPress={() => setIsVendorProfileVisible(false)}
+                            >
+                                <Ionicons name="chevron-down" size={28} color="#FFF" />
                             </TouchableOpacity>
                         </View>
 
-                        {/* Floating Stats Bar */}
-                        <View style={styles.statsBar}>
-                            <View style={styles.statItem}>
-                                <Text style={styles.statNumber}>500+</Text>
-                                <Text style={styles.statLabel}>Verified Decorators</Text>
+                        <View style={styles.profileIdentityOverlay}>
+                            <View style={styles.avatarContainer}>
+                                <Image source={selectedVendor.image || venue1} style={styles.avatarImage} />
                             </View>
-                            <View style={styles.statDivider} />
-                            <View style={styles.statItem}>
-                                <Text style={styles.statNumber}>4.8 <Ionicons name="star" size={14} color={colors.gold} /></Text>
-                                <Text style={styles.statLabel}>Average Rating</Text>
-                            </View>
-                            <View style={styles.statDivider} />
-                            <View style={styles.statItem}>
-                                <Text style={styles.statNumber}>100%</Text>
-                                <Text style={styles.statLabel}>Quality Guaranteed</Text>
+                            <View style={styles.nameSection}>
+                                <Text style={styles.profileVendorName}>{selectedVendor.name}</Text>
+                                <Text style={styles.profileBusinessName}>Decoration & Theme Specialist</Text>
+                                <View style={styles.profileLocationRow}>
+                                    <Ionicons name="location" size={16} color={COLORS.primary} />
+                                    <Text style={styles.profileLocationText}>{selectedVendor.location}</Text>
+                                </View>
                             </View>
                         </View>
-                    </LinearGradient>
+
+                        <View style={styles.stickyNavWrapper}>
+                            <View style={styles.shortcutNavBar}>
+                                <TouchableOpacity onPress={() => handleTabPress('Projects', portfolioRef, 0)}>
+                                    <Text style={[styles.shortcutNavText, activeSection === 'Projects' && styles.shortcutNavTextActive]}>Projects</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleTabPress('Pricing', pricingRef, 1)}>
+                                    <Text style={[styles.shortcutNavText, activeSection === 'Pricing' && styles.shortcutNavTextActive]}>Pricing</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleTabPress('About', aboutRef, 2)}>
+                                    <Text style={[styles.shortcutNavText, activeSection === 'About' && styles.shortcutNavTextActive]}>About</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleTabPress('Reviews', reviewsRef, 3)}>
+                                    <Text style={[styles.shortcutNavText, activeSection === 'Reviews' && styles.shortcutNavTextActive]}>Reviews</Text>
+                                </TouchableOpacity>
+
+                                <Animated.View
+                                    style={[
+                                        styles.tabUnderline,
+                                        {
+                                            width: 70,
+                                            transform: [{ translateX: tabUnderlineTranslateX }]
+                                        }
+                                    ]}
+                                />
+                            </View>
+                        </View>
+
+                        <View style={styles.profileInfoContent}>
+                            <View ref={portfolioRef} style={styles.profileMediaSection}>
+                                <View style={styles.mediaHeaderRow}>
+                                    <Text style={styles.profileSectionLabel}>Portfolio</Text>
+                                    <View style={styles.mediaMainTabs}>
+                                        {['Photos', 'Videos'].map(mTab => (
+                                            <TouchableOpacity
+                                                key={mTab}
+                                                style={[styles.mediaMainTab, activeMediaTab === mTab && styles.mediaMainTabActive]}
+                                                onPress={() => setActiveMediaTab(mTab)}
+                                            >
+                                                <Text style={[styles.mTabText, activeMediaTab === mTab && styles.mTabTextActive]}>{mTab}</Text>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </View>
+                                </View>
+
+                                {activeMediaTab === 'Photos' ? (
+                                    <View>
+                                        <TouchableOpacity style={styles.featuredProjectCard}>
+                                            <Image source={selectedVendor.featuredProject?.image || venue5} style={styles.featuredProjectImage} />
+                                            <LinearGradient
+                                                colors={['transparent', 'rgba(0,0,0,0.85)']}
+                                                style={styles.featuredProjectOverlay}
+                                            />
+                                            <View style={styles.featuredProjectOverlay}>
+                                                <View style={styles.featuredBadge}>
+                                                    <Text style={styles.featuredBadgeText}>FEATURED</Text>
+                                                </View>
+                                                <Text style={styles.featuredProjectTitle}>{selectedVendor.featuredProject?.title || 'Bespoke Decoration Project'}</Text>
+                                                <View style={styles.featuredMetaRow}>
+                                                    <Text style={styles.featuredMetaText}>12 Photos • Premium Setup</Text>
+                                                    <TouchableOpacity style={styles.viewProjectBtn}>
+                                                        <Text style={styles.viewProjectBtnText}>View Project</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+
+                                        <View style={styles.pinterestGrid}>
+                                            <View style={styles.gridColumn}>
+                                                {[
+                                                    { title: 'Elegant Floral Mandap', type: 'Mandap', likes: 124, images: [venue7, venue2, venue8], height: 260 },
+                                                    { title: 'Modern Entrance Decor', type: 'Entrance', likes: 89, images: [venue3, venue5, venue6], height: 200 }
+                                                ].map((proj, idx) => (
+                                                    <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
+                                                        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
+                                                            {proj.images.map((img, i) => (
+                                                                <Image key={i} source={img} style={[styles.projectImage, { width: (width - 63) / 2 }]} />
+                                                            ))}
+                                                        </ScrollView>
+                                                        <View style={styles.typeBadge}><Text style={styles.typeBadgeText}>{proj.type}</Text></View>
+                                                        <View style={styles.projectCardFooter}>
+                                                            <View style={styles.likesRow}>
+                                                                <Ionicons name="heart" size={14} color="#FF4b4b" />
+                                                                <Text style={styles.likesText}>{proj.likes}</Text>
+                                                            </View>
+                                                            <TouchableOpacity style={styles.miniViewProject}><Ionicons name="eye" size={16} color={COLORS.secondary} /></TouchableOpacity>
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </View>
+                                            <View style={styles.gridColumn}>
+                                                {[
+                                                    { title: 'Royal Stage Gala', type: 'Stage', likes: 210, images: [venue5, venue6, venue1], height: 210 },
+                                                    { title: 'Pastel Theme Mehendi', type: 'Mehendi', likes: 156, images: [venue1, venue4, venue7], height: 250 }
+                                                ].map((proj, idx) => (
+                                                    <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
+                                                        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
+                                                            {proj.images.map((img, i) => (
+                                                                <Image key={i} source={img} style={[styles.projectImage, { width: (width - 63) / 2 }]} />
+                                                            ))}
+                                                        </ScrollView>
+                                                        <View style={styles.typeBadge}><Text style={styles.typeBadgeText}>{proj.type}</Text></View>
+                                                        <View style={styles.projectCardFooter}>
+                                                            <View style={styles.likesRow}>
+                                                                <Ionicons name="heart" size={14} color="#FF4b4b" />
+                                                                <Text style={styles.likesText}>{proj.likes}</Text>
+                                                            </View>
+                                                            <TouchableOpacity style={styles.miniViewProject}><Ionicons name="eye" size={16} color={COLORS.secondary} /></TouchableOpacity>
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </View>
+                                        </View>
+                                    </View>
+                                ) : (
+                                    <View style={styles.videoPlaceholder}>
+                                        <Ionicons name="play-circle-outline" size={48} color={COLORS.secondary} />
+                                        <Text style={styles.videoPlaceholderText}>Video walkthroughs coming soon</Text>
+                                    </View>
+                                )}
+                            </View>
+
+                            <View ref={pricingRef} style={styles.profilePricingSection}>
+                                <View style={styles.pricingSectionTitleRow}>
+                                    <Text style={styles.profileSectionLabel}>Decoration Pricing</Text>
+                                    <View style={styles.verifiedPriceBadge}>
+                                        <Ionicons name="shield-checkmark" size={14} color="#D48806" />
+                                        <Text style={styles.verifiedPriceText}>Best Price Guaranteed</Text>
+                                    </View>
+                                </View>
+
+                                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pricingCardsScroll}>
+                                    {[
+                                        { title: 'Floral Royal', price: '₹1,50,000', per: 'per event', tag: 'Most Popular', color: COLORS.primary },
+                                        { title: 'Pastel Bliss', price: '₹75,000', per: 'per event', tag: 'Limited Offer', color: '#D48806' },
+                                        { title: 'Thematic Setup', price: '₹50,000', per: 'starting', tag: 'Customizable', color: '#2C3E50' }
+                                    ].map((pkg, idx) => (
+                                        <View key={idx} style={styles.eventPriceCard}>
+                                            <View style={[styles.eventCardTopTag, { backgroundColor: pkg.color }]}>
+                                                <Text style={styles.eventCardTagText}>{pkg.tag}</Text>
+                                            </View>
+
+                                            <View style={styles.eventCardIdentity}>
+                                                <Text style={styles.eventPackageTitle}>{pkg.title}</Text>
+                                                <View style={styles.eventPriceTag}>
+                                                    <Text style={styles.eventMainPrice}>{pkg.price}</Text>
+                                                    <Text style={styles.eventPricePer}>{pkg.per}</Text>
+                                                </View>
+                                            </View>
+
+                                            <View style={styles.pricingDivider} />
+
+                                            <View style={styles.pricingInclusions}>
+                                                {[
+                                                    { icon: 'flower', label: 'Premium Fresh Flowers' },
+                                                    { icon: 'bulb', label: 'Advanced Lighting' },
+                                                    { icon: 'color-palette', label: 'Theme Consultation' },
+                                                    { icon: 'construct', label: 'On-site Execution' }
+                                                ].map((inc, i) => (
+                                                    <View key={i} style={styles.inclusionLine}>
+                                                        <Ionicons name={inc.icon} size={16} color="#999" />
+                                                        <Text style={styles.inclusionText}>{inc.label}</Text>
+                                                    </View>
+                                                ))}
+                                            </View>
+
+                                            <TouchableOpacity style={[styles.bookNowMinBtn, { borderColor: pkg.color }]}>
+                                                <Text style={[styles.bookNowMinText, { color: pkg.color }]}>Customize Plan</Text>
+                                            </TouchableOpacity>
+
+                                            <View style={styles.ticketPunchLeft} />
+                                            <View style={styles.ticketPunchRight} />
+                                        </View>
+                                    ))}
+                                </ScrollView>
+                            </View>
+
+                            <View ref={aboutRef} style={[styles.profileAboutContainer, { marginTop: 40 }]}>
+                                <Text style={styles.profileSectionLabel}>About Us</Text>
+
+                                <View style={styles.storyQuoteSection}>
+                                    <View style={styles.quoteBar} />
+                                    <Text style={styles.storyQuoteText}>
+                                        "Transforming spaces into floral dreams for over a decade."
+                                    </Text>
+                                </View>
+
+                                <Text style={styles.profileAboutText}>
+                                    With years of experience in high-end wedding decoration, {selectedVendor?.name} is dedicated to creating breathtaking environments. Our floral designers and thematic experts work tirelessly to ensure every detail matches your vision.
+                                </Text>
+                            </View>
+
+                            <View ref={reviewsRef} style={styles.profileReviewsSection}>
+                                <Text style={styles.profileSectionLabel}>Ratings & Reviews</Text>
+
+                                <View style={styles.ratingOverview}>
+                                    <View style={styles.bigRatingBadge}>
+                                        <Text style={styles.bigRatingScore}>5.0</Text>
+                                        <Text style={styles.bigRatingStatus}>Excellent</Text>
+                                        <View style={styles.bigRatingStars}>
+                                            {[1, 2, 3, 4, 5].map(i => <Ionicons key={i} name="star" size={14} color="#FFD700" />)}
+                                        </View>
+                                        <Text style={styles.bigRatingSub}>Verfied Reviews</Text>
+                                    </View>
+
+                                    <View style={styles.distributionSide}>
+                                        {[
+                                            { star: 5, progress: 0.95 },
+                                            { star: 4, progress: 0.05 }
+                                        ].map(item => (
+                                            <View key={item.star} style={styles.distRowMini}>
+                                                <Text style={styles.distStarNumMini}>{item.star}</Text>
+                                                <View style={styles.progressBarMiniBg}>
+                                                    <View style={[styles.progressBarMiniFill, { width: `${item.progress * 100}%` }]} />
+                                                </View>
+                                            </View>
+                                        ))}
+                                    </View>
+                                </View>
+
+                                <TouchableOpacity style={styles.profileContactBtn}>
+                                    <Text style={styles.profileContactBtnText}>Enquire Now</Text>
+                                    <Ionicons name="chatbubble-ellipses" size={20} color="#FFF" />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Animated.ScrollView>
                 </View>
+            </Modal>
+        );
+    };
 
+    return (
+        <View style={styles.container}>
+            <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
+            <ScrollView
+                ref={scrollRef}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 60 }}
+                onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
+                scrollEventThrottle={16}
+            >
+                {renderActionHero()}
+                {renderLargePremiumVendorCards()}
+                {renderVendorPostsFeed()}
 
-                {/* 2. VENDORS */}
-                <View style={styles.sectionContainer}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, alignItems: 'center', marginBottom: 15 }}>
-                        <Text style={styles.sectionHeader}>Vendors</Text>
-                        <Text style={styles.seeAll}>See All</Text>
-                    </View>
-                    {VENDORS.map((item) => (
-                        <View key={item.id} style={{ paddingHorizontal: 20, marginBottom: 20 }}>
-                            <VendorCard item={item} />
-                        </View>
-                    ))}
+                <View style={styles.footerContainer}>
+                    <TouchableOpacity style={styles.stickyButton}>
+                        <Text style={styles.stickyButtonText}>Shortlist Decor</Text>
+                        <Ionicons name="arrow-forward" size={18} color="#FFF" />
+                    </TouchableOpacity>
                 </View>
-
-                {/* 6. WHY BOOK WITH US */}
-                <View style={[styles.sectionContainer, { paddingHorizontal: 20, marginBottom: 80 }]}>
-                    <Text style={styles.sectionHeader}>Why Book With Us?</Text>
-                    <View style={styles.whyUsContainer}>
-                        <View style={[styles.whyUsItem, { backgroundColor: '#F0F8FF' }]}>
-                            <View style={[styles.whyUsIconBox, { backgroundColor: '#FFFFFF' }]}>
-                                <Ionicons name="ribbon-outline" size={26} color="#1565C0" />
-                            </View>
-                            <Text style={styles.whyUsTitle}>Trusted Vendors</Text>
-                            <Text style={styles.whyUsDesc}>Verified professionals for your big day.</Text>
-                        </View>
-                        <View style={[styles.whyUsItem, { backgroundColor: '#F1F8E9' }]}>
-                            <View style={[styles.whyUsIconBox, { backgroundColor: '#FFFFFF' }]}>
-                                <Ionicons name="wallet-outline" size={26} color="#2E7D32" />
-                            </View>
-                            <Text style={styles.whyUsTitle}>Best Prices</Text>
-                            <Text style={styles.whyUsDesc}>Transparent pricing with no hidden costs.</Text>
-                        </View>
-                        <View style={[styles.whyUsItem, { backgroundColor: '#FFF8E1' }]}>
-                            <View style={[styles.whyUsIconBox, { backgroundColor: '#FFFFFF' }]}>
-                                <Ionicons name="chatbubbles-outline" size={26} color="#EF6C00" />
-                            </View>
-                            <Text style={styles.whyUsTitle}>Verified Reviews</Text>
-                            <Text style={styles.whyUsDesc}>Real feedback from real couples.</Text>
-                        </View>
-                    </View>
-                </View>
-
-                {/* 10. REVIEW CHEKLIST */}
-
-
             </ScrollView>
 
-
-        </SafeAreaView>
+            {renderSearchOverlay()}
+            {renderVendorProfileModal()}
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.ivory,
-    },
-    // Hero
-    heroBanner: {
-        width: width,
-        height: 480, // Increased height for new layout
-        justifyContent: 'flex-end',
-        marginBottom: 50, // Space for the floating stats bar overlap if needed, or visual breathing room
-    },
-    heroOverlay: {
-        flex: 1,
-        justifyContent: 'flex-end', // Align content to bottom
-        paddingHorizontal: 20,
-        paddingBottom: 40, // Adjusted padding for lower placement
-    },
-    backBtn: {
+    container: { flex: 1, backgroundColor: COLORS.background },
+    backButtonDefault: {
         position: 'absolute',
         top: 50,
         left: 20,
-        padding: 10,
-        backgroundColor: 'rgba(0,0,0,0.4)', // Darker background for visibility
-        borderRadius: 20,
         zIndex: 10,
-    },
-    heroContent: {
-        alignItems: 'flex-start', // Left aligned titles
-        paddingBottom: 20,
-    },
-    heroTitle: {
-        color: colors.white,
-        fontSize: 36,
-        fontWeight: '900', // Extra bold
-        textAlign: 'left', // Left aligned
-        lineHeight: 44,
-        marginBottom: 8,
-    },
-    heroSubtitle: {
-        color: '#FFEA00', // Bright Yellow
-        fontSize: 16,
-        fontWeight: '700',
-        textAlign: 'left',
-        marginBottom: 30,
-    },
-    heroCTA: {
-        flexDirection: 'row',
-        backgroundColor: '#D32F2F', // High visibility red
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-        borderRadius: 30,
-        alignItems: 'center',
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: 'rgba(0,0,0,0.3)',
         justifyContent: 'center',
-        width: '100%', // Full width as per image
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
+        alignItems: 'center'
     },
-    heroCTAText: {
-        color: colors.white,
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    // Stats Bar
-    statsBar: {
-        position: 'absolute',
-        bottom: -30, // Floating effect partial overlap
-        left: 20,
-        right: 20,
-        backgroundColor: colors.white,
-        borderRadius: 15,
-        flexDirection: 'row',
-        paddingVertical: 15,
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        elevation: 8, // High elevation for floating look
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4.65,
-        zIndex: 20,
-    },
-    statItem: {
-        alignItems: 'center',
-        flex: 1,
-    },
-    statNumber: {
-        color: '#D32F2F', // Red to match CTA
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 2,
-    },
-    statLabel: {
-        color: '#555',
-        fontSize: 10,
-        textAlign: 'center',
-    },
-    statDivider: {
-        width: 1,
-        height: '70%',
-        backgroundColor: '#eee',
-    },
+    contentBody: { backgroundColor: COLORS.background, borderTopLeftRadius: 40, borderTopRightRadius: 40, marginTop: -40, paddingBottom: 50 },
+    heroContainer: { marginBottom: 50 },
+    heroImage: { width: width, height: 460, justifyContent: 'flex-end' },
+    heroGradient: { flex: 1, justifyContent: 'flex-end', padding: 25, paddingBottom: 100 },
+    topBar: { position: 'absolute', top: 50, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', zIndex: 10 },
+    backButton: { backgroundColor: 'rgba(0,0,0,0.35)', padding: 10, borderRadius: 24 },
+    utilityBtn: { backgroundColor: 'rgba(0,0,0,0.35)', padding: 10, borderRadius: 24 },
+    heroHeadline: { fontSize: 36, color: COLORS.white, lineHeight: 44, marginBottom: 12 },
+    heroSubhead: { fontSize: 16, color: '#FFEB3B', marginBottom: 24, opacity: 0.95 },
 
-    // Sections
-    sectionContainer: {
-        marginBottom: 25,
+    premiumSearchContainer: {
+        flexDirection: 'row',
+        backgroundColor: '#FFF',
+        marginHorizontal: 20,
+        height: 60,
+        borderRadius: 24,
+        alignItems: 'center',
+        marginTop: -30,
+        elevation: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+        paddingHorizontal: 18,
     },
-    sectionHeader: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: colors.maroon,
-        fontFamily: 'serif',
-        marginBottom: 15,
-        paddingHorizontal: 20, // Default padding for headers
-    },
-    // Themes
-    themeCard: {
-        width: 110,
-        height: 150,
-        borderRadius: 15,
-        marginRight: 10,
-        overflow: 'hidden',
-    },
-    themeImage: {
-        width: '100%',
-        height: '100%',
-    },
-    themeOverlay: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 80,
-        justifyContent: 'flex-end',
-        padding: 10,
-    },
-    themeText: {
-        color: colors.ivory,
-        fontWeight: 'bold',
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    // Events
-    // Events
-    eventCard: {
-        backgroundColor: '#FFFBEA', // Cream background (matches header in image)
-        borderRadius: 12,
-        marginBottom: 10,
-        elevation: 1, // Softer shadow
+    premiumSearchActive: { borderWidth: 1.5, borderColor: COLORS.secondary },
+    locationSelector: { flexDirection: 'row', alignItems: 'center', gap: 6, width: 110 },
+    locationTextPin: { fontSize: 15, color: '#333', fontWeight: 'bold' },
+    searchDivider: { width: 1.5, height: 28, backgroundColor: '#EEE', marginHorizontal: 12 },
+    searchInputWrapper: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+    premiumInput: { flex: 1, fontSize: 15, color: '#333' },
+
+    trustIndicatorRow: { flexDirection: 'row', justifyContent: 'center', gap: 15, marginTop: 25 },
+    trustBadge: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: 'rgba(255, 255, 255, 0.8)', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 14, elevation: 1 },
+    trustBadgeText: { fontSize: 12, color: COLORS.primary, fontWeight: 'bold' },
+
+    overlayContainer: { flex: 1, backgroundColor: '#FFF' },
+    overlayHeader: { paddingTop: 60, paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#F5F5F5', paddingBottom: 20 },
+    overlaySearchBox: { flexDirection: 'row', alignItems: 'center', gap: 15 },
+    overlayInput: { flex: 1, height: 48, backgroundColor: '#F8F8F8', borderRadius: 16, paddingHorizontal: 18, fontSize: 16 },
+    cancelText: { color: COLORS.primary, fontWeight: 'bold', fontSize: 15 },
+    overlayContent: { padding: 25 },
+    overlaySectionTitle: { fontSize: 18, color: '#333', marginBottom: 18, marginTop: 15, fontWeight: 'bold' },
+    recentList: { gap: 15, marginBottom: 25 },
+    recentItem: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+    recentText: { color: '#555', fontSize: 15 },
+    popularRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginBottom: 30 },
+    popularTag: { backgroundColor: '#FFF9F0', paddingHorizontal: 16, paddingVertical: 9, borderRadius: 24, borderWidth: 1, borderColor: '#FFECB3' },
+    popularTagText: { fontSize: 14, color: '#D48806', fontWeight: 'bold' },
+
+    premiumVendorCard: {
+        width: width * 0.82,
+        marginRight: 24,
+        backgroundColor: '#FFF',
+        borderRadius: 32,
+        elevation: 10,
         overflow: 'hidden',
         borderWidth: 1,
-        borderColor: '#F5E6C1', // Light gold/cream border
+        borderColor: 'rgba(0,0,0,0.03)',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 12 },
+        shadowOpacity: 0.1,
+        shadowRadius: 20,
     },
-    eventCardExpanded: {
-        backgroundColor: colors.white, // Body becomes white when expanded
-        borderColor: '#F1E3C4',
+    vendorMainImg: { width: '100%', height: 200, position: 'relative', overflow: 'hidden' },
+    tagWrapper: { position: 'absolute', top: 15, left: 15, zIndex: 10 },
+    lustreOverlay: {
+        ...StyleSheet.absoluteFillObject,
     },
-    eventHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 15,
-        backgroundColor: '#FFFBEA', // Match card bg
+    premiumTag: { backgroundColor: 'rgba(255,255,255,0.92)', alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12, borderWidth: 0.5, borderColor: 'rgba(0,0,0,0.05)' },
+    premiumTagText: { color: COLORS.primary, fontSize: 11, fontWeight: 'bold', letterSpacing: 0.5 },
+    vendorDetails: { padding: 20, paddingTop: 15 },
+    detailsTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
+    vendorNamePremium: { fontSize: 20, color: '#222', fontWeight: 'bold' },
+    ratingBadgePremium: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.secondary, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 10, gap: 4 },
+    ratingTextPremium: { color: '#FFF', fontSize: 12, fontWeight: 'bold' },
+    locationContainerPremium: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 16 },
+    locationTextPremium: { fontSize: 13, color: '#666' },
+    previewsRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    miniThumb: { width: 44, height: 44, backgroundColor: '#F0F0F0', borderRadius: 10, borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)' },
+    followBtnGold: { marginLeft: 'auto', borderWidth: 1.5, borderColor: COLORS.secondary, paddingHorizontal: 18, paddingVertical: 8, borderRadius: 14, backgroundColor: 'rgba(212, 175, 55, 0.05)' },
+    followTextGold: { color: COLORS.secondary, fontWeight: 'bold', fontSize: 13 },
+
+    sectionContainer: { marginTop: 40 },
+    sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 20 },
+    sectionTitle: { fontSize: 24, color: '#800000', fontWeight: 'bold' },
+    seeAllText: { fontWeight: 'bold', fontSize: 14, color: COLORS.secondary },
+
+    postCardCompact: {
+        borderRadius: 24,
+        backgroundColor: '#FFF',
+        overflow: 'hidden',
+        borderWidth: 1.5,
+        borderColor: 'rgba(212, 175, 55, 0.15)',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.08,
+        shadowRadius: 10,
     },
-    eventHeaderExpanded: {
-        backgroundColor: '#FFFBEA', // Keep header cream even when expanded
-        borderBottomWidth: 1,
-        borderBottomColor: '#F2F2F2',
-    },
-    eventIconBox: {
+    dotContainerCompact: { position: 'absolute', bottom: 10, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 4 },
+    dotSmall: { width: 4, height: 4, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.4)' },
+    dotActiveSmall: { width: 12, backgroundColor: '#FFF' },
+    likeBtnSmall: { position: 'absolute', top: 10, right: 10, backgroundColor: 'rgba(0,0,0,0.3)', padding: 6, borderRadius: 15 },
+
+    infoPanelCompact: { paddingVertical: 14, paddingHorizontal: 15 },
+    panelHeaderCompact: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
+    vendorNameCompact: { fontSize: 13, color: '#111', flex: 1, fontWeight: 'bold' },
+    ratingCompact: { flexDirection: 'row', alignItems: 'center', gap: 2, backgroundColor: '#F5F5F5', paddingHorizontal: 5, paddingVertical: 2, borderRadius: 6 },
+    ratingTextCompact: { fontSize: 10, color: '#333', fontWeight: 'bold' },
+    eventTypeCompact: { fontSize: 10, color: COLORS.primary, marginBottom: 1, fontWeight: 'bold' },
+    locationCompact: { fontSize: 9, color: '#777', marginBottom: 10 },
+    metaRowCompact: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', borderTopWidth: 0.5, borderColor: '#EEE', paddingTop: 8 },
+    metaLikesCompact: { fontSize: 10, color: '#999', fontWeight: 'bold' },
+    premiumLikeBtn: {
+        position: 'absolute',
+        top: 15,
+        right: 15,
         width: 36,
         height: 36,
         borderRadius: 18,
-        backgroundColor: 'rgba(128, 0, 0, 0.08)', // Light maroon tint
+        backgroundColor: 'rgba(0,0,0,0.25)',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 12,
     },
-    eventTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#4A2C2A', // Darker brown/maroon for text
-    },
-    eventBody: {
-        padding: 12,
-        backgroundColor: colors.white,
-    },
-    eventItemRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    eventItemText: {
-        marginLeft: 10,
-        fontSize: 14,
-        color: '#5D4037', // Brownish grey text
-        fontWeight: '500',
-    },
-    // Flowers
-    flowerGrid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        paddingHorizontal: 20,
-        paddingHorizontal: 20,
-        justifyContent: 'space-between',
-        paddingBottom: 10,
-    },
-    flowerCard: {
-        width: (width - 70) / 3, // Changed to 3 columns
-        backgroundColor: colors.white,
-        borderRadius: 12,
-        marginBottom: 15,
-        elevation: 3,
-        shadowColor: colors.cardShadow,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        // Improved shadow/elevation
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
-        shadowRadius: 5,
-        elevation: 5,
-    },
-    flowerImage: {
-        width: '100%',
-        height: 140,
-        borderTopLeftRadius: 12,
-        borderTopRightRadius: 12,
-        resizeMode: 'cover',
-    },
-    flowerMeta: {
-        padding: 10,
-    },
-    flowerName: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: colors.textMain,
-    },
-    flowerType: {
-        fontSize: 12,
-        color: colors.textGrey,
-        marginTop: 2,
-    },
-    stockBadge: {
-        alignSelf: 'flex-start',
-        paddingHorizontal: 8,
-        paddingVertical: 2,
-        borderRadius: 4,
-        marginTop: 6,
-    },
-    stockText: {
-        color: colors.white,
-        fontSize: 10,
-        fontWeight: 'bold',
-    },
-    seeAll: {
-        color: colors.saffron,
-        fontWeight: 'bold',
-        fontSize: 14,
-    },
-    // Venue
-    venueRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: colors.white,
-        padding: 15,
-        borderRadius: 12,
-        marginBottom: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#EEE',
-    },
-    venueArea: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: colors.textMain,
-    },
-    venueBudget: {
-        fontSize: 13,
-        color: colors.gold,
-        fontWeight: '600',
-        marginTop: 2,
-    },
-    statusPill: {
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 20,
-    },
-    statusText: {
-        fontSize: 12,
-        fontWeight: 'bold',
-    },
-    // Moodboard
-    moodboardItem: {
-        marginRight: 15,
-        borderRadius: 12,
-        backgroundColor: colors.white,
-        padding: 8,
-        elevation: 2,
-    },
-    moodboardImage: {
-        width: 140,
-        height: 180,
-        borderRadius: 8,
-        marginBottom: 8,
-    },
-    colorPalette: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-    },
-    swatch: {
-        width: 16,
-        height: 16,
-        borderRadius: 8,
-        marginHorizontal: 3,
-        borderWidth: 1,
-        borderColor: '#EEE',
-    },
-    addMoodBtn: {
-        width: 140,
-        height: 200,
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: colors.maroon,
-        borderStyle: 'dashed',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#FFF9E6',
-    },
-    addMoodText: {
-        marginTop: 5,
-        color: colors.maroon,
-        fontWeight: 'bold',
-    },
-    // Venue Mix
-    venueMix: {
-        fontSize: 12,
-        color: colors.textGrey,
-        marginTop: 2,
-        fontStyle: 'italic',
-    },
-    // Timeline
-    timelineItem: {
-        flexDirection: 'row',
-        marginBottom: 12,
-    },
-    timelineDot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: colors.saffron,
-        marginTop: 5,
-        marginRight: 12,
-    },
-    timelineContent: {
-        flex: 1,
-    },
-    timelineTime: {
-        fontSize: 12,
-        color: colors.textGrey,
-        fontWeight: '600',
-    },
-    timelineEvent: {
-        fontSize: 14,
-        color: colors.textMain,
-    },
-    // Checklist
-    checklistCard: {
-        backgroundColor: colors.white,
-        borderRadius: 15,
-        padding: 15,
-        elevation: 2,
-        marginBottom: 20,
-    },
-    checkRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    checkText: {
-        marginLeft: 10,
-        fontSize: 15,
-        color: colors.textMain,
-    },
-    // Vendor Enhanced
-    showcaseCardWrapper: {
-        width: '100%',
-        height: 400, // Taller cards for vertical list
-        marginVertical: 15,
-    },
-    glassBorderContainer: {
-        flex: 1,
-        borderRadius: 40,
-        backgroundColor: 'rgba(255, 255, 255, 0.12)', // Slightly more transparent for floating effect
-        overflow: 'hidden',
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 15 },
-        shadowOpacity: 0.25,
-        shadowRadius: 20,
-        elevation: 20,
-    },
-    glassEdgeGlow: {
-        ...StyleSheet.absoluteFillObject,
-        borderRadius: 40,
-        borderWidth: 1.5,
-        borderColor: 'rgba(255, 255, 255, 0.4)', // Light-catching edge
-        opacity: 0.8,
-    },
-    showcaseImage: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        padding: 15,
-    },
-    nameOverlayContainer: {
-        position: 'absolute',
-        bottom: 15,
-        left: 15,
-        right: 15,
-    },
-    showcaseTitleOverlay: {
-        padding: 18,
-        borderRadius: 22,
-        overflow: 'hidden',
-        backgroundColor: 'rgba(0,0,0,0.35)',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.1)',
-    },
-    showcaseTitle: {
-        color: '#FFF',
-        fontSize: 22,
-        fontWeight: 'bold',
-        textShadowColor: 'rgba(0,0,0,0.3)',
-        textShadowOffset: { width: 0, height: 1 },
-        textShadowRadius: 4,
-    },
-    showcaseSubtitle: {
-        color: 'rgba(255,255,255,0.8)',
-        fontSize: 12,
-        marginTop: 2,
-    },
-    showcasePriceContainer: {
-        alignItems: 'flex-end',
-    },
-    showcasePrice: {
-        color: '#FFF',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    showcaseDecorator: {
-        width: 30,
-        height: 3,
-        backgroundColor: 'rgba(255,255,255,0.8)',
-        borderRadius: 2,
-        marginTop: 8,
-    },
-    vendorCover: {
-        width: '100%',
-        height: 180,
-    },
-    vendorImageOverlay: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 60,
-    },
-    cardFloatingBadges: {
-        position: 'absolute',
-        top: 12,
-        left: 12,
-        right: 12,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    ratingBadgeFloating: {
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        backdropFilter: 'blur(10px)',
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.2)',
-    },
-    favoriteBtn: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
-        backgroundColor: 'rgba(0,0,0,0.4)',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: 'rgba(255,255,255,0.2)',
-    },
-    ratingText: {
-        color: colors.white,
-        fontWeight: 'bold',
-        fontSize: 12,
-        marginRight: 4,
-    },
-    vendorInfo: {
-        padding: 15,
-    },
-    vendorNameLarge: {
-        fontSize: 18,
-        fontWeight: '800',
-        color: colors.textMain,
-        marginBottom: 2,
-    },
-    vendorMetaRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 5,
-    },
-    vendorMetaText: {
-        marginLeft: 4,
-        color: colors.textGrey,
-        fontSize: 13,
-        fontWeight: '500',
-    },
-    vendorFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    vendorLabel: {
-        fontSize: 11,
-        color: colors.textGrey,
-        textTransform: 'uppercase',
-        letterSpacing: 0.5,
-    },
-    vendorPrice: {
-        fontSize: 18,
-        fontWeight: '800',
-        color: colors.maroon,
-    },
-    contactBtn: {
-        backgroundColor: colors.textMain,
-        paddingVertical: 10,
-        paddingHorizontal: 16,
-        borderRadius: 25,
-        elevation: 3,
-        shadowColor: colors.textMain,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    contactBtnText: {
-        color: colors.white,
-        fontWeight: '600',
-        fontSize: 13,
-    },
-    divider: {
-        height: 1,
-        backgroundColor: '#F5F5F5',
-        marginVertical: 12,
-    },
-    vendorFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    vendorLabel: {
-        fontSize: 12,
-        color: colors.textGrey,
-    },
-    vendorPrice: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: colors.maroon,
-    },
-    contactBtn: {
-        backgroundColor: colors.textMain, // Dark background
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        borderRadius: 20,
-        elevation: 2,
-    },
-    contactBtnText: {
-        color: colors.white, // White text for contrast
-        fontWeight: 'bold',
-        fontSize: 12, // Adjusted for better fit
-        textAlign: 'center',
-    },
-    divider: {
-        height: 1,
-        backgroundColor: '#EEE',
-        marginVertical: 15,
-    },
-    // Bottom Bar
-    bottomBar: {
-        position: 'absolute',
-        bottom: 0,
-        width: width,
-        backgroundColor: colors.white,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-        borderTopWidth: 1,
-        borderTopColor: '#EEE',
-        elevation: 10,
-    },
-    totalLabel: {
-        fontSize: 12,
-        color: colors.textGrey,
-    },
-    totalValue: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: colors.textMain,
-    },
-    primaryActionBtn: {
-        backgroundColor: colors.saffron,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 25,
-        borderRadius: 25,
-        elevation: 4,
-    },
-    primaryActionText: {
-        color: colors.white,
-        fontWeight: 'bold',
-        fontSize: 16,
-        marginRight: 8,
-    },
-    // Previous Work Styles
-    previousWorkContainer: {
-        marginBottom: 15,
-    },
-    previousWorkLabel: {
-        fontSize: 14,
-        fontWeight: 'bold',
-        color: colors.maroon,
-        marginBottom: 8,
-    },
-    previousWorkImage: {
-        width: '100%',
-        height: 200,
-        borderRadius: 12,
-        resizeMode: 'cover',
-    },
-    // Why Us
-    whyUsContainer: {
-        flexDirection: 'row', // Horizontal layout
-        justifyContent: 'space-between', // Distribute items
-        paddingHorizontal: 5, // Slight padding for shadows
-    },
-    whyUsItem: {
-        width: (width - 60) / 3, // 3 items with padding
-        backgroundColor: colors.white,
-        borderRadius: 16,
-        padding: 15,
-        alignItems: 'center', // Center content
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-    },
-    whyUsIconBox: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    whyUsTitle: {
-        fontSize: 12, // Reduced size for grid
-        fontWeight: 'bold',
-        color: colors.kumkum, // Updated to Kumkum color
-        marginBottom: 4,
-        textAlign: 'center', // Center text
-    },
-    whyUsDesc: {
-        fontSize: 10, // Reduced size for grid
-        color: colors.textGrey,
-        textAlign: 'center', // Center text
-        lineHeight: 14,
-    },
-    // Real Stories
-    storyCard: {
-        width: 200,
-        height: 250,
-        borderRadius: 15,
-        marginRight: 15,
-        backgroundColor: colors.white,
-        elevation: 5,
-        shadowColor: colors.cardShadow,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-        overflow: 'hidden',
-    },
-    storyImage: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
-    },
-    storyOverlay: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 120,
-        justifyContent: 'flex-end',
-        padding: 15,
-    },
-    storyContent: {
-        justifyContent: 'flex-end',
-    },
-    storyTitle: {
-        color: colors.white,
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 2,
-    },
-    storyCouple: {
-        color: colors.gold,
-        fontSize: 14,
-        fontWeight: '500',
-    },
-    // Testimonials
-    testimonialCard: {
-        width: 260,
-        backgroundColor: '#FFF9E6', // Light cream/gold tint
-        borderRadius: 15,
-        padding: 20,
-        marginRight: 15,
-        borderWidth: 1,
-        borderColor: '#F5E6C1',
-    },
-    quoteIcon: {
-        marginBottom: 10,
-    },
-    testimonialText: {
-        fontSize: 14,
-        color: '#4A3B32',
-        fontStyle: 'italic',
-        lineHeight: 20,
-        marginBottom: 15,
-    },
-    testimonialFooter: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    testimonialAuthor: {
-        fontWeight: 'bold',
-        color: colors.maroon,
-        fontSize: 14,
-    },
+
+    postDescriptionFull: { fontSize: 13, color: '#555', lineHeight: 20, marginBottom: 12 },
+    editorialRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, marginBottom: 10, alignItems: 'flex-start' },
+
+    profileContainer: { flex: 1, backgroundColor: '#FFF' },
+    profileHeader: { height: 320, width: '100%' },
+    coverImage: { width: '100%', height: '100%', resizeMode: 'cover' },
+    headerOverlay: { position: 'absolute', top: 0, left: 0, right: 0, height: 120 },
+    closeBtnProfile: { position: 'absolute', top: 50, left: 20, width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(0,0,0,0.3)', alignItems: 'center', justifyContent: 'center', zIndex: 10 },
+    profileIdentityOverlay: { marginTop: -60, backgroundColor: '#FFF', borderTopLeftRadius: 40, borderTopRightRadius: 40, paddingHorizontal: 24, paddingTop: 20, alignItems: 'center', paddingBottom: 20 },
+    avatarContainer: { width: 110, height: 110, borderRadius: 55, borderWidth: 5, borderColor: '#FFF', elevation: 15, backgroundColor: '#FFF', overflow: 'hidden', marginTop: -70 },
+    avatarImage: { width: '100%', height: '100%' },
+    nameSection: { alignItems: 'center', marginTop: 10 },
+    profileVendorName: { fontSize: 28, color: '#111', fontWeight: 'bold' },
+    profileBusinessName: { fontSize: 16, color: COLORS.secondary, marginTop: 4, fontWeight: 'bold' },
+    profileLocationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8, gap: 4 },
+    profileLocationText: { fontSize: 13, color: '#777' },
+    stickyNavWrapper: { backgroundColor: 'rgba(255,255,248,0.95)', borderBottomWidth: 1, borderBottomColor: '#F0F0F0' },
+    shortcutNavBar: { flexDirection: 'row', gap: 30, paddingHorizontal: 24, paddingVertical: 18, alignItems: 'center' },
+    shortcutNavText: { fontSize: 15, color: '#999', fontWeight: 'bold' },
+    shortcutNavTextActive: { color: COLORS.secondary },
+    tabUnderline: { position: 'absolute', bottom: 12, left: 24, width: 60, height: 3, backgroundColor: COLORS.secondary, borderRadius: 2 },
+    profileInfoContent: { backgroundColor: '#FFF', paddingHorizontal: 24, paddingTop: 20, paddingBottom: 40 },
+    profileSectionLabel: { fontSize: 20, color: '#222', marginBottom: 16, fontWeight: 'bold' },
+    mediaHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+    mediaMainTabs: { flexDirection: 'row', gap: 20 },
+    mediaMainTab: { paddingBottom: 6 },
+    mediaMainTabActive: { borderBottomWidth: 2, borderBottomColor: COLORS.secondary },
+    mTabText: { fontSize: 13, color: '#999', fontWeight: 'bold' },
+    mTabTextActive: { color: COLORS.secondary },
+    featuredProjectCard: { width: '100%', height: 240, borderRadius: 24, overflow: 'hidden', marginBottom: 20, elevation: 5 },
+    featuredProjectImage: { width: '100%', height: '100%' },
+    featuredProjectOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%', padding: 20, justifyContent: 'flex-end' },
+    featuredBadge: { backgroundColor: COLORS.secondary, alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, marginBottom: 8 },
+    featuredBadgeText: { fontSize: 10, color: '#FFF', textTransform: 'uppercase', fontWeight: 'bold' },
+    featuredProjectTitle: { fontSize: 20, color: '#FFF', fontWeight: 'bold' },
+    featuredMetaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 },
+    featuredMetaText: { fontSize: 13, color: '#DDD' },
+    viewProjectBtn: { backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: '#FFF' },
+    viewProjectBtnText: { fontSize: 12, color: '#FFF', fontWeight: 'bold' },
+    pinterestGrid: { flexDirection: 'row', gap: 15 },
+    gridColumn: { flex: 1, gap: 15 },
+    projectCard: { width: '100%', borderRadius: 20, backgroundColor: '#FFF', overflow: 'hidden', elevation: 3 },
+    projectImage: { width: '100%', height: '100%', resizeMode: 'cover' },
+    cardCarousel: { flex: 1 },
+    typeBadge: { position: 'absolute', top: 12, left: 12, backgroundColor: 'rgba(0,0,0,0.4)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, zIndex: 10 },
+    typeBadgeText: { fontSize: 9, color: '#FFF', fontWeight: 'bold' },
+    projectCardFooter: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 12, backgroundColor: 'rgba(255,255,255,0.9)', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    likesRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    likesText: { fontSize: 11, color: '#333', fontWeight: 'bold' },
+    miniViewProject: { padding: 4 },
+    videoPlaceholder: { width: '100%', height: 200, backgroundColor: '#F9F9F9', borderRadius: 20, alignItems: 'center', justifyContent: 'center', gap: 12, borderStyle: 'dashed', borderWidth: 1, borderColor: '#DDD' },
+    videoPlaceholderText: { fontSize: 14, color: '#999', fontWeight: 'bold' },
+
+    profilePricingSection: { marginTop: 35, paddingHorizontal: 0 },
+    pricingSectionTitleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+    verifiedPriceBadge: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#FFF9F0', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, borderWidth: 1, borderColor: '#FFECB3' },
+    verifiedPriceText: { fontSize: 11, color: '#D48806', fontWeight: 'bold' },
+    pricingCardsScroll: { paddingVertical: 10 },
+    eventPriceCard: { width: width * 0.75, backgroundColor: '#FFF', borderRadius: 24, marginRight: 20, padding: 24, paddingTop: 45, elevation: 5, overflow: 'hidden' },
+    eventCardTopTag: { position: 'absolute', top: 0, right: 0, paddingHorizontal: 20, paddingVertical: 10, borderBottomLeftRadius: 20 },
+    eventCardTagText: { color: '#FFF', fontSize: 10, textTransform: 'uppercase', letterSpacing: 0.5, fontWeight: 'bold' },
+    eventCardIdentity: { marginBottom: 15 },
+    eventPackageTitle: { fontSize: 22, color: '#222', marginBottom: 5, fontWeight: 'bold' },
+    eventPriceTag: { flexDirection: 'row', alignItems: 'baseline', gap: 6 },
+    eventMainPrice: { fontSize: 28, color: COLORS.primary, fontWeight: 'bold' },
+    eventPricePer: { fontSize: 14, color: '#666' },
+    pricingDivider: { height: 1.5, backgroundColor: '#F0F0F0', marginVertical: 15, borderStyle: 'dashed' },
+    pricingInclusions: { gap: 10, marginBottom: 25 },
+    inclusionLine: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    inclusionText: { fontSize: 14, color: '#555' },
+    bookNowMinBtn: { height: 50, borderRadius: 15, borderWidth: 1.5, justifyContent: 'center', alignItems: 'center' },
+    bookNowMinText: { fontSize: 14, fontWeight: 'bold' },
+    ticketPunchLeft: { position: 'absolute', left: -12, top: '48%', width: 24, height: 24, borderRadius: 12, backgroundColor: '#FFF' },
+    ticketPunchRight: { position: 'absolute', right: -12, top: '48%', width: 24, height: 24, borderRadius: 12, backgroundColor: '#FFF' },
+
+    profileAboutContainer: { marginTop: 40 },
+    storyQuoteSection: { flexDirection: 'row', gap: 15, marginVertical: 20 },
+    quoteBar: { width: 4, backgroundColor: COLORS.secondary, borderRadius: 2 },
+    storyQuoteText: { fontSize: 18, color: COLORS.secondary, fontStyle: 'italic', flex: 1, lineHeight: 26, fontWeight: 'bold' },
+    profileAboutText: { fontSize: 14, color: '#666', lineHeight: 22, marginTop: 4 },
+
+    profileReviewsSection: { marginTop: 40 },
+    ratingOverview: { flexDirection: 'row', gap: 20, alignItems: 'center', marginVertical: 30 },
+    bigRatingBadge: { width: 140, height: 140, borderRadius: 70, backgroundColor: 'rgba(242,149,2,0.05)', borderWidth: 2, borderColor: COLORS.secondary, alignItems: 'center', justifyContent: 'center', gap: 4 },
+    bigRatingScore: { fontSize: 38, color: COLORS.secondary, fontWeight: 'bold' },
+    bigRatingStatus: { fontSize: 12, color: COLORS.secondary, textTransform: 'uppercase', fontWeight: 'bold' },
+    bigRatingStars: { flexDirection: 'row', gap: 2, marginVertical: 4 },
+    bigRatingSub: { fontSize: 9, color: '#999', marginTop: 2 },
+    distributionSide: { flex: 1, gap: 8 },
+    distRowMini: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    distStarNumMini: { fontSize: 11, color: '#666', width: 12, fontWeight: 'bold' },
+    progressBarMiniBg: { flex: 1, height: 4, backgroundColor: '#F0F0F0', borderRadius: 2, overflow: 'hidden' },
+    progressBarMiniFill: { height: '100%', backgroundColor: COLORS.secondary, borderRadius: 2 },
+
+    profileContactBtn: { backgroundColor: COLORS.secondary, marginTop: 40, height: 56, borderRadius: 28, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 12, elevation: 8 },
+    profileContactBtnText: { fontSize: 16, color: '#FFF', fontWeight: 'bold' },
+
+    footerContainer: { alignItems: 'center', marginVertical: 40, paddingBottom: 40 },
+    stickyButton: { backgroundColor: COLORS.primary, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', paddingVertical: 18, paddingHorizontal: 36, borderRadius: 36, elevation: 12 },
+    stickyButtonText: { fontSize: 14, color: COLORS.white, marginRight: 12, letterSpacing: 1.2, textTransform: 'uppercase', fontWeight: 'bold' },
+    noResults: { padding: 60, alignItems: 'center' },
+    noResultsText: { color: '#999', fontSize: 15 },
 });
 
 export default DecorationFloralScreen;
