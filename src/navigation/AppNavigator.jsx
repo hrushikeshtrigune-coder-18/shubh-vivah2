@@ -39,6 +39,8 @@ const AppNavigator = () => {
                     <Stack.Screen name="ReceptionInviteScreen" component={require('../screens/wedding/services/ReceptionInviteScreen').default} />
 
                     <Stack.Screen name="MakeupScreen" component={require('../screens/wedding/services/MakeupPage').default} />
+                    <Stack.Screen name="MakeupArtistsScreen" component={require('../screens/wedding/services/MakupArtistsPage').default} />
+                    <Stack.Screen name="VendorDetailScreen" component={require('../screens/wedding/services/VendorDetailScreen').default} />
                 </>
             ) : (
                 <Stack.Screen name="Auth" component={AuthNavigator} />

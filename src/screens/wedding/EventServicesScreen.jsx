@@ -78,6 +78,15 @@ const services = [
         description: 'Romantic getaways to the world\'s most beautiful destinations.',
         features: ['Custom Packages', 'Luxury Stays'],
         icon: 'plane'
+    },
+    {
+        id: '7',
+        title: 'Makeup Artists',
+        subtitle: 'Bridal & Party',
+        image: { uri: 'https://images.unsplash.com/photo-1487412947132-28a5d7071f8e?q=80&w=2070&auto=format&fit=crop' },
+        description: 'Professional makeup artists for your special day to make you look stunning.',
+        features: ['Bridal Makeup', 'Guest Makeup'],
+        icon: 'brush'
     }
 ];
 
@@ -395,11 +404,9 @@ const EventServicesScreen = ({ navigation }) => {
                                                 setSelectedService(null);
                                                 if (s.id === '2') {
                                                     navigation.navigate('EventManagementScreen');
-                                                } else if (s.id === 's6') {
+                                                } else if (s.title === 'Jewellery' || s.id === 's6') {
                                                     navigation.navigate('JewelleryScreen');
-                                                } else if (s.id === 's6') {
-                                                    navigation.navigate('JewelleryScreen');
-                                                } else if (s.id === 's9') {
+                                                } else if (s.title === 'Makeup Artists' || s.id === 's9' || s.id === '7') {
                                                     navigation.navigate('MakeupScreen');
                                                 } else {
                                                     navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });

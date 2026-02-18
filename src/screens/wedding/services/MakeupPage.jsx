@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     View,
     Text,
@@ -13,6 +13,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
 
@@ -59,6 +60,13 @@ const MOCK_ARTISTS = [
 
 const MakeupPage = () => {
     const navigation = useNavigation();
+    const scrollViewRef = useRef(null);
+
+    const scrollToSection = () => {
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: 400, animated: true });
+        }
+    };
 
     const renderHeader = () => (
         <View style={styles.headerContainer}>
@@ -77,7 +85,7 @@ const MakeupPage = () => {
             <View style={styles.headerContent}>
                 <Text style={styles.headerTitle}>Because Some Moments Deserve to Live Forever</Text>
 
-                <TouchableOpacity style={styles.ctaButton}>
+                <TouchableOpacity style={styles.ctaButton} onPress={scrollToSection}>
                     <Ionicons name="heart" size={18} color="#FFF" style={{ marginRight: 8 }} />
                     <Text style={styles.ctaText}>Find My Makeup Artist</Text>
                 </TouchableOpacity>
@@ -104,42 +112,49 @@ const MakeupPage = () => {
     );
 
     const renderArtistCard = ({ item }) => (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('MakeupArtistsScreen')}>
             {/* Main Image Background */}
             <Image source={item.image} style={styles.cardImage} />
 
-            {/* Top Badges */}
-            <View style={styles.ratingBadge}>
-                <Text style={styles.ratingText}>{item.rating}</Text>
-            </View>
+            {/* Top Right Heart Icon */}
             <TouchableOpacity style={styles.heartIcon}>
-                <Ionicons name="heart-outline" size={20} color="#D61C1C" />
+                <Ionicons name="heart-outline" size={20} color="#FFF" />
             </TouchableOpacity>
 
-            {/* Overlapping Content Box */}
-            <BlurView intensity={50} tint="light" style={styles.contentBox}>
-                <Text style={styles.cardTitle}>{item.name}</Text>
-                <Text style={styles.cardLocation}>{item.location}</Text>
+            {/* Bottom Gradient Overlay */}
+            <LinearGradient
+                colors={['transparent', 'rgba(0,0,0,0.8)']}
+                style={styles.cardOverlay}
+            >
+                <View style={styles.cardContent}>
+                    <Text style={styles.cardTitle}>{item.name}</Text>
+                    <Text style={styles.cardLocation}>{item.location}</Text>
 
-                <View style={styles.priceRow}>
-                    <Text style={styles.cardPrice}>{item.price.split(' ')[0]}</Text>
-                    <View style={styles.guestTag}>
-                        <Text style={styles.guestTagText}>Bridal • Party</Text>
+                    <View style={styles.ratingRow}>
+                        <Ionicons name="star" size={14} color="#F29502" />
+                        <Text style={styles.ratingText}>{item.rating} (120 reviews)</Text>
                     </View>
-                </View>
 
-                <TouchableOpacity style={styles.viewBtn}>
-                    <Text style={styles.viewBtnText}>View Profile</Text>
-                </TouchableOpacity>
-            </BlurView>
-        </View >
+                    <TouchableOpacity style={styles.seeMoreBtn} onPress={() => navigation.navigate('MakeupArtistsScreen')}>
+                        <Text style={styles.seeMoreText}>View Portfolio</Text>
+                        <View style={styles.arrowCircle}>
+                            <Ionicons name="chevron-forward" size={16} color="#000" />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </LinearGradient>
+        </TouchableOpacity >
     );
 
     return (
         <View style={styles.container}>
             <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
 
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 50 }}>
+            <ScrollView
+                ref={scrollViewRef}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{ paddingBottom: 50 }}
+            >
                 {renderHeader()}
 
                 <View style={styles.listContainer}>
@@ -269,115 +284,94 @@ const styles = StyleSheet.create({
     },
     // Updated Card Styles
     card: {
-        height: 380, // Taller card to fit image and content box
+        height: 420, // Taller card to display full image
         borderRadius: 25,
         marginBottom: 25,
         overflow: 'hidden',
         position: 'relative',
-        backgroundColor: '#FFF',
-        borderWidth: 1,
-        borderColor: '#E6C68C', // Gold border from ref
+        backgroundColor: '#000', // Dark bg for loading
     },
     cardImage: {
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
     },
-    ratingBadge: {
-        position: 'absolute',
-        top: 20,
-        left: 20,
-        backgroundColor: '#F29502', // Orange/Gold Circle
-        width: 28,
-        height: 28,
-        borderRadius: 14,
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 5,
-    },
-    ratingText: {
-        color: '#FFF',
-        fontWeight: 'bold',
-        fontSize: 10,
-    },
     heartIcon: {
         position: 'absolute',
         top: 20,
         right: 20,
-        backgroundColor: '#FFF',
-        width: 36,
-        height: 36,
-        borderRadius: 18, // Circle
+        backgroundColor: 'rgba(255,255,255,0.2)', // Semi-transparent glass
+        width: 40,
+        height: 40,
+        borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 5,
-        elevation: 2,
-    },
-    // Content Box Overlay
-    contentBox: {
-        position: 'absolute',
-        bottom: 10,
-        left: 15,
-        right: 15,
-        backgroundColor: 'rgba(255, 255, 255, 0.85)', // Glassy white
-        borderRadius: 20,
-        padding: 15,
-        overflow: 'hidden',
-        borderColor: 'rgba(255, 255, 255, 0.5)',
         borderWidth: 1,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        zIndex: 10,
+        borderColor: 'rgba(255,255,255,0.3)',
+    },
+    cardOverlay: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: 20,
+        paddingTop: 60,
+        justifyContent: 'flex-end',
+    },
+    cardContent: {
+        width: '100%',
     },
     cardTitle: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
-        color: '#A70002', // Maroon/Red like "Royal Orchid Palace"
+        color: '#FFF',
         marginBottom: 4,
         fontFamily: 'serif',
     },
     cardLocation: {
         fontSize: 14,
-        color: '#F29502', // Gold/Orange like "Pune, MH"
-        fontWeight: '600',
-        marginBottom: 12,
+        color: '#EEE',
+        fontWeight: '500',
+        marginBottom: 8,
     },
-    priceRow: {
+    ratingRow: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 15,
+        marginBottom: 20,
     },
-    cardPrice: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#A70002',
-    },
-    guestTag: {
-        backgroundColor: '#FFF3E0', // Light orange bg
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 8,
-    },
-    guestTagText: {
-        color: '#F29502',
+    ratingText: {
+        color: '#EEE',
         fontSize: 12,
-        fontWeight: '600',
+        marginLeft: 6,
     },
-    viewBtn: {
-        backgroundColor: '#D61C1C', // Red button
+    seeMoreBtn: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)', // Transparent glass effect
         paddingVertical: 12,
-        borderRadius: 12,
+        paddingHorizontal: 20,
+        borderRadius: 30,
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
         width: '100%',
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.2)',
     },
-    viewBtnText: {
+    seeMoreText: {
         color: '#FFF',
-        fontWeight: 'bold',
+        fontWeight: '600',
         fontSize: 16,
+        textAlign: 'center',
+        flex: 1, // To center text accounting for the icon
+        marginLeft: 30, // Offset for the icon on the right
+    },
+    arrowCircle: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        backgroundColor: '#FFF',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

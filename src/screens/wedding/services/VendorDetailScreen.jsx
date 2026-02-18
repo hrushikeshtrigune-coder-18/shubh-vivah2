@@ -5,6 +5,7 @@ import {
     Dimensions,
     Image,
     Platform,
+    ScrollView,
     Share,
     StatusBar,
     StyleSheet,
@@ -26,9 +27,18 @@ const COLORS = {
     maroon: '#800000',
 };
 
+const SUB_CATEGORIES = ['Photos', 'Videos', 'Media'];
+const SUB_FILTERS = [
+    { id: 'floral', name: 'Floral', icon: 'flower-outline' },
+    { id: 'theme', name: 'Theme', icon: 'color-palette-outline' },
+    { id: 'traditional', name: 'Traditional', icon: 'layers-outline' },
+];
+
 const VendorDetailScreen = ({ navigation, route }) => {
     const vendor = route.params?.vendor || {};
-    const [activeTab, setActiveTab] = useState('Portfolio');
+    const [activeTab, setActiveTab] = useState('Projects'); // Use sentence case to match tab labels
+    const [activeSubTab, setActiveSubTab] = useState('Media');
+    const [activeSubFilter, setActiveSubFilter] = useState('floral');
     const [bookmarked, setBookmarked] = useState(false);
     const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -61,14 +71,19 @@ const VendorDetailScreen = ({ navigation, route }) => {
 
     const tabs = ['Portfolio', 'Albums', 'Videos'];
 
-    const portfolioImages = vendor.portfolio || [
+    const portfolioImages = (vendor.portfolio || [
         require('../../../../assets/images/decor.jpg'),
         require('../../../../assets/images/Food.jpg'),
         require('../../../../assets/images/photo.jpg'),
         require('../../../../assets/images/entertenment.jpg'),
         require('../../../../assets/images/venue1.jpg'),
         require('../../../../assets/images/venue2.jpg'),
-    ];
+    ]).map((img, index) => ({
+        id: `p-${index}`,
+        source: typeof img === 'number' || typeof img === 'object' ? img : { uri: img },
+        height: index % 3 === 0 ? 200 : index % 3 === 1 ? 280 : 240,
+        label: `${(Math.random() * 5 + 1).toFixed(2)} ETH`
+    }));
 
     const handleShare = async () => {
         try {
@@ -103,40 +118,7 @@ const VendorDetailScreen = ({ navigation, route }) => {
         extrapolate: 'clamp',
     });
 
-    const renderTabContent = () => {
-        switch (activeTab) {
-            case 'Portfolio':
-                return (
-                    <View style={styles.portfolioGrid}>
-                        {portfolioImages.map((img, index) => (
-                            <View key={index} style={styles.portfolioItem}>
-                                <Image
-                                    source={typeof img === 'string' ? { uri: img } : img}
-                                    style={styles.portfolioImage}
-                                    resizeMode="cover"
-                                />
-                            </View>
-                        ))}
-                    </View>
-                );
-            case 'Albums':
-                return (
-                    <View style={styles.emptyState}>
-                        <Ionicons name="images-outline" size={48} color="#ccc" />
-                        <Text style={styles.emptyText}>Albums coming soon</Text>
-                    </View>
-                );
-            case 'Videos':
-                return (
-                    <View style={styles.emptyState}>
-                        <Ionicons name="videocam-outline" size={48} color="#ccc" />
-                        <Text style={styles.emptyText}>Videos coming soon</Text>
-                    </View>
-                );
-            default:
-                return null;
-        }
-    };
+    // Removed renderTabContent for inlined structural logic below
 
     return (
         <View style={styles.container}>
@@ -204,33 +186,78 @@ const VendorDetailScreen = ({ navigation, route }) => {
                     </Animated.View>
                 </View>
 
-                {/* Divider */}
-                <View style={styles.divider} />
+                {/* Content Section */}
+                <View style={styles.mainContent}>
+                    {/* Debug Marker */}
+                    <Text style={{ position: 'absolute', top: -10, right: 10, color: 'transparent', fontSize: 10 }}>v2.0</Text>
 
-                {/* Tabs */}
-                <View style={styles.tabContainer}>
-                    {tabs.map((tab) => (
-                        <TouchableOpacity
-                            key={tab}
-                            style={[
-                                styles.tab,
-                                activeTab === tab && styles.activeTab,
-                            ]}
-                            onPress={() => setActiveTab(tab)}
-                        >
-                            <Text style={[
-                                styles.tabText,
-                                activeTab === tab && styles.activeTabText,
-                            ]}>
-                                {tab}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                    {/* Main Tabs */}
+                    <View style={styles.mainTabsWrapper}>
+                        {['Projects', 'Pricing', 'About', 'Reviews'].map((tab) => (
+                            <TouchableOpacity
+                                key={tab}
+                                onPress={() => setActiveTab(tab)}
+                                style={[styles.mainTabItem, activeTab === tab && styles.activeMainTabItem]}
+                            >
+                                <Text style={[styles.mainTabText, activeTab === tab && styles.activeMainTabText]}>{tab}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
 
-                {/* Tab Content */}
-                <View style={styles.tabContent}>
-                    {renderTabContent()}
+                    {/* Portfolio Content */}
+                    {activeTab === 'Projects' && (
+                        <View style={styles.portfolioSection}>
+                            <View style={styles.portfolioHeaderRow}>
+                                <Text style={styles.portfolioTitle}>Portfolio</Text>
+                                <View style={styles.subCategoryTabs}>
+                                    {SUB_CATEGORIES.map((cat) => (
+                                        <TouchableOpacity
+                                            key={cat}
+                                            onPress={() => setActiveSubTab(cat)}
+                                            style={[styles.subTabItem, activeSubTab === cat && styles.activeSubTabItem]}
+                                        >
+                                            <Text style={[styles.subTabText, activeSubTab === cat && styles.activeSubTabText]}>{cat}</Text>
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            </View>
+
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.subFilterPills}>
+                                {SUB_FILTERS.map((filter) => (
+                                    <TouchableOpacity
+                                        key={filter.id}
+                                        onPress={() => setActiveSubFilter(filter.id)}
+                                        style={[styles.subFilterPill, activeSubFilter === filter.id && styles.activeSubFilterPill]}
+                                    >
+                                        <Ionicons
+                                            name={filter.icon}
+                                            size={18}
+                                            color={activeSubFilter === filter.id ? '#fff' : '#666'}
+                                        />
+                                        <Text style={[styles.subFilterText, activeSubFilter === filter.id && styles.activeSubFilterText]}>
+                                            {filter.name}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+
+                            {/* Symmetric 2-Column Grid */}
+                            <View style={styles.symmetricGrid}>
+                                {portfolioImages.map((img) => (
+                                    <View key={img.id} style={styles.gridCardWrapper}>
+                                        <Image source={img.source} style={styles.squareGridImage} resizeMode="cover" />
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                    )}
+
+                    {(activeTab !== 'Projects') && (
+                        <View style={styles.emptyState}>
+                            <Ionicons name="construct-outline" size={48} color="#ccc" />
+                            <Text style={styles.emptyText}>{activeTab} coming soon</Text>
+                        </View>
+                    )}
                 </View>
 
                 {/* Bottom spacing */}
@@ -399,69 +426,127 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
 
-    // Divider
-    divider: {
-        height: 1,
-        backgroundColor: '#e0e0e0',
-        marginHorizontal: 24,
+    // Updated Content Section
+    mainContent: {
+        backgroundColor: COLORS.akshid,
+        paddingTop: 10,
+    },
+    mainTabsWrapper: {
+        flexDirection: 'row',
+        paddingHorizontal: 20,
+        marginBottom: 25,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    mainTabItem: {
+        paddingVertical: 12,
+        marginRight: 25,
+        position: 'relative',
+    },
+    activeMainTabItem: {
+        borderBottomWidth: 3,
+        borderBottomColor: COLORS.darkHaldi,
+    },
+    mainTabText: {
+        fontSize: 15,
+        color: '#888',
+        fontWeight: '600',
+    },
+    activeMainTabText: {
+        color: COLORS.darkHaldi,
+        fontWeight: 'bold',
     },
 
-    // Tabs
-    tabContainer: {
-        flexDirection: 'row',
-        paddingHorizontal: 24,
-        paddingTop: 18,
-        paddingBottom: 5,
-        gap: 10,
-    },
-    tab: {
+    // Portfolio Section
+    portfolioSection: {
         paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 25,
-        borderWidth: 1.5,
-        borderColor: '#ddd',
-        backgroundColor: '#fff',
     },
-    activeTab: {
-        borderColor: COLORS.kumkum,
-        backgroundColor: '#fff',
+    portfolioHeaderRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
     },
-    tabText: {
+    portfolioTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#1E1E2D',
+        fontFamily: 'serif',
+    },
+    subCategoryTabs: {
+        flexDirection: 'row',
+        gap: 15,
+    },
+    subTabItem: {
+        paddingVertical: 4,
+    },
+    activeSubTabItem: {
+        borderBottomWidth: 2,
+        borderBottomColor: COLORS.darkHaldi,
+    },
+    subTabText: {
         fontSize: 14,
         color: '#888',
         fontWeight: '500',
     },
-    activeTabText: {
-        color: COLORS.kumkum,
-        fontWeight: '700',
+    activeSubTabText: {
+        color: COLORS.darkHaldi,
+        fontWeight: 'bold',
+    },
+    subFilterPills: {
+        marginBottom: 25,
+        flexDirection: 'row',
+    },
+    subFilterPill: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 25,
+        backgroundColor: '#f5f5f5',
+        marginRight: 10,
+        gap: 8,
+        borderWidth: 1,
+        borderColor: '#eee',
+    },
+    activeSubFilterPill: {
+        backgroundColor: COLORS.darkHaldi,
+        borderColor: COLORS.darkHaldi,
+    },
+    subFilterText: {
+        fontSize: 14,
+        color: '#666',
+        fontWeight: '600',
+    },
+    activeSubFilterText: {
+        color: '#fff',
     },
 
-    // Tab Content
-    tabContent: {
-        paddingHorizontal: 20,
-        paddingTop: 15,
-    },
-    portfolioGrid: {
+    // Symmetric Grid (2-Column)
+    symmetricGrid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-between',
+        paddingTop: 5,
     },
-    portfolioItem: {
-        width: (width - 50) / 2,
-        height: 160,
-        borderRadius: 16,
+    gridCardWrapper: {
+        width: (width - 55) / 2, // 2 columns with spacing
+        height: 180,
+        borderRadius: 18, // Rounded rectangle, not oval
         overflow: 'hidden',
-        marginBottom: 12,
+        marginBottom: 15,
+        backgroundColor: '#fff',
         elevation: 3,
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 5,
         shadowOffset: { width: 0, height: 2 },
     },
-    portfolioImage: {
+    squareGridImage: {
         width: '100%',
         height: '100%',
     },
+
     emptyState: {
         alignItems: 'center',
         justifyContent: 'center',

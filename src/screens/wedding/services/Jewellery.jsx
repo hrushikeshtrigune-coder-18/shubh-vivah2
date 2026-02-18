@@ -1,7 +1,7 @@
 
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { ResizeMode, Video } from 'expo-av';
-import React, { memo, useMemo, useRef, useState } from 'react';
+import { useVideoPlayer, VideoView } from 'expo-video';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import {
     Dimensions,
     Image,
@@ -12,6 +12,7 @@ import {
     StatusBar,
     StyleSheet,
     Text,
+    TextInput,
     TouchableOpacity,
     UIManager,
     View
@@ -38,20 +39,22 @@ const COLORS = {
 
 // Isolated Hero Component for DOM Stability on Web
 const VideoHero = memo(({ insets, onSearchPress, navigation }) => {
-    const videoRef = useRef(null);
+    const videoSource = require('../../../../assets/EventMimg/Jewelary/jewelaryV (2).mp4');
+    const player = useVideoPlayer(videoSource, player => {
+        player.loop = true;
+        player.play();
+        player.muted = true;
+    });
+
     return (
         <View style={styles.heroWrapper}>
             <View style={styles.heroContainer}>
                 <View style={StyleSheet.absoluteFill}>
-                    <Video
-                        key="stable-hero-video"
-                        ref={videoRef}
-                        source={require('../../../../assets/EventMimg/Jewelary/jewelaryV (2).mp4')}
+                    <VideoView
                         style={styles.heroVideo}
-                        resizeMode={ResizeMode.COVER}
-                        shouldPlay
-                        isLooping
-                        isMuted
+                        player={player}
+                        nativeControls={false}
+                        contentFit="cover"
                     />
                 </View>
                 <View style={styles.heroOverlay} />
@@ -73,38 +76,35 @@ const VideoHero = memo(({ insets, onSearchPress, navigation }) => {
                 </View>
             </View>
 
-            <View style={styles.statsStrip}>
-                <View style={styles.statsSection}>
-                    <Text style={styles.statsValue}>500+</Text>
-                    <Text style={styles.statsLabel}>Verified{'\n'}Jewellers</Text>
-                </View>
-                <View style={styles.verticalDivider} />
-                <View style={styles.statsSection}>
-                    <Text style={styles.statsValue}>4.8 ★</Text>
-                    <Text style={styles.statsLabel}>Average{'\n'}Rating</Text>
-                </View>
-                <View style={styles.verticalDivider} />
-                <View style={styles.statsSection}>
-                    <Text style={styles.statsValue}>100%</Text>
-                    <Text style={styles.statsLabel}>Quality{'\n'}Guaranteed</Text>
-                </View>
+            <View style={styles.searchContainer}>
+                <TouchableOpacity style={styles.locationButton}>
+                    <Ionicons name="location-sharp" size={20} color={COLORS.kumkum} />
+                    <Text style={styles.locationText}>Mumbai</Text>
+                    <Ionicons name="chevron-down" size={16} color={COLORS.gold} />
+                </TouchableOpacity>
+                <View style={styles.searchDivider} />
+                <TextInput
+                    placeholder="Search venues, areas..."
+                    placeholderTextColor="#999"
+                    style={styles.searchInput}
+                />
             </View>
         </View>
     );
 });
 
 const jewelleryData = [
-    { id: '1', name: 'Royal Kundan Set', location: 'Jaipur, RJ', locality: 'Pimpri Chinchwad', rating: '4.8', ratingValue: 4.8, reviews: 45, guests: 'Bridal Set, Gemstone', type: 'Gold, Kundan', wmgAward: true, price: '₹ 1.5L', image: { uri: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop' }, category: 'Jewellery' },
-    { id: '12', name: 'Diamond Choker', location: 'Mumbai, MH', locality: 'Chinchwad', rating: '4.9', ratingValue: 4.9, reviews: 120, guests: 'Necklace', type: 'Diamond', wmgAward: true, price: '₹ 2.25L', image: { uri: 'https://images.unsplash.com/photo-1599643478518-17488fbbcd75?q=80&w=2070&auto=format&fit=crop' }, category: 'Jewellery' },
-    { id: '3', name: 'Temple Gold Set', location: 'Chennai, TN', locality: 'Pimpri', rating: '4.7', ratingValue: 4.7, reviews: 25, guests: 'Traditional', type: 'Gold', wmgAward: false, price: '₹ 3.0L', image: { uri: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2070&auto=format&fit=crop' }, category: 'Jewellery' },
-    { id: '4', name: 'Polki Earrings', location: 'Hyderabad, TS', locality: 'Kothrud', rating: '4.6', ratingValue: 4.6, reviews: 8, guests: 'Earrings', type: 'Artificial', wmgAward: false, price: '₹ 75k', image: { uri: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=2070&auto=format&fit=crop' }, category: 'Accessories' },
-    { id: '15', name: 'Antique Bangles', location: 'Kolkata, WB', locality: 'Alephata', rating: '4.8', ratingValue: 4.8, reviews: 60, guests: 'Bangles', type: 'Gold', wmgAward: true, price: '₹ 1.2L', image: { uri: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=2070&auto=format&fit=crop' }, category: 'Jewellery' },
-    { id: '6', name: 'Floral Hathphool', location: 'Delhi, DL', locality: 'Ashok Nagar', rating: '4.5', ratingValue: 4.5, reviews: 12, guests: 'Floral', type: 'Flower Jewellery', wmgAward: false, price: '₹ 15k', image: { uri: 'https://images.unsplash.com/photo-1588661845173-982163b2255e?q=80&w=1974&auto=format&fit=crop' }, category: 'Flower Jewellery' },
-    { id: '7', name: 'Rent: Kundan Set', location: 'Pune, MH', locality: 'Pimpri Chinchwad', rating: '4.2', ratingValue: 4.2, reviews: 35, guests: 'Rental, Gemstone', type: 'Bridal Jewellery on Rent', wmgAward: false, price: '₹ 25k', image: { uri: 'https://images.unsplash.com/photo-1589139169229-87588019685a?q=80&w=1974&auto=format&fit=crop' }, category: 'Bridal Jewellery on Rent' },
-    { id: '8', name: 'Ruby Gemstone Ring', location: 'Mumbai, MH', locality: 'Kothrud', rating: '4.9', ratingValue: 4.9, reviews: 50, guests: 'Gemstone', type: 'Gold, Diamond', wmgAward: true, price: '₹ 85k', image: { uri: 'https://images.unsplash.com/photo-1605100804763-ebea243bc612?q=80&w=2070&auto=format&fit=crop' }, category: 'Jewellery' },
-    { id: '9', name: 'Emerald Necklace', location: 'Delhi, DL', locality: 'Ashok Nagar', rating: '4.7', ratingValue: 4.7, reviews: 22, guests: 'Necklace, Gemstone', type: 'Gold', wmgAward: false, price: '₹ 1.8L', image: { uri: 'https://images.unsplash.com/photo-1599643477877-53135311f9ae?q=80&w=2070&auto=format&fit=crop' }, category: 'Jewellery' },
-    { id: '10', name: 'Pearl Drop Earrings', location: 'Jaipur, RJ', locality: 'Chinchwad', rating: '4.5', ratingValue: 4.5, reviews: 18, guests: 'Earrings', type: 'Artificial', wmgAward: false, price: '₹ 12k', image: { uri: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=2070&auto=format&fit=crop' }, category: 'Accessories' },
-    { id: '11', name: 'Diamond Bangle Set', location: 'Surat, GJ', locality: 'Pimpri', rating: '4.8', ratingValue: 4.8, reviews: 42, guests: 'Bangles, Diamond', type: 'Diamond', wmgAward: true, price: '₹ 3.5L', image: { uri: 'https://images.unsplash.com/photo-1602752250015-4726425c3459?q=80&w=2070&auto=format&fit=crop' }, category: 'Jewellery' },
+    { id: '1', name: 'Royal Kundan Set', location: 'Jaipur, RJ', locality: 'Pimpri Chinchwad', rating: '4.8', ratingValue: 4.8, reviews: 45, guests: 'Bridal Set, Gemstone', type: 'Gold, Kundan', wmgAward: true, price: '₹ 1.5L', image: require('../../../../assets/EventMimg/Jewelary/bridalJewelary.jpg'), category: 'Jewellery', likes: '1.2k', description: 'Handcrafted Kundan set with precious stones, perfect for your big day.' },
+    { id: '12', name: 'Diamond Choker', location: 'Mumbai, MH', locality: 'Chinchwad', rating: '4.9', ratingValue: 4.9, reviews: 120, guests: 'Necklace', type: 'Diamond', wmgAward: true, price: '₹ 2.25L', image: require('../../../../assets/EventMimg/Jewelary/Djewellery.jpg'), category: 'Jewellery', likes: '2.5k', description: 'Exquisite diamond choker with solitary emerald center piece.' },
+    { id: '3', name: 'Temple Gold Set', location: 'Chennai, TN', locality: 'Pimpri', rating: '4.7', ratingValue: 4.7, reviews: 25, guests: 'Traditional', type: 'Gold', wmgAward: false, price: '₹ 3.0L', image: require('../../../../assets/EventMimg/Jewelary/jewelary.jpg'), category: 'Jewellery', likes: '850', description: 'Traditional Temple jewellery with intricate god and goddess motifs.' },
+    { id: '4', name: 'Polki Earrings', location: 'Hyderabad, TS', locality: 'Kothrud', rating: '4.6', ratingValue: 4.6, reviews: 8, guests: 'Earrings', type: 'Artificial', wmgAward: false, price: '₹ 75k', image: require('../../../../assets/EventMimg/Jewelary/jewelry4.jpg'), category: 'Accessories', likes: '450', description: 'Statement Polki earrings to add a touch of royalty to your look.' },
+    { id: '15', name: 'Antique Bangles', location: 'Kolkata, WB', locality: 'Alephata', rating: '4.8', ratingValue: 4.8, reviews: 60, guests: 'Bangles', type: 'Gold', wmgAward: true, price: '₹ 1.2L', image: require('../../../../assets/EventMimg/Jewelary/RING 3.jpeg'), category: 'Jewellery', likes: '1.8k', description: 'Antique gold bangles with intricate filigree work.' },
+    { id: '6', name: 'Floral Hathphool', location: 'Delhi, DL', locality: 'Ashok Nagar', rating: '4.5', ratingValue: 4.5, reviews: 12, guests: 'Floral', type: 'Flower Jewellery', wmgAward: false, price: '₹ 15k', image: require('../../../../assets/EventMimg/Jewelary/flowerlJewelary.jpg'), category: 'Flower Jewellery', likes: '320', description: 'Fresh floral hathphool for Haldi and Mehendi ceremonies.' },
+    { id: '7', name: 'Rent: Kundan Set', location: 'Pune, MH', locality: 'Pimpri Chinchwad', rating: '4.2', ratingValue: 4.2, reviews: 35, guests: 'Rental, Gemstone', type: 'Bridal Jewellery on Rent', wmgAward: false, price: '₹ 25k', image: require('../../../../assets/EventMimg/Jewelary/jewelry1.jpg'), category: 'Bridal Jewellery on Rent', likes: '210', description: 'Premium Kundan bridal set available for rent at affordable rates.' },
+    { id: '8', name: 'Ruby Gemstone Ring', location: 'Mumbai, MH', locality: 'Kothrud', rating: '4.9', ratingValue: 4.9, reviews: 50, guests: 'Gemstone', type: 'Gold, Diamond', wmgAward: true, price: '₹ 85k', image: require('../../../../assets/EventMimg/Jewelary/RING4.jpg'), category: 'Jewellery', likes: '980', description: 'Stunning ruby gemstone ring surrounded by diamonds.' },
+    { id: '9', name: 'Emerald Necklace', location: 'Delhi, DL', locality: 'Ashok Nagar', rating: '4.7', ratingValue: 4.7, reviews: 22, guests: 'Necklace, Gemstone', type: 'Gold', wmgAward: false, price: '₹ 1.8L', image: require('../../../../assets/EventMimg/Jewelary/Djewellery1.jpg'), category: 'Jewellery', likes: '650', description: 'Elegant emerald necklace set in 18k gold.' },
+    { id: '10', name: 'Pearl Drop Earrings', location: 'Jaipur, RJ', locality: 'Chinchwad', rating: '4.5', ratingValue: 4.5, reviews: 18, guests: 'Earrings', type: 'Artificial', wmgAward: false, price: '₹ 12k', image: require('../../../../assets/EventMimg/Jewelary/accessories.jpg'), category: 'Accessories', likes: '150', description: 'Classic pearl drop earrings suitable for any occasion.' },
+    { id: '11', name: 'Diamond Bangle Set', location: 'Surat, GJ', locality: 'Pimpri', rating: '4.8', ratingValue: 4.8, reviews: 42, guests: 'Bangles, Diamond', type: 'Diamond', wmgAward: true, price: '₹ 3.5L', image: require('../../../../assets/EventMimg/Jewelary/Djewellery2.jpg'), category: 'Jewellery', likes: '3.1k', description: 'Luxurious diamond bangle set with intricate detailing.' },
 ];
 
 const DETAILED_FILTERS = [
@@ -115,13 +115,111 @@ const DETAILED_FILTERS = [
     { id: 'Rating', name: 'Rating', options: ['All Ratings', 'Rated <4', 'Rated 4+', 'Rated 4.5+', 'Rated 4.8+'] }
 ];
 
-const FEATURED_COLLECTIONS = [
-    { id: '1', name: 'Temple Jewellery', image: { uri: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2070&auto=format&fit=crop' }, subtitle: 'Divine • Traditional • Gold', filterKey: 'Temple' },
-    { id: '2', name: 'Kundan Sets', image: { uri: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop' }, subtitle: 'Royal • Polki • Heritage', filterKey: 'Kundan' },
-    { id: '3', name: 'Diamond Love', image: { uri: 'https://images.unsplash.com/photo-1599643478518-17488fbbcd75?q=80&w=2070&auto=format&fit=crop' }, subtitle: 'Modern • Classy • Shine', filterKey: 'Diamond' },
-    { id: '4', name: 'Antique Gold', image: { uri: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=2070&auto=format&fit=crop' }, subtitle: 'Vintage • Heritage • Heavy', filterKey: 'Gold' },
-    { id: '5', name: 'Floral Jewellery', image: { uri: 'https://images.unsplash.com/photo-1588661845173-982163b2255e?q=80&w=1974&auto=format&fit=crop' }, subtitle: 'Haldi • Mehendi • Fresh', filterKey: 'Flower' },
-    { id: '6', name: 'Bridal Sets', image: { uri: 'https://images.unsplash.com/photo-1589139169229-87588019685a?q=80&w=1974&auto=format&fit=crop' }, subtitle: 'Complete • Wedding • Rent', filterKey: 'Bridal' },
+const OUR_VENDORS = [
+    {
+        id: '1',
+        name: 'Tanishq Jewellers',
+        location: 'Pimpri Chinchwad, Pune',
+        rating: '4.9',
+        image: require('../../../../assets/EventMimg/Jewelary/bridalJewelary.jpg'),
+        isLuxury: true,
+        thumbnails: [
+            require('../../../../assets/EventMimg/Jewelary/jewelry1.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/jewelry2.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/jewelry3.jpg')
+        ]
+    },
+    {
+        id: '2',
+        name: 'Kalyan Jewellers',
+        location: 'Kothrud, Pune',
+        rating: '4.8',
+        image: require('../../../../assets/EventMimg/Jewelary/jewelary.jpg'),
+        isLuxury: true,
+        thumbnails: [
+            require('../../../../assets/EventMimg/Jewelary/jewelry4.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/RING 3.jpeg'),
+            require('../../../../assets/EventMimg/Jewelary/RING1.jpg')
+        ]
+    },
+    {
+        id: '3',
+        name: 'Malabar Gold & Diamonds',
+        location: 'Ashok Nagar, Pune',
+        rating: '4.7',
+        image: require('../../../../assets/EventMimg/Jewelary/Djewellery.jpg'),
+        isLuxury: false,
+        thumbnails: [
+            require('../../../../assets/EventMimg/Jewelary/Djewellery1.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/Djewellery2.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/RING2.jpg')
+        ]
+    },
+    {
+        id: '4',
+        name: 'PNG Jewellers',
+        location: 'Laxmi Road, Pune',
+        rating: '4.8',
+        image: require('../../../../assets/EventMimg/Jewelary/jewelry1.jpg'),
+        isLuxury: true,
+        thumbnails: [
+            require('../../../../assets/EventMimg/Jewelary/accessories.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/RING4.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/flowerlJewelary.jpg')
+        ]
+    },
+    {
+        id: '5',
+        name: 'Ranka Jewellers',
+        location: 'Hadapsar, Pune',
+        rating: '4.6',
+        image: require('../../../../assets/EventMimg/Jewelary/jewelry2.jpg'),
+        isLuxury: false,
+        thumbnails: [
+            require('../../../../assets/EventMimg/Jewelary/jewelry3.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/jewelry4.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/RING 3.jpeg')
+        ]
+    },
+    {
+        id: '6',
+        name: 'BlueStone Jewellery',
+        location: 'Viman Nagar, Pune',
+        rating: '4.5',
+        image: require('../../../../assets/EventMimg/Jewelary/Djewellery.jpg'),
+        isLuxury: false,
+        thumbnails: [
+            require('../../../../assets/EventMimg/Jewelary/Djewellery1.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/Djewellery2.jpg'),
+            require('../../../../assets/EventMimg/Jewelary/RING1.jpg')
+        ]
+    },
+    {
+        id: '7',
+        name: 'CaratLane',
+        location: 'Phoenix Mall, Pune',
+        rating: '4.7',
+        image: { uri: 'https://images.unsplash.com/photo-1599643477877-53135311f9ae?q=80&w=2070&auto=format&fit=crop' },
+        isLuxury: false,
+        thumbnails: [
+            { uri: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2070&auto=format&fit=crop' },
+            { uri: 'https://images.unsplash.com/photo-1589139169229-87588019685a?q=80&w=1974&auto=format&fit=crop' },
+            { uri: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=2070&auto=format&fit=crop' }
+        ]
+    },
+    {
+        id: '8',
+        name: 'TBZ - The Original',
+        location: 'Bund Garden, Pune',
+        rating: '4.8',
+        image: { uri: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=2070&auto=format&fit=crop' },
+        isLuxury: true,
+        thumbnails: [
+            { uri: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=2070&auto=format&fit=crop' },
+            { uri: 'https://images.unsplash.com/photo-1588661845173-982163b2255e?q=80&w=1974&auto=format&fit=crop' },
+            { uri: 'https://images.unsplash.com/photo-1605100804763-ebea243bc612?q=80&w=2070&auto=format&fit=crop' }
+        ]
+    }
 ];
 
 const VIBE_DATA = [
@@ -143,6 +241,47 @@ const JewelleryScreen = ({ navigation }) => {
 
     const [likedItems, setLikedItems] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('All');
+
+    // Auto-Scroll Logic for Vendors
+    const vendorScrollRef = useRef(null);
+    const scrollInterval = useRef(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        startAutoScroll();
+        return () => stopAutoScroll();
+    }, [currentIndex]);
+
+    const startAutoScroll = () => {
+        stopAutoScroll();
+        scrollInterval.current = setInterval(() => {
+            let nextIndex = currentIndex + 1;
+            if (nextIndex >= OUR_VENDORS.length) {
+                nextIndex = 0;
+            }
+
+            if (vendorScrollRef.current) {
+                vendorScrollRef.current.scrollTo({
+                    x: nextIndex * (width * 0.75 + 15), // Card width + margin
+                    animated: true,
+                });
+                setCurrentIndex(nextIndex);
+            }
+        }, 3000);
+    };
+
+    const stopAutoScroll = () => {
+        if (scrollInterval.current) {
+            clearInterval(scrollInterval.current);
+        }
+    };
+
+    const handleMomentumScrollEnd = (event) => {
+        const contentOffsetX = event.nativeEvent.contentOffset.x;
+        const index = Math.round(contentOffsetX / (width * 0.75 + 15));
+        setCurrentIndex(index);
+        startAutoScroll(); // Restart timer after manual scroll
+    };
 
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -214,53 +353,174 @@ const JewelleryScreen = ({ navigation }) => {
                 </View>
 
                 {/* Featured Collections */}
+                {/* Our Vendors Section */}
                 <View style={styles.sectionContainer}>
-                    <Text style={styles.sectionTitle}>Featured Collections</Text>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.horizontalScroll}>
-                        {FEATURED_COLLECTIONS.map((item) => (
-                            <TouchableOpacity key={item.id} style={styles.featuredCard}>
-                                <ImageBackground source={item.image} style={styles.featuredImage} imageStyle={{ borderRadius: 15 }}>
-                                    <View style={styles.featuredOverlay}>
-                                        <Text style={styles.featuredName}>{item.name}</Text>
+                    <View style={styles.rowBetween}>
+                        <Text style={styles.sectionTitle}>Our Vendors</Text>
+                        <TouchableOpacity>
+                            <Text style={styles.browseMoreText}>Browse More</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <ScrollView
+                        ref={vendorScrollRef}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.horizontalScroll}
+                        onScrollBeginDrag={stopAutoScroll}
+                        onMomentumScrollEnd={handleMomentumScrollEnd}
+                        snapToInterval={width * 0.75 + 15}
+                        decelerationRate="fast"
+                    >
+                        {OUR_VENDORS.map((item) => (
+                            <TouchableOpacity key={item.id} style={styles.vendorCard} onPress={() => navigation.navigate('JewelleryDetails', { item })}>
+                                <View style={styles.vendorImageContainer}>
+                                    <Image source={item.image} style={styles.vendorImage} />
+                                    {item.isLuxury && (
+                                        <View style={styles.luxuryTag}>
+                                            <Text style={styles.luxuryText}>Luxury</Text>
+                                        </View>
+                                    )}
+                                </View>
+                                <View style={styles.vendorContent}>
+                                    <View style={styles.rowBetween}>
+                                        <Text style={styles.vendorName}>{item.name}</Text>
+                                        <View style={styles.ratingPill}>
+                                            <Ionicons name="star" size={12} color="#fff" />
+                                            <Text style={styles.ratingValue}>{item.rating}</Text>
+                                        </View>
                                     </View>
-                                </ImageBackground>
+                                    <View style={styles.locationRow}>
+                                        <Ionicons name="location-outline" size={14} color="#666" />
+                                        <Text style={styles.vendorLocation}>{item.location}</Text>
+                                    </View>
+
+                                    <View style={styles.thumbnailRowContainer}>
+                                        <View style={styles.thumbnailRow}>
+                                            {item.thumbnails?.slice(0, 3).map((thumb, index) => (
+                                                <Image key={index} source={thumb} style={styles.thumbnailImage} />
+                                            ))}
+                                        </View>
+                                        <TouchableOpacity style={styles.followButton}>
+                                            <Text style={styles.followText}>Follow</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
                             </TouchableOpacity>
                         ))}
                     </ScrollView>
                 </View>
 
                 {/* Top Picks Grid */}
+                {/* Top Picks Grid */}
                 <View style={styles.sectionContainer}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
-                        <Text style={styles.sectionTitle}>Top Picks For You</Text>
-                        <TouchableOpacity onPress={() => setModalVisible(true)}>
-                            <Ionicons name="filter" size={24} color={COLORS.textRed} />
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.gridContainer}>
-                        {filteredData.map((item) => {
-                            const isLiked = likedItems[item.id];
-                            return (
-                                <TouchableOpacity key={item.id} style={styles.gridCard} onPress={() => navigation.navigate('JewelleryDetails', { item })}>
-                                    <View style={styles.gridImageContainer}>
-                                        <Image source={item.image} style={styles.gridImage} resizeMode="cover" />
-                                        <TouchableOpacity style={styles.gridHeartBtn} onPress={() => toggleLike(item.id)}>
-                                            <Ionicons name={isLiked ? "heart" : "heart-outline"} size={18} color={isLiked ? "red" : "#333"} />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={styles.gridContent}>
-                                        <View style={styles.gridHeaderRow}>
-                                            <Text style={styles.gridTitle} numberOfLines={1}>{item.name}</Text>
-                                            <View style={styles.gridRatingContainer}>
-                                                <Ionicons name="star" size={10} color="#F29502" />
-                                                <Text style={styles.gridRatingText}>{item.ratingValue}</Text>
+                    <Text style={styles.sectionTitle}>Top Picks For You</Text>
+                    <View style={{ paddingBottom: 20 }}>
+                        {filteredData.map((item, index) => {
+                            if (index % 3 === 0) {
+                                // Hero Card (Every 3rd item starting at 0)
+                                return (
+                                    <TouchableOpacity key={item.id} style={styles.topPickCard} onPress={() => navigation.navigate('JewelleryDetails', { item })}>
+                                        <View style={styles.cardImageContainer}>
+                                            <Image source={item.image} style={styles.cardImage} />
+                                            <View style={styles.cardOverlay}>
+                                                <TouchableOpacity style={styles.heartButton} onPress={() => toggleLike(item.id)}>
+                                                    <Ionicons name={likedItems[item.id] ? "heart" : "heart-outline"} size={22} color={likedItems[item.id] ? "red" : "#fff"} />
+                                                </TouchableOpacity>
+                                                <View style={styles.imageDots}>
+                                                    <View style={[styles.dot, styles.activeDot]} />
+                                                    <View style={styles.dot} />
+                                                    <View style={styles.dot} />
+                                                </View>
                                             </View>
                                         </View>
-                                        <Text style={styles.gridPrice}>{item.price}</Text>
+                                        <View style={styles.cardContent}>
+                                            <View style={styles.headerRow}>
+                                                <Text style={styles.cardTitle}>{item.name}</Text>
+                                                <View style={styles.ratingBadge}>
+                                                    <Ionicons name="star" size={12} color="#F29502" />
+                                                    <Text style={styles.ratingText}>{item.ratingValue}</Text>
+                                                </View>
+                                            </View>
+                                            <Text style={styles.cardDescription} numberOfLines={2}>{item.description}</Text>
+                                            <View style={{ marginTop: 8 }}>
+                                                <Text style={styles.cardMeta}>{item.category} • {item.location}</Text>
+                                                <Text style={styles.cardLocality}>{item.locality}</Text>
+                                            </View>
+                                            <View style={styles.cardFooter}>
+                                                <Text style={styles.likesText}>{item.likes} likes</Text>
+                                                <Ionicons name="bookmark-outline" size={22} color="#888" />
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            } else if (index % 3 === 1) {
+                                // Start of a Grid Pair (Index 1, 4, 7...)
+                                // Render this item and the next one (if exists) in a row
+                                const nextItem = filteredData[index + 1];
+                                return (
+                                    <View key={`grid-row-${index}`} style={styles.gridContainer}>
+                                        {/* Current Item (Left Grid) - Height 210 */}
+                                        <TouchableOpacity style={styles.gridCard} onPress={() => navigation.navigate('JewelleryDetails', { item })}>
+                                            <View style={[styles.gridImageContainer, { height: 200 }]}>
+                                                <Image source={item.image} style={styles.gridImage} resizeMode="cover" />
+                                                <TouchableOpacity style={styles.gridHeartBtn} onPress={() => toggleLike(item.id)}>
+                                                    <Ionicons name={likedItems[item.id] ? "heart" : "heart-outline"} size={18} color={likedItems[item.id] ? "red" : "#333"} />
+                                                </TouchableOpacity>
+                                            </View>
+                                            <View style={styles.gridContent}>
+                                                <View style={styles.gridHeaderRow}>
+                                                    <Text style={styles.gridTitle} numberOfLines={1}>{item.name}</Text>
+                                                    <View style={styles.gridRatingContainer}>
+                                                        <Ionicons name="star" size={10} color="#F29502" />
+                                                        <Text style={styles.gridRatingText}>{item.ratingValue}</Text>
+                                                    </View>
+                                                </View>
+                                                <View style={{ marginTop: 6 }}>
+                                                    <Text style={styles.gridMeta} numberOfLines={1}>{item.category} • {item.location}</Text>
+                                                    <Text style={styles.gridLocality} numberOfLines={1}>{item.locality}</Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+                                                    <Text style={{ fontSize: 10, color: '#888' }}>{item.likes} likes</Text>
+                                                    <Ionicons name="bookmark-outline" size={16} color="#888" />
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+
+                                        {/* Next Item (Right Grid) - Only if it exists and is part of the pair - Height 260 */}
+                                        {nextItem && (
+                                            <TouchableOpacity style={styles.gridCard} onPress={() => navigation.navigate('JewelleryDetails', { item: nextItem })}>
+                                                <View style={[styles.gridImageContainer, { height: 260 }]}>
+                                                    <Image source={nextItem.image} style={styles.gridImage} resizeMode="cover" />
+                                                    <TouchableOpacity style={styles.gridHeartBtn} onPress={() => toggleLike(nextItem.id)}>
+                                                        <Ionicons name={likedItems[nextItem.id] ? "heart" : "heart-outline"} size={18} color={likedItems[nextItem.id] ? "red" : "#333"} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View style={styles.gridContent}>
+                                                    <View style={styles.gridHeaderRow}>
+                                                        <Text style={styles.gridTitle} numberOfLines={1}>{nextItem.name}</Text>
+                                                        <View style={styles.gridRatingContainer}>
+                                                            <Ionicons name="star" size={10} color="#F29502" />
+                                                            <Text style={styles.gridRatingText}>{nextItem.ratingValue}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View style={{ marginTop: 6 }}>
+                                                        <Text style={styles.gridMeta} numberOfLines={1}>{nextItem.category} • {nextItem.location}</Text>
+                                                        <Text style={styles.gridLocality} numberOfLines={1}>{nextItem.locality}</Text>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
+                                                        <Text style={{ fontSize: 10, color: '#888' }}>{nextItem.likes} likes</Text>
+                                                        <Ionicons name="bookmark-outline" size={16} color="#888" />
+                                                    </View>
+                                                </View>
+                                            </TouchableOpacity>
+                                        )}
                                     </View>
-                                </TouchableOpacity>
-                            );
+                                );
+                            } else {
+                                // Index % 3 === 2 (Already rendered as 'nextItem', skip)
+                                return null;
+                            }
                         })}
                     </View>
                 </View>
@@ -322,15 +582,15 @@ const styles = StyleSheet.create({
     heroSubtext: { color: '#eee', fontSize: 13, fontWeight: '500', marginBottom: 25 },
     heroCTA: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.kumkum, alignSelf: 'flex-start', paddingVertical: 14, paddingHorizontal: 35, borderRadius: 30, elevation: 4 },
     heroCTAText: { color: '#fff', fontSize: 15, fontWeight: 'bold' },
-    statsStrip: {
+    searchContainer: {
         position: 'absolute',
-        bottom: -35,
+        bottom: -30,
         alignSelf: 'center',
         width: width * 0.92,
         backgroundColor: '#fff',
-        borderRadius: 20,
+        borderRadius: 40,
         flexDirection: 'row',
-        paddingVertical: 15,
+        paddingVertical: 18,
         paddingHorizontal: 20,
         elevation: 8,
         zIndex: 40,
@@ -339,67 +599,176 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 8,
         alignItems: 'center',
-        justifyContent: 'space-between',
         borderWidth: 1,
         borderColor: '#f0f0f0'
     },
-    statsSection: {
-        flex: 1,
+    locationButton: {
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center'
+        marginRight: 10,
     },
-    statsValue: {
-        fontSize: 18,
+    locationText: {
+        fontSize: 14,
         fontWeight: 'bold',
-        color: COLORS.textRed,
-        marginBottom: 2
+        color: '#333',
+        marginHorizontal: 5,
     },
-    statsLabel: {
-        fontSize: 10,
-        fontWeight: '500',
-        color: '#666',
-        textAlign: 'center',
-        lineHeight: 14
-    },
-    verticalDivider: {
+    searchDivider: {
         width: 1,
-        height: '70%',
-        backgroundColor: '#eee'
+        height: '60%',
+        backgroundColor: '#ddd',
+        marginRight: 10,
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 14,
+        color: '#333',
+        paddingVertical: 0,
     },
     sectionContainer: { marginTop: 30, paddingHorizontal: 20 },
     sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textRed, marginBottom: 10 },
     horizontalScroll: { paddingRight: 20 },
-    featuredCard: { width: width * 0.28, height: 140, marginRight: 10 },
-    featuredImage: { width: '100%', height: '100%', justifyContent: 'flex-end' },
-    featuredOverlay: { padding: 10, borderBottomLeftRadius: 15, borderBottomRightRadius: 15, backgroundColor: 'rgba(0,0,0,0.1)' },
-    featuredName: { color: '#fff', fontWeight: 'bold', textShadowColor: 'rgba(0, 0, 0, 0.75)', textShadowOffset: { width: -1, height: 1 }, textShadowRadius: 10 },
+    browseMoreText: { color: '#F29502', fontWeight: 'bold', fontSize: 13 },
+    vendorCard: {
+        width: width * 0.75,
+        backgroundColor: '#fff',
+        borderRadius: 20,
+        marginRight: 15,
+        overflow: 'hidden',
+        elevation: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        marginBottom: 10
+    },
+    vendorImageContainer: { height: 180, position: 'relative' },
+    vendorImage: { width: '100%', height: '100%', resizeMode: 'cover' },
+    luxuryTag: {
+        position: 'absolute',
+        top: 15,
+        left: 15,
+        backgroundColor: '#fff',
+        paddingHorizontal: 12,
+        paddingVertical: 5,
+        borderRadius: 15,
+        elevation: 3
+    },
+    luxuryText: { color: COLORS.kumkum, fontWeight: 'bold', fontSize: 12 },
+    vendorContent: { padding: 15 },
+    rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 },
+    vendorName: { fontSize: 18, fontWeight: 'bold', color: '#333', flex: 1, marginRight: 10 },
+    ratingPill: {
+        backgroundColor: '#F29502',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: 15
+    },
+    ratingValue: { color: '#fff', fontWeight: 'bold', fontSize: 13, marginLeft: 4 },
+    locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 5, marginBottom: 15 },
+    vendorLocation: { fontSize: 13, color: '#666', marginLeft: 4 },
+    thumbnailRowContainer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    thumbnailRow: { flexDirection: 'row' },
+    thumbnailImage: { width: 45, height: 45, borderRadius: 12, marginRight: 8 },
+    followButton: {
+        borderColor: '#F29502',
+        borderWidth: 1.5,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 25,
+        backgroundColor: '#fff'
+    },
+    followText: { color: '#F29502', fontWeight: 'bold', fontSize: 13 },
     vibeScroll: { paddingRight: 20 },
     vibeItem: { width: 70, height: 70, borderRadius: 35, backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#f29502', justifyContent: 'center', alignItems: 'center' },
     activeVibeItem: { backgroundColor: '#FFF8E1' },
     vibeText: { fontSize: 11, color: COLORS.textRed, marginTop: 5, fontWeight: '700', textAlign: 'center' },
-    cardContainer: { marginBottom: 20, borderRadius: 20, overflow: 'hidden', height: 350, borderWidth: 1.5, borderColor: '#FFD700' },
-    cardImage: { width: '100%', height: '100%' },
-    ratingBadge: { position: 'absolute', top: 15, left: 15, backgroundColor: '#F29502', width: 35, height: 35, borderRadius: 17.5, alignItems: 'center', justifyContent: 'center' },
-    ratingText: { color: '#fff', fontWeight: 'bold' },
-    heartBtn: { position: 'absolute', top: 15, right: 15, backgroundColor: '#fff', width: 35, height: 35, borderRadius: 17.5, alignItems: 'center', justifyContent: 'center' },
-    floatingContent: { position: 'absolute', bottom: 15, left: 15, right: 15, backgroundColor: '#fff', borderRadius: 15, padding: 12, borderWidth: 1, borderColor: '#FFD700' },
-    cardTitle: { fontSize: 16, fontWeight: 'bold', color: COLORS.textRed },
-    cardLocation: { fontSize: 12, color: '#F29502' },
-    rowBetween: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 },
-    cardPrice: { fontSize: 14, fontWeight: 'bold', color: COLORS.textRed },
-    capacityBadge: { backgroundColor: '#FFF8E1', paddingHorizontal: 8, borderRadius: 10 },
-    capacityText: { fontSize: 10, color: '#f29502' },
-    gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-    gridCard: { width: (width - 50) / 2, marginBottom: 20, backgroundColor: 'transparent' }, // width calculation: (screen width - padding*2 - gap)/2
-    gridImageContainer: { height: 160, borderRadius: 12, overflow: 'hidden', marginBottom: 8 },
+
+    topPickCard: {
+        backgroundColor: '#fff',
+        borderRadius: 25,
+        marginBottom: 25,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        borderWidth: 1,
+        borderColor: '#f29502',
+        overflow: 'hidden'
+    },
+    cardImageContainer: { height: 220, position: 'relative' },
+    cardImage: { width: '100%', height: '100%', resizeMode: 'cover' },
+    cardOverlay: { ...StyleSheet.absoluteFillObject, justifyContent: 'space-between', padding: 15 },
+    heartButton: {
+        alignSelf: 'flex-end',
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        padding: 8,
+        borderRadius: 20
+    },
+    imageDots: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginBottom: 5
+    },
+    dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.5)', marginHorizontal: 3 },
+    activeDot: { backgroundColor: '#fff', width: 18 },
+    cardContent: { padding: 20 },
+    headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 },
+    cardTitle: { fontSize: 20, fontWeight: 'bold', color: '#000' },
+    ratingBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 12,
+        elevation: 2,
+        borderWidth: 0.5,
+        borderColor: '#ddd'
+    },
+    ratingText: { marginLeft: 4, fontWeight: 'bold', fontSize: 13, color: '#333' },
+    cardDescription: { fontSize: 14, color: '#666', lineHeight: 20, marginBottom: 12 },
+    cardMeta: { fontSize: 13, fontWeight: 'bold', color: COLORS.textRed, marginBottom: 2 },
+    cardLocality: { fontSize: 12, color: '#888' },
+    cardFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 15,
+        paddingTop: 15,
+        borderTopWidth: 1,
+        borderTopColor: '#f0f0f0'
+    },
+    likesText: { fontSize: 14, color: '#888' },
+    gridContainer: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start' },
+    gridCard: {
+        width: (width - 50) / 2,
+        marginBottom: 20,
+        backgroundColor: '#fff',
+        borderRadius: 15,
+        borderWidth: 1,
+        borderColor: '#f29502',
+        padding: 5,
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4
+    }, // width calculation: (screen width - padding*2 - gap)/2
+    gridImageContainer: { borderRadius: 12, overflow: 'hidden', marginBottom: 8, width: '100%' },
     gridImage: { width: '100%', height: '100%' },
     gridHeartBtn: { position: 'absolute', top: 8, right: 8, backgroundColor: '#fff', width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center', elevation: 2 },
     gridContent: { paddingHorizontal: 2 },
     gridHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
-    gridTitle: { fontSize: 13, fontWeight: '600', color: '#333', flex: 1, marginRight: 5 },
-    gridRatingContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF8E1', paddingHorizontal: 4, paddingVertical: 2, borderRadius: 4 },
-    gridRatingText: { fontSize: 10, fontWeight: 'bold', color: '#F29502', marginLeft: 2 },
-    gridPrice: { fontSize: 13, fontWeight: '700', color: '#333' },
+    gridTitle: { fontSize: 13, fontWeight: 'bold', color: '#333', flex: 1, marginRight: 5 },
+    gridRatingContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF8E1', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 8 },
+    gridRatingText: { fontSize: 10, fontWeight: 'bold', color: '#F29502', marginLeft: 3 },
+    gridMeta: { color: COLORS.textRed, fontWeight: '700', fontSize: 10, marginBottom: 2 },
+    gridLocality: { color: '#666', fontSize: 10 },
     modalOverlay: { position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
     modalContainer: { backgroundColor: '#fff', height: '65%', borderTopLeftRadius: 20, borderTopRightRadius: 20 },
     modalHeader: { flexDirection: 'row', justifyContent: 'space-between', padding: 15, borderBottomWidth: 1, borderBottomColor: '#eee' },

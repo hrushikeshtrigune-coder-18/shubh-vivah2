@@ -39,38 +39,46 @@ const COLORS = {
 };
 
 const PORTFOLIO_IMAGES = [
-    { id: '1', uri: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=2070&auto=format&fit=crop' },
-    { id: '2', uri: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=2070&auto=format&fit=crop' },
-    { id: '3', uri: 'https://images.unsplash.com/photo-1599643478518-17488fbbcd75?q=80&w=2070&auto=format&fit=crop' },
-    { id: '4', uri: 'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?q=80&w=2070&auto=format&fit=crop' },
-    { id: '5', uri: 'https://images.unsplash.com/photo-1588661845173-982163b2255e?q=80&w=1974&auto=format&fit=crop' },
-    { id: '6', uri: 'https://images.unsplash.com/photo-1589139169229-87588019685a?q=80&w=1974&auto=format&fit=crop' },
-    { id: '7', uri: 'https://images.unsplash.com/photo-1605100804763-ebea243bc612?q=80&w=2070&auto=format&fit=crop' },
-    { id: '8', uri: 'https://images.unsplash.com/photo-1599643477877-53135311f9ae?q=80&w=2070&auto=format&fit=crop' }
+    { id: '1', source: require('../../../../assets/EventMimg/Jewelary/jewelry1.jpg'), height: 200, label: '4.87 ETH' },
+    { id: '2', source: require('../../../../assets/EventMimg/Jewelary/jewelry2.jpg'), height: 280, label: '2.48 ETH' },
+    { id: '3', source: require('../../../../assets/EventMimg/Jewelary/jewelry3.jpg'), height: 240, label: '1.56 ETH' },
+    { id: '4', source: require('../../../../assets/EventMimg/Jewelary/jewelry4.jpg'), height: 180, label: '2.34 ETH' },
+    { id: '5', source: require('../../../../assets/EventMimg/Jewelary/RING 3.jpeg'), height: 260, label: '3.12 ETH' },
+    { id: '6', source: require('../../../../assets/EventMimg/Jewelary/RING1.jpg'), height: 220, label: '5.20 ETH' },
+    { id: '7', source: require('../../../../assets/EventMimg/Jewelary/RING2.jpg'), height: 240, label: '1.98 ETH' },
+    { id: '8', source: require('../../../../assets/EventMimg/Jewelary/RING4.jpg'), height: 200, label: '4.15 ETH' },
 ];
 
-const HeroImg1 = require('../../../../assets/EventMimg/Jewelary/Djewellery.jpg');
-const HeroImg2 = require('../../../../assets/EventMimg/Jewelary/Djewellery1.jpg');
-const HeroImg3 = require('../../../../assets/EventMimg/Jewelary/Djewellery2.jpg');
-
-const HERO_IMAGES = [
-    { id: 'local-1', source: HeroImg1 },
-    { id: 'local-2', source: HeroImg2 },
-    { id: 'local-3', source: HeroImg3 },
+const SUB_CATEGORIES = ['Photos', 'Videos', 'Media'];
+const SUB_FILTERS = [
+    { id: 'floral', name: 'Floral', icon: 'flower-outline' },
+    { id: 'theme', name: 'Theme', icon: 'color-palette-outline' },
+    { id: 'traditional', name: 'Traditional', icon: 'layers-outline' },
 ];
 
 const JewelleryDetails = ({ route, navigation }) => {
     const { item } = route.params || {};
     const insets = useSafeAreaInsets();
-    const [activeTab, setActiveTab] = useState('PORTFOLIO');
+    const [activeTab, setActiveTab] = useState('PROJECTS');
     const [isBookmark, setIsBookmark] = useState(false);
     const [bookModalVisible, setBookModalVisible] = useState(false);
+    const [activeSubTab, setActiveSubTab] = useState('Media');
+    const [activeSubFilter, setActiveSubFilter] = useState('floral');
 
     // Hero Carousel Logic
     const flatListRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    const heroImages = HERO_IMAGES;
+    // Dynamic Hero Images
+    const heroImages = React.useMemo(() => {
+        if (item?.thumbnails && Array.isArray(item.thumbnails) && item.thumbnails.length > 0) {
+            return item.thumbnails.map((img, index) => ({ id: `hero-${index}`, source: img }));
+        }
+        if (item?.image) {
+            return [{ id: 'hero-main', source: item.image }];
+        }
+        return [];
+    }, [item]);
 
     useEffect(() => {
         if (heroImages.length <= 1) return;
@@ -169,8 +177,6 @@ const JewelleryDetails = ({ route, navigation }) => {
         </View>
     );
 
-
-
     return (
         <View style={styles.mainContainer}>
             {Platform.OS !== 'web' && <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />}
@@ -190,7 +196,7 @@ const JewelleryDetails = ({ route, navigation }) => {
                         setCurrentIndex(newIndex);
                     }}
                 >
-                    {HERO_IMAGES.map((item) => (
+                    {heroImages.map((item) => (
                         <Image
                             key={item.id}
                             source={item.source}
@@ -251,21 +257,78 @@ const JewelleryDetails = ({ route, navigation }) => {
                     {/* Highlights Scroll */}
 
 
-                    {/* Tabs */}
-                    <View style={styles.tabsWrapper}>
-                        <TabPill title="Portfolio" active={activeTab === 'PORTFOLIO'} onPress={() => setActiveTab('PORTFOLIO')} />
-                        <TabPill title="Albums" active={activeTab === 'ALBUMS'} onPress={() => setActiveTab('ALBUMS')} />
-                        <TabPill title="Videos" active={activeTab === 'VIDEOS'} onPress={() => setActiveTab('VIDEOS')} />
+                    {/* Main Tabs */}
+                    <View style={styles.mainTabsWrapper}>
+                        {['Projects', 'Pricing', 'About', 'Reviews'].map((tab) => (
+                            <TouchableOpacity
+                                key={tab}
+                                onPress={() => setActiveTab(tab.toUpperCase())}
+                                style={[styles.mainTabItem, activeTab === tab.toUpperCase() && styles.activeMainTabItem]}
+                            >
+                                <Text style={[styles.mainTabText, activeTab === tab.toUpperCase() && styles.activeMainTabText]}>{tab}</Text>
+                            </TouchableOpacity>
+                        ))}
                     </View>
 
-                    {/* Portfolio Grid */}
-                    {activeTab === 'PORTFOLIO' && (
-                        <View style={styles.gridContainer}>
-                            {PORTFOLIO_IMAGES.map((img) => (
-                                <View key={img.id} style={styles.gridItem}>
-                                    <Image source={{ uri: img.uri }} style={styles.gridImage} resizeMode="cover" />
+                    {/* Portfolio Content */}
+                    {activeTab === 'PROJECTS' && (
+                        <View style={styles.portfolioSection}>
+                            <View style={styles.portfolioHeaderRow}>
+                                <Text style={styles.portfolioTitle}>Portfolio</Text>
+                                <View style={styles.subCategoryTabs}>
+                                    {SUB_CATEGORIES.map((cat) => (
+                                        <TouchableOpacity
+                                            key={cat}
+                                            onPress={() => setActiveSubTab(cat)}
+                                            style={[styles.subTabItem, activeSubTab === cat && styles.activeSubTabItem]}
+                                        >
+                                            <Text style={[styles.subTabText, activeSubTab === cat && styles.activeSubTabText]}>{cat}</Text>
+                                        </TouchableOpacity>
+                                    ))}
                                 </View>
-                            ))}
+                            </View>
+
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.subFilterPills}>
+                                {SUB_FILTERS.map((filter) => (
+                                    <TouchableOpacity
+                                        key={filter.id}
+                                        onPress={() => setActiveSubFilter(filter.id)}
+                                        style={[styles.subFilterPill, activeSubFilter === filter.id && styles.activeSubFilterPill]}
+                                    >
+                                        <Ionicons
+                                            name={filter.icon}
+                                            size={18}
+                                            color={activeSubFilter === filter.id ? COLORS.white : COLORS.textGray}
+                                        />
+                                        <Text style={[styles.subFilterText, activeSubFilter === filter.id && styles.activeSubFilterText]}>
+                                            {filter.name}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </ScrollView>
+
+                            <View style={styles.masonryGrid}>
+                                <View style={styles.gridColumn}>
+                                    {PORTFOLIO_IMAGES.filter((_, i) => i % 2 === 0).map((img) => (
+                                        <View key={img.id} style={[styles.masonryItem, { height: img.height }]}>
+                                            <Image source={img.source} style={styles.gridImage} resizeMode="cover" />
+                                            <View style={styles.gridItemOverlay}>
+                                                <Text style={styles.gridItemText}>{img.label}</Text>
+                                            </View>
+                                        </View>
+                                    ))}
+                                </View>
+                                <View style={styles.gridColumn}>
+                                    {PORTFOLIO_IMAGES.filter((_, i) => i % 2 !== 0).map((img) => (
+                                        <View key={img.id} style={[styles.masonryItem, { height: img.height }]}>
+                                            <Image source={img.source} style={styles.gridImage} resizeMode="cover" />
+                                            <View style={styles.gridItemOverlay}>
+                                                <Text style={styles.gridItemText}>{img.label}</Text>
+                                            </View>
+                                        </View>
+                                    ))}
+                                </View>
+                            </View>
                         </View>
                     )}
 
@@ -360,11 +423,7 @@ const JewelleryDetails = ({ route, navigation }) => {
     );
 };
 
-const TabPill = ({ title, active, onPress }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.tabPill, active && styles.activeTabPill]}>
-        <Text style={[styles.tabPillText, active && styles.activeTabPillText]}>{title}</Text>
-    </TouchableOpacity>
-);
+// End of JewelleryDetails
 
 const styles = StyleSheet.create({
     mainContainer: { flex: 1, backgroundColor: COLORS.akshid },
@@ -431,21 +490,89 @@ const styles = StyleSheet.create({
 
 
 
-    // Tabs
-    tabsWrapper: { flexDirection: 'row', gap: 10, marginBottom: 20 },
-    tabPill: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, backgroundColor: COLORS.white, borderWidth: 1, borderColor: 'transparent' },
-    activeTabPill: { backgroundColor: COLORS.white, borderColor: COLORS.kumkum, borderWidth: 1 },
-    tabPillText: { fontSize: 13, color: COLORS.textGray, fontWeight: '600' },
-    activeTabPillText: { color: COLORS.kumkum },
+    // Main Tabs
+    mainTabsWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 20,
+        borderBottomWidth: 1,
+        borderBottomColor: '#F0F0F0',
+    },
+    mainTabItem: {
+        paddingVertical: 10,
+        paddingHorizontal: 5,
+        borderBottomWidth: 3,
+        borderBottomColor: 'transparent',
+    },
+    activeMainTabItem: {
+        borderBottomColor: COLORS.darkHaldi,
+    },
+    mainTabText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#A0A0A0'
+    },
+    activeMainTabText: {
+        color: COLORS.darkHaldi
+    },
 
-    // Grid
-    gridContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-    gridItem: {
-        width: (width - 40 - 20) / 3,
-        height: (width - 40 - 20) / 3,
-        borderRadius: 12, overflow: 'hidden', backgroundColor: COLORS.haldi
+    // Portfolio Section
+    portfolioSection: { marginTop: 10 },
+    portfolioHeaderRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        marginBottom: 15
+    },
+    portfolioTitle: { fontSize: 24, fontWeight: '800', color: COLORS.textDark },
+    subCategoryTabs: { flexDirection: 'row', gap: 15 },
+    subTabItem: { paddingBottom: 5, borderBottomWidth: 2, borderBottomColor: 'transparent' },
+    activeSubTabItem: { borderBottomColor: COLORS.darkHaldi },
+    subTabText: { fontSize: 13, fontWeight: '600', color: COLORS.textGray },
+    activeSubTabText: { color: COLORS.darkHaldi },
+
+    subFilterPills: { flexDirection: 'row', marginBottom: 20 },
+    subFilterPill: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 20,
+        backgroundColor: '#F0F0F0',
+        marginRight: 10,
+        gap: 6
+    },
+    activeSubFilterPill: { backgroundColor: COLORS.darkHaldi },
+    subFilterText: { fontSize: 13, fontWeight: '600', color: COLORS.textGray },
+    activeSubFilterText: { color: COLORS.white },
+
+    masonryGrid: { flexDirection: 'row', gap: 15 },
+    gridColumn: { flex: 1, gap: 15 },
+    masonryItem: {
+        borderRadius: 80, // Large border radius for the oval effect
+        overflow: 'hidden',
+        backgroundColor: COLORS.haldi,
+        position: 'relative'
     },
     gridImage: { width: '100%', height: '100%' },
+    gridItemOverlay: {
+        position: 'absolute',
+        bottom: 20,
+        left: 0,
+        right: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.25)', // Glassmorphic look
+        paddingVertical: 5,
+        marginHorizontal: 20,
+        borderRadius: 20,
+    },
+    gridItemText: {
+        color: COLORS.white,
+        fontSize: 14,
+        fontWeight: '900',
+        fontFamily: Platform.select({ ios: 'Times New Roman', android: 'serif' }), // Serif for that ETH style
+    },
 
     // Bottom CTA
     ctaRow: { marginTop: 30, flexDirection: 'row', gap: 15 },

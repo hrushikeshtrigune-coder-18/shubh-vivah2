@@ -47,7 +47,7 @@ const MOCK_DATA = {
             reviews: 120,
             experience: '8 Years',
             specialization: 'Bridal & Airbrush',
-            image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=2071',
+            image: require('../../../../assets/Makeup/artist1.jpg'),
             price: '₹15,000+',
             type: 'Airbrush'
         },
@@ -59,7 +59,7 @@ const MOCK_DATA = {
             reviews: 85,
             experience: '5 Years',
             specialization: 'HD & Party',
-            image: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1935',
+            image: require('../../../../assets/Makeup/artist2.jpg'),
             price: '₹12,000+',
             type: 'HD Makeup'
         },
@@ -71,7 +71,7 @@ const MOCK_DATA = {
             reviews: 200,
             experience: '10 Years',
             specialization: 'Traditional Bridal',
-            image: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=2069',
+            image: require('../../../../assets/Makeup/artist3.jpg'),
             price: '₹20,000+',
             type: 'Bridal'
         },
@@ -117,7 +117,7 @@ const MakupArtistsPage = () => {
     const renderHeader = () => (
         <View style={styles.header}>
             <Image
-                source={{ uri: 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?q=80&w=2070' }}
+                source={require('../../../../assets/images/makeup.jpg')}
                 style={styles.headerImage}
             />
             <LinearGradient colors={['rgba(0,0,0,0.7)', 'transparent', 'rgba(0,0,0,0.8)']} style={styles.headerOverlay} />
@@ -159,7 +159,7 @@ const MakupArtistsPage = () => {
 
     const renderArtistCard = ({ item }) => (
         <TouchableOpacity style={styles.artistCard} onPress={() => { }}>
-            <Image source={{ uri: item.image }} style={styles.artistImage} />
+            <Image source={typeof item.image === 'string' ? { uri: item.image } : item.image} style={styles.artistImage} />
             <View style={styles.artistInfo}>
                 <View style={styles.artistHeader}>
                     <Text style={styles.artistName}>{item.name}</Text>
