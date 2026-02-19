@@ -7,12 +7,15 @@ import {
     FlatList,
     Image,
     LayoutAnimation,
+    Modal,
     Platform,
     ScrollView,
     StatusBar,
     StyleSheet,
     Text,
+    TextInput,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     useWindowDimensions,
     View
 } from 'react-native';
@@ -46,6 +49,7 @@ const EventManagement = ({ navigation }) => {
     // Force update for hero section visibility
     const [expandedService, setExpandedService] = useState(null);
     const [selectedService, setSelectedService] = useState(null); // For detailed card view
+    const [bookModalVisible, setBookModalVisible] = useState(false);
 
     // Video Player Setup
     const videoSource = require('../../../../assets/EventMimg/EventV.mp4');
@@ -200,8 +204,83 @@ const EventManagement = ({ navigation }) => {
                 />
             </View>
 
+            {/* 1.7 Enquire Now Section */}
+            <View style={[styles.sectionContainer, { backgroundColor: '#FFFBEA', alignItems: 'center', paddingBottom: 60 }]}>
+                <Text style={[styles.sectionTitle, { color: '#A70002', textAlign: 'center' }]}>Ready to Plan Your Perfect Event?</Text>
+                <Text style={[styles.sectionSubtitle, { textAlign: 'center', marginBottom: 25 }]}>Our expert team is here to help you every step of the way.</Text>
+
+                <TouchableOpacity style={styles.largePrimaryCTA} onPress={() => setBookModalVisible(true)}>
+                    <Text style={styles.ctaText}>Enquire Now</Text>
+                    <Ionicons name="arrow-forward" size={20} color="#fff" style={{ marginLeft: 10 }} />
+                </TouchableOpacity>
+            </View>
+
             <View style={{ height: 20 }} />
         </>
+    );
+
+    const renderBookModal = () => (
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={bookModalVisible}
+            onRequestClose={() => setBookModalVisible(false)}
+        >
+            <TouchableWithoutFeedback onPress={() => setBookModalVisible(false)}>
+                <View style={styles.formModalOverlay}>
+                    <TouchableWithoutFeedback onPress={() => { }}>
+                        <View style={styles.formModalContent}>
+                            <View style={[styles.modalHeader, { borderBottomWidth: 1, borderBottomColor: '#eee', paddingBottom: 15 }]}>
+                                <Text style={[styles.modalTitle, { color: '#333', fontSize: 20, marginBottom: 0 }]}>Enquire Now</Text>
+                                <TouchableOpacity onPress={() => setBookModalVisible(false)} style={styles.closeBtn}>
+                                    <Ionicons name="close" size={24} color="#333" />
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={[styles.modalSubtitle, { marginTop: 10, color: '#666' }]}>Fill in the details below and we will get back to you shortly.</Text>
+
+                            <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
+                                <View style={styles.inputGroup}>
+                                    <Text style={styles.label}>Full Name</Text>
+                                    <View style={styles.inputWrapper}>
+                                        <Ionicons name="person-outline" size={20} color={COLORS.kumkum} style={styles.inputIcon} />
+                                        <TextInput placeholder="Enter your full name" style={styles.formInput} placeholderTextColor="#999" />
+                                    </View>
+                                </View>
+
+                                <View style={styles.inputGroup}>
+                                    <Text style={styles.label}>Mobile Number</Text>
+                                    <View style={styles.inputWrapper}>
+                                        <Ionicons name="call-outline" size={20} color={COLORS.kumkum} style={styles.inputIcon} />
+                                        <TextInput placeholder="Enter mobile number" keyboardType="phone-pad" style={styles.formInput} placeholderTextColor="#999" />
+                                    </View>
+                                </View>
+
+                                <View style={styles.rowInputs}>
+                                    <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
+                                        <Text style={styles.label}>Event Date</Text>
+                                        <View style={styles.inputWrapper}>
+                                            <Ionicons name="calendar-outline" size={20} color={COLORS.kumkum} style={styles.inputIcon} />
+                                            <TextInput placeholder="DD/MM/YYYY" style={styles.formInput} placeholderTextColor="#999" />
+                                        </View>
+                                    </View>
+                                    <View style={[styles.inputGroup, { flex: 1 }]}>
+                                        <Text style={styles.label}>Time Slot</Text>
+                                        <View style={styles.inputWrapper}>
+                                            <Ionicons name="time-outline" size={20} color={COLORS.kumkum} style={styles.inputIcon} />
+                                            <TextInput placeholder="e.g. 10:00 AM" style={styles.formInput} placeholderTextColor="#999" />
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <TouchableOpacity style={styles.submitBtn} onPress={() => setBookModalVisible(false)}>
+                                    <Text style={styles.submitBtnText}>Submit Enquiry</Text>
+                                </TouchableOpacity>
+                            </ScrollView>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+            </TouchableWithoutFeedback>
+        </Modal>
     );
 
     return (
@@ -232,6 +311,8 @@ const EventManagement = ({ navigation }) => {
                         {renderScrollContent()}
                     </Reanimated.ScrollView>
                 )}
+
+                {renderBookModal()}
             </View>
         </View>
 
@@ -380,11 +461,7 @@ const FeaturedVendorCard = ({ vendor, navigation }) => (
         entering={FadeInDown.delay(100).duration(600).springify()}
         style={styles.featuredVendorCardContainer}
     >
-        <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.featuredVendorCard}
-            onPress={() => navigation.navigate('VendorDetailScreen', { vendor })}
-        >
+        <View style={styles.featuredVendorCard}>
             {/* Header */}
             <View style={styles.fVendorHeader}>
                 <Text style={styles.fVendorName}>{vendor.name}</Text>
@@ -421,7 +498,7 @@ const FeaturedVendorCard = ({ vendor, navigation }) => (
                     ))}
                 </View>
             </View>
-        </TouchableOpacity>
+        </View>
     </Reanimated.View>
 );
 
@@ -1050,8 +1127,84 @@ const styles = StyleSheet.create({
         fontSize: 12,
     },
 
-
-
+    // New Styles for Booking Form
+    largePrimaryCTA: {
+        backgroundColor: COLORS.kumkum,
+        paddingVertical: 18,
+        paddingHorizontal: 40,
+        borderRadius: 35,
+        flexDirection: 'row',
+        alignItems: 'center',
+        elevation: 6,
+        shadowColor: COLORS.kumkum,
+        shadowOpacity: 0.3,
+        shadowOffset: { width: 0, height: 4 },
+        shadowRadius: 6,
+    },
+    formModalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    formModalContent: {
+        width: width * 0.9,
+        backgroundColor: '#fff',
+        borderRadius: 25,
+        padding: 20,
+        maxHeight: '80%',
+    },
+    closeBtn: {
+        padding: 5,
+    },
+    formContainer: {
+        marginTop: 15,
+    },
+    inputGroup: {
+        marginBottom: 15,
+    },
+    label: {
+        fontSize: 13,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 8,
+        marginLeft: 2,
+    },
+    inputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#F8F8F8',
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: '#EEE',
+        paddingHorizontal: 12,
+        height: 50,
+    },
+    inputIcon: {
+        marginRight: 10,
+    },
+    formInput: {
+        flex: 1,
+        fontSize: 14,
+        color: '#333',
+    },
+    rowInputs: {
+        flexDirection: 'row',
+        marginBottom: 5,
+    },
+    submitBtn: {
+        backgroundColor: COLORS.kumkum,
+        paddingVertical: 15,
+        borderRadius: 12,
+        alignItems: 'center',
+        marginTop: 20,
+        marginBottom: 10,
+    },
+    submitBtnText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 });
 
 export default EventManagement;

@@ -6,7 +6,9 @@ import {
     Dimensions,
     Image,
     ImageBackground,
+    KeyboardAvoidingView,
     Modal,
+    Platform,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -25,10 +27,10 @@ import venue7 from '../../../../assets/images/venue7.jpg';
 import venue8 from '../../../../assets/images/venue8.jpg';
 
 // New Floral Images
-import dfMarigold from '../../../../assets/DF images/Traditional Marigold.jpg';
 import dfPastel from '../../../../assets/DF images/Floral Pastel.jpg';
 import dfMinimal from '../../../../assets/DF images/Modern Minimal.jpg';
 import dfRoyal from '../../../../assets/DF images/Royal Heritage.jpg';
+import dfMarigold from '../../../../assets/DF images/Traditional Marigold.jpg';
 
 const { width, height } = Dimensions.get('window');
 
@@ -330,6 +332,16 @@ const DecorationFloralScreen = ({ navigation }) => {
     const [isVendorProfileVisible, setIsVendorProfileVisible] = useState(false);
     const [activeTab, setActiveTab] = useState('About');
     const [activeMediaTab, setActiveMediaTab] = useState('Photos');
+    const [isContactModalVisible, setIsContactModalVisible] = useState(false);
+
+    // Contact Form States
+    const [contactName, setContactName] = useState('');
+    const [contactMobile, setContactMobile] = useState('');
+    const [contactEventType, setContactEventType] = useState('');
+    const [contactCity, setContactCity] = useState('');
+    const [contactDate, setContactDate] = useState('');
+    const [contactTime, setContactTime] = useState('');
+    const [contactNote, setContactNote] = useState('');
 
 
     const [selectedCity, setSelectedCity] = useState('Mumbai');
@@ -930,7 +942,7 @@ const DecorationFloralScreen = ({ navigation }) => {
                                     </View>
                                 </View>
 
-                                <TouchableOpacity style={styles.profileContactBtn}>
+                                <TouchableOpacity style={styles.profileContactBtn} onPress={() => setIsContactModalVisible(true)}>
                                     <Text style={styles.profileContactBtnText}>Enquire Now</Text>
                                     <Ionicons name="chatbubble-ellipses" size={20} color="#FFF" />
                                 </TouchableOpacity>
@@ -939,6 +951,157 @@ const DecorationFloralScreen = ({ navigation }) => {
                     </Animated.ScrollView>
                 </View >
             </Modal >
+        );
+    };
+
+    const renderContactModal = () => {
+        return (
+            <Modal
+                visible={isContactModalVisible}
+                animationType="fade"
+                transparent={true}
+                onRequestClose={() => setIsContactModalVisible(false)}
+            >
+                <View style={styles.contactModalOverlay}>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                        style={styles.contactModalContainer}
+                    >
+                        <View style={styles.contactFormCard}>
+                            <View style={styles.contactHeader}>
+                                <View>
+                                    <Text style={styles.contactTitle}>Book a Visit</Text>
+                                    <Text style={styles.contactSubTitle}>
+                                        Schedule a tour of {selectedVendor?.name || 'Traditional Marigold'}
+                                    </Text>
+                                </View>
+                                <TouchableOpacity
+                                    style={styles.closeContactBtn}
+                                    onPress={() => setIsContactModalVisible(false)}
+                                >
+                                    <Ionicons name="close" size={24} color="#666" />
+                                </TouchableOpacity>
+                            </View>
+
+                            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
+                                <Text style={styles.contactLabel}>Full Name</Text>
+                                <View style={styles.contactInputWrapper}>
+                                    <Ionicons name="person-outline" size={20} color="#999" />
+                                    <TextInput
+                                        style={styles.contactInput}
+                                        placeholder="Enter your full name"
+                                        placeholderTextColor="#BBB"
+                                        value={contactName}
+                                        onChangeText={setContactName}
+                                    />
+                                </View>
+
+                                <Text style={styles.contactLabel}>Mobile Number (OTP optional)</Text>
+                                <View style={styles.contactInputWrapper}>
+                                    <Ionicons name="call-outline" size={20} color="#999" />
+                                    <TextInput
+                                        style={styles.contactInput}
+                                        placeholder="Enter mobile number"
+                                        placeholderTextColor="#BBB"
+                                        keyboardType="phone-pad"
+                                        value={contactMobile}
+                                        onChangeText={setContactMobile}
+                                    />
+                                </View>
+
+                                <View style={styles.contactInputRow}>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>Event Type</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="list-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="e.g. Wedding"
+                                                placeholderTextColor="#BBB"
+                                                value={contactEventType}
+                                                onChangeText={setContactEventType}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>City</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="business-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="Enter city"
+                                                placeholderTextColor="#BBB"
+                                                value={contactCity}
+                                                onChangeText={setContactCity}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <View style={styles.contactInputRow}>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>Preferred Date</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="calendar-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="DD/MM/YYYY"
+                                                placeholderTextColor="#BBB"
+                                                value={contactDate}
+                                                onChangeText={setContactDate}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>Time Slot</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="time-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="e.g. 2:00 PM"
+                                                placeholderTextColor="#BBB"
+                                                value={contactTime}
+                                                onChangeText={setContactTime}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <Text style={styles.contactLabel}>Add a Note</Text>
+                                <View style={[styles.contactInputWrapper, { height: 80, alignItems: 'flex-start', paddingTop: 10 }]}>
+                                    <TextInput
+                                        style={[styles.contactInput, { textAlignVertical: 'top' }]}
+                                        placeholder="Optional notes..."
+                                        placeholderTextColor="#BBB"
+                                        multiline
+                                        numberOfLines={3}
+                                        value={contactNote}
+                                        onChangeText={setContactNote}
+                                    />
+                                </View>
+
+                                <View style={styles.contactActionRow}>
+                                    <TouchableOpacity
+                                        style={styles.backContactBtn}
+                                        onPress={() => setIsContactModalVisible(false)}
+                                    >
+                                        <Text style={styles.backContactText}>Back</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.confirmContactBtn}
+                                        onPress={() => {
+                                            alert('Booking Request Sent!');
+                                            setIsContactModalVisible(false);
+                                        }}
+                                    >
+                                        <Text style={styles.confirmContactText}>Confirm Visit</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </ScrollView>
+                        </View>
+                    </KeyboardAvoidingView>
+                </View>
+            </Modal>
         );
     };
 
@@ -958,11 +1121,15 @@ const DecorationFloralScreen = ({ navigation }) => {
                 {renderVendorPostsFeed()}
 
                 <View style={styles.footerContainer}>
-                    <TouchableOpacity style={styles.stickyButton}>
-                        <Text style={styles.stickyButtonText}>Shortlist Decor</Text>
-                        <Ionicons name="arrow-forward" size={18} color="#FFF" />
+                    <TouchableOpacity
+                        style={styles.contactUsFloatingBtn}
+                        onPress={() => setIsContactModalVisible(true)}
+                    >
+                        <Ionicons name="chatbubble-ellipses" size={22} color="#FFF" />
+                        <Text style={styles.contactUsFloatingText}>Contact Us</Text>
                     </TouchableOpacity>
                 </View>
+                {renderContactModal()}
             </ScrollView>
 
             {renderSearchOverlay()}
@@ -1295,6 +1462,65 @@ const styles = StyleSheet.create({
     gridColumn: { flex: 1, gap: 15 },
     galleryImageCard: { borderRadius: 20, overflow: 'hidden', backgroundColor: '#F0F0F0' },
     mosaicImageFull: { width: '100%', height: '100%', resizeMode: 'cover' },
+
+    // Contact Modal Styles
+    contactModalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+    contactModalContainer: { width: '100%' },
+    contactFormCard: {
+        backgroundColor: '#FFF',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        padding: 20,
+        paddingTop: 24,
+        maxHeight: height * 0.85,
+        elevation: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -10 },
+        shadowOpacity: 0.15,
+        shadowRadius: 15
+    },
+    contactHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
+    contactTitle: { fontSize: 24, color: '#C61E1A', fontWeight: 'bold' },
+    contactSubTitle: { fontSize: 13, color: '#F29502', marginLeft: 6, fontWeight: '600' },
+    closeContactBtn: { backgroundColor: '#F5F5F5', borderRadius: 25, padding: 8 },
+    contactLabel: { fontSize: 13, color: '#C61E1A', marginTop: 12, marginBottom: 6, fontWeight: 'bold' },
+    contactInputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FBFBFB',
+        borderWidth: 1.5,
+        borderColor: '#F29502',
+        borderRadius: 16,
+        paddingHorizontal: 15,
+        height: 48,
+        gap: 12
+    },
+    contactInput: { flex: 1, fontSize: 16, color: '#333', fontWeight: '500' },
+    contactInputRow: { flexDirection: 'row', gap: 12 },
+    contactActionRow: { flexDirection: 'row', gap: 15, marginTop: 25, marginBottom: 10 },
+    backContactBtn: { flex: 1, height: 52, borderRadius: 16, backgroundColor: '#F5F5F5', alignItems: 'center', justifyContent: 'center' },
+    confirmContactBtn: { flex: 2, height: 52, borderRadius: 16, backgroundColor: '#C61E1A', alignItems: 'center', justifyContent: 'center' },
+    backContactText: { fontSize: 16, color: '#666', fontWeight: 'bold' },
+    confirmContactText: { fontSize: 16, color: '#FFF', fontWeight: 'bold' },
+
+    contactUsFloatingBtn: {
+        backgroundColor: '#F29502',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 15,
+        paddingHorizontal: 35,
+        borderRadius: 30,
+        gap: 10,
+        elevation: 8,
+        shadowColor: '#F29502',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        position: 'absolute',
+        bottom: 20,
+    },
+    contactUsFloatingText: { color: '#FFF', fontSize: 17, fontWeight: 'bold' },
 });
 
 export default DecorationFloralScreen;

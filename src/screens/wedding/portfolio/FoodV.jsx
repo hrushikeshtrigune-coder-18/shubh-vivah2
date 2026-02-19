@@ -5,12 +5,16 @@ import {
     Animated,
     Dimensions,
     Image,
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
     ScrollView,
     StatusBar,
     StyleSheet,
     Text,
+    TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
 import food1 from '../../../../assets/images/food1.jpg';
 import food2 from '../../../../assets/images/food2.jpg';
@@ -61,6 +65,16 @@ const FoodV = ({ navigation, route }) => {
     const [activeSection, setActiveSection] = useState('Photos');
     // activeMediaTab removed as it is now the main activeSection
     const [activeMenuFilter, setActiveMenuFilter] = useState('Veg');
+    const [isContactModalVisible, setIsContactModalVisible] = useState(false);
+
+    // Contact Form States
+    const [contactName, setContactName] = useState('');
+    const [contactMobile, setContactMobile] = useState('');
+    const [contactEventType, setContactEventType] = useState('');
+    const [contactCity, setContactCity] = useState('');
+    const [contactDate, setContactDate] = useState('');
+    const [contactTime, setContactTime] = useState('');
+    const [contactNote, setContactNote] = useState('');
 
     // Tab Animation Logic
     const tabUnderlineTranslateX = useRef(new Animated.Value(0)).current;
@@ -371,6 +385,157 @@ const FoodV = ({ navigation, route }) => {
         </View>
     );
 
+    const renderContactModal = () => {
+        return (
+            <Modal
+                visible={isContactModalVisible}
+                animationType="fade"
+                transparent={true}
+                onRequestClose={() => setIsContactModalVisible(false)}
+            >
+                <View style={styles.contactModalOverlay}>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                        style={styles.contactModalContainer}
+                    >
+                        <View style={styles.contactFormCard}>
+                            <View style={styles.contactHeader}>
+                                <View>
+                                    <Text style={styles.contactTitle}>Book a Visit</Text>
+                                    <Text style={styles.contactSubTitle}>
+                                        Schedule a tour of {displayVendor?.name || 'Vandana Catering'}
+                                    </Text>
+                                </View>
+                                <TouchableOpacity
+                                    style={styles.closeContactBtn}
+                                    onPress={() => setIsContactModalVisible(false)}
+                                >
+                                    <Ionicons name="close" size={24} color="#666" />
+                                </TouchableOpacity>
+                            </View>
+
+                            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
+                                <Text style={styles.contactLabel}>Full Name</Text>
+                                <View style={styles.contactInputWrapper}>
+                                    <Ionicons name="person-outline" size={20} color="#999" />
+                                    <TextInput
+                                        style={styles.contactInput}
+                                        placeholder="Enter your full name"
+                                        placeholderTextColor="#BBB"
+                                        value={contactName}
+                                        onChangeText={setContactName}
+                                    />
+                                </View>
+
+                                <Text style={styles.contactLabel}>Mobile Number (OTP optional)</Text>
+                                <View style={styles.contactInputWrapper}>
+                                    <Ionicons name="call-outline" size={20} color="#999" />
+                                    <TextInput
+                                        style={styles.contactInput}
+                                        placeholder="Enter mobile number"
+                                        placeholderTextColor="#BBB"
+                                        keyboardType="phone-pad"
+                                        value={contactMobile}
+                                        onChangeText={setContactMobile}
+                                    />
+                                </View>
+
+                                <View style={styles.contactInputRow}>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>Event Type</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="list-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="e.g. Wedding"
+                                                placeholderTextColor="#BBB"
+                                                value={contactEventType}
+                                                onChangeText={setContactEventType}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>City</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="business-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="Enter city"
+                                                placeholderTextColor="#BBB"
+                                                value={contactCity}
+                                                onChangeText={setContactCity}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <View style={styles.contactInputRow}>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>Preferred Date</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="calendar-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="DD/MM/YYYY"
+                                                placeholderTextColor="#BBB"
+                                                value={contactDate}
+                                                onChangeText={setContactDate}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>Time Slot</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="time-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="e.g. 2:00 PM"
+                                                placeholderTextColor="#BBB"
+                                                value={contactTime}
+                                                onChangeText={setContactTime}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <Text style={styles.contactLabel}>Add a Note</Text>
+                                <View style={[styles.contactInputWrapper, { height: 80, alignItems: 'flex-start', paddingTop: 10 }]}>
+                                    <TextInput
+                                        style={[styles.contactInput, { textAlignVertical: 'top' }]}
+                                        placeholder="Optional notes..."
+                                        placeholderTextColor="#BBB"
+                                        multiline
+                                        numberOfLines={3}
+                                        value={contactNote}
+                                        onChangeText={setContactNote}
+                                    />
+                                </View>
+
+                                <View style={styles.contactActionRow}>
+                                    <TouchableOpacity
+                                        style={styles.backContactBtn}
+                                        onPress={() => setIsContactModalVisible(false)}
+                                    >
+                                        <Text style={styles.backContactText}>Back</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.confirmContactBtn}
+                                        onPress={() => {
+                                            alert('Booking Request Sent!');
+                                            setIsContactModalVisible(false);
+                                        }}
+                                    >
+                                        <Text style={styles.confirmContactText}>Confirm Visit</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </ScrollView>
+                        </View>
+                    </KeyboardAvoidingView>
+                </View>
+            </Modal>
+        );
+    };
+
     return (
         <View style={styles.profileContainer}>
             <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
@@ -453,14 +618,12 @@ const FoodV = ({ navigation, route }) => {
 
             {/* Bottom Floating Contact Bar */}
             <View style={styles.floatingActionTier}>
-                <TouchableOpacity style={styles.chatIconButton}>
-                    <Ionicons name="chatbubble-ellipses" size={24} color={COLORS.primary} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.mainCheckAvailBtn}>
-                    <Text style={styles.mainCheckBtnText}>Request Quote</Text>
-                    <Ionicons name="sparkles" size={18} color="#FFF" />
+                <TouchableOpacity style={styles.contactUsBtn} onPress={() => setIsContactModalVisible(true)}>
+                    <Text style={styles.contactUsBtnText}>Contact Us</Text>
+                    <Ionicons name="chatbubble-ellipses" size={24} color="#FFF" />
                 </TouchableOpacity>
             </View>
+            {renderContactModal()}
         </View>
     );
 };
@@ -609,14 +772,53 @@ const styles = StyleSheet.create({
     itemRatingVal: { fontSize: 12, fontFamily: 'Outfit_700Bold', color: '#D48806' },
     reviewContentText: { fontFamily: 'Outfit_400Regular', fontSize: 14, color: '#555', lineHeight: 22 },
 
-    floatingActionTier: { position: 'absolute', bottom: 30, left: 20, right: 20, flexDirection: 'row', gap: 15, alignItems: 'center' },
-    chatIconButton: { width: 60, height: 60, borderRadius: 30, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center', elevation: 8, shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 10 },
-    mainCheckAvailBtn: { flex: 1, height: 60, borderRadius: 30, backgroundColor: COLORS.primary, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, elevation: 8 },
-    mainCheckBtnText: { color: '#FFF', fontFamily: 'Outfit_700Bold', fontSize: 16, letterSpacing: 0.5 },
+    floatingActionTier: { position: 'absolute', bottom: 30, left: 20, right: 20, alignItems: 'center' },
+    contactUsBtn: { width: '100%', height: 65, borderRadius: 35, backgroundColor: '#F29502', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 12, elevation: 12, shadowColor: '#F29502', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.4, shadowRadius: 10 },
+    contactUsBtnText: { color: '#FFF', fontFamily: 'Outfit_700Bold', fontSize: 20, letterSpacing: 0.5 },
 
     videoPlaceholder: { height: 250, backgroundColor: '#F9F9F9', borderRadius: 24, justifyContent: 'center', alignItems: 'center', borderStyle: 'dashed', borderWidth: 2, borderColor: '#DDD' },
     placeholderText: { marginTop: 15, fontFamily: 'Outfit_600SemiBold', color: '#999' },
     cardCarousel: { height: '100%' },
+
+    // Contact Modal Styles
+    contactModalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+    contactModalContainer: { width: '100%' },
+    contactFormCard: {
+        backgroundColor: '#FFF',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        padding: 20,
+        paddingTop: 24,
+        maxHeight: '90%',
+        elevation: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -10 },
+        shadowOpacity: 0.1,
+        shadowRadius: 15
+    },
+    contactHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
+    contactTitle: { fontFamily: 'Outfit_700Bold', fontSize: 24, color: '#CC0E0E' },
+    contactSubTitle: { fontFamily: 'Outfit_500Medium', fontSize: 13, color: '#F29502', marginLeft: 6 },
+    closeContactBtn: { backgroundColor: '#F5F5F5', borderRadius: 25, padding: 8 },
+    contactLabel: { fontFamily: 'Outfit_700Bold', fontSize: 13, color: '#CC0E0E', marginTop: 12, marginBottom: 6 },
+    contactInputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FBFBFB',
+        borderWidth: 1.5,
+        borderColor: '#F29502',
+        borderRadius: 16,
+        paddingHorizontal: 15,
+        height: 48,
+        gap: 12
+    },
+    contactInput: { flex: 1, fontFamily: 'Outfit_500Medium', fontSize: 16, color: '#333' },
+    contactInputRow: { flexDirection: 'row', gap: 12 },
+    contactActionRow: { flexDirection: 'row', gap: 15, marginTop: 25, marginBottom: 10 },
+    backContactBtn: { flex: 1, height: 52, borderRadius: 16, backgroundColor: '#F5F5F5', alignItems: 'center', justifyContent: 'center' },
+    confirmContactBtn: { flex: 2, height: 52, borderRadius: 16, backgroundColor: '#CC0E0E', alignItems: 'center', justifyContent: 'center' },
+    backContactText: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#666' },
+    confirmContactText: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#FFF' },
 });
 
 export default FoodV;

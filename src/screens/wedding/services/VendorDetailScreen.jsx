@@ -268,12 +268,9 @@ const VendorDetailScreen = ({ navigation, route }) => {
 
             {/* Sticky Bottom CTA */}
             <View style={styles.bottomCTA}>
-                <TouchableOpacity style={styles.callBtn}>
-                    <Ionicons name="call-outline" size={20} color={COLORS.kumkum} />
-                    <Text style={styles.callBtnText}>Call Now</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.bookBtn}>
-                    <Text style={styles.bookBtnText}>Book Now</Text>
+                <TouchableOpacity style={styles.contactUsBtn}>
+                    <Text style={styles.contactUsBtnText}>Contact Us</Text>
+                    <Ionicons name="chatbubble-ellipses" size={24} color="#FFF" />
                 </TouchableOpacity>
             </View>
         </View>
@@ -480,7 +477,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        flexDirection: 'row',
         paddingHorizontal: 20,
         paddingVertical: 15,
         paddingBottom: Platform.OS === 'ios' ? 30 : 15,
@@ -492,43 +488,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 10,
         shadowOffset: { width: 0, height: -5 },
-        gap: 12,
-    },
-    callBtn: {
-        flex: 1,
-        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 14,
-        borderRadius: 30,
-        borderWidth: 2,
-        borderColor: COLORS.kumkum,
-        backgroundColor: '#fff',
-        gap: 8,
     },
-    callBtnText: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: COLORS.kumkum,
-    },
-    bookBtn: {
-        flex: 1.5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 14,
-        borderRadius: 30,
-        backgroundColor: COLORS.kumkum,
-        elevation: 4,
-        shadowColor: COLORS.kumkum,
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 4 },
-    },
-    bookBtnText: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: '#fff',
-    },
+    contactUsBtn: { width: '100%', height: 65, borderRadius: 35, backgroundColor: '#F29502', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 12, elevation: 12, shadowColor: '#F29502', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.4, shadowRadius: 10 },
+    contactUsBtnText: { color: '#FFF', fontFamily: 'Outfit_700Bold', fontSize: 20, letterSpacing: 0.5 },
 });
 
 export default VendorDetailScreen;
