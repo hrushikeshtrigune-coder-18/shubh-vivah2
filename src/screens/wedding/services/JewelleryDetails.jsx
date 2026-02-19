@@ -38,22 +38,55 @@ const COLORS = {
     cardShadow: 'rgba(167, 0, 2, 0.1)', // Kumkum tinted shadow
 };
 
-const PORTFOLIO_IMAGES = [
-    { id: '1', source: require('../../../../assets/EventMimg/Jewelary/jewelry1.jpg'), height: 200, label: '4.87 ETH' },
-    { id: '2', source: require('../../../../assets/EventMimg/Jewelary/jewelry2.jpg'), height: 280, label: '2.48 ETH' },
-    { id: '3', source: require('../../../../assets/EventMimg/Jewelary/jewelry3.jpg'), height: 240, label: '1.56 ETH' },
-    { id: '4', source: require('../../../../assets/EventMimg/Jewelary/jewelry4.jpg'), height: 180, label: '2.34 ETH' },
-    { id: '5', source: require('../../../../assets/EventMimg/Jewelary/RING 3.jpeg'), height: 260, label: '3.12 ETH' },
-    { id: '6', source: require('../../../../assets/EventMimg/Jewelary/RING1.jpg'), height: 220, label: '5.20 ETH' },
-    { id: '7', source: require('../../../../assets/EventMimg/Jewelary/RING2.jpg'), height: 240, label: '1.98 ETH' },
-    { id: '8', source: require('../../../../assets/EventMimg/Jewelary/RING4.jpg'), height: 200, label: '4.15 ETH' },
-];
-
 const SUB_CATEGORIES = ['Photos', 'Videos', 'Media'];
 const SUB_FILTERS = [
+    { id: 'All', name: 'All', icon: 'grid-outline' },
     { id: 'floral', name: 'Floral', icon: 'flower-outline' },
     { id: 'theme', name: 'Theme', icon: 'color-palette-outline' },
     { id: 'traditional', name: 'Traditional', icon: 'layers-outline' },
+];
+
+const PORTFOLIO_IMAGES = [
+    { id: '1', source: require('../../../../assets/EventMimg/Jewelary/jewelry1.jpg'), height: 200, label: 'Traditional', category: 'traditional' },
+    { id: '2', source: require('../../../../assets/EventMimg/Jewelary/jewelry2.jpg'), height: 280, label: 'Floral Design', category: 'floral' },
+    { id: '3', source: require('../../../../assets/EventMimg/Jewelary/jewelry3.jpg'), height: 240, label: 'Theme Based', category: 'theme' },
+    { id: '4', source: require('../../../../assets/EventMimg/Jewelary/jewelry4.jpg'), height: 180, label: 'Bridal Set', category: 'traditional' },
+    { id: '5', source: require('../../../../assets/EventMimg/Jewelary/RING 3.jpeg'), height: 260, label: 'Modern Ring', category: 'theme' },
+    { id: '6', source: require('../../../../assets/EventMimg/Jewelary/RING1.jpg'), height: 220, label: 'Floral Ring', category: 'floral' },
+    { id: '7', source: require('../../../../assets/EventMimg/Jewelary/RING2.jpg'), height: 240, label: 'Classic Gold', category: 'traditional' },
+    { id: '8', source: require('../../../../assets/EventMimg/Jewelary/RING4.jpg'), height: 200, label: 'Theme Cut', category: 'theme' },
+];
+
+const ABOUT_DATA = {
+    description: "Welcome to Royal Orchid Palace, where we craft timeless pieces of jewellery that become a part of your legacy. Established in 1998, we have been serving the finest families with our exquisite gold, diamond, and polki collections.",
+    highlights: ["custom designs", "certified purity", "lifetime exchange"],
+    specialties: ["Bridal Sets", "Antique Kundan", "Solitaire Rings", "Temple Jewellery"]
+};
+
+const PRICING_PACKAGES = [
+    { id: '1', title: 'Bridal Gold Set', price: '₹ 1.5L - 5L', details: 'Complete necklace, earrings, and maang tikka set in 22k gold.', popular: true },
+    { id: '2', title: 'Diamond Engagement Ring', price: '₹ 50k - 2L', details: 'Solitaire and halo settings available in 18k gold and platinum.', popular: false },
+    { id: '3', title: 'Antique Temple Set', price: '₹ 2L - 8L', details: 'Handcrafted deity motifs with precious gemstones.', popular: false },
+    { id: '4', title: 'Polki Choker', price: '₹ 3L+', details: 'Uncut diamonds set in traditional jadau style.', popular: true },
+];
+
+const REVIEWS_DATA = [
+    { id: '1', user: 'Anjali Sharma', rating: 5, date: '2 days ago', comment: 'Absolutely stunning collection! The bridal set I bought was the highlight of my wedding. Highly recommend.' },
+    { id: '2', user: 'Rahul Verma', rating: 4, date: '1 week ago', comment: 'Great designs and transparent pricing. The staff was very patient and helpful.' },
+    { id: '3', user: 'Priya Patel', rating: 5, date: '3 weeks ago', comment: 'Loved the custom engagement ring. It was exactly what I imagined. Thank you!' },
+];
+
+const VIDEOS_DATA = [
+    { id: '1', thumbnail: require('../../../../assets/EventMimg/Jewelary/jewelry1.jpg'), title: 'Bridal Collection Launch 2024', duration: '2:15' },
+    { id: '2', thumbnail: require('../../../../assets/EventMimg/Jewelary/jewelry3.jpg'), title: 'Behind the Scenes: Handcrafted Kundan', duration: '4:30' },
+    { id: '3', thumbnail: require('../../../../assets/EventMimg/Jewelary/bridalJewelary.jpg'), title: 'Real Brides Testimonials', duration: '1:45' },
+    { id: '4', thumbnail: require('../../../../assets/EventMimg/Jewelary/Djewellery.jpg'), title: 'Diamond Solitaire Showcase', duration: '3:00' },
+];
+
+const MEDIA_DATA = [
+    { id: '1', image: require('../../../../assets/EventMimg/Jewelary/jewelary.jpg'), title: 'featured in Vogue Wedding Book 2024', source: 'Vogue India', date: 'Oct 2024' },
+    { id: '2', image: require('../../../../assets/EventMimg/Jewelary/RING4.jpg'), title: 'Best Traditional Jewellery Award', source: 'WeddingSutra', date: 'Aug 2024' },
+    { id: '3', image: require('../../../../assets/EventMimg/Jewelary/accessories.jpg'), title: 'Top 10 Jewellers in Pune', source: 'LBB Pune', date: 'July 2024' },
 ];
 
 const JewelleryDetails = ({ route, navigation }) => {
@@ -63,7 +96,10 @@ const JewelleryDetails = ({ route, navigation }) => {
     const [isBookmark, setIsBookmark] = useState(false);
     const [bookModalVisible, setBookModalVisible] = useState(false);
     const [activeSubTab, setActiveSubTab] = useState('Media');
-    const [activeSubFilter, setActiveSubFilter] = useState('floral');
+    const [activeSubFilter, setActiveSubFilter] = useState('All');
+
+    const mainScrollRef = useRef(null);
+    const [contentY, setContentY] = useState(0);
 
     // Hero Carousel Logic
     const flatListRef = useRef(null);
@@ -75,6 +111,9 @@ const JewelleryDetails = ({ route, navigation }) => {
             return item.thumbnails.map((img, index) => ({ id: `hero-${index}`, source: img }));
         }
         if (item?.image) {
+            if (typeof item.image === 'string') {
+                return [{ id: 'hero-main', source: { uri: item.image } }];
+            }
             return [{ id: 'hero-main', source: item.image }];
         }
         return [];
@@ -99,10 +138,22 @@ const JewelleryDetails = ({ route, navigation }) => {
 
     const scrollY = useSharedValue(0);
 
-    const scrollHandler = useAnimatedScrollHandler((event) => {
-        scrollY.value = event.contentOffset.y;
+    const scrollHandler = useAnimatedScrollHandler({
+        onScroll: (event) => {
+            scrollY.value = event.contentOffset.y;
+        },
     });
 
+    const handleViewPhotos = () => {
+        setActiveTab('PROJECTS');
+        setActiveSubTab('Photos');
+        if (mainScrollRef.current && contentY > 0) {
+            // Need to use scrollTo on the underlying native component or work with Animated ref
+            // Since useAnimatedRef is often used with Reanimated, we use a standard ref here if possible 
+            // but Animated.ScrollView might require .scrollTo({ y, animated })
+            mainScrollRef.current.scrollTo({ y: contentY - 60, animated: true }); // -60 for header offset
+        }
+    };
     // Animate Avatar
     const animatedAvatarStyle = useAnimatedStyle(() => {
         const left = interpolate(
@@ -211,10 +262,11 @@ const JewelleryDetails = ({ route, navigation }) => {
             {renderFixedHeader()}
 
             <Animated.ScrollView
+                ref={mainScrollRef}
                 onScroll={scrollHandler}
                 scrollEventThrottle={16}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.scrollContent}
+                contentContainerStyle={{ paddingBottom: 100 }}
             >
                 {/* Spacer to push sheet down */}
                 <View style={{ height: 350 }} />
@@ -258,7 +310,15 @@ const JewelleryDetails = ({ route, navigation }) => {
 
 
                     {/* Main Tabs */}
-                    <View style={styles.mainTabsWrapper}>
+                    <View
+                        style={styles.mainTabsWrapper}
+                        onLayout={(event) => {
+                            const layout = event.nativeEvent.layout;
+                            setContentY(layout.y + 280); // +280 approx for Hero height + Info height if layout.y is relative to parent View
+                            // Actually since onLayout is inside ScrollView, layout.y is relative to ScrollView content start
+                            setContentY(layout.y);
+                        }}
+                    >
                         {['Projects', 'Pricing', 'About', 'Reviews'].map((tab) => (
                             <TouchableOpacity
                                 key={tab}
@@ -307,28 +367,147 @@ const JewelleryDetails = ({ route, navigation }) => {
                                 ))}
                             </ScrollView>
 
-                            <View style={styles.masonryGrid}>
-                                <View style={styles.gridColumn}>
-                                    {PORTFOLIO_IMAGES.filter((_, i) => i % 2 === 0).map((img) => (
-                                        <View key={img.id} style={[styles.masonryItem, { height: img.height }]}>
-                                            <Image source={img.source} style={styles.gridImage} resizeMode="cover" />
-                                            <View style={styles.gridItemOverlay}>
-                                                <Text style={styles.gridItemText}>{img.label}</Text>
+                            {/* Photos Sub-tab */}
+                            {activeSubTab === 'Photos' && (
+                                <View style={styles.masonryGrid}>
+                                    <View style={styles.gridColumn}>
+                                        {PORTFOLIO_IMAGES
+                                            .filter(img => activeSubFilter === 'All' || img.category === activeSubFilter)
+                                            .filter((_, i) => i % 2 === 0)
+                                            .map((img) => (
+                                                <View key={img.id} style={[styles.masonryItem, { height: img.height }]}>
+                                                    <Image source={img.source} style={styles.gridImage} resizeMode="cover" />
+                                                    <View style={styles.gridItemOverlay}>
+                                                        <Text style={styles.gridItemText}>{img.label}</Text>
+                                                    </View>
+                                                </View>
+                                            ))}
+                                    </View>
+                                    <View style={styles.gridColumn}>
+                                        {PORTFOLIO_IMAGES
+                                            .filter(img => activeSubFilter === 'All' || img.category === activeSubFilter)
+                                            .filter((_, i) => i % 2 !== 0)
+                                            .map((img) => (
+                                                <View key={img.id} style={[styles.masonryItem, { height: img.height }]}>
+                                                    <Image source={img.source} style={styles.gridImage} resizeMode="cover" />
+                                                    <View style={styles.gridItemOverlay}>
+                                                        <Text style={styles.gridItemText}>{img.label}</Text>
+                                                    </View>
+                                                </View>
+                                            ))}
+                                    </View>
+                                </View>
+                            )}
+
+                            {/* Videos Sub-tab */}
+                            {activeSubTab === 'Videos' && (
+                                <View style={styles.videosGrid}>
+                                    {VIDEOS_DATA.map((video) => (
+                                        <TouchableOpacity key={video.id} style={styles.videoCard}>
+                                            <Image source={video.thumbnail} style={styles.videoThumbnail} resizeMode="cover" />
+                                            <View style={styles.playIconOverlay}>
+                                                <Ionicons name="play-circle" size={40} color="rgba(255,255,255,0.9)" />
                                             </View>
-                                        </View>
+                                            <View style={styles.videoDurationBadge}>
+                                                <Text style={styles.videoDurationText}>{video.duration}</Text>
+                                            </View>
+                                            <View style={styles.videoInfoOverlay}>
+                                                <Text style={styles.videoTitle} numberOfLines={2}>{video.title}</Text>
+                                            </View>
+                                        </TouchableOpacity>
                                     ))}
                                 </View>
-                                <View style={styles.gridColumn}>
-                                    {PORTFOLIO_IMAGES.filter((_, i) => i % 2 !== 0).map((img) => (
-                                        <View key={img.id} style={[styles.masonryItem, { height: img.height }]}>
-                                            <Image source={img.source} style={styles.gridImage} resizeMode="cover" />
-                                            <View style={styles.gridItemOverlay}>
-                                                <Text style={styles.gridItemText}>{img.label}</Text>
+                            )}
+
+                            {/* Media Sub-tab */}
+                            {activeSubTab === 'Media' && (
+                                <View style={styles.mediaList}>
+                                    {MEDIA_DATA.map((item) => (
+                                        <TouchableOpacity key={item.id} style={styles.mediaCard}>
+                                            <Image source={item.image} style={styles.mediaImage} />
+                                            <View style={styles.mediaContent}>
+                                                <Text style={styles.mediaSource}>{item.source} • {item.date}</Text>
+                                                <Text style={styles.mediaTitle}>{item.title}</Text>
+                                                <View style={styles.readMoreRow}>
+                                                    <Text style={styles.readMoreText}>Read Article</Text>
+                                                    <Ionicons name="arrow-forward" size={14} color={COLORS.kumkum} />
+                                                </View>
                                             </View>
-                                        </View>
+                                        </TouchableOpacity>
                                     ))}
+                                </View>
+                            )}
+                        </View>
+                    )}
+
+                    {/* Pricing Content */}
+                    {activeTab === 'PRICING' && (
+                        <View style={styles.sectionContent}>
+                            <Text style={styles.sectionHeading}>Indicative Pricing</Text>
+                            {PRICING_PACKAGES.map((pkg) => (
+                                <View key={pkg.id} style={styles.pricingCard}>
+                                    <View style={styles.pricingHeader}>
+                                        <Text style={styles.pricingTitle}>{pkg.title}</Text>
+                                        {pkg.popular && <View style={styles.popularTag}><Text style={styles.popularText}>Popular</Text></View>}
+                                    </View>
+                                    <Text style={styles.pricingPrice}>{pkg.price}</Text>
+                                    <Text style={styles.pricingDetails}>{pkg.details}</Text>
+                                </View>
+                            ))}
+                        </View>
+                    )}
+
+                    {/* About Content */}
+                    {activeTab === 'ABOUT' && (
+                        <View style={styles.sectionContent}>
+                            <Text style={styles.sectionHeading}>About Us</Text>
+                            <Text style={styles.aboutDescription}>{ABOUT_DATA.description}</Text>
+
+                            <Text style={[styles.sectionHeading, { marginTop: 20, fontSize: 18 }]}>Specialties</Text>
+                            <View style={styles.specialtiesGrid}>
+                                {ABOUT_DATA.specialties.map((spec, index) => (
+                                    <View key={index} style={styles.specialtyItem}>
+                                        <Ionicons name="diamond-outline" size={16} color={COLORS.kumkum} />
+                                        <Text style={styles.specialtyText}>{spec}</Text>
+                                    </View>
+                                ))}
+                            </View>
+                        </View>
+                    )}
+
+                    {/* Reviews Content */}
+                    {activeTab === 'REVIEWS' && (
+                        <View style={styles.sectionContent}>
+                            <View style={styles.ratingSummary}>
+                                <Text style={styles.bigRating}>4.8</Text>
+                                <View>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        {[1, 2, 3, 4, 5].map(i => <Ionicons key={i} name="star" size={16} color={COLORS.darkHaldi} />)}
+                                    </View>
+                                    <Text style={styles.totalReviews}>Based on 320 reviews</Text>
                                 </View>
                             </View>
+
+                            {REVIEWS_DATA.map((review) => (
+                                <View key={review.id} style={styles.reviewCard}>
+                                    <View style={styles.reviewHeader}>
+                                        <View style={styles.reviewerInfo}>
+                                            <View style={styles.reviewerAvatar}>
+                                                <Text style={styles.avatarText}>{review.user.charAt(0)}</Text>
+                                            </View>
+                                            <View>
+                                                <Text style={styles.reviewerName}>{review.user}</Text>
+                                                <Text style={styles.reviewDate}>{review.date}</Text>
+                                            </View>
+                                        </View>
+                                        <View style={styles.reviewRating}>
+                                            <Text style={styles.ratingNum}>{review.rating}</Text>
+                                            <Ionicons name="star" size={12} color={COLORS.white} />
+                                        </View>
+                                    </View>
+                                    <Text style={styles.reviewComment}>{review.comment}</Text>
+                                </View>
+                            ))}
                         </View>
                     )}
 
@@ -339,7 +518,7 @@ const JewelleryDetails = ({ route, navigation }) => {
                             <Ionicons name="calendar-outline" size={18} color={COLORS.white} />
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={[styles.contactBtn, styles.viewPhotosBtn]}>
+                        <TouchableOpacity style={[styles.contactBtn, styles.viewPhotosBtn]} onPress={handleViewPhotos}>
                             <Text style={[styles.contactBtnText, { color: COLORS.textDark }]}>View Photos</Text>
                             <Ionicons name="images-outline" size={18} color={COLORS.textDark} />
                         </TouchableOpacity>
@@ -640,7 +819,74 @@ const styles = StyleSheet.create({
             default: { elevation: 3 }
         })
     },
-    confirmBtnText: { color: COLORS.white, fontWeight: 'bold', fontSize: 16 }
+    confirmBtnText: { color: COLORS.white, fontWeight: 'bold', fontSize: 16 },
+
+    // New Sections Styles
+    sectionContent: { marginTop: 10, paddingBottom: 20 },
+    sectionHeading: { fontSize: 22, fontWeight: '800', color: COLORS.textDark, marginBottom: 15 },
+
+    // Pricing Styles
+    pricingCard: {
+        backgroundColor: COLORS.white, borderRadius: 16, padding: 15, marginBottom: 15,
+        ...Platform.select({
+            default: { elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5 }
+        })
+    },
+    pricingHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 },
+    pricingTitle: { fontSize: 16, fontWeight: '700', color: COLORS.textDark },
+    popularTag: { backgroundColor: '#FFF8E1', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8, borderWidth: 1, borderColor: COLORS.haldi },
+    popularText: { fontSize: 10, fontWeight: '700', color: COLORS.darkHaldi },
+    pricingPrice: { fontSize: 18, fontWeight: '800', color: COLORS.kumkum, marginBottom: 5 },
+    pricingDetails: { fontSize: 13, color: COLORS.textGray, lineHeight: 18 },
+
+    // About Styles
+    aboutDescription: { fontSize: 14, color: COLORS.textDark, lineHeight: 22 },
+    specialtiesGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 10 },
+    specialtyItem: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.white, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20, gap: 5, borderWidth: 1, borderColor: '#eee' },
+    specialtyText: { fontSize: 13, fontWeight: '600', color: COLORS.textDark },
+
+    // Reviews Styles
+    ratingSummary: { flexDirection: 'row', alignItems: 'center', gap: 15, marginBottom: 25, backgroundColor: '#FFF8E1', padding: 15, borderRadius: 16 },
+    bigRating: { fontSize: 36, fontWeight: '800', color: COLORS.darkHaldi },
+    totalReviews: { fontSize: 12, color: COLORS.textGray, marginTop: 2 },
+    reviewCard: { marginBottom: 20, borderBottomWidth: 1, borderBottomColor: '#eee', paddingBottom: 15 },
+    reviewHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 },
+    reviewerInfo: { flexDirection: 'row', gap: 10, alignItems: 'center' },
+    reviewerAvatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.kumkum, alignItems: 'center', justifyContent: 'center' },
+    avatarText: { color: COLORS.white, fontWeight: 'bold', fontSize: 18 },
+    reviewerName: { fontSize: 15, fontWeight: '700', color: COLORS.textDark },
+    reviewDate: { fontSize: 11, color: COLORS.textGray },
+    reviewRating: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.darkHaldi, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8, gap: 3 },
+    ratingNum: { color: COLORS.white, fontWeight: 'bold', fontSize: 12 },
+    reviewComment: { fontSize: 13, color: '#444', lineHeight: 20 },
+
+    // Video Styles
+    videosGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+    videoCard: {
+        width: '48%', height: 120, borderRadius: 12, marginBottom: 15, overflow: 'hidden', position: 'relative', backgroundColor: '#000',
+        ...Platform.select({
+            default: { elevation: 3 }
+        })
+    },
+    videoThumbnail: { width: '100%', height: '100%', opacity: 0.8 },
+    playIconOverlay: { ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center' },
+    videoDurationBadge: { position: 'absolute', top: 8, right: 8, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
+    videoDurationText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
+    videoInfoOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 8, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }, // Note: linear-gradient only web supported usually, simple View for RN
+    videoTitle: { color: '#fff', fontSize: 11, fontWeight: '600', textShadowColor: 'rgba(0,0,0,0.5)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 },
+
+    // Media Styles
+    mediaList: { paddingBottom: 10 },
+    mediaCard: {
+        flexDirection: 'row', backgroundColor: COLORS.white, borderRadius: 12, marginBottom: 15, overflow: 'hidden',
+        borderWidth: 1, borderColor: '#eee'
+    },
+    mediaImage: { width: 100, height: 100 },
+    mediaContent: { flex: 1, padding: 12, justifyContent: 'center' },
+    mediaSource: { fontSize: 11, color: COLORS.kumkum, fontWeight: '700', textTransform: 'uppercase', marginBottom: 4 },
+    mediaTitle: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8, lineHeight: 20 },
+    readMoreRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+    readMoreText: { fontSize: 12, color: COLORS.kumkum, fontWeight: '600' }
 });
 
 export default JewelleryDetails;

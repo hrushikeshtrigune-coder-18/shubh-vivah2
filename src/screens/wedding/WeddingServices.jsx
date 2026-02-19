@@ -128,8 +128,7 @@ const serviceCategories = [
         id: '9',
         title: 'Makeup',
         icon: require('../../../assets/images/makeup.jpg'),
-        screen: 'VendorListScreen',
-        params: { serviceName: 'Bridal Makeup' },
+        screen: 'MakeupScreen',
         suggestions: [
             { id: 's1', title: 'HD Makeup', icon: 'brush-outline' },
             { id: 's2', title: 'Airbrush', icon: 'color-wand-outline' },
@@ -729,14 +728,7 @@ const Services2 = () => {
     const renderServiceGrid = () => {
         return (
             <View style={styles.sectionContainer}>
-                {/* Header removed to match design 
-                <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>
-                        {searchQuery ? 'Matching Services' : 'All Services'}
-                    </Text>
-                    {!searchQuery && <TouchableOpacity><Text style={styles.seeAllText}></Text></TouchableOpacity>}
-                </View>
-                */}
+
 
                 {filteredServices.length > 0 ? (
                     <View style={styles.grid}>

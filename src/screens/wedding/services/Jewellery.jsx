@@ -38,7 +38,7 @@ const COLORS = {
 };
 
 // Isolated Hero Component for DOM Stability on Web
-const VideoHero = memo(({ insets, onSearchPress, navigation }) => {
+const VideoHero = memo(({ insets, onSearchPress, navigation, searchQuery, setSearchQuery, selectedLocation, onLocationPress }) => {
     const videoSource = require('../../../../assets/EventMimg/Jewelary/jewelaryV (2).mp4');
     const player = useVideoPlayer(videoSource, player => {
         player.loop = true;
@@ -77,9 +77,9 @@ const VideoHero = memo(({ insets, onSearchPress, navigation }) => {
             </View>
 
             <View style={styles.searchContainer}>
-                <TouchableOpacity style={styles.locationButton}>
+                <TouchableOpacity style={styles.locationButton} onPress={onLocationPress}>
                     <Ionicons name="location-sharp" size={20} color={COLORS.kumkum} />
-                    <Text style={styles.locationText}>Mumbai</Text>
+                    <Text style={styles.locationText}>{selectedLocation || 'Mumbai'}</Text>
                     <Ionicons name="chevron-down" size={16} color={COLORS.gold} />
                 </TouchableOpacity>
                 <View style={styles.searchDivider} />
@@ -87,6 +87,8 @@ const VideoHero = memo(({ insets, onSearchPress, navigation }) => {
                     placeholder="Search venues, areas..."
                     placeholderTextColor="#999"
                     style={styles.searchInput}
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
                 />
             </View>
         </View>
@@ -222,13 +224,7 @@ const OUR_VENDORS = [
     }
 ];
 
-const VIBE_DATA = [
-    { id: 'All', name: 'View All', icon: 'apps', lib: 'Ionicons' },
-    { id: 'Jewellery', name: 'Jewellery', icon: 'diamond-stone', lib: 'MCI' },
-    { id: 'Flower Jewellery', name: 'Flower Jewellery', icon: 'flower-outline', lib: 'MCI' },
-    { id: 'Bridal Jewellery on Rent', name: 'Rental\nJewellery', icon: 'calendar-clock', lib: 'MCI' },
-    { id: 'Accessories', name: 'Accessories', icon: 'glasses', lib: 'Ionicons' },
-];
+
 
 const JewelleryScreen = ({ navigation }) => {
     const safeInsets = useSafeAreaInsets();
@@ -241,6 +237,16 @@ const JewelleryScreen = ({ navigation }) => {
 
     const [likedItems, setLikedItems] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const mainScrollViewRef = useRef(null);
+    const [topPicksY, setTopPicksY] = useState(0);
+
+    const scrollToCollections = () => {
+        if (mainScrollViewRef.current && topPicksY > 0) {
+            mainScrollViewRef.current.scrollTo({ y: topPicksY, animated: true });
+        }
+    };
 
     // Auto-Scroll Logic for Vendors
     const vendorScrollRef = useRef(null);
@@ -304,7 +310,21 @@ const JewelleryScreen = ({ navigation }) => {
 
     const clearFilters = () => setSelectedFilters({ Locality: [], Type: [], 'WMG Award': [], 'Review count': [], 'Rating': [] });
 
+    const handleLocationPress = () => {
+        setActiveFilterTab('Locality');
+        setModalVisible(true);
+    };
+
     const filteredData = jewelleryData.filter(item => {
+        // Text Search Filter
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            const matchName = item.name.toLowerCase().includes(query);
+            const matchLocality = item.locality.toLowerCase().includes(query);
+            const matchLocation = item.location.toLowerCase().includes(query);
+            if (!matchName && !matchLocality && !matchLocation) return false;
+        }
+
         if (selectedCategory !== 'All') {
             const search = selectedCategory.toLowerCase();
             if (!(item.category.toLowerCase().includes(search) || item.type.toLowerCase().includes(search) || (item.guests && item.guests.toLowerCase().includes(search)) || item.name.toLowerCase().includes(search))) return false;
@@ -327,30 +347,23 @@ const JewelleryScreen = ({ navigation }) => {
             {Platform.OS !== 'web' && <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />}
 
             <ScrollView
+                ref={mainScrollViewRef}
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
                 scrollEventThrottle={16}
             >
                 {/* Hero Section */}
-                <VideoHero insets={insets} onSearchPress={() => { }} navigation={navigation} />
+                <VideoHero
+                    insets={insets}
+                    onSearchPress={scrollToCollections}
+                    navigation={navigation}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                    selectedLocation={selectedFilters.Locality.length > 0 ? selectedFilters.Locality[0] : 'All Localities'}
+                    onLocationPress={handleLocationPress}
+                />
 
-                {/* Filter Tabs */}
-                <View style={styles.sectionContainer}>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.vibeScroll}>
-                        {VIBE_DATA.map((item) => (
-                            <TouchableOpacity key={item.id} style={{ marginRight: 15, alignItems: 'center' }} onPress={() => setSelectedCategory(item.id)}>
-                                <View style={[styles.vibeItem, selectedCategory === item.id && styles.activeVibeItem]}>
-                                    {item.lib === 'Ionicons' ? (
-                                        <Ionicons name={item.icon} size={28} color={COLORS.textRed} />
-                                    ) : (
-                                        <MaterialCommunityIcons name={item.icon} size={28} color={COLORS.textRed} />
-                                    )}
-                                </View>
-                                <Text style={styles.vibeText}>{item.name}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                </View>
+
 
                 {/* Featured Collections */}
                 {/* Our Vendors Section */}
@@ -413,7 +426,13 @@ const JewelleryScreen = ({ navigation }) => {
 
                 {/* Top Picks Grid */}
                 {/* Top Picks Grid */}
-                <View style={styles.sectionContainer}>
+                <View
+                    style={styles.sectionContainer}
+                    onLayout={(event) => {
+                        const layout = event.nativeEvent.layout;
+                        setTopPicksY(layout.y);
+                    }}
+                >
                     <Text style={styles.sectionTitle}>Top Picks For You</Text>
                     <View style={{ paddingBottom: 20 }}>
                         {filteredData.map((item, index) => {
@@ -586,7 +605,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: -30,
         alignSelf: 'center',
-        width: width * 0.92,
+        width: '92%',
+        maxWidth: 600,
         backgroundColor: '#fff',
         borderRadius: 40,
         flexDirection: 'row',
@@ -599,8 +619,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 8,
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#f0f0f0'
     },
     locationButton: {
         flexDirection: 'row',
@@ -624,6 +642,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#333',
         paddingVertical: 0,
+        ...Platform.select({
+            web: { outlineStyle: 'none' }
+        })
     },
     sectionContainer: { marginTop: 30, paddingHorizontal: 20 },
     sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textRed, marginBottom: 10 },
