@@ -43,29 +43,29 @@ const AppNavigator = () => {
                     <Stack.Screen name="Food" component={Food} />
                     <Stack.Screen name="Honeymoon" component={Honeymoon} />
                     <Stack.Screen name="HoneymoonVendorDetails" component={HoneymoonVendorDetails} />
+                    <Stack.Screen name="MehandiScreen" component={MehandiScreen} />
+                    <Stack.Screen name="DecorationFloral" component={DecorationFloralScreen} />
+                    <Stack.Screen name="VenuePortfolio" component={VenuePortfolio} />
+                    <Stack.Screen name="PhotographerPortfolio" component={PhotographerPortfolio} />
+                    <Stack.Screen name="FoodV" component={FoodV} />
+                    <Stack.Screen name="DecorPortfolio" component={DecorPortfolio} />
                     <Stack.Screen name="EInviteScreen" component={require('../screens/wedding/services/EInvite').default} />
                     <Stack.Screen name="InviteStudioScreen" component={require('../screens/wedding/services/InviteStudioScreen').default} />
                     <Stack.Screen name="EventManagementScreen" component={require('../screens/wedding/services/EventMangment').default} />
                     <Stack.Screen name="VendorListScreen" component={require('../screens/wedding/services/VendorListScreen').default} />
                     <Stack.Screen name="VendorDetailScreen" component={require('../screens/wedding/services/VendorDetailScreen').default} />
                     <Stack.Screen name="JewelleryScreen" component={require('../screens/wedding/services/Jewellery').default} />
+                    <Stack.Screen name="JewelleryDetailsScreen" component={require('../screens/wedding/services/Jewellery Details').default} />
                     <Stack.Screen name="HaldiInviteScreen" component={require('../screens/wedding/services/HaldiInviteScreen').default} />
                     <Stack.Screen name="SangitInviteScreen" component={require('../screens/wedding/services/SangitInviteScreen').default} />
                     <Stack.Screen name="MehndiInviteScreen" component={require('../screens/wedding/services/MehndiInviteScreen').default} />
                     <Stack.Screen name="WeddingInviteScreen" component={require('../screens/wedding/services/WeddingInviteScreen').default} />
                     <Stack.Screen name="ReceptionInviteScreen" component={require('../screens/wedding/services/ReceptionInviteScreen').default} />
-                    <Stack.Screen name="MehandiScreen" component={MehandiScreen} />
-                    <Stack.Screen name="VenuePortfolio" component={VenuePortfolio} />
-                    <Stack.Screen name="PhotographerPortfolio" component={PhotographerPortfolio} />
-                    <Stack.Screen name="FoodV" component={FoodV} />
-                    <Stack.Screen name="DecorPortfolio" component={DecorPortfolio} />
+                    <Stack.Screen name="Services2" component={require('../screens/wedding/Services 2').default} />
                 </>
             ) : (
                 <Stack.Screen name="Auth" component={AuthNavigator} />
             )}
-            <Stack.Screen name="DecorationFloral" component={DecorationFloralScreen} />
-            <Stack.Screen name="Services2" component={require('../screens/wedding/Services 2').default} />
-            <Stack.Screen name="JewelleryDetailsScreen" component={require('../screens/wedding/services/Jewellery Details').default} />
         </Stack.Navigator>
     );
 };

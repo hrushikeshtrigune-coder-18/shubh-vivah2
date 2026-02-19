@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect } from 'react';
 import {
     Dimensions,
-    Platform,
     StatusBar,
     StyleSheet,
     Text,
@@ -11,71 +12,77 @@ import {
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
+    Easing,
     Extrapolate,
     interpolate,
     useAnimatedScrollHandler,
     useAnimatedStyle,
-    useSharedValue
+    useSharedValue,
+    withRepeat,
+    withTiming
 } from 'react-native-reanimated';
 
 const { width, height } = Dimensions.get('window');
-const CARD_HEIGHT = 280;
-const CARD_MARGIN = 95;
+const CARD_HEIGHT = 300; // Slightly taller for more elegance
+const CARD_MARGIN = 60; // Tighter margin
 const FULL_CARD_HEIGHT = CARD_HEIGHT + CARD_MARGIN;
 const CARD_WIDTH = (width / 2) - 25;
 
-// Data ordered to achieve the column layout:
-// Left: Ring, Sangeet, Wedding
-// Right: Haldi, Mehndi, Reception
-// Order in array: Ring, Haldi, Sangeet, Mehndi, Wedding, Reception
+// Data ordered to achieve the column layout
 const inviteTypes = [
     {
         id: '1',
         title: 'Ring Ceremony',
-        subtitle: 'Engagement',
+        subtitle: 'The Promise',
         image: require('../../../../assets/EventMimg/Einvite/Ring.png'),
         icon: 'ring',
-        overlayColor: 'rgba(255, 105, 180, 0.2)'
+        accentColor: '#FF69B4',
+        theme: ['rgba(255, 105, 180, 0.6)', 'rgba(75, 0, 130, 0.4)']
     },
     {
         id: '2',
         title: 'Haldi',
-        subtitle: 'Yellow Hue',
+        subtitle: 'Golden Hue',
         image: require('../../../../assets/EventMimg/Einvite/Haldi.png'),
-        icon: 'sun',
-        overlayColor: 'rgba(255, 215, 0, 0.2)'
+        icon: 'sunny',
+        accentColor: '#FFD700',
+        theme: ['rgba(255, 215, 0, 0.6)', 'rgba(255, 140, 0, 0.4)']
     },
     {
         id: '3',
         title: 'Sangeet',
-        subtitle: 'Musical Night',
+        subtitle: 'Melodic Night',
         image: require('../../../../assets/EventMimg/Einvite/Sanget.png'),
-        icon: 'music',
-        overlayColor: 'rgba(75, 0, 130, 0.2)'
+        icon: 'musical-notes',
+        accentColor: '#4B0082',
+        theme: ['rgba(75, 0, 130, 0.6)', 'rgba(138, 43, 226, 0.4)']
     },
     {
         id: '4',
         title: 'Mehndi',
-        subtitle: 'Henna Designs',
+        subtitle: 'Artistic Henna',
         image: require('../../../../assets/EventMimg/Einvite/Mehandi.png'),
-        icon: 'paint-brush',
-        overlayColor: 'rgba(34, 139, 34, 0.2)'
+        icon: 'brush',
+        accentColor: '#228B22',
+        theme: ['rgba(34, 139, 34, 0.6)', 'rgba(0, 100, 0, 0.4)']
     },
     {
         id: '5',
         title: 'Wedding',
-        subtitle: 'The Big Day',
+        subtitle: 'Eternal Union',
         image: require('../../../../assets/EventMimg/Einvite/wedding.png'),
         icon: 'heart',
-        overlayColor: 'rgba(255, 0, 0, 0.2)'
+        accentColor: '#CC0E0E',
+        theme: ['rgba(204, 14, 14, 0.6)', 'rgba(128, 0, 0, 0.4)']
     },
     {
         id: '6',
         title: 'Reception',
-        subtitle: 'Grand Feast',
+        subtitle: 'Grand Celebration',
         image: require('../../../../assets/EventMimg/Einvite/Reception.png'),
-        icon: 'wine-glass',
-        overlayColor: 'rgba(0, 0, 128, 0.2)'
+        icon: 'wine',
+        accentColor: '#000080',
+        theme: ['rgba(0, 0, 128, 0.6)', 'rgba(0, 0, 50, 0.4)']
     }
 ];
 
@@ -83,48 +90,84 @@ const InviteCard = React.memo(({ item, index, scrollY, navigation }) => {
     // Calculated position based on grid logic
     const isRightColumn = index % 2 !== 0;
     const staggerOffset = isRightColumn ? (FULL_CARD_HEIGHT / 2) : 0;
-
-    // Calculated position based on grid logic
     const row = Math.floor(index / 2);
-    // Approximate Y position of the card's center relative to the top of the list
     const cardCenterY = (row * FULL_CARD_HEIGHT) + (CARD_HEIGHT / 2) + 10 + staggerOffset;
 
-    const rStyle = useAnimatedStyle(() => {
-        const viewportTarget = scrollY.value + (height * 0.33); // Target 1/3 down the screen
-        const distanceFromCenter = Math.abs(viewportTarget - cardCenterY);
+    const shimmerValue = useSharedValue(-1);
 
-        // Zoom Effect - slightly wider range to catch ends
-        const scale = interpolate(
+    useEffect(() => {
+        shimmerValue.value = withRepeat(
+            withTiming(1, { duration: 3000, easing: Easing.bezier(0.4, 0, 0.2, 1) }),
+            -1,
+            false
+        );
+    }, []);
+
+    const rStyle = useAnimatedStyle(() => {
+        const viewportTarget = scrollY.value + (height * 0.45);
+        const distanceFromCenter = viewportTarget - cardCenterY;
+
+        // Enhanced 3D Tilt & Z-Perspective
+        const rotateX = interpolate(
             distanceFromCenter,
-            [0, height * 0.22], // Widened slightly
-            [1.15, 0.9],
+            [-height * 0.5, 0, height * 0.5],
+            [20, 0, -20],
             Extrapolate.CLAMP
         );
 
-        // Opacity Effect
-        const opacity = interpolate(
+        const rotateY = interpolate(
             distanceFromCenter,
-            [0, height * 0.25],
+            [-height * 0.5, 0, height * 0.5],
+            [-5, 0, 5],
+            Extrapolate.CLAMP
+        );
+
+        const translateZ = interpolate(
+            Math.abs(distanceFromCenter),
+            [0, height * 0.4],
+            [50, -20],
+            Extrapolate.CLAMP
+        );
+
+        const scale = interpolate(
+            Math.abs(distanceFromCenter),
+            [0, height * 0.4],
+            [1.08, 0.85],
+            Extrapolate.CLAMP
+        );
+
+        const opacity = interpolate(
+            Math.abs(distanceFromCenter),
+            [0, height * 0.5],
             [1, 0.6],
             Extrapolate.CLAMP
         );
 
-        // Shadow Intensity
-        const shadowOpacity = interpolate(
-            distanceFromCenter,
-            [0, height * 0.3],
-            [0.3, 0.05],
-            Extrapolate.CLAMP
-        );
-
         return {
-            transform: [{ scale }, { translateY: staggerOffset }],
-            opacity,
-            shadowOpacity
+            transform: [
+                { translateY: staggerOffset },
+                { perspective: 1200 },
+                { rotateX: `${rotateX}deg` },
+                { rotateY: `${rotateY}deg` },
+                { scale },
+                { translateZ }
+            ],
+            opacity
         };
     });
 
-    // Parallax for Image
+    // Light Refraction Beam (Moving highlight)
+    const rShimmerStyle = useAnimatedStyle(() => {
+        const translateX = interpolate(
+            shimmerValue.value,
+            [-1, 1],
+            [-CARD_WIDTH * 1.5, CARD_WIDTH * 1.5]
+        );
+        return {
+            transform: [{ translateX }, { rotate: '35deg' }]
+        };
+    });
+
     const rImageStyle = useAnimatedStyle(() => {
         const viewportCenter = scrollY.value + (height / 2);
         const distanceFromCenter = viewportCenter - cardCenterY;
@@ -132,69 +175,126 @@ const InviteCard = React.memo(({ item, index, scrollY, navigation }) => {
         const translateY = interpolate(
             distanceFromCenter,
             [-height, height],
-            [-20, 20], // Move image slightly opposite to scroll
+            [-25, 25],
             Extrapolate.CLAMP
         );
 
         return {
-            transform: [{ translateY }]
+            transform: [{ translateY }, { scale: 1.15 }]
         };
     });
 
     const handlePress = () => {
         let screenName = 'InviteStudioScreen';
         switch (item.title) {
-            case 'Haldi':
-                screenName = 'HaldiInviteScreen';
-                break;
-            case 'Sangeet':
-                screenName = 'SangitInviteScreen';
-                break;
-            case 'Mehndi':
-                screenName = 'MehndiInviteScreen';
-                break;
-            case 'Wedding':
-                screenName = 'WeddingInviteScreen';
-                break;
-            case 'Reception':
-                screenName = 'ReceptionInviteScreen';
-                break;
-            default:
-                screenName = 'InviteStudioScreen';
-                break;
+            case 'Haldi': screenName = 'HaldiInviteScreen'; break;
+            case 'Sangeet': screenName = 'SangitInviteScreen'; break;
+            case 'Mehndi': screenName = 'MehndiInviteScreen'; break;
+            case 'Wedding': screenName = 'WeddingInviteScreen'; break;
+            case 'Reception': screenName = 'ReceptionInviteScreen'; break;
+            default: screenName = 'InviteStudioScreen'; break;
         }
         navigation.navigate(screenName, { eventType: item.title });
     };
 
-
-
     return (
         <Animated.View style={[styles.cardWrapper, rStyle]}>
             <TouchableOpacity
-                activeOpacity={0.9}
+                activeOpacity={0.95}
                 onPress={handlePress}
                 style={styles.cardInner}
             >
-                {/* Image Container with Parallax */}
-                <View style={styles.imageContainer}>
-                    <Animated.Image
-                        source={item.image}
-                        style={[StyleSheet.absoluteFillObject, styles.cardImage, rImageStyle]}
-                        resizeMode="cover"
+                {/* 3D Liquid Glass Body */}
+                <BlurView intensity={45} tint="light" style={StyleSheet.absoluteFill}>
+                    <LinearGradient
+                        colors={['rgba(255,255,255,0.6)', 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.05)']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={StyleSheet.absoluteFill}
                     />
 
-                </View>
+                    <View style={[styles.innerGlow, { borderColor: item.accentColor + '30' }]} />
 
+                    <View style={styles.imageContainer}>
+                        <Animated.Image
+                            source={item.image}
+                            style={[StyleSheet.absoluteFillObject, styles.cardImage, rImageStyle]}
+                            resizeMode="cover"
+                        />
+                        <LinearGradient
+                            colors={['transparent', 'rgba(0,0,0,0.5)']}
+                            style={StyleSheet.absoluteFill}
+                        />
+                    </View>
 
+                    <View style={styles.cardContent}>
+                        <View style={[styles.iconCircle, { backgroundColor: item.accentColor + '15', borderColor: item.accentColor + '40' }]}>
+                            <Ionicons name={item.icon} size={18} color={item.accentColor} />
+                        </View>
+                        <Text style={styles.cardTitle}>{item.title}</Text>
+                        <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+                    </View>
+
+                    <Animated.View style={[styles.glassRefraction, rShimmerStyle]}>
+                        <LinearGradient
+                            colors={['transparent', 'rgba(255,255,255,0.5)', 'transparent']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                            style={StyleSheet.absoluteFill}
+                        />
+                    </Animated.View>
+                </BlurView>
             </TouchableOpacity>
         </Animated.View>
     );
 });
 
+const AuraBlob = ({ color, index, size, top, left, bottom, right }) => {
+    const anim = useSharedValue(0);
+    useEffect(() => {
+        anim.value = withRepeat(
+            withTiming(1, { duration: 12000 + index * 2000, easing: Easing.inOut(Easing.sin) }),
+            -1,
+            true
+        );
+    }, []);
+
+    const rStyle = useAnimatedStyle(() => {
+        const translateX = interpolate(anim.value, [0, 1], [-50, 50]);
+        const translateY = interpolate(anim.value, [0, 1], [-30, 80]);
+        const scale = interpolate(anim.value, [0, 1], [1, 1.3]);
+        return { transform: [{ translateX }, { translateY }, { scale }] };
+    });
+
+    return (
+        <Animated.View style={[
+            styles.aura,
+            { backgroundColor: color, width: size, height: size, borderRadius: size / 2, top, left, bottom, right },
+            rStyle
+        ]} />
+    );
+};
+
+const BackgroundAura = () => {
+    const auras = [
+        { color: '#FFD700', size: 400, top: '10%', left: '-10%' },
+        { color: '#FF69B4', size: 350, bottom: '20%', right: '-10%' },
+        { color: '#4B0082', size: 450, top: '40%', right: '10%' },
+        { color: '#CC0E0E', size: 380, bottom: '5%', left: '20%' },
+    ];
+
+    return (
+        <View style={StyleSheet.absoluteFill}>
+            <LinearGradient colors={['#FDFCF0', '#FFF8F0', '#FFF5EE']} style={StyleSheet.absoluteFill} />
+            {auras.map((aura, i) => <AuraBlob key={i} index={i} {...aura} />)}
+            <BlurView intensity={80} tint="light" style={StyleSheet.absoluteFill} />
+        </View>
+    );
+};
+
 const EInvite = ({ navigation }) => {
     const scrollY = useSharedValue(0);
 
-    // Scroll Handler
     const scrollHandler = useAnimatedScrollHandler((event) => {
         scrollY.value = event.contentOffset.y;
     });
@@ -202,21 +302,24 @@ const EInvite = ({ navigation }) => {
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <StatusBar barStyle="dark-content" backgroundColor="#FFFFF0" />
+                <StatusBar barStyle="dark-content" transparent />
+                <BackgroundAura />
 
-                {/* Header */}
-                <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-                        <Ionicons name="arrow-back" size={24} color="#5C3332" />
-                    </TouchableOpacity>
-                    <View style={styles.headerTextContainer}>
-                        <Text style={styles.headerTitle}>E-Invites</Text>
-                        <Text style={styles.headerSubtitle}>Invites for Every Occasion</Text>
-                    </View>
-                    <View style={{ width: 40 }} />
+                <View style={styles.headerContainer}>
+                    <BlurView intensity={20} tint="light" style={styles.header}>
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                            <Ionicons name="arrow-back" size={22} color="#5C3332" />
+                        </TouchableOpacity>
+                        <View style={styles.headerTextContainer}>
+                            <Text style={styles.headerTitle}>Studio</Text>
+                            <Text style={styles.headerSubtitle}>AI CRAFTED INVITES</Text>
+                        </View>
+                        <TouchableOpacity style={styles.backButton}>
+                            <Ionicons name="options-outline" size={22} color="#5C3332" />
+                        </TouchableOpacity>
+                    </BlurView>
                 </View>
 
-                {/* Grid List with Animation */}
                 <Animated.FlatList
                     data={inviteTypes}
                     keyExtractor={item => item.id}
@@ -238,103 +341,129 @@ const EInvite = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFF0', // Soft Ivory
+        backgroundColor: '#FDFCF0',
+    },
+    aura: {
+        position: 'absolute',
+        opacity: 0.15,
+    },
+    headerContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        paddingTop: 50,
+        paddingHorizontal: 15,
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingTop: 50,
-        paddingBottom: 20,
-        backgroundColor: '#FFFFF0',
-        zIndex: 10,
+        paddingHorizontal: 15,
+        paddingVertical: 12,
+        borderRadius: 30,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.5)',
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.05,
+        shadowRadius: 15,
     },
     backButton: {
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#fff',
+        backgroundColor: 'rgba(255,255,255,0.8)',
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
     },
     headerTextContainer: {
         alignItems: 'center',
     },
     headerTitle: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: '#5C3332',
-        fontFamily: Platform.OS === 'ios' ? 'Times New Roman' : 'serif',
+        fontSize: 24,
+        color: '#332121',
+        fontFamily: 'PlayfairDisplay_700Bold',
+        letterSpacing: 0.5,
     },
     headerSubtitle: {
-        fontSize: 14,
+        fontSize: 9,
         color: '#8A6E6E',
-        fontFamily: Platform.OS === 'ios' ? 'Times New Roman' : 'serif',
-        marginTop: 2,
+        fontFamily: 'Outfit_600SemiBold',
+        letterSpacing: 3,
+        marginTop: -2,
     },
     listContent: {
-        paddingTop: 10,
-        paddingBottom: height * 0.35, // Reduced from 0.85
+        paddingTop: 140,
+        paddingBottom: height * 0.4,
     },
-
-    // Card Styles
     cardWrapper: {
         width: CARD_WIDTH,
         height: CARD_HEIGHT,
         marginBottom: CARD_MARGIN,
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: '#F29502',
-        backgroundColor: '#fff',
+        borderRadius: 32,
         shadowColor: "#000",
-        shadowOffset: { width: 0, height: 10 },
-        shadowRadius: 15,
-        elevation: 6, // Android shadow
+        shadowOffset: { width: 0, height: 20 },
+        shadowOpacity: 0.2,
+        shadowRadius: 25,
+        elevation: 15,
     },
     cardInner: {
         flex: 1,
-        borderRadius: 20,
+        borderRadius: 32,
         overflow: 'hidden',
-        backgroundColor: '#fff',
+        borderWidth: 1.5,
+        borderColor: 'rgba(255,255,255,0.6)',
+    },
+    innerGlow: {
+        ...StyleSheet.absoluteFillObject,
+        borderRadius: 32,
+        borderWidth: 1,
+        margin: 2,
     },
     imageContainer: {
-        height: '100%',
+        height: '62%',
         width: '100%',
         overflow: 'hidden',
-        backgroundColor: '#f0f0f0',
     },
     cardImage: {
         width: '100%',
-        height: '110%', // Taller for parallax
+        height: '100%',
     },
-    overlay: {
-        ...StyleSheet.absoluteFillObject,
+    cardContent: {
+        padding: 16,
+        paddingTop: 12,
+        alignItems: 'center',
     },
     iconCircle: {
         width: 36,
         height: 36,
         borderRadius: 18,
-        backgroundColor: '#F5F5DC', // Beige
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 10,
+        marginBottom: 8,
+        borderWidth: 1,
     },
     cardTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#333',
-        fontFamily: Platform.OS === 'ios' ? 'Times New Roman' : 'serif',
+        fontSize: 14,
+        color: '#1a1a1a',
+        fontFamily: 'Outfit_700Bold',
+        letterSpacing: 0.2,
     },
     cardSubtitle: {
-        fontSize: 12,
+        fontSize: 10,
         color: '#666',
-        marginTop: 2,
+        fontFamily: 'Outfit_400Regular',
+        marginTop: 1,
+    },
+    glassRefraction: {
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        width: 100,
+        opacity: 0.6,
     },
 });
 

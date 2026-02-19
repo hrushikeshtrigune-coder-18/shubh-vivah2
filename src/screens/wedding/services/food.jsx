@@ -8,6 +8,7 @@ import {
     Image,
     ImageBackground,
     Modal,
+    PanResponder,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -44,6 +45,7 @@ const CATERERS_DATA = [
         capacity: '300-1500 guests',
         specialties: ['Live Counters', 'Custom Menu', 'Jain Friendly'],
         image: 'https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=800&auto=format&fit=crop',
+        accentColor: '#2b1a0e', // Deep earthy brown for rustic feast
     },
     {
         id: '2',
@@ -56,6 +58,7 @@ const CATERERS_DATA = [
         capacity: '500-2000 guests',
         specialties: ['Multi-Cuisine', 'Luxury Presentation'],
         image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=800&auto=format&fit=crop',
+        accentColor: '#0a1024', // Midnight blue for refined gourmet
     },
     {
         id: '3',
@@ -68,6 +71,7 @@ const CATERERS_DATA = [
         capacity: '200-1000 guests',
         specialties: ['Mughlai', 'North Indian', 'Live Chaat'],
         image: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=800&auto=format&fit=crop',
+        accentColor: '#421a10', // Deep ochre/red for rich Indian spices
     },
 ];
 
@@ -93,6 +97,101 @@ const TESTIMONIALS = [
         tags: ['500 Guests', 'Multi-Cuisine', 'Mumbai'],
     },
 ];
+
+const SwipeButton = ({ onSwipeComplete }) => {
+    const pan = useRef(new Animated.ValueXY()).current;
+    const buttonWidth = width - 70; // Adjusted for padding
+    const knobWidth = 44;
+    const swipeThreshold = buttonWidth - knobWidth - 10;
+
+    const shimmerAnim = useRef(new Animated.Value(0)).current;
+
+    const panResponder = useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onPanResponderMove: (e, gestureState) => {
+                if (gestureState.dx >= 0 && gestureState.dx <= swipeThreshold) {
+                    pan.setValue({ x: gestureState.dx, y: 0 });
+                }
+            },
+            onPanResponderRelease: (e, gestureState) => {
+                if (gestureState.dx >= swipeThreshold - 20) {
+                    Animated.timing(pan, {
+                        toValue: { x: swipeThreshold, y: 0 },
+                        duration: 100,
+                        useNativeDriver: false,
+                    }).start(() => {
+                        onSwipeComplete();
+                        setTimeout(() => pan.setValue({ x: 0, y: 0 }), 500);
+                    });
+                } else {
+                    Animated.spring(pan, {
+                        toValue: { x: 0, y: 0 },
+                        useNativeDriver: false,
+                    }).start();
+                }
+            },
+        })
+    ).current;
+
+    React.useEffect(() => {
+        const startShimmer = () => {
+            shimmerAnim.setValue(0);
+            Animated.loop(
+                Animated.sequence([
+                    Animated.timing(shimmerAnim, {
+                        toValue: 1,
+                        duration: 3500,
+                        useNativeDriver: true,
+                    }),
+                    Animated.delay(1000),
+                ])
+            ).start();
+        };
+        startShimmer();
+    }, []);
+
+    const translateX = shimmerAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [-buttonWidth, buttonWidth],
+    });
+
+    return (
+        <View style={styles.swipeContainer}>
+            <LinearGradient
+                colors={['rgba(255, 255, 255, 0.15)', 'rgba(0, 0, 0, 0.6)']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+                style={StyleSheet.absoluteFill}
+            />
+            <Animated.View
+                style={[
+                    StyleSheet.absoluteFill,
+                    {
+                        transform: [{ translateX }],
+                    }
+                ]}
+            >
+                <LinearGradient
+                    colors={['transparent', 'rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.08)', 'transparent']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={StyleSheet.absoluteFill}
+                />
+            </Animated.View>
+            <Text style={styles.swipeText}>Book now</Text>
+            <Animated.View
+                style={[
+                    styles.swipeKnob,
+                    { transform: pan.getTranslateTransform() }
+                ]}
+                {...panResponder.panHandlers}
+            >
+                <Ionicons name="airplane" size={18} color="#FFF" />
+            </Animated.View>
+        </View>
+    );
+};
 
 const Food = ({ navigation }) => {
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -200,57 +299,54 @@ const Food = ({ navigation }) => {
     };
 
     const renderCatererCard = ({ item }) => (
-        <View style={styles.card}>
-            <Image source={{ uri: item.image }} style={styles.cardImage} />
-            <TouchableOpacity style={styles.saveButton}>
-                <Ionicons name="heart-outline" size={24} color="#FFF" />
-            </TouchableOpacity>
-
-            <View style={styles.cardContent}>
-                <View style={styles.cardHeader}>
-                    <Text style={styles.cardTitle}>{item.name}</Text>
-                    <View style={styles.ratingBadge}>
-                        <Ionicons name="star" size={12} color="#FFF" />
-                        <Text style={styles.ratingText}>{item.rating} ({item.reviews})</Text>
-                    </View>
+        <TouchableOpacity
+            style={styles.newCardContainer}
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('FoodV')}
+        >
+            <ImageBackground
+                source={{ uri: item.image }}
+                style={styles.newCardBackground}
+                imageStyle={{ borderRadius: 30 }}
+            >
+                <View style={styles.topRightActions}>
+                    <TouchableOpacity style={styles.bookmarkButton}>
+                        <Ionicons name="bookmark-outline" size={18} color="#FFF" />
+                    </TouchableOpacity>
                 </View>
 
-                <View style={styles.infoRow}>
-                    <Ionicons name="location-outline" size={16} color="#666" />
-                    <Text style={styles.infoText}>{item.location}</Text>
-                </View>
-
-                <View style={styles.priceRow}>
-                    <View style={styles.priceItem}>
-                        <Text style={styles.priceLabel}>Veg</Text>
-                        <Text style={styles.priceValue}>₹{item.priceVeg}</Text>
-                    </View>
-                    <View style={styles.divider} />
-                    <View style={styles.priceItem}>
-                        <Text style={styles.priceLabel}>Non-Veg</Text>
-                        <Text style={styles.priceValue}>₹{item.priceNonVeg}</Text>
-                    </View>
-                </View>
-
-                <View style={styles.infoRow}>
-                    <Ionicons name="people-outline" size={16} color="#666" />
-                    <Text style={styles.infoText}>Ideal for: {item.capacity}</Text>
-                </View>
-
-                <View style={styles.chipContainer}>
-                    {item.specialties.map((spec, index) => (
-                        <View key={index} style={styles.chip}>
-                            <Text style={styles.chipText}>{spec}</Text>
+                <LinearGradient
+                    colors={[
+                        'transparent',
+                        `${item.accentColor}33`,
+                        `${item.accentColor}99`,
+                        `${item.accentColor}E6`,
+                        item.accentColor
+                    ]}
+                    style={styles.newCardGradient}
+                >
+                    <View style={styles.cardContentWrapper}>
+                        <View style={styles.newCardHeader}>
+                            <Text style={styles.newCardTitle} numberOfLines={1}>{item.name}</Text>
+                            <View style={styles.ratingBadge}>
+                                <Ionicons name="star" size={12} color="#FFD700" />
+                                <Text style={styles.ratingText}>{item.rating}</Text>
+                            </View>
                         </View>
-                    ))}
-                </View>
 
-                <TouchableOpacity style={styles.ctaButton} onPress={() => navigation.navigate('FoodV')}>
-                    <Text style={styles.ctaText}>View Menu & Packages</Text>
-                    <Ionicons name="arrow-forward" size={16} color="#FFF" />
-                </TouchableOpacity>
-            </View>
-        </View>
+                        <View style={styles.newCardInfoRow}>
+                            <View style={styles.locationContainer}>
+                                <Ionicons name="location-sharp" size={14} color="#F29502" />
+                                <Text style={styles.locationText}>{item.location}</Text>
+                            </View>
+                            <Text style={styles.priceText}>Veg ₹{item.priceVeg}</Text>
+                        </View>
+
+                        <SwipeButton onSwipeComplete={() => navigation.navigate('FoodV')} />
+                    </View>
+                </LinearGradient>
+            </ImageBackground>
+        </TouchableOpacity>
     );
 
     const renderTestimonials = () => (
@@ -578,134 +674,128 @@ const styles = StyleSheet.create({
         color: '#FFF',
         textAlign: 'center',
     },
-    card: {
+    newCardContainer: {
+        marginHorizontal: 15,
+        marginBottom: 25,
+        borderRadius: 30,
         backgroundColor: '#FFF',
-        borderRadius: 15,
-        marginBottom: 20,
-        overflow: 'hidden',
-        borderWidth: 1,
-        borderColor: '#F29502',
+        elevation: 5,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
     },
-    cardImage: {
+    newCardBackground: {
         width: '100%',
-        height: 200,
-        resizeMode: 'cover',
+        height: 300,
+        justifyContent: 'flex-end',
+        overflow: 'hidden',
     },
-    saveButton: {
+    topRightActions: {
         position: 'absolute',
-        top: 15,
-        right: 15,
+        top: 20,
+        right: 20,
+    },
+    bookmarkButton: {
         backgroundColor: 'rgba(0,0,0,0.3)',
         padding: 8,
         borderRadius: 20,
     },
-    cardContent: {
-        padding: 15,
+    newCardGradient: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '60%',
+        padding: 24,
+        justifyContent: 'flex-end',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
     },
-    cardHeader: {
+    cardContentWrapper: {
+        width: '100%',
+    },
+    newCardHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         marginBottom: 8,
+        gap: 12,
     },
-    cardTitle: {
+    newCardTitle: {
         fontFamily: 'Outfit_700Bold',
-        fontSize: 18,
-        color: '#CC0E0E',
+        fontSize: 24,
+        color: '#FFF',
         flex: 1,
-        marginRight: 10,
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
     },
     ratingBadge: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F29502',
-        paddingHorizontal: 6,
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        paddingHorizontal: 8,
         paddingVertical: 3,
-        borderRadius: 6,
+        borderRadius: 10,
+        gap: 4,
+        marginTop: 2,
     },
     ratingText: {
-        fontFamily: 'Outfit_600SemiBold',
-        fontSize: 10,
         color: '#FFF',
-        marginLeft: 4,
-    },
-    infoRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 8,
-    },
-    infoText: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 14, // Increased from 13
-        color: '#F29502',
-        marginLeft: 6,
-    },
-    priceRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#FFFFF0',
-        padding: 10,
-        borderRadius: 8,
-        marginVertical: 10,
-        borderWidth: 1,
-        borderColor: '#F29502',
-    },
-    priceItem: {
-        flex: 1,
-        alignItems: 'center',
-    },
-    priceLabel: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 12, // Increased from 11
-        color: '#F29502',
-    },
-    priceValue: {
         fontFamily: 'Outfit_600SemiBold',
-        fontSize: 15, // Increased from 14
-        color: '#CC0E0E',
+        fontSize: 12,
     },
-    divider: {
-        width: 1,
-        height: '80%',
-        backgroundColor: '#F29502',
-    },
-    chipContainer: {
+    newCardInfoRow: {
         flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-        marginBottom: 15,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 12,
     },
-    chip: {
-        backgroundColor: '#FFF',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: '#F29502',
+    locationContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
     },
-    chipText: {
+    locationText: {
+        color: '#F29502',
         fontFamily: 'Outfit_500Medium',
-        fontSize: 12, // Increased from 11
-        color: '#CC0E0E',
+        fontSize: 14,
     },
-    ctaButton: {
-        backgroundColor: '#CC0E0E',
-        flexDirection: 'row',
+    priceText: {
+        color: 'rgba(255, 255, 255, 0.9)',
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 15,
+    },
+    swipeContainer: {
+        height: 48,
+        backgroundColor: 'rgba(0, 0, 0, 0.45)',
+        borderRadius: 12,
+        justifyContent: 'center',
+        paddingHorizontal: 4,
+        borderWidth: 0.8,
+        borderColor: 'rgba(255, 255, 255, 0.3)',
+        marginTop: 5,
+        overflow: 'hidden',
+    },
+    swipeKnob: {
+        width: 38,
+        height: 38,
+        backgroundColor: 'rgba(255, 255, 255, 0.25)',
+        borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 12,
-        borderRadius: 10,
+        position: 'absolute',
+        left: 5,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.4)',
     },
-    ctaText: {
+    swipeText: {
+        color: '#FFF',
         fontFamily: 'Outfit_600SemiBold',
         fontSize: 14,
-        color: '#FFF',
-        marginRight: 8,
+        textAlign: 'center',
+        opacity: 0.9,
     },
     snapshotCard: {
         width: width - 60,

@@ -1,17 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
 import { ResizeMode, Video } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
+    Animated,
     Dimensions,
     FlatList,
     Image,
+    ImageBackground,
+    PanResponder,
     ScrollView,
     StatusBar,
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -94,7 +97,8 @@ const VENDORS = [
         location: 'Mumbai, India',
         rating: 4.9,
         price: '₹1,50,000',
-        image: { uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop' }
+        image: { uri: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=600&auto=format&fit=crop' },
+        accentColor: '#122b0f', // Deep Forest Green for floral theme
     },
     {
         id: '2',
@@ -102,7 +106,8 @@ const VENDORS = [
         location: 'Delhi, India',
         rating: 4.7,
         price: '₹2,00,000',
-        image: require('../../../../assets/images/venue1.jpg')
+        image: require('../../../../assets/images/venue1.jpg'),
+        accentColor: '#2e0a0a', // Deep maroon for heritage decor
     },
     {
         id: '3',
@@ -110,7 +115,8 @@ const VENDORS = [
         location: 'Udaipur, India',
         rating: 5.0,
         price: '₹5,00,000',
-        image: require('../../../../assets/images/venue2.jpg')
+        image: require('../../../../assets/images/venue2.jpg'),
+        accentColor: '#301828', // Deep plum for regal setups
     },
     {
         id: '4',
@@ -118,11 +124,107 @@ const VENDORS = [
         location: 'Bangalore, India',
         rating: 4.6,
         price: '₹1,20,000',
-        image: require('../../../../assets/images/venue3.jpg')
-    }
+        image: require('../../../../assets/images/venue3.jpg'),
+        accentColor: '#1b3d16', // Fresh Garden Green
+    },
 ];
 
 // --- COMPONENTS ---
+
+const SwipeButton = ({ onSwipeComplete }) => {
+    const pan = useRef(new Animated.ValueXY()).current;
+    const buttonWidth = width - 70; // Adjusted for padding
+    const knobWidth = 44;
+    const swipeThreshold = buttonWidth - knobWidth - 10;
+
+    const shimmerAnim = useRef(new Animated.Value(0)).current;
+
+    const panResponder = useRef(
+        PanResponder.create({
+            onStartShouldSetPanResponder: () => true,
+            onPanResponderMove: (e, gestureState) => {
+                if (gestureState.dx >= 0 && gestureState.dx <= swipeThreshold) {
+                    pan.setValue({ x: gestureState.dx, y: 0 });
+                }
+            },
+            onPanResponderRelease: (e, gestureState) => {
+                if (gestureState.dx >= swipeThreshold - 20) {
+                    Animated.timing(pan, {
+                        toValue: { x: swipeThreshold, y: 0 },
+                        duration: 100,
+                        useNativeDriver: false,
+                    }).start(() => {
+                        onSwipeComplete();
+                        setTimeout(() => pan.setValue({ x: 0, y: 0 }), 500);
+                    });
+                } else {
+                    Animated.spring(pan, {
+                        toValue: { x: 0, y: 0 },
+                        useNativeDriver: false,
+                    }).start();
+                }
+            },
+        })
+    ).current;
+
+    useEffect(() => {
+        const startShimmer = () => {
+            shimmerAnim.setValue(0);
+            Animated.loop(
+                Animated.sequence([
+                    Animated.timing(shimmerAnim, {
+                        toValue: 1,
+                        duration: 3500,
+                        useNativeDriver: true,
+                    }),
+                    Animated.delay(1000),
+                ])
+            ).start();
+        };
+        startShimmer();
+    }, []);
+
+    const translateX = shimmerAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [-buttonWidth, buttonWidth],
+    });
+
+    return (
+        <View style={styles.swipeContainer}>
+            <LinearGradient
+                colors={['rgba(255, 255, 255, 0.15)', 'rgba(0, 0, 0, 0.6)']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+                style={StyleSheet.absoluteFill}
+            />
+            <Animated.View
+                style={[
+                    StyleSheet.absoluteFill,
+                    {
+                        transform: [{ translateX }],
+                    }
+                ]}
+            >
+                <LinearGradient
+                    colors={['transparent', 'rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.08)', 'transparent']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={StyleSheet.absoluteFill}
+                />
+            </Animated.View>
+            <Text style={styles.swipeText}>Book now</Text>
+            <Animated.View
+                style={[
+                    styles.swipeKnob,
+                    { transform: pan.getTranslateTransform() }
+                ]}
+                {...panResponder.panHandlers}
+            >
+                <Ionicons name="airplane" size={18} color="#FFF" />
+            </Animated.View>
+        </View>
+    );
+};
 
 const StoryCard = ({ item }) => (
     <View style={styles.storyCard}>
@@ -158,51 +260,54 @@ const TestimonialCard = ({ item }) => (
 );
 
 const VendorCard = ({ item, navigation }) => (
-    <View style={[styles.vendorCardEnhanced, { width: 280, marginRight: 20 }]}>
-        <View>
-            <Image
-                source={item.image}
-                style={styles.vendorCover}
-            />
+    <TouchableOpacity
+        style={styles.newCardContainerSmall}
+        activeOpacity={0.9}
+        onPress={() => navigation.navigate('DecorPortfolio', { vendor: item })}
+    >
+        <ImageBackground
+            source={item.image}
+            style={styles.newCardBackgroundSmall}
+            imageStyle={{ borderRadius: 30 }}
+        >
+            <View style={styles.topRightActions}>
+                <TouchableOpacity style={styles.bookmarkButton}>
+                    <Ionicons name="bookmark-outline" size={18} color="#FFF" />
+                </TouchableOpacity>
+            </View>
+
             <LinearGradient
-                colors={['transparent', 'rgba(0,0,0,0.6)']}
-                style={styles.vendorImageOverlay}
-            />
-            <View style={styles.cardFloatingBadges}>
-                <View style={styles.ratingBadgeFloating}>
-                    <Text style={styles.ratingText}>{item.rating}</Text>
-                    <Ionicons name="star" size={10} color={colors.white} />
+                colors={[
+                    'transparent',
+                    `${item.accentColor}33`,
+                    `${item.accentColor}99`,
+                    `${item.accentColor}E6`,
+                    item.accentColor
+                ]}
+                style={styles.newCardGradient}
+            >
+                <View style={styles.cardContentWrapper}>
+                    <View style={styles.newCardHeader}>
+                        <Text style={styles.newCardTitleSmall} numberOfLines={1}>{item.name}</Text>
+                        <View style={styles.ratingBadge}>
+                            <Ionicons name="star" size={12} color="#FFD700" />
+                            <Text style={styles.ratingText}>{item.rating}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.newCardInfoRow}>
+                        <View style={styles.locationContainer}>
+                            <Ionicons name="location-sharp" size={14} color="#F29502" />
+                            <Text style={styles.locationText}>{item.location.split(',')[0]}</Text>
+                        </View>
+                        <Text style={styles.priceSmallText}>{item.price}</Text>
+                    </View>
+
+                    <SwipeButton onSwipeComplete={() => navigation.navigate('DecorPortfolio', { vendor: item })} />
                 </View>
-                <TouchableOpacity style={styles.favoriteBtn}>
-                    <Ionicons name="heart-outline" size={18} color={colors.white} />
-                </TouchableOpacity>
-            </View>
-        </View>
-
-        <View style={styles.vendorInfo}>
-            <Text style={styles.vendorNameLarge}>{item.name}</Text>
-            <View style={styles.vendorMetaRow}>
-                <Ionicons name="location-sharp" size={14} color={colors.saffron} />
-                <Text style={styles.vendorMetaText}>{item.location}</Text>
-            </View>
-
-            <View style={styles.divider} />
-
-            <View style={styles.vendorFooter}>
-                <View>
-                    <Text style={styles.vendorLabel}>Starting from</Text>
-                    <Text style={styles.vendorPrice}>{item.price}</Text>
-                </View>
-                <TouchableOpacity
-                    style={styles.contactBtn}
-                    onPress={() => navigation.navigate('DecorPortfolio', { vendor: item })}
-                >
-                    <Text style={styles.contactBtnText}>View Portfolio</Text>
-                    <Ionicons name="arrow-forward" size={14} color={colors.white} style={{ marginLeft: 5 }} />
-                </TouchableOpacity>
-            </View>
-        </View>
-    </View>
+            </LinearGradient>
+        </ImageBackground>
+    </TouchableOpacity>
 );
 
 const ThemeCard = ({ item }) => (
@@ -1099,6 +1204,129 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: colors.maroon,
         fontSize: 14,
+    },
+
+    // --- NEW PREMIUM CARD STYLES ---
+    newCardContainerSmall: {
+        width: 280,
+        marginRight: 20,
+        borderRadius: 30,
+        backgroundColor: '#FFF',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        overflow: 'hidden',
+    },
+    newCardBackgroundSmall: {
+        width: '100%',
+        height: 350,
+        justifyContent: 'flex-end',
+        overflow: 'hidden',
+    },
+    topRightActions: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+    },
+    bookmarkButton: {
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        padding: 8,
+        borderRadius: 20,
+    },
+    newCardGradient: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '60%',
+        padding: 24,
+        justifyContent: 'flex-end',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
+    },
+    cardContentWrapper: {
+        width: '100%',
+    },
+    newCardHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
+        gap: 12,
+    },
+    newCardTitleSmall: {
+        fontFamily: 'serif',
+        fontSize: 24,
+        color: '#FFF',
+        fontWeight: 'bold',
+        flex: 1,
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
+    },
+    ratingBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+        borderRadius: 10,
+        gap: 4,
+        marginTop: 2,
+    },
+    ratingText: {
+        color: '#FFF',
+        fontSize: 12,
+    },
+    newCardInfoRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 12,
+    },
+    locationContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+    },
+    locationText: {
+        color: colors.saffron,
+        fontSize: 14,
+    },
+    priceSmallText: {
+        color: 'rgba(255, 255, 255, 0.9)',
+        fontSize: 14,
+    },
+    swipeContainer: {
+        height: 48,
+        backgroundColor: 'rgba(0, 0, 0, 0.45)',
+        borderRadius: 12,
+        justifyContent: 'center',
+        paddingHorizontal: 4,
+        borderWidth: 0.8,
+        borderColor: 'rgba(255, 255, 255, 0.3)',
+        marginTop: 5,
+        overflow: 'hidden',
+    },
+    swipeKnob: {
+        width: 38,
+        height: 38,
+        backgroundColor: 'rgba(255, 255, 255, 0.25)',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        left: 5,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.4)',
+    },
+    swipeText: {
+        color: '#FFF',
+        fontSize: 14,
+        textAlign: 'center',
+        opacity: 0.9,
     },
 });
 

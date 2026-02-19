@@ -43,6 +43,7 @@ const JewelleryDetails = ({ route, navigation }) => {
     const { item } = route.params || {};
     const insets = useSafeAreaInsets();
     const [activeTab, setActiveTab] = useState('PORTFOLIO');
+    const [userRating, setUserRating] = useState(0);
 
     const renderHeader = () => (
         <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
@@ -89,6 +90,22 @@ const JewelleryDetails = ({ route, navigation }) => {
                 <ActionItem icon="heart-outline" label="Shortlist" />
                 <ActionItem icon="create-outline" label="Write a Review" />
                 <ActionItem icon="share-social-outline" label="Share" />
+            </View>
+
+            {/* Tap to Rate */}
+            <View style={styles.tapToRateContainer}>
+                <Text style={styles.tapToRateTitle}>Tap to Rate</Text>
+                <View style={styles.tapToRateStars}>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <TouchableOpacity key={star} onPress={() => setUserRating(star)}>
+                            <Ionicons
+                                name={userRating >= star ? "star" : "star-outline"}
+                                size={32}
+                                color={userRating >= star ? COLORS.gold : "#DDD"}
+                            />
+                        </TouchableOpacity>
+                    ))}
+                </View>
             </View>
         </View>
     );
@@ -219,7 +236,21 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 30
     },
-    viewMoreText: { color: COLORS.kumkum, fontWeight: '600' }
+    viewMoreText: { color: COLORS.kumkum, fontWeight: '600' },
+    tapToRateContainer: {
+        marginTop: 20,
+        paddingTop: 15,
+        borderTopWidth: 1,
+        borderTopColor: '#EEE',
+        alignItems: 'center'
+    },
+    tapToRateTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 10
+    },
+    tapToRateStars: { flexDirection: 'row', gap: 10 },
 });
 
 export default JewelleryDetails;
