@@ -31,7 +31,7 @@ const COLORS = {
     textDark: '#CC0E0E',
 };
 
-const FoodV = ({ navigation, route }) => {
+const FoodV = ({ navigation, route }: any) => {
     const { vendor } = route.params || {};
 
     // Default Data (Fallback)
@@ -54,15 +54,16 @@ const FoodV = ({ navigation, route }) => {
         images: vendor.images || (vendor.previews ? [vendor.image, ...vendor.previews] : defaultVendor.images)
     } : defaultVendor;
     const scrollY = useRef(new Animated.Value(0)).current;
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<ScrollView>(null);
 
     // Profile Sections Refs
-    const portfolioRef = useRef(null);
-    const pricingRef = useRef(null);
-    const aboutRef = useRef(null);
-    const reviewsRef = useRef(null);
+    const portfolioRef = useRef<View>(null);
+    const pricingRef = useRef<View>(null);
+    const aboutRef = useRef<View>(null);
+    const reviewsRef = useRef<View>(null);
 
-    const [activeSection, setActiveSection] = useState('Photos');
+    const [activeSection, setActiveSection] = useState('Projects');
+    const [activeMediaTab, setActiveMediaTab] = useState('Photos');
     // activeMediaTab removed as it is now the main activeSection
     const [activeMenuFilter, setActiveMenuFilter] = useState('Veg');
     const [isContactModalVisible, setIsContactModalVisible] = useState(false);
@@ -81,7 +82,7 @@ const FoodV = ({ navigation, route }) => {
 
     // Menu Entrance Animation Logic
     // Using a separate component for animated list items to handle mounting animations
-    const AnimatedMenuCard = ({ item, index, isNonVeg }) => {
+    const AnimatedMenuCard = ({ item, index, isNonVeg }: { item: any, index: number, isNonVeg: boolean }) => {
         const fadeAnim = useRef(new Animated.Value(0)).current;
         const translateY = useRef(new Animated.Value(20)).current;
 
@@ -121,16 +122,16 @@ const FoodV = ({ navigation, route }) => {
 
     const tabWidth = (width - 20) / 3; // width minus horizontal padding divided by 3 tabs
 
-    const handleTabPress = (section, ref, index) => {
+    const handleTabPress = (section: string, ref: any, index: number) => {
         setActiveSection(section);
         Animated.spring(tabUnderlineTranslateX, {
-            toValue: index * tabWidth,
+            toValue: index * 90, // Adjusted for new tab width
             useNativeDriver: true,
         }).start();
 
         ref.current?.measureLayout(
             scrollRef.current,
-            (x, y) => {
+            (x: number, y: number) => {
                 scrollRef.current?.scrollTo({ y: y - 100, animated: true });
             }
         );
@@ -183,13 +184,13 @@ const FoodV = ({ navigation, route }) => {
             }
         ];
 
-        const renderMenuCategory = (menuData, isNonVeg) => (
+        const renderMenuCategory = (menuData: any[], isNonVeg: boolean) => (
             <View style={styles.menuTabContainer}>
                 {menuData.map((cat, idx) => (
                     <View key={idx} style={styles.menuCategoryBlock}>
                         <Text style={styles.menuCategoryTitle}>{cat.category}</Text>
                         <View style={styles.menuItemsList}>
-                            {cat.items.map((item, i) => (
+                            {cat.items.map((item: any, i: number) => (
                                 <AnimatedMenuCard
                                     key={item.id}
                                     item={item}
@@ -234,7 +235,7 @@ const FoodV = ({ navigation, route }) => {
                 ].map((proj, idx) => (
                     <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
                         <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
-                            {proj.images.map((img, i) => (
+                            {proj.images.map((img: any, i: number) => (
                                 <Image key={i} source={img} style={[styles.projectImage, { width: (width - 40) }]} />
                             ))}
                         </ScrollView>
@@ -256,7 +257,7 @@ const FoodV = ({ navigation, route }) => {
                     ].map((proj, idx) => (
                         <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
                             <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
-                                {proj.images.map((img, i) => (
+                                {proj.images.map((img: any, i: number) => (
                                     <Image key={i} source={img} style={[styles.projectImage, { width: (width - 40) }]} />
                                 ))}
                             </ScrollView>
@@ -276,9 +277,23 @@ const FoodV = ({ navigation, route }) => {
 
         return (
             <View ref={portfolioRef} style={styles.profileMediaSection}>
-                {activeSection === 'Photos' ? (
+                <View style={styles.mediaHeaderRow}>
+                    <Text style={styles.sectionTitle}>Portfolio</Text>
+                    <View style={styles.mediaMainTabs}>
+                        {['Photos', 'Videos', 'Menu'].map(tab => (
+                            <TouchableOpacity
+                                key={tab}
+                                style={[styles.mediaMainTab, activeMediaTab === tab && styles.mediaMainTabActive]}
+                                onPress={() => setActiveMediaTab(tab)}
+                            >
+                                <Text style={[styles.mTabText, activeMediaTab === tab && styles.mTabTextActive]}>{tab}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </View>
+                {activeMediaTab === 'Photos' ? (
                     renderPhotos()
-                ) : activeSection === 'Videos' ? (
+                ) : activeMediaTab === 'Videos' ? (
                     <View style={styles.videoPlaceholder}>
                         <Ionicons name="play-circle" size={60} color="#DDD" />
                         <Text style={styles.placeholderText}>Catering Highlights Videos</Text>
@@ -554,19 +569,23 @@ const FoodV = ({ navigation, route }) => {
                 <View style={styles.profileHeader}>
                     <Image source={displayVendor.image} style={styles.coverImage} />
                     <LinearGradient
-                        colors={['rgba(0,0,0,0.5)', 'transparent']}
+                        colors={['rgba(0,0,0,0.6)', 'transparent', 'rgba(0,0,0,0.4)']}
                         style={styles.headerOverlay}
                     />
                     <TouchableOpacity
                         style={styles.closeBtnProfile}
                         onPress={() => navigation.goBack()}
                     >
-                        <Ionicons name="arrow-back" size={28} color="#FFF" />
+                        <Ionicons name="chevron-down" size={28} color="#FFF" />
                     </TouchableOpacity>
                 </View>
 
-                {/* 1: Profile Identity (Floating) */}
+                {/* 1: Profile Identity (Premium) */}
                 <View style={styles.profileIdentityOverlay}>
+                    <LinearGradient
+                        colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
+                        style={styles.identityBgGradient}
+                    />
                     <View style={styles.avatarContainer}>
                         <Image source={displayVendor.image} style={styles.avatarImage} />
                     </View>
@@ -574,37 +593,44 @@ const FoodV = ({ navigation, route }) => {
                         <Text style={styles.profileVendorName}>{displayVendor.name}</Text>
                         <Text style={styles.profileBusinessName}>{displayVendor.tag}</Text>
                         <View style={styles.profileLocationRow}>
-                            <Ionicons name="location" size={16} color={COLORS.primary} />
+                            <Ionicons name="location" size={16} color={COLORS.secondary} />
                             <Text style={styles.profileLocationText}>{displayVendor.location}</Text>
                         </View>
                     </View>
                 </View>
 
-                {/* 2: Sticky Shortcut Nav Bar */}
+                {/* 2: Premium Sticky Tab Bar */}
                 <View style={styles.stickyNavWrapper}>
-                    <View style={styles.shortcutNavBar}>
-                        <TouchableOpacity style={{ width: tabWidth, alignItems: 'center' }} onPress={() => handleTabPress('Photos', portfolioRef, 0)}>
-                            <Text style={[styles.shortcutNavText, activeSection === 'Photos' && styles.shortcutNavTextActive]}>Photos</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ width: tabWidth, alignItems: 'center' }} onPress={() => handleTabPress('Videos', portfolioRef, 1)}>
-                            <Text style={[styles.shortcutNavText, activeSection === 'Videos' && styles.shortcutNavTextActive]}>Videos</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={{ width: tabWidth, alignItems: 'center' }} onPress={() => handleTabPress('Menu', portfolioRef, 2)}>
-                            <Text style={[styles.shortcutNavText, activeSection === 'Menu' && styles.shortcutNavTextActive]}>Menu</Text>
-                        </TouchableOpacity>
-
-                        {/* Animated Gold Underline */}
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.shortcutNavBar}
+                    >
+                        {['Projects', 'Pricing', 'About', 'Reviews'].map((tab, idx) => (
+                            <TouchableOpacity
+                                key={tab}
+                                style={styles.shortcutNavTab}
+                                onPress={() => handleTabPress(tab,
+                                    tab === 'Projects' ? portfolioRef :
+                                        tab === 'Pricing' ? pricingRef :
+                                            tab === 'About' ? aboutRef : reviewsRef,
+                                    idx)}
+                            >
+                                <Text style={[
+                                    styles.shortcutNavText,
+                                    activeSection === tab && styles.shortcutNavTextActive
+                                ]}>{tab}</Text>
+                            </TouchableOpacity>
+                        ))}
                         <Animated.View
                             style={[
                                 styles.tabUnderline,
                                 {
-                                    width: tabWidth,
-                                    left: 0,
                                     transform: [{ translateX: tabUnderlineTranslateX }]
                                 }
                             ]}
                         />
-                    </View>
+                    </ScrollView>
                 </View>
 
                 {/* 3: Main Scrollable Content */}
@@ -630,38 +656,46 @@ const FoodV = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     profileContainer: { flex: 1, backgroundColor: '#FFF' },
-    profileHeader: { height: 280, width: '100%' },
-    coverImage: { width: '100%', height: '100%' },
+    profileHeader: { height: 320, width: '100%' },
+    coverImage: { width: '100%', height: '100%', resizeMode: 'cover' },
     headerOverlay: { ...StyleSheet.absoluteFillObject },
-    closeBtnProfile: { position: 'absolute', top: 50, left: 20, zIndex: 10, padding: 8, backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 20 },
+    closeBtnProfile: { position: 'absolute', top: 50, left: 20, zIndex: 10, width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(0,0,0,0.3)', alignItems: 'center', justifyContent: 'center' },
 
     profileIdentityOverlay: {
+        marginTop: -60,
         backgroundColor: '#FFF',
-        marginTop: -50,
-        marginHorizontal: 15,
-        borderRadius: 24,
-        padding: 20,
-        flexDirection: 'row',
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        paddingHorizontal: 24,
+        paddingTop: 20,
         alignItems: 'center',
-        elevation: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.15,
-        shadowRadius: 10,
+        paddingBottom: 20,
+        position: 'relative'
     },
-    avatarContainer: { width: 80, height: 80, borderRadius: 40, borderWidth: 3, borderColor: '#FFF', overflow: 'hidden', backgroundColor: '#F0F0F0', elevation: 5 },
+    identityBgGradient: { ...StyleSheet.absoluteFillObject, borderTopLeftRadius: 40, borderTopRightRadius: 40 },
+    avatarContainer: { width: 110, height: 110, borderRadius: 55, borderWidth: 5, borderColor: '#FFF', elevation: 15, backgroundColor: '#FFF', overflow: 'hidden', marginTop: -70 },
     avatarImage: { width: '100%', height: '100%' },
-    nameSection: { flex: 1, marginLeft: 15 },
-    profileVendorName: { fontFamily: 'Outfit_700Bold', fontSize: 22, color: '#111' },
-    profileBusinessName: { fontFamily: 'Outfit_400Regular', fontSize: 13, color: '#666', marginTop: 2 },
-    profileLocationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6, gap: 4 },
-    profileLocationText: { fontFamily: 'Outfit_500Medium', fontSize: 13, color: COLORS.primary },
+    nameSection: { alignItems: 'center', marginTop: 10 },
+    profileVendorName: { fontSize: 28, color: '#111', fontWeight: 'bold' },
+    profileBusinessName: { fontSize: 16, color: COLORS.secondary, marginTop: 4, fontWeight: 'bold' },
+    profileLocationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8, gap: 4 },
+    profileLocationText: { fontSize: 13, color: '#777' },
 
-    stickyNavWrapper: { backgroundColor: '#FFF', borderBottomWidth: 1, borderColor: '#F0F0F0' },
-    shortcutNavBar: { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 15, paddingHorizontal: 10 },
-    shortcutNavText: { fontFamily: 'Outfit_600SemiBold', fontSize: 14, color: '#999' },
-    shortcutNavTextActive: { color: COLORS.primary },
-    tabUnderline: { position: 'absolute', bottom: 0, height: 3, backgroundColor: COLORS.secondary, borderRadius: 3 },
+    stickyNavWrapper: { backgroundColor: 'rgba(253, 252, 240, 0.96)', borderBottomWidth: 1, borderBottomColor: 'rgba(212, 136, 6, 0.15)', elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8 },
+    shortcutNavBar: { flexDirection: 'row', gap: 12, paddingHorizontal: 20, paddingVertical: 16, alignItems: 'center' },
+    shortcutNavTab: { width: 90, alignItems: 'center', justifyContent: 'center' },
+    shortcutNavText: { fontSize: 15, color: '#999', fontWeight: 'bold' },
+    shortcutNavTextActive: { color: COLORS.secondary },
+    tabUnderline: { position: 'absolute', bottom: 12, left: 20, width: 90, height: 3, backgroundColor: COLORS.secondary, borderRadius: 2 },
+
+    sectionTitle: { fontSize: 24, color: '#800000', fontWeight: 'bold' },
+    profileMediaSection: { marginBottom: 40 },
+    mediaHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+    mediaMainTabs: { flexDirection: 'row', gap: 15 },
+    mediaMainTab: { paddingBottom: 6 },
+    mediaMainTabActive: { borderBottomWidth: 2, borderBottomColor: COLORS.secondary },
+    mTabText: { fontSize: 13, color: '#999', fontWeight: 'bold' },
+    mTabTextActive: { color: COLORS.secondary },
 
     menuTabContainer: { paddingVertical: 10 },
     menuCategoryBlock: { marginBottom: 25 },
@@ -685,24 +719,13 @@ const styles = StyleSheet.create({
     },
     menuItemImage: { width: 100, height: 100, borderTopLeftRadius: 15, borderBottomLeftRadius: 15 },
     menuItemInfo: { flex: 1, paddingHorizontal: 15, paddingVertical: 10 },
-    vegNonVegDot: { marginRight: 15 },
     menuItemName: { fontFamily: 'Outfit_700Bold', fontSize: 15, color: '#222', marginBottom: 4 },
     menuItemDesc: { fontFamily: 'Outfit_400Regular', fontSize: 12, color: '#666', lineHeight: 18 },
-    vegNonVegDot: { width: 14, height: 14, borderRadius: 2, borderWidth: 1, justifyContent: 'center', alignItems: 'center' },
+    vegNonVegDot: { width: 14, height: 14, borderRadius: 2, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginRight: 15 },
     vegNonVegInner: { width: 8, height: 8, borderRadius: 4 },
 
     profileInfoContent: { paddingHorizontal: 20, paddingTop: 30 },
     profileSectionLabel: { fontFamily: 'Outfit_700Bold', fontSize: 20, color: '#111', marginBottom: 20 },
-
-    // Media Section
-    // Media Section
-    profileMediaSection: { marginBottom: 40 },
-    mediaHeaderRow: { marginBottom: 20 },
-    mediaMainTabs: { flexDirection: 'row', backgroundColor: '#F5F5F5', borderRadius: 12, padding: 4, width: '100%' },
-    mediaMainTab: { flex: 1, paddingVertical: 10, borderRadius: 10, alignItems: 'center' },
-    mediaMainTabActive: { backgroundColor: '#FFF', elevation: 2 },
-    mTabText: { fontFamily: 'Outfit_600SemiBold', fontSize: 13, color: '#999' },
-    mTabTextActive: { color: '#111' },
 
     subMenuContainer: { flexDirection: 'row', justifyContent: 'center', marginBottom: 20, gap: 15 },
     subMenuTab: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: '#EEE', backgroundColor: '#FFF' },

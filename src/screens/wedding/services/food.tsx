@@ -15,6 +15,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import VendorCard from '../../../components/VendorCard';
 import food1 from '../../../../assets/images/food1.jpg';
 import food2 from '../../../../assets/images/food2.jpg';
 import food3 from '../../../../assets/images/food3.jpg';
@@ -137,10 +138,17 @@ const POPULAR_SEARCHES = ['Veg Caterers in Pune', 'Luxury Buffets', 'Live Chaat 
 const TRENDING_TAGS = ['Live Counters', 'Gourmet', 'Traditional', 'Fusion'];
 
 // Post Component (Dynamic Widths for Editorial Layout)
-const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
+interface PostCardProps {
+    post: any;
+    onPostPress: (post: any) => void;
+    onVendorPress?: (post: any) => void;
+    isFullWidth: boolean;
+}
+
+const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<ScrollView>(null);
 
     const cardWidth = isFullWidth ? (width - 20) : (width - 28) / 2;
     const imageHeight = isFullWidth ? 200 : (post.imageHeight * 0.75);
@@ -158,7 +166,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     const handleScroll = Animated.event(
         [{ nativeEvent: { contentOffset: { x: scrollX } } }],
         {
-            useNativeDriver: false, listener: (event) => {
+            useNativeDriver: false, listener: (event: any) => {
                 const index = Math.round(event.nativeEvent.contentOffset.x / cardWidth);
                 if (index !== activeIndex) {
                     setActiveIndex(index);
@@ -184,13 +192,13 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
                     decelerationRate="fast"
                     snapToInterval={cardWidth}
                 >
-                    {post.images.map((img, index) => (
+                    {post.images.map((img: any, index: number) => (
                         <Image key={index} source={img} style={{ width: cardWidth, height: imageHeight }} resizeMode="cover" />
                     ))}
                 </ScrollView>
 
                 <View style={styles.dotContainerCompact}>
-                    {post.images.map((_, index) => (
+                    {post.images.map((_: any, index: number) => (
                         <View key={index} style={[styles.dotSmall, activeIndex === index && styles.dotActiveSmall]} />
                     ))}
                 </View>
@@ -225,9 +233,9 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     );
 };
 
-const Food = ({ navigation }) => {
-    const scrollRef = useRef(null);
-    const featuredScrollRef = useRef(null);
+const Food = ({ navigation }: { navigation: any }) => {
+    const scrollRef = useRef<ScrollView>(null);
+    const featuredScrollRef = useRef<ScrollView>(null);
     const scrollY = useRef(new Animated.Value(0)).current;
 
     const [isSearchFocused, setSearchFocused] = useState(false);
@@ -372,41 +380,14 @@ const Food = ({ navigation }) => {
                         snapToInterval={width * 0.82 + 24}
                     >
                         {filteredVendors.map((vendor) => (
-                            <TouchableOpacity
+                            <VendorCard
                                 key={vendor.id}
-                                style={styles.premiumVendorCard}
-                                activeOpacity={0.9}
+                                vendor={vendor as any}
                                 onPress={() => {
                                     navigation.navigate('FoodV', { vendor: vendor });
                                 }}
-                            >
-                                <ImageBackground source={vendor.image} style={styles.vendorMainImg} imageStyle={{ borderRadius: 20 }}>
-                                    <View style={styles.premiumTag}>
-                                        <Text style={styles.premiumTagText}>{vendor.tag}</Text>
-                                    </View>
-                                </ImageBackground>
-                                <View style={styles.vendorDetails}>
-                                    <View style={styles.detailsTop}>
-                                        <Text style={styles.vendorNamePremium}>{vendor.name}</Text>
-                                        <View style={styles.ratingBadgePremium}>
-                                            <Ionicons name="star" size={12} color="#FFF" />
-                                            <Text style={styles.ratingTextPremium}>{vendor.rating}</Text>
-                                        </View>
-                                    </View>
-                                    <View style={styles.locationContainerPremium}>
-                                        <Ionicons name="location-outline" size={14} color="#666" />
-                                        <Text style={styles.locationTextPremium}>{vendor.location}</Text>
-                                    </View>
-                                    <View style={styles.previewsRow}>
-                                        {vendor.previews.map((img, idx) => (
-                                            <Image key={idx} source={img} style={styles.miniThumb} />
-                                        ))}
-                                        <TouchableOpacity style={styles.followBtnGold}>
-                                            <Text style={styles.followTextGold}>Follow</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
+                                containerStyle={{ marginRight: 24 }}
+                            />
                         ))}
                     </ScrollView>
                 ) : (
@@ -419,7 +400,7 @@ const Food = ({ navigation }) => {
     const renderVendorPostsFeed = () => {
         const filteredPosts = getFilteredPosts();
 
-        const handlePostClick = (post) => {
+        const handlePostClick = (post: any) => {
             const vendor = FEATURED_VENDORS.find(v => v.name === post.vendorName);
             if (vendor) {
                 navigation.navigate('FoodV', { vendor: vendor });

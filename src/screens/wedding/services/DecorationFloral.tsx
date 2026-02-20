@@ -17,6 +17,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import VendorCard from '../../../components/VendorCard';
 import venue1 from '../../../../assets/images/venue1.jpg';
 import venue2 from '../../../../assets/images/venue2.jpg';
 import venue3 from '../../../../assets/images/venue3.jpg';
@@ -51,7 +52,7 @@ const FEATURED_VENDORS = [
         city: 'Mumbai',
         image: dfMarigold,
         previews: [venue6, venue7, venue8],
-        featuredProject: { image: dfMarigold, title: 'Heritage Marigold Wedding 2024' }
+        featuredProject: { image: dfMarigold as any, title: 'Heritage Marigold Wedding 2024' }
     },
     {
         id: 'v2',
@@ -147,10 +148,17 @@ const POPULAR_SEARCHES = ['Floral Mandap', 'Entrance Decor', 'Thematic Stage', '
 const TRENDING_TAGS = ['Pastel', 'Royal', 'Eco-friendly', 'Minimalist'];
 
 // Post Component (Dynamic Widths for Editorial Layout)
-const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
+interface PostCardProps {
+    post: any;
+    onPostPress: (post: any) => void;
+    onVendorPress?: (post: any) => void;
+    isFullWidth: boolean;
+}
+
+const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<ScrollView>(null);
     const scaleAnim = useRef(new Animated.Value(1)).current;
 
     const cardWidth = isFullWidth ? (width - 20) : (width - 28) / 2;
@@ -185,7 +193,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     const handleScroll = Animated.event(
         [{ nativeEvent: { contentOffset: { x: scrollX } } }],
         {
-            useNativeDriver: false, listener: (event) => {
+            useNativeDriver: false, listener: (event: any) => {
                 const index = Math.round(event.nativeEvent.contentOffset.x / cardWidth);
                 if (index !== activeIndex) {
                     setActiveIndex(index);
@@ -214,13 +222,13 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
                         decelerationRate="fast"
                         snapToInterval={cardWidth}
                     >
-                        {post.images.map((img, index) => (
+                        {post.images.map((img: any, index: number) => (
                             <Image key={index} source={img} style={{ width: cardWidth, height: imageHeight }} resizeMode="cover" />
                         ))}
                     </ScrollView>
 
                     <View style={styles.dotContainerCompact}>
-                        {post.images.map((_, index) => (
+                        {post.images.map((_: any, index: number) => (
                             <View key={index} style={[styles.dotSmall, activeIndex === index && styles.dotActiveSmall]} />
                         ))}
                     </View>
@@ -256,73 +264,10 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     );
 };
 
-const PremiumVendorCard = ({ vendor, onPress }) => {
-    const scaleAnim = useRef(new Animated.Value(1)).current;
 
-    const handlePressIn = () => {
-        Animated.spring(scaleAnim, {
-            toValue: 0.98,
-            useNativeDriver: true,
-        }).start();
-    };
-
-    const handlePressOut = () => {
-        Animated.spring(scaleAnim, {
-            toValue: 1,
-            friction: 4,
-            tension: 40,
-            useNativeDriver: true,
-        }).start();
-    };
-
-    return (
-        <View style={styles.premiumVendorCardContainer}>
-            <View style={styles.premiumVendorCard}>
-                <ImageBackground source={vendor.image} style={styles.vendorMainImg}>
-                    <View style={styles.tagWrapper}>
-                        <View style={styles.premiumTag}>
-                            <Text style={styles.premiumTagText}>{vendor.tag}</Text>
-                        </View>
-                    </View>
-                    <LinearGradient
-                        colors={['rgba(255,255,255,0.08)', 'rgba(255,255,255,0)', 'rgba(255,255,255,0.04)']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 1 }}
-                        style={styles.lustreOverlay}
-                    />
-                    <TouchableOpacity style={styles.premiumLikeBtn}>
-                        <Ionicons name="heart-outline" size={20} color="#FFF" />
-                    </TouchableOpacity>
-                </ImageBackground>
-                <View style={styles.vendorDetails}>
-                    <View style={styles.detailsTop}>
-                        <Text style={styles.vendorNamePremium}>{vendor.name}</Text>
-                        <View style={styles.ratingBadgePremium}>
-                            <Ionicons name="star" size={12} color="#FFF" />
-                            <Text style={styles.ratingTextPremium}>{vendor.rating}</Text>
-                        </View>
-                    </View>
-                    <View style={styles.locationContainerPremium}>
-                        <Ionicons name="location-outline" size={14} color="#666" />
-                        <Text style={styles.locationTextPremium}>{vendor.location}</Text>
-                    </View>
-                    <View style={styles.previewsRow}>
-                        {vendor.previews.map((img, idx) => (
-                            <Image key={idx} source={img} style={styles.miniThumb} />
-                        ))}
-                        <TouchableOpacity style={styles.followBtnGold}>
-                            <Text style={styles.followTextGold}>Follow</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-        </View>
-    );
-};
-
-const DecorationFloralScreen = ({ navigation }) => {
-    const scrollRef = useRef(null);
-    const featuredScrollRef = useRef(null);
+const DecorationFloralScreen = ({ navigation }: { navigation: any }) => {
+    const scrollRef = useRef<ScrollView>(null);
+    const featuredScrollRef = useRef<ScrollView>(null);
 
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchFocused, setSearchFocused] = useState(false);
@@ -347,7 +292,7 @@ const DecorationFloralScreen = ({ navigation }) => {
     const [selectedCity, setSelectedCity] = useState('Mumbai');
     const [featuredIndex, setFeaturedIndex] = useState(0);
 
-    const openVendorProfile = (vendor) => {
+    const openVendorProfile = (vendor: any) => {
         setSelectedVendor(vendor);
         setIsVendorProfileVisible(true);
     };
@@ -362,13 +307,13 @@ const DecorationFloralScreen = ({ navigation }) => {
     const profileScrollY = useRef(new Animated.Value(0)).current;
 
     // Refs for profile section scrolling
-    const profileScrollRef = useRef(null);
-    const portfolioRef = useRef(null);
-    const pricingRef = useRef(null);
-    const aboutRef = useRef(null);
-    const reviewsRef = useRef(null);
+    const profileScrollRef = useRef<ScrollView>(null);
+    const portfolioRef = useRef<View>(null);
+    const pricingRef = useRef<View>(null);
+    const aboutRef = useRef<View>(null);
+    const reviewsRef = useRef<View>(null);
 
-    const handleTabPress = (section, ref, index) => {
+    const handleTabPress = (section: string, ref: any, index: number) => {
         setActiveSection(section);
         const tabWidth = 70;
         const gap = 12;
@@ -381,10 +326,10 @@ const DecorationFloralScreen = ({ navigation }) => {
         scrollToProfileSection(ref);
     };
 
-    const scrollToProfileSection = (ref) => {
+    const scrollToProfileSection = (ref: any) => {
         ref.current?.measureLayout(
             profileScrollRef.current,
-            (x, y) => {
+            (x: number, y: number) => {
                 profileScrollRef.current?.scrollTo({ y: y - 80, animated: true });
             },
             () => { }
@@ -530,9 +475,11 @@ const DecorationFloralScreen = ({ navigation }) => {
                         decelerationRate="fast"
                     >
                         {filteredVendors.map((vendor) => (
-                            <PremiumVendorCard
+                            <VendorCard
                                 key={vendor.id}
-                                vendor={vendor}
+                                vendor={vendor as any}
+                                onPress={() => openVendorProfile(vendor)}
+                                containerStyle={{ marginRight: 24 }}
                             />
                         ))}
                     </ScrollView>
@@ -800,7 +747,7 @@ const DecorationFloralScreen = ({ navigation }) => {
                                                     onPress={() => setSelectedMediaCategory(subTab.value)}
                                                 >
                                                     <Ionicons
-                                                        name={subTab.icon}
+                                                        name={subTab.icon as any}
                                                         size={16}
                                                         color={selectedMediaCategory === subTab.value ? '#FFF' : '#666'}
                                                     />
@@ -882,7 +829,7 @@ const DecorationFloralScreen = ({ navigation }) => {
                                                     { icon: 'construct', label: 'On-site Execution' }
                                                 ].map((inc, i) => (
                                                     <View key={i} style={styles.inclusionLine}>
-                                                        <Ionicons name={inc.icon} size={16} color="#999" />
+                                                        <Ionicons name={inc.icon as any} size={16} color="#999" />
                                                         <Text style={styles.inclusionText}>{inc.label}</Text>
                                                     </View>
                                                 ))}
@@ -1521,6 +1468,7 @@ const styles = StyleSheet.create({
         bottom: 20,
     },
     contactUsFloatingText: { color: '#FFF', fontSize: 17, fontWeight: 'bold' },
+    profileMediaSection: { marginTop: 20 },
 });
 
 export default DecorationFloralScreen;

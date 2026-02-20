@@ -15,6 +15,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
+import VendorCard from '../../../components/VendorCard';
 import venue1 from '../../../../assets/images/venue1.jpg';
 import venue2 from '../../../../assets/images/venue2.jpg';
 import venue3 from '../../../../assets/images/venue3.jpg';
@@ -25,6 +26,31 @@ import venue7 from '../../../../assets/images/venue7.jpg';
 import venue8 from '../../../../assets/images/venue8.jpg';
 
 const { width } = Dimensions.get('window');
+
+interface Vendor {
+    id: string;
+    name: string;
+    rating: number;
+    tag: string;
+    location: string;
+    city: string;
+    image: any;
+    previews: any[];
+}
+
+interface Post {
+    id: string;
+    vendorName: string;
+    vendorLogo: any;
+    images: any[];
+    likes: number;
+    city: string;
+    description: string;
+    rating: number;
+    eventType: string;
+    locationDetail: string;
+    imageHeight: number;
+}
 
 const COLORS = {
     background: '#FFFFF0', // Ivory
@@ -163,10 +189,18 @@ const POPULAR_SEARCHES = ['Farmhouses in Pune', 'Resorts with Pool', 'Banquet Ha
 const TRENDING_TAGS = ['Poolside', 'Royal', 'Beachfront', 'Minimalist'];
 
 // Post Component (Dynamic Widths for Editorial Layout)
-const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
+interface PostCardProps {
+    post: Post;
+    onPostPress: (post: Post) => void;
+    onVendorPress?: (post: Post) => void;
+    isFullWidth: boolean;
+    key?: any; // Added to resolve TSC mismatch
+}
+
+const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<ScrollView>(null);
 
     // Expanded widths: reduced margins
     const cardWidth = isFullWidth ? (width - 20) : (width - 28) / 2;
@@ -187,7 +221,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     const handleScroll = Animated.event(
         [{ nativeEvent: { contentOffset: { x: scrollX } } }],
         {
-            useNativeDriver: false, listener: (event) => {
+            useNativeDriver: false, listener: (event: any) => {
                 const index = Math.round(event.nativeEvent.contentOffset.x / cardWidth);
                 if (index !== activeIndex) {
                     setActiveIndex(index);
@@ -254,17 +288,17 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     );
 };
 
-const WeddingVenue = ({ navigation }) => {
-    const scrollRef = useRef(null);
-    const featuredScrollRef = useRef(null);
+const WeddingVenue = ({ navigation }: { navigation: any }) => {
+    const scrollRef = useRef<ScrollView>(null);
+    const featuredScrollRef = useRef<ScrollView>(null);
     const scrollY = useRef(new Animated.Value(0)).current;
 
     // States
-    const [selectedPost, setSelectedPost] = useState(null);
-    const [selectedVendor, setSelectedVendor] = useState(null);
+    const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+    const [selectedVendor, setSelectedVendor] = useState<Vendor | any>(null);
     const [isVendorProfileVisible, setIsVendorProfileVisible] = useState(false);
     const [activeMediaTab, setActiveMediaTab] = useState('Photos');
-    const [activePhotoCategory, setActivePhotoCategory] = useState('Banquet');
+    const [activePhotoCategory, setActivePhotoCategory] = useState('Venue'); // Changed default to 'Venue'
     const [userRating, setUserRating] = useState(0);
     const [activeSection, setActiveSection] = useState('Projects');
 
@@ -273,13 +307,13 @@ const WeddingVenue = ({ navigation }) => {
     const profileScrollY = useRef(new Animated.Value(0)).current;
 
     // Refs for profile section scrolling
-    const profileScrollRef = useRef(null);
-    const portfolioRef = useRef(null);
-    const pricingRef = useRef(null);
-    const aboutRef = useRef(null);
-    const reviewsRef = useRef(null);
+    const profileScrollRef = useRef<ScrollView>(null);
+    const portfolioRef = useRef<View>(null);
+    const pricingRef = useRef<View>(null);
+    const aboutRef = useRef<View>(null);
+    const reviewsRef = useRef<View>(null);
 
-    const handleTabPress = (section, ref, index) => {
+    const handleTabPress = (section: string, ref: any, index: number) => {
         setActiveSection(section);
         // Animate underline
         const tabWidth = 70; // Slightly reduced width to fit 4 tabs
@@ -293,10 +327,10 @@ const WeddingVenue = ({ navigation }) => {
         scrollToProfileSection(ref);
     };
 
-    const scrollToProfileSection = (ref) => {
+    const scrollToProfileSection = (ref: React.RefObject<View>) => {
         ref.current?.measureLayout(
-            profileScrollRef.current,
-            (x, y) => {
+            profileScrollRef.current as any,
+            (x: number, y: number) => {
                 profileScrollRef.current?.scrollTo({ y: y - 80, animated: true });
             },
             () => { }
@@ -444,42 +478,15 @@ const WeddingVenue = ({ navigation }) => {
                         snapToInterval={width * 0.82 + 24}
                     >
                         {filteredVendors.map((vendor) => (
-                            <TouchableOpacity
+                            <VendorCard
                                 key={vendor.id}
-                                style={styles.premiumVendorCard}
-                                activeOpacity={0.9}
+                                vendor={vendor}
                                 onPress={() => {
                                     setSelectedVendor(vendor);
                                     setIsVendorProfileVisible(true);
                                 }}
-                            >
-                                <ImageBackground source={vendor.image} style={styles.vendorMainImg} imageStyle={{ borderRadius: 20 }}>
-                                    <View style={styles.premiumTag}>
-                                        <Text style={styles.premiumTagText}>{vendor.tag}</Text>
-                                    </View>
-                                </ImageBackground>
-                                <View style={styles.vendorDetails}>
-                                    <View style={styles.detailsTop}>
-                                        <Text style={styles.vendorNamePremium}>{vendor.name}</Text>
-                                        <View style={styles.ratingBadgePremium}>
-                                            <Ionicons name="star" size={12} color="#FFF" />
-                                            <Text style={styles.ratingTextPremium}>{vendor.rating}</Text>
-                                        </View>
-                                    </View>
-                                    <View style={styles.locationContainerPremium}>
-                                        <Ionicons name="location-outline" size={14} color="#666" />
-                                        <Text style={styles.locationTextPremium}>{vendor.location}</Text>
-                                    </View>
-                                    <View style={styles.previewsRow}>
-                                        {vendor.previews.map((img, idx) => (
-                                            <Image key={idx} source={img} style={styles.miniThumb} />
-                                        ))}
-                                        <TouchableOpacity style={styles.followBtnGold}>
-                                            <Text style={styles.followTextGold}>Follow</Text>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
+                                containerStyle={{ marginRight: 24 }}
+                            />
                         ))}
                     </ScrollView>
                 ) : (
@@ -689,6 +696,25 @@ const WeddingVenue = ({ navigation }) => {
 
                                 {activeMediaTab === 'Photos' ? (
                                     <View>
+                                        {/* Row of Categories (Venue, Resort, Lawns, Banquet) */}
+                                        <ScrollView
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}
+                                            contentContainerStyle={styles.photoCategoryScroll}
+                                        >
+                                            {['Venue', 'Resort', 'Lawns', 'Banquet'].map((cat) => (
+                                                <TouchableOpacity
+                                                    key={cat}
+                                                    style={[styles.photoCategoryTab, activePhotoCategory === cat && styles.photoCategoryTabActive]}
+                                                    onPress={() => setActivePhotoCategory(cat)}
+                                                >
+                                                    <Text style={[styles.photoCategoryText, activePhotoCategory === cat && styles.photoCategoryTextActive]}>
+                                                        {cat}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            ))}
+                                        </ScrollView>
+
                                         {/* Featured Project Card */}
                                         <TouchableOpacity style={styles.featuredProjectCard}>
                                             <Image source={venue6} style={styles.featuredProjectImage} />
@@ -706,9 +732,9 @@ const WeddingVenue = ({ navigation }) => {
                                         <View style={styles.pinterestGrid}>
                                             <View style={styles.gridColumn}>
                                                 {[
-                                                    { title: 'Elegant Lawn Reception', type: 'Lawn', likes: 124, images: [venue7, venue2, venue8], height: 260 },
+                                                    { title: 'Elegant Lawn Reception', type: 'Lawns', likes: 124, images: [venue7, venue2, venue8], height: 260 },
                                                     { title: 'Modern Banquet Setup', type: 'Banquet', likes: 89, images: [venue3, venue5, venue6], height: 200 }
-                                                ].map((proj, idx) => (
+                                                ].filter(p => activePhotoCategory === 'Venue' || p.type === activePhotoCategory).map((proj, idx) => (
                                                     <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
                                                         <ScrollView
                                                             horizontal
@@ -736,9 +762,9 @@ const WeddingVenue = ({ navigation }) => {
                                             </View>
                                             <View style={styles.gridColumn}>
                                                 {[
-                                                    { title: 'Lakeside Resort Gala', type: 'Resorts', likes: 210, images: [venue5, venue6, venue1], height: 210 },
-                                                    { title: 'Golden Hour Lawn', type: 'Lawn', likes: 156, images: [venue1, venue4, venue7], height: 250 }
-                                                ].map((proj, idx) => (
+                                                    { title: 'Lakeside Resort Gala', type: 'Resort', likes: 210, images: [venue5, venue6, venue1], height: 210 },
+                                                    { title: 'Golden Hour Lawn', type: 'Lawns', likes: 156, images: [venue1, venue4, venue7], height: 250 }
+                                                ].filter(p => activePhotoCategory === 'Venue' || p.type === activePhotoCategory).map((proj, idx) => (
                                                     <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
                                                         <ScrollView
                                                             horizontal
@@ -806,12 +832,12 @@ const WeddingVenue = ({ navigation }) => {
                                             <View style={styles.pricingDivider} />
 
                                             <View style={styles.pricingInclusions}>
-                                                {[
+                                                {([
                                                     { icon: 'restaurant', label: 'In-house Catering' },
                                                     { icon: 'bed', label: '2 Luxury AC Rooms' },
                                                     { icon: 'color-palette', label: 'Premium Theme Decor' },
                                                     { icon: 'musical-notes', label: 'Sound & Basic IQ' }
-                                                ].map((inc, i) => (
+                                                ] as { icon: any, label: string }[]).map((inc, i) => (
                                                     <View key={i} style={styles.inclusionLine}>
                                                         <Ionicons name={inc.icon} size={16} color="#999" />
                                                         <Text style={styles.inclusionText}>{inc.label}</Text>
@@ -831,7 +857,7 @@ const WeddingVenue = ({ navigation }) => {
                                 </ScrollView>
 
                                 <View style={styles.pricingFootnote}>
-                                    <Ionicons name="information-circle-outline" size={14} color="#666" />
+                                    <Ionicons name="information-circle" size={14} color="#666" />
                                     <Text style={styles.footnoteText}>Prices vary based on guest count and peak dates.</Text>
                                 </View>
                             </View>
@@ -1191,7 +1217,7 @@ const styles = StyleSheet.create({
 
     // Discovery Feed (Staggered Pinterest-style)
     staggeredGrid: { flexDirection: 'row', paddingHorizontal: 15, gap: 12 },
-    gridColumn: { flex: 1, gap: 20 }, // Vertical gap between staggered items
+    gridColumn: { flex: 1, gap: 20 }, // Removed duplicate gridColumn later
     postCardCompact: {
         borderRadius: 24,
         backgroundColor: '#FFF',
@@ -1254,6 +1280,7 @@ const styles = StyleSheet.create({
     mediaMainTabActive: { borderBottomWidth: 2, borderBottomColor: COLORS.secondary },
     mTabText: { fontFamily: 'Outfit_600SemiBold', fontSize: 13, color: '#999' },
     mTabTextActive: { color: COLORS.secondary },
+    profileMediaSection: { marginTop: 30 },
     featuredProjectCard: { width: '100%', height: 240, borderRadius: 24, overflow: 'hidden', marginBottom: 20, elevation: 5 },
     featuredProjectImage: { width: '100%', height: '100%' },
     featuredProjectOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%', padding: 20, justifyContent: 'flex-end' },
@@ -1265,7 +1292,6 @@ const styles = StyleSheet.create({
     viewProjectBtn: { backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: '#FFF' },
     viewProjectBtnText: { fontFamily: 'Outfit_600SemiBold', fontSize: 12, color: '#FFF' },
     pinterestGrid: { flexDirection: 'row', gap: 15 },
-    gridColumn: { flex: 1, gap: 15 },
     projectCard: { width: '100%', borderRadius: 20, backgroundColor: '#FFF', overflow: 'hidden', elevation: 3 },
     projectImage: { width: '100%', height: '100%', resizeMode: 'cover' },
     cardCarousel: { flex: 1 },
@@ -1279,7 +1305,7 @@ const styles = StyleSheet.create({
     profileAboutText: { fontFamily: 'Outfit_400Regular', fontSize: 14, color: '#666', lineHeight: 22, marginTop: 4 },
     profileSectionLabel: { fontFamily: 'Outfit_700Bold', fontSize: 20, color: '#222', marginBottom: 16 },
     statsGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12, marginTop: 24 },
-    statCard: { width: (width - 72) / 2, backgroundColor: '#FEFEF8', padding: 16, borderRadius: 16, borderWeight: 1, borderColor: '#F0E6D2', alignItems: 'center', gap: 4 },
+    statCard: { width: (width - 72) / 2, backgroundColor: '#FEFEF8', padding: 16, borderRadius: 16, borderWidth: 1, borderColor: '#F0E6D2', alignItems: 'center', gap: 4 },
     statVal: { fontFamily: 'Outfit_700Bold', fontSize: 18, color: '#222' },
     statLabel: { fontFamily: 'Outfit_400Regular', fontSize: 12, color: '#888' },
     typeBadgeText: { fontFamily: 'Outfit_700Bold', fontSize: 9, color: '#FFF' },
@@ -1312,6 +1338,11 @@ const styles = StyleSheet.create({
     interactiveStars: { flexDirection: 'row', gap: 10 },
     ratingFeedback: { fontFamily: 'Outfit_500Medium', fontSize: 13, color: COLORS.primary, marginTop: 10 },
     reviewCard: { backgroundColor: '#F9F9F9', padding: 16, borderRadius: 16, marginBottom: 12 },
+    reviewHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+    reviewerName: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#333' },
+    ratingStars: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    ratingVal: { fontFamily: 'Outfit_600SemiBold', fontSize: 14, color: '#333' },
+    reviewComment: { fontFamily: 'Outfit_400Regular', fontSize: 14, color: '#666', lineHeight: 20 },
     ratingOverview: { flexDirection: 'row', gap: 20, alignItems: 'center', marginVertical: 30 },
     bigRatingBadge: { width: 140, height: 140, borderRadius: 70, backgroundColor: 'rgba(242,149,2,0.05)', borderWidth: 2, borderColor: COLORS.secondary, alignItems: 'center', justifyContent: 'center', gap: 4 },
     bigRatingScore: { fontFamily: 'Outfit_700Bold', fontSize: 38, color: COLORS.secondary },
@@ -1340,6 +1371,30 @@ const styles = StyleSheet.create({
     profileContactBtnText: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#FFF' },
     gridImageWrapper: { width: (width - 58) / 2, height: 180, borderRadius: 16, overflow: 'hidden' },
     gridImage: { width: '100%', height: '100%', resizeMode: 'cover' },
+
+    // Photo Category Filters
+    photoCategoryScroll: { paddingVertical: 15, marginBottom: 10 },
+    photoCategoryTab: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 20,
+        backgroundColor: '#F7F7F7',
+        marginRight: 10,
+        borderWidth: 1,
+        borderColor: '#EEE'
+    },
+    photoCategoryTabActive: {
+        backgroundColor: COLORS.secondary,
+        borderColor: COLORS.secondary
+    },
+    photoCategoryText: {
+        fontFamily: 'Outfit_600SemiBold',
+        fontSize: 14,
+        color: '#666'
+    },
+    photoCategoryTextActive: {
+        color: '#FFF'
+    },
 
     modalContainer: { flex: 1, backgroundColor: '#000' },
     modalHeader: { position: 'absolute', top: 60, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', zIndex: 10 },

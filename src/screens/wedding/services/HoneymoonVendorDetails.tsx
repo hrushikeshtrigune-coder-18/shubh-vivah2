@@ -27,7 +27,7 @@ const COLORS = {
     textDark: '#CC0E0E',
 };
 
-const HoneymoonVendorDetails = ({ navigation, route }) => {
+const HoneymoonVendorDetails = ({ navigation, route }: any) => {
     const { vendor } = route.params || {};
 
     // Default Data with Type classification
@@ -48,7 +48,8 @@ const HoneymoonVendorDetails = ({ navigation, route }) => {
             { name: 'Bali', price: '₹1.8L', duration: '6 Nights', type: 'International', image: { uri: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=2038&auto=format&fit=crop' } },
             { name: 'Goa', price: '₹60K', duration: '4 Nights', type: 'Domestic', image: { uri: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=2000&auto=format&fit=crop' } },
             { name: 'Kerala', price: '₹80K', duration: '5 Nights', type: 'Domestic', image: { uri: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=2000&auto=format&fit=crop' } }
-        ]
+        ],
+        startPrice: '45,000'
     };
 
     const displayVendor = vendor ? {
@@ -58,16 +59,17 @@ const HoneymoonVendorDetails = ({ navigation, route }) => {
         rating: vendor.rating || defaultVendor.rating,
         image: vendor.image || defaultVendor.image,
         images: vendor.images || (vendor.previews ? [vendor.image, ...vendor.previews] : defaultVendor.images),
-        locations: vendor.locations || defaultVendor.locations
+        locations: vendor.locations || defaultVendor.locations,
+        startPrice: vendor.startPrice || defaultVendor.startPrice
     } : defaultVendor;
 
     const scrollY = useRef(new Animated.Value(0)).current;
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<ScrollView>(null);
 
-    const portfolioRef = useRef(null);
-    const pricingRef = useRef(null);
-    const aboutRef = useRef(null);
-    const reviewsRef = useRef(null);
+    const portfolioRef = useRef<View>(null);
+    const pricingRef = useRef<View>(null);
+    const aboutRef = useRef<View>(null);
+    const reviewsRef = useRef<View>(null);
 
     const [activeSection, setActiveSection] = useState('Photos');
     const tabUnderlineTranslateX = useRef(new Animated.Value(0)).current;
@@ -85,17 +87,17 @@ const HoneymoonVendorDetails = ({ navigation, route }) => {
 
     // Filter States
     const [packageTypeFilter, setPackageTypeFilter] = useState('International');
-    const availableTypes = Array.from(new Set(displayVendor.locations.map(l => l.type || 'International')));
+    const availableTypes: string[] = Array.from(new Set(displayVendor.locations.map((l: any) => l.type || 'International')));
 
     // Auto-select first location of current type
     const [activeLocationFilter, setActiveLocationFilter] = useState('');
 
     useEffect(() => {
-        const firstLoc = displayVendor.locations.find(l => (l.type || 'International') === packageTypeFilter);
+        const firstLoc = displayVendor.locations.find((l: any) => (l.type || 'International') === packageTypeFilter);
         if (firstLoc) setActiveLocationFilter(firstLoc.name);
     }, [packageTypeFilter]);
 
-    const AnimatedDestinationCard = ({ item, index }) => {
+    const AnimatedDestinationCard = ({ item, index }: { item: any; index: number }) => {
         const fadeAnim = useRef(new Animated.Value(0)).current;
         const translateY = useRef(new Animated.Value(20)).current;
 
@@ -111,23 +113,23 @@ const HoneymoonVendorDetails = ({ navigation, route }) => {
                 <Image source={item.image || displayVendor.image} style={styles.menuItemImage} />
                 <View style={styles.menuItemInfo}>
                     <Text style={styles.menuItemName}>{item.name}</Text>
-                    <Text style={styles.menuItemDesc}>{item.duration} • Starting from {item.price || displayVendor.startPrice}</Text>
+                    <Text style={styles.menuItemDesc}>{item.duration} • Starting from {item.price || (displayVendor as any).startPrice}</Text>
                 </View>
                 <Ionicons name="airplane" size={20} color={COLORS.primary} style={{ marginRight: 15 }} />
             </Animated.View>
         );
     };
 
-    const handleTabPress = (section, ref, index) => {
+    const handleTabPress = (section: string, ref: any, index: number) => {
         setActiveSection(section);
         Animated.spring(tabUnderlineTranslateX, {
-            toValue: index * tabWidth,
+            toValue: index * 90,
             useNativeDriver: true,
         }).start();
 
         ref.current?.measureLayout(
             scrollRef.current,
-            (x, y) => {
+            (x: number, y: number) => {
                 scrollRef.current?.scrollTo({ y: y - 100, animated: true });
             }
         );
@@ -140,10 +142,10 @@ const HoneymoonVendorDetails = ({ navigation, route }) => {
                 { title: 'Luxury Stays', type: 'Premium', likes: 189, images: displayVendor.images, height: 220 },
                 { title: 'Adventure Together', type: 'Experience', likes: 312, images: displayVendor.images, height: 280 }
             ].map((proj, idx) => (
-                <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
+                <View key={`project-${idx}`} style={[styles.projectCard, { height: proj.height }]}>
                     <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
-                        {proj.images.map((img, i) => (
-                            <Image key={i} source={img} style={[styles.projectImage, { width: (width - 40) }]} />
+                        {proj.images.map((img: any, i: number) => (
+                            <Image key={`project-${idx}-image-${i}`} source={img} style={[styles.projectImage, { width: (width - 40) }]} />
                         ))}
                     </ScrollView>
                     <View style={styles.typeBadge}><Text style={styles.typeBadgeText}>{proj.type}</Text></View>
@@ -189,27 +191,32 @@ const HoneymoonVendorDetails = ({ navigation, route }) => {
                     </View>
 
                     {/* Sub-Location Filter */}
-                    <View style={styles.subMenuContainer}>
-                        {displayVendor.locations
-                            ?.filter(l => (l.type || 'International') === packageTypeFilter)
-                            .map((loc, idx) => (
-                                <TouchableOpacity
-                                    key={idx}
-                                    style={[styles.subMenuTab, activeLocationFilter === loc.name && styles.subMenuTabActive]}
-                                    onPress={() => setActiveLocationFilter(loc.name)}
-                                >
-                                    <Text style={[styles.subMenuText, activeLocationFilter === loc.name && { color: COLORS.primary, fontWeight: 'bold' }]}>{loc.name}</Text>
-                                </TouchableOpacity>
-                            ))}
-                    </View>
+                    {availableTypes.map((l: string) => (
+                        <View key={l} style={styles.locationGroup}>
+                            <Text style={styles.locationGroupTitle}>{l}</Text>
+                            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.locationPills}>
+                                {displayVendor.locations
+                                    ?.filter((loc: { type?: string }) => (loc.type || 'International') === l)
+                                    .map((loc: { name: string }, idx: number) => (
+                                        <TouchableOpacity
+                                            key={idx}
+                                            style={[styles.subMenuTab, activeLocationFilter === loc.name && styles.subMenuTabActive]}
+                                            onPress={() => setActiveLocationFilter(loc.name)}
+                                        >
+                                            <Text style={[styles.subMenuText, activeLocationFilter === loc.name && { color: COLORS.primary, fontWeight: 'bold' }]}>{loc.name}</Text>
+                                        </TouchableOpacity>
+                                    ))}
+                            </ScrollView>
+                        </View>
+                    ))}
 
                     <View style={styles.menuTabContainer}>
                         <View style={styles.menuCategoryBlock}>
                             <Text style={styles.menuCategoryTitle}>{packageTypeFilter} Packages</Text>
                             <View style={styles.menuItemsList}>
                                 {displayVendor.locations
-                                    ?.filter(l => l.name === activeLocationFilter)
-                                    .map((item, i) => (
+                                    ?.filter((l: { name: string }) => l.name === activeLocationFilter)
+                                    .map((item: any, i: number) => (
                                         <AnimatedDestinationCard key={i} item={item} index={i} />
                                     ))}
                             </View>
@@ -479,13 +486,17 @@ const HoneymoonVendorDetails = ({ navigation, route }) => {
             >
                 <View style={styles.profileHeader}>
                     <Image source={displayVendor.image} style={styles.coverImage} />
-                    <LinearGradient colors={['rgba(0,0,0,0.5)', 'transparent']} style={styles.headerOverlay} />
+                    <LinearGradient colors={['rgba(0,0,0,0.6)', 'transparent', 'rgba(0,0,0,0.4)']} style={styles.headerOverlay} />
                     <TouchableOpacity style={styles.closeBtnProfile} onPress={() => navigation.goBack()}>
-                        <Ionicons name="arrow-back" size={28} color="#FFF" />
+                        <Ionicons name="chevron-down" size={28} color="#FFF" />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.profileIdentityOverlay}>
+                    <LinearGradient
+                        colors={['rgba(255,255,255,0)', 'rgba(255,255,255,1)']}
+                        style={styles.identityBgGradient}
+                    />
                     <View style={styles.avatarContainer}>
                         <Image source={displayVendor.image} style={styles.avatarImage} />
                     </View>
@@ -493,21 +504,36 @@ const HoneymoonVendorDetails = ({ navigation, route }) => {
                         <Text style={styles.profileVendorName}>{displayVendor.name}</Text>
                         <Text style={styles.profileBusinessName}>{displayVendor.tag}</Text>
                         <View style={styles.profileLocationRow}>
-                            <Ionicons name="location" size={16} color={COLORS.primary} />
-                            <Text style={styles.profileLocationText}>{displayVendor.location}</Text>
+                            <Ionicons name="pricetag" size={14} color={COLORS.secondary} />
+                            <Text style={styles.startPriceText}>Starts from ₹{(displayVendor as any).startPrice || '45,000'}</Text>
                         </View>
                     </View>
                 </View>
 
                 <View style={styles.stickyNavWrapper}>
-                    <View style={styles.shortcutNavBar}>
-                        {['Photos', 'Videos', 'Packages'].map((tab, idx) => (
-                            <TouchableOpacity key={tab} style={{ width: tabWidth, alignItems: 'center' }} onPress={() => handleTabPress(tab, portfolioRef, idx)}>
-                                <Text style={[styles.shortcutNavText, activeSection === tab && styles.shortcutNavTextActive]}>{tab}</Text>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.shortcutNavBar}
+                    >
+                        {['Projects', 'Pricing', 'About', 'Reviews'].map((tab, idx) => (
+                            <TouchableOpacity
+                                key={tab}
+                                style={styles.shortcutNavTab}
+                                onPress={() => handleTabPress(tab,
+                                    tab === 'Projects' ? portfolioRef :
+                                        tab === 'Pricing' ? pricingRef :
+                                            tab === 'About' ? aboutRef : reviewsRef,
+                                    idx)}
+                            >
+                                <Text style={[
+                                    styles.shortcutNavText,
+                                    activeSection === tab && styles.shortcutNavTextActive
+                                ]}>{tab}</Text>
                             </TouchableOpacity>
                         ))}
-                        <Animated.View style={[styles.tabUnderline, { width: tabWidth, left: 0, transform: [{ translateX: tabUnderlineTranslateX }] }]} />
-                    </View>
+                        <Animated.View style={[styles.tabUnderline, { transform: [{ translateX: tabUnderlineTranslateX }] }]} />
+                    </ScrollView>
                 </View>
 
                 <View style={{ paddingTop: 20, paddingHorizontal: 20 }}>
@@ -531,37 +557,54 @@ const HoneymoonVendorDetails = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
     profileContainer: { flex: 1, backgroundColor: '#FFF' },
-    profileHeader: { height: 280, width: '100%' },
-    coverImage: { width: '100%', height: '100%' },
+    profileHeader: { height: 320, width: '100%' },
+    coverImage: { width: '100%', height: '100%', resizeMode: 'cover' },
     headerOverlay: { ...StyleSheet.absoluteFillObject },
-    closeBtnProfile: { position: 'absolute', top: 50, left: 20, zIndex: 10, padding: 8, backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: 20 },
+    closeBtnProfile: { position: 'absolute', top: 50, left: 20, zIndex: 10, width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(0,0,0,0.3)', alignItems: 'center', justifyContent: 'center' },
 
-    profileIdentityOverlay: { backgroundColor: '#FFF', marginTop: -50, marginHorizontal: 15, borderRadius: 24, padding: 20, flexDirection: 'row', alignItems: 'center', elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.15, shadowRadius: 10 },
-    avatarContainer: { width: 80, height: 80, borderRadius: 40, borderWidth: 3, borderColor: '#FFF', overflow: 'hidden', backgroundColor: '#F0F0F0', elevation: 5 },
+    profileIdentityOverlay: {
+        marginTop: -60,
+        backgroundColor: '#FFF',
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        paddingHorizontal: 24,
+        paddingTop: 20,
+        alignItems: 'center',
+        paddingBottom: 20,
+        position: 'relative'
+    },
+    identityBgGradient: { ...StyleSheet.absoluteFillObject, borderTopLeftRadius: 40, borderTopRightRadius: 40 },
+    avatarContainer: { width: 110, height: 110, borderRadius: 55, borderWidth: 5, borderColor: '#FFF', elevation: 15, backgroundColor: '#FFF', overflow: 'hidden', marginTop: -70 },
     avatarImage: { width: '100%', height: '100%' },
-    nameSection: { flex: 1, marginLeft: 15 },
-    profileVendorName: { fontFamily: 'Outfit_700Bold', fontSize: 22, color: '#111' },
-    profileBusinessName: { fontFamily: 'Outfit_400Regular', fontSize: 13, color: '#666', marginTop: 2 },
-    profileLocationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 6, gap: 4 },
-    profileLocationText: { fontFamily: 'Outfit_500Medium', fontSize: 13, color: COLORS.primary },
+    nameSection: { alignItems: 'center', marginTop: 10 },
+    profileVendorName: { fontSize: 28, color: '#111', fontWeight: 'bold' },
+    profileBusinessName: { fontSize: 16, color: COLORS.secondary, marginTop: 4, fontWeight: 'bold' },
+    profileLocationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8, gap: 4 },
+    profileLocationText: { fontSize: 13, color: '#777' },
+    startPriceText: { fontSize: 13, color: '#777', marginLeft: 4 }, // Added style for startPriceText
 
-    stickyNavWrapper: { backgroundColor: '#FFF', borderBottomWidth: 1, borderColor: '#F0F0F0' },
-    shortcutNavBar: { flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 15, paddingHorizontal: 10 },
-    shortcutNavText: { fontFamily: 'Outfit_600SemiBold', fontSize: 14, color: '#999' },
-    shortcutNavTextActive: { color: COLORS.primary },
-    tabUnderline: { position: 'absolute', bottom: 0, height: 3, backgroundColor: COLORS.secondary, borderRadius: 3 },
+    stickyNavWrapper: { backgroundColor: 'rgba(253, 252, 240, 0.96)', borderBottomWidth: 1, borderBottomColor: 'rgba(212, 136, 6, 0.15)', elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.05, shadowRadius: 8 },
+    shortcutNavBar: { flexDirection: 'row', gap: 12, paddingHorizontal: 20, paddingVertical: 16, alignItems: 'center' },
+    shortcutNavTab: { width: 90, alignItems: 'center', justifyContent: 'center' },
+    shortcutNavText: { fontSize: 15, color: '#999', fontWeight: 'bold' },
+    shortcutNavTextActive: { color: COLORS.secondary },
+    tabUnderline: { position: 'absolute', bottom: 12, left: 20, width: 90, height: 3, backgroundColor: COLORS.secondary, borderRadius: 2 },
 
     mainTypeFilterRow: { flexDirection: 'row', justifyContent: 'center', gap: 15, marginBottom: 20 },
-    typeFilterBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, borderRadius: 15, backgroundColor: '#F5F5F5', gap: 8, borderWeight: 1, borderColor: '#EEE' },
+    typeFilterBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, borderRadius: 15, backgroundColor: '#F5F5F5', gap: 8, borderWidth: 1, borderColor: '#EEE' },
     typeFilterBtnActive: { backgroundColor: COLORS.primary, elevation: 5, shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 6 },
     typeFilterText: { fontFamily: 'Outfit_600SemiBold', fontSize: 14, color: '#666' },
     typeFilterTextActive: { color: '#FFF' },
+
+    locationGroup: { marginBottom: 15 }, // Added style for locationGroup
+    locationGroupTitle: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#333', marginBottom: 10, paddingLeft: 5 }, // Added style for locationGroupTitle
+    locationPills: { paddingHorizontal: 5 }, // Added style for locationPills
 
     menuTabContainer: { paddingVertical: 10 },
     menuCategoryBlock: { marginBottom: 25 },
     menuCategoryTitle: { fontFamily: 'Outfit_700Bold', fontSize: 18, color: '#800000', marginBottom: 15, paddingLeft: 5 },
     menuItemsList: { gap: 15 },
-    menuItemCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF', borderRadius: 16, marginBottom: 15, elevation: 3, borderWeight: 1, borderColor: '#FFD700', overflow: 'hidden' },
+    menuItemCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF', borderRadius: 16, marginBottom: 15, elevation: 3, borderWidth: 1, borderColor: '#FFD700', overflow: 'hidden' }, // Changed borderWeight to borderWidth
     menuItemImage: { width: 100, height: 100 },
     menuItemInfo: { flex: 1, paddingHorizontal: 15, paddingVertical: 10 },
     menuItemName: { fontFamily: 'Outfit_700Bold', fontSize: 15, color: '#222', marginBottom: 4 },
