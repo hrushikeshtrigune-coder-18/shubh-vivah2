@@ -1,0 +1,618 @@
+import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+    Animated,
+    Dimensions,
+    Image,
+    ImageBackground,
+    Modal,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import Card from '../../components/Card/Card';
+
+
+
+const { width, height } = Dimensions.get('window');
+const ITEM_WIDTH = width * 0.75;
+const ITEM_HEIGHT = height * 0.5;
+const SPACING = 10;
+const EMPTY_ITEM_SIZE = (width - ITEM_WIDTH) / 2;
+
+const services = [
+    {
+        id: '1',
+        title: 'E-Invites',
+        subtitle: 'Digital & Animated',
+        image: require('../../../assets1/images/invite.jpg'),
+        description: 'Eco-friendly and animated digital invitations to impress your guests instantly.',
+        features: ['Video Invites', 'RSVP Tracking'],
+        icon: 'envelope-open-text'
+    },
+    {
+        id: '2',
+        title: 'Event Management',
+        subtitle: 'Planning & Execution',
+        image: { uri: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop' },
+        description: 'Flawless execution of your dream wedding with our expert planners.',
+        features: ['Full Planning', 'Vendor Management'],
+        icon: 'clipboard-list'
+    },
+    {
+        id: '3',
+        title: 'Wedding Venue',
+        subtitle: 'Heritage & Luxury',
+        image: require('../../../assets1/images/decor.jpg'),
+        description: 'Experience royalty with our curated selection of heritage palaces and luxury banquet halls.',
+        features: ['500-2000 Pax', 'Royal Stay'],
+        icon: 'archway'
+    },
+    {
+        id: '4',
+        title: 'Food & Catering',
+        subtitle: 'Gourmet Feasts',
+        image: require('../../../assets1/images/Food.jpg'),
+        description: 'Exquisite culinary experiences with multi-cuisine menus from top chefs.',
+        features: ['Live Counters', 'Global Cuisine'],
+        icon: 'utensils'
+    },
+    {
+        id: '5',
+        title: 'Photography',
+        subtitle: 'Drone & Candid',
+        image: require('../../../assets1/images/photo.jpg'),
+        description: 'Capture every emotion with our cinematic storytelling and expert drone shots.',
+        features: ['4K Drone', 'Same Day Edit'],
+        icon: 'camera'
+    },
+    {
+        id: '6',
+        title: 'Honeymoon Planning',
+        subtitle: 'Romantic Getaways',
+        image: require('../../../assets1/images/honeymoon planning.jpg'),
+        description: 'Romantic getaways to the world\'s most beautiful destinations.',
+        features: ['Custom Packages', 'Luxury Stays'],
+        icon: 'plane'
+    },
+
+];
+
+const EventServicesScreen = ({ navigation }: { navigation: any }) => {
+    const [searchText, setSearchText] = useState('');
+    const [selectedService, setSelectedService] = useState<any>(null);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
+    // Category Pills Data
+    const CATEGORIES = ['All', 'Decor', 'Florist', 'Catering', 'Music', 'Photo', 'Venue'];
+    const [selectedCategory, setSelectedCategory] = useState('All');
+
+    // Filter services based on category AND search text
+    // Note: We are filtering 'services' for the main list, but 'searchSuggestions' for the dropdown.
+    // The main list logic needs to be updated to use 'filteredServices' instead of 'services'.
+
+    const filteredServices = services.filter(service => {
+        const matchesSearch = service.title.toLowerCase().includes(searchText.toLowerCase());
+        const matchesCategory = selectedCategory === 'All' ||
+            (selectedCategory === 'Decor' && (service.title.includes('Decoration') || service.title.includes('Venue'))) ||
+            (selectedCategory === 'Florist' && service.title.includes('Decoration')) ||
+            (selectedCategory === 'Catering' && service.title.includes('Food')) ||
+            (selectedCategory === 'Photo' && service.title.includes('Photography')) ||
+            (selectedCategory === 'Venue' && service.title.includes('Venue'));
+
+        return matchesSearch && matchesCategory;
+    });
+
+    // Search Suggestions Data
+    const searchSuggestions = [
+        {
+            id: 's2',
+            title: 'Decoration & Floral',
+            subtitle: 'Styling & Ambience',
+            image: require('../../../assets1/images/decor.jpg'),
+            description: 'Transform your venue with bespoke floral arrangements and immersive themes.',
+            features: ['Theme Decor', 'Floral Styling'],
+            icon: 'holly-berry'
+        },
+        {
+            id: 's4',
+            title: 'Mehandi',
+            subtitle: 'Art & Tradition',
+            image: { uri: 'https://images.unsplash.com/photo-1615966650071-855a15507753?q=80&w=2000&auto=format&fit=crop' },
+            description: 'Intricate henna designs and professional artists for your Mehandi ceremony.',
+            features: ['Bridal Mehandi', 'Guest Packages'],
+            icon: 'paint-brush'
+        },
+        {
+            id: 's5',
+            title: 'Bridal Makeup',
+            subtitle: 'Professional Artists',
+            image: require('../../../assets1/images/makeup.jpg'),
+            description: 'Get the perfect bridal look with our certified makeup artists.',
+            features: ['HD Makeup', 'Trial Included'],
+            icon: 'magic'
+        },
+        {
+            id: 's6',
+            title: 'Jewellery',
+            subtitle: 'Bridal & Gold',
+            image: require('../../../assets1/images/Jewellery.jpg'),
+            description: 'Exquisite bridal and wedding jewellery collections.',
+            features: ['Gold & Diamond', 'Custom Designs'],
+            icon: 'gem'
+        }
+    ];
+
+    // Filter suggestions based on searchText (Dropdown logic)
+    // Logic: If text is empty, show specific default suggestions.
+    const defaultSuggestionIds = ['s1', 's2', 's3', 's4'];
+
+    const filteredSuggestions = searchText.trim() === ''
+        ? searchSuggestions.filter(item => defaultSuggestionIds.includes(item.id))
+        : searchSuggestions.filter(item => item.title.toLowerCase().includes(searchText.toLowerCase()));
+
+    // Auto-scroll Carousel Logic
+    const flatListRef = useRef<Animated.FlatList<any>>(null);
+    const scrollX = useRef(new Animated.Value(0)).current;
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    const [isUserScrolling, setIsUserScrolling] = useState(false);
+
+    useEffect(() => {
+        if (isUserScrolling) return; // Pause if user is scrolling
+
+        const interval = setInterval(() => {
+            if (services.length > 0) {
+                let nextIndex = currentIndex + 1;
+                if (nextIndex >= services.length) {
+                    nextIndex = 0;
+                }
+                setCurrentIndex(nextIndex);
+                flatListRef.current?.scrollToOffset({
+                    offset: nextIndex * ITEM_WIDTH,
+                    animated: true
+                });
+            }
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [currentIndex, isUserScrolling]);
+
+    const renderItem = React.useCallback(({ item, index }: { item: any; index: number }) => {
+        return (
+            <Card
+                item={item}
+                index={index}
+                scrollX={scrollX}
+                itemWidth={ITEM_WIDTH}
+                itemHeight={ITEM_HEIGHT}
+                onPress={() => {
+                    if (item.id === '1') {
+                        navigation.navigate('EInviteScreen');
+                    } else {
+                        setSelectedService(item);
+                    }
+                }}
+            />
+        );
+    }, [ITEM_WIDTH, ITEM_HEIGHT]);
+
+    const getItemLayout = (data: any, index: number) => ({
+        length: ITEM_WIDTH,
+        offset: ITEM_WIDTH * index,
+        index,
+    });
+
+    const onMomentumScrollEnd = (event: any) => {
+        const index = Math.round(event.nativeEvent.contentOffset.x / ITEM_WIDTH);
+        if (index !== currentIndex) {
+            setCurrentIndex(index);
+        }
+        setIsUserScrolling(false); // Resume auto-scroll
+    };
+
+    return (
+        <View style={styles.container}>
+            <StatusBar hidden={false} barStyle="light-content" translucent backgroundColor="transparent" />
+
+            {/* Premium Glassmorphic Header */}
+            <ImageBackground
+                source={require('../../../assets1/images/decor.jpg')}
+                style={styles.heroContainer}
+                imageStyle={styles.heroImage}
+            >
+                {/* Dark overlay for better text visibility */}
+                <View style={styles.overlay} />
+
+                <View style={styles.heroContentContainer}>
+                    <BlurView intensity={30} tint="light" style={styles.glassHeader}>
+                        <View style={styles.headerTextContainer}>
+                            <Text style={styles.heroTitle}>Wedding Services</Text>
+                            <Text style={styles.heroSubtitle}>Everything for your perfect day</Text>
+                        </View>
+
+                        <View style={styles.searchContainer}>
+                            <View style={styles.searchBar}>
+                                <Ionicons name="search" size={22} color="#800000" style={styles.searchIcon} />
+                                <TextInput
+                                    placeholder="Find a service..."
+                                    value={searchText}
+                                    onChangeText={setSearchText}
+                                    placeholderTextColor="#666"
+                                    onFocus={() => setShowSuggestions(true)}
+                                    style={styles.searchInput}
+                                />
+                                {searchText.length > 0 && (
+                                    <TouchableOpacity onPress={() => setSearchText('')}>
+                                        <Ionicons name="close-circle" size={20} color="#800000" />
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        </View>
+                    </BlurView>
+                </View>
+            </ImageBackground>
+
+            {/* Search Suggestions (Absolute on top) */}
+            {showSuggestions && (
+                <View style={[styles.suggestionsDropdown, { top: 280 }]}>
+                    <View style={styles.chipsContainer}>
+                        {filteredSuggestions.map((item) => (
+                            <TouchableOpacity
+                                key={item.id}
+                                style={styles.suggestionChip}
+                                onPress={() => {
+                                    setSelectedService(item);
+                                    setShowSuggestions(false);
+                                    setSearchText(item.title);
+                                }}
+                            >
+                                <Text style={styles.suggestionText}>{item.title}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                    <TouchableOpacity
+                        style={{ alignSelf: 'center', marginTop: 10, padding: 5 }}
+                        onPress={() => setShowSuggestions(false)}
+                    >
+                        <Text style={{ color: '#666', fontSize: 12 }}>Close</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+
+            {/* Content Container - Pushing it down to respect the larger header */}
+            <View style={{ flex: 1, paddingVertical: 20 }}>
+                <Animated.FlatList
+                    ref={flatListRef}
+                    data={services}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    snapToInterval={ITEM_WIDTH}
+                    snapToAlignment="start"
+                    decelerationRate="fast"
+                    contentContainerStyle={{
+                        paddingHorizontal: EMPTY_ITEM_SIZE
+                    }}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                        { useNativeDriver: true }
+                    )}
+                    scrollEventThrottle={16}
+                    onScrollBeginDrag={() => setIsUserScrolling(true)}
+                    onScrollEndDrag={() => setIsUserScrolling(false)}
+                    getItemLayout={getItemLayout}
+                    onMomentumScrollEnd={onMomentumScrollEnd}
+                />
+            </View>
+
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={selectedService !== null}
+                onRequestClose={() => setSelectedService(null)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={[styles.modalCard, { maxHeight: '80%', width: '90%' }]}>
+                        {selectedService && (
+                            <View style={{ flexShrink: 1 }}>
+                                <ScrollView bounces={false} contentContainerStyle={{ flexGrow: 1 }}>
+                                    <Image
+                                        source={selectedService.image}
+                                        style={styles.modalImage}
+                                        resizeMode="cover"
+                                    />
+                                    <View style={styles.modalContent}>
+                                        <Text style={styles.modalTitle}>{selectedService.title}</Text>
+                                        <Text style={styles.modalSub}>{selectedService.subtitle}</Text>
+                                        <View style={styles.divider} />
+
+                                        <Text style={styles.modalDesc}>{selectedService.description}</Text>
+
+                                        <View style={styles.modalFeatures}>
+                                            {selectedService.features && selectedService.features.map((feature: string, idx: number) => (
+                                                <View key={idx} style={styles.suggestionChip}>
+                                                    <Text style={styles.suggestionText}>{feature}</Text>
+                                                </View>
+                                            ))}
+                                        </View>
+
+                                        <TouchableOpacity
+                                            style={styles.modalCta}
+                                            onPress={() => {
+                                                const s = selectedService;
+                                                setSelectedService(null);
+
+                                                // Special case for Search Suggestions
+                                                if (s.title === 'Decoration & Floral') {
+                                                    navigation.navigate('DecorationFloral');
+                                                    return;
+                                                }
+
+                                                // Conditional Navigation based on Service ID
+                                                switch (s.id) {
+                                                    case 's5': // Bridal Makeup
+                                                        // navigation.navigate('BridalMakeup');
+                                                        break;
+                                                    case 's4': // Mehandi
+                                                        navigation.navigate('MehandiScreen');
+                                                        break;
+                                                    case '2': // Event Management
+                                                        navigation.navigate('EventManagementScreen');
+                                                        break;
+                                                    case '3': // Wedding Venue
+                                                        navigation.navigate('WeddingVenue');
+                                                        break;
+                                                    case '4': // Food & Catering
+                                                        navigation.navigate('Food');
+                                                        break;
+                                                    case '5': // Photography
+                                                        navigation.navigate('Photography');
+                                                        break;
+                                                    case '7': // Jewellery
+                                                    case 's6': // Jewellery (from suggestions)
+                                                        navigation.navigate('JewelleryScreen');
+                                                        break;
+                                                    case '6': // Honeymoon Planning
+                                                        navigation.navigate('Honeymoon');
+                                                        break;
+                                                    default:
+                                                        // Default: Vendor List (Gifts, etc.)
+                                                        navigation.navigate('VendorListScreen', { serviceName: s.title, serviceId: s.id });
+                                                }
+                                            }}
+                                        >
+                                            <Text style={styles.modalCtaText}>Book Now</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </ScrollView>
+                                <TouchableOpacity
+                                    style={styles.closeBtn}
+                                    onPress={() => setSelectedService(null)}
+                                >
+                                    <Ionicons name="close" size={24} color={'#fff'} />
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff', // Ivory
+    },
+    heroContainer: {
+        height: 280, // Taller for hero impact
+        width: '100%',
+        position: 'relative',
+        justifyContent: 'flex-end',
+    },
+    heroImage: {
+        resizeMode: 'cover',
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'rgba(0,0,0,0.3)', // Dark overlay for text readability
+    },
+    heroContentContainer: {
+        paddingHorizontal: 20,
+        paddingBottom: 30,
+        justifyContent: 'flex-end',
+        flex: 1,
+    },
+    glassHeader: {
+        borderRadius: 25,
+        overflow: 'hidden',
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.3)',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)', // Glass effect base
+    },
+    headerTextContainer: {
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    heroTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
+        fontFamily: 'serif',
+        marginBottom: 5,
+        letterSpacing: 1,
+        textShadowColor: 'rgba(0, 0, 0, 0.5)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
+    },
+    heroSubtitle: {
+        fontSize: 16,
+        color: '#F0F0F0',
+        fontWeight: '500',
+        fontFamily: 'serif',
+        textShadowColor: 'rgba(0, 0, 0, 0.5)',
+        textShadowOffset: { width: 0, height: 1 },
+        textShadowRadius: 3,
+    },
+    searchContainer: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    searchBar: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)', // High opacity for input readability
+        borderRadius: 30,
+        paddingHorizontal: 15,
+        height: 50,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    searchIcon: {
+        marginRight: 10,
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 16,
+        color: '#333',
+    },
+    suggestionsDropdown: {
+        position: 'absolute',
+        left: 20,
+        right: 20,
+        backgroundColor: '#FFF',
+        borderRadius: 15,
+        padding: 15,
+        elevation: 20,
+        zIndex: 1000,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+    },
+    chipsContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 10,
+    },
+    suggestionChip: {
+        backgroundColor: '#F5F5F5',
+        paddingVertical: 8,
+        paddingHorizontal: 15,
+        borderRadius: 20,
+    },
+    suggestionText: {
+        fontSize: 13,
+        fontWeight: '600',
+        color: '#333',
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalCard: {
+        width: '85%',
+        backgroundColor: '#FFFFE4', // Ivory
+        borderRadius: 25,
+        overflow: 'hidden',
+        elevation: 20,
+        borderWidth: 2,
+        borderColor: '#F29502', // Gold
+    },
+    modalImage: {
+        width: '100%',
+        height: 150, // Reduced from 180
+        // resizeMode: 'cover', // Moved to component prop
+    },
+    closeBtn: {
+        position: 'absolute',
+        top: 15,
+        right: 15,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        borderRadius: 20,
+        padding: 6,
+    },
+    divider: {
+        width: '100%',
+        height: 1,
+        backgroundColor: 'rgba(0,0,0,0.1)',
+        marginVertical: 15,
+    },
+    modalContent: {
+        padding: 20, // Reduced from 25
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 22, // Reduced from 24
+        fontWeight: 'bold',
+        color: '#A70002', // Maroon
+        fontFamily: 'serif',
+        textAlign: 'center',
+        marginBottom: 5,
+    },
+    modalSub: {
+        fontSize: 14,
+        color: '#F29502', // Gold
+        fontWeight: '600',
+        marginBottom: 15,
+        fontFamily: 'serif',
+        display: 'none',
+    },
+    // Actually, looking at the image: Title is Red Serif. Desc is Yellow/Gold. 
+    // I will adjust modalSub to be hidden or merged if the user wants EXACT match, 
+    // but the reference image has "Food n Catering" (Title) and then "Multi-cuisine..." (Desc). 
+    // There is no subtitle "Gourmet Feasts" visible in the reference.
+    // I will set modalSub display to none to match the clean Title + Desc look.
+
+    modalDesc: {
+        fontSize: 14,
+        color: '#D4AF37', // Gold (per reference image style of golden desc)
+        textAlign: 'center',
+        lineHeight: 22,
+        marginBottom: 20,
+        fontWeight: '500',
+        fontFamily: 'serif',
+    },
+    modalFeatures: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 8,
+        marginBottom: 20,
+        justifyContent: 'center', // Center features
+        display: 'none', // Reference image doesn't show feature chips, just text. Hiding for exact match.
+    },
+    modalCta: {
+        marginTop: 5,
+        backgroundColor: '#A70002', // Maroon
+        paddingVertical: 12, // Reduced from 14
+        paddingHorizontal: 30, // Reduced from 40
+        borderRadius: 12,
+        alignItems: 'center',
+        width: '100%',
+        elevation: 3,
+    },
+    modalCtaText: {
+        color: '#FFF', // Ivory
+        fontSize: 18,
+        fontWeight: 'bold',
+        fontFamily: 'serif',
+    },
+});
+
+export default EventServicesScreen;
