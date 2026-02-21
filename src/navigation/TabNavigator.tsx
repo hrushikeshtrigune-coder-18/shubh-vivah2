@@ -4,7 +4,7 @@ import React from 'react';
 import { Image } from 'react-native';
 import Footer from '../components/Footer/Footer';
 
-import Services2 from '../screens/wedding/Services 2';
+import Services2 from '../screens/wedding/Services2';
 import { colors } from '../theme/colors';
 
 const Tab = createBottomTabNavigator();

@@ -4,15 +4,17 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    Alert,
     Animated,
     Dimensions,
     Image,
+    KeyboardAvoidingView,
+    Modal,
     Platform,
     ScrollView,
     StatusBar,
     StyleSheet,
     Text,
+    TextInput,
     TouchableOpacity,
     View
 } from 'react-native';
@@ -71,8 +73,15 @@ const WAgencies = ({ navigation }: { navigation?: any }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const fadeAnim = useRef(new Animated.Value(1)).current;
 
-    // Pulse animation for Chat Button
-    const pulseAnim = useRef(new Animated.Value(1)).current;
+    // Enquiry Modal State
+    const [isEnquiryModalVisible, setIsEnquiryModalVisible] = useState(false);
+    const [contactName, setContactName] = useState('');
+    const [contactMobile, setContactMobile] = useState('');
+    const [contactEventType, setContactEventType] = useState('');
+    const [contactCity, setContactCity] = useState('');
+    const [contactDate, setContactDate] = useState('');
+    const [contactTime, setContactTime] = useState('');
+    const [contactNote, setContactNote] = useState('');
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -105,14 +114,6 @@ const WAgencies = ({ navigation }: { navigation?: any }) => {
                 Animated.spring(anim, { toValue: 1, friction: 9, tension: 45, useNativeDriver: true })
             ))
         ]).start();
-
-        // Start pulse animation
-        Animated.loop(
-            Animated.sequence([
-                Animated.timing(pulseAnim, { toValue: 1.1, duration: 1000, useNativeDriver: true }),
-                Animated.timing(pulseAnim, { toValue: 1, duration: 1000, useNativeDriver: true }),
-            ])
-        ).start();
     }, []);
 
     const heroScale = scrollY.interpolate({
@@ -126,6 +127,155 @@ const WAgencies = ({ navigation }: { navigation?: any }) => {
         outputRange: [0, -50],
         extrapolate: 'clamp',
     });
+
+    const renderEnquiryModal = () => (
+        <Modal
+            visible={isEnquiryModalVisible}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setIsEnquiryModalVisible(false)}
+        >
+            <View style={styles.contactModalOverlay}>
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={styles.contactModalContainer}
+                >
+                    <View style={styles.contactFormCard}>
+                        <View style={styles.contactHeader}>
+                            <View>
+                                <Text style={styles.contactTitle}>Enquire Now</Text>
+                                <Text style={styles.contactSubTitle}>
+                                    Get in touch with {agencyName}
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                style={styles.closeContactBtn}
+                                onPress={() => setIsEnquiryModalVisible(false)}
+                            >
+                                <Ionicons name="close" size={24} color="#666" />
+                            </TouchableOpacity>
+                        </View>
+
+                        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
+                            <Text style={styles.contactLabel}>Full Name</Text>
+                            <View style={styles.contactInputWrapper}>
+                                <Ionicons name="person-outline" size={20} color="#999" />
+                                <TextInput
+                                    style={styles.contactInput}
+                                    placeholder="Enter your full name"
+                                    placeholderTextColor="#BBB"
+                                    value={contactName}
+                                    onChangeText={setContactName}
+                                />
+                            </View>
+
+                            <Text style={styles.contactLabel}>Mobile Number</Text>
+                            <View style={styles.contactInputWrapper}>
+                                <Ionicons name="call-outline" size={20} color="#999" />
+                                <TextInput
+                                    style={styles.contactInput}
+                                    placeholder="Enter mobile number"
+                                    placeholderTextColor="#BBB"
+                                    keyboardType="phone-pad"
+                                    value={contactMobile}
+                                    onChangeText={setContactMobile}
+                                />
+                            </View>
+
+                            <View style={styles.contactInputRow}>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.contactLabel}>Event Type</Text>
+                                    <View style={styles.contactInputWrapper}>
+                                        <Ionicons name="list-outline" size={20} color="#999" />
+                                        <TextInput
+                                            style={styles.contactInput}
+                                            placeholder="e.g. Wedding"
+                                            placeholderTextColor="#BBB"
+                                            value={contactEventType}
+                                            onChangeText={setContactEventType}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.contactLabel}>City</Text>
+                                    <View style={styles.contactInputWrapper}>
+                                        <Ionicons name="business-outline" size={20} color="#999" />
+                                        <TextInput
+                                            style={styles.contactInput}
+                                            placeholder="Enter city"
+                                            placeholderTextColor="#BBB"
+                                            value={contactCity}
+                                            onChangeText={setContactCity}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View style={styles.contactInputRow}>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.contactLabel}>Preferred Date</Text>
+                                    <View style={styles.contactInputWrapper}>
+                                        <Ionicons name="calendar-outline" size={20} color="#999" />
+                                        <TextInput
+                                            style={styles.contactInput}
+                                            placeholder="DD/MM/YYYY"
+                                            placeholderTextColor="#BBB"
+                                            value={contactDate}
+                                            onChangeText={setContactDate}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.contactLabel}>Time Slot</Text>
+                                    <View style={styles.contactInputWrapper}>
+                                        <Ionicons name="time-outline" size={20} color="#999" />
+                                        <TextInput
+                                            style={styles.contactInput}
+                                            placeholder="e.g. 2:00 PM"
+                                            placeholderTextColor="#BBB"
+                                            value={contactTime}
+                                            onChangeText={setContactTime}
+                                        />
+                                    </View>
+                                </View>
+                            </View>
+
+                            <Text style={styles.contactLabel}>Add a Note</Text>
+                            <View style={[styles.contactInputWrapper, { height: 80, alignItems: 'flex-start', paddingTop: 10 }]}>
+                                <TextInput
+                                    style={[styles.contactInput, { textAlignVertical: 'top' }]}
+                                    placeholder="Optional notes..."
+                                    placeholderTextColor="#BBB"
+                                    multiline
+                                    numberOfLines={3}
+                                    value={contactNote}
+                                    onChangeText={setContactNote}
+                                />
+                            </View>
+
+                            <View style={styles.contactActionRow}>
+                                <TouchableOpacity
+                                    style={styles.backContactBtn}
+                                    onPress={() => setIsEnquiryModalVisible(false)}
+                                >
+                                    <Text style={styles.backContactText}>Back</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.confirmContactBtn}
+                                    onPress={() => {
+                                        alert('Enquiry Sent!');
+                                        setIsEnquiryModalVisible(false);
+                                    }}
+                                >
+                                    <Text style={styles.confirmContactText}>Send Enquiry</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </ScrollView>
+                    </View>
+                </KeyboardAvoidingView>
+            </View>
+        </Modal>
+    );
 
     const renderBentoBox = () => (
         <View style={styles.bentoGrid}>
@@ -305,26 +455,29 @@ const WAgencies = ({ navigation }: { navigation?: any }) => {
                     <View style={styles.legacySection}>
                         {renderBentoBox()}
                     </View>
+
+                    {/* Enquire Button */}
+                    <View style={styles.enquireSection}>
+                        <TouchableOpacity
+                            style={styles.enquireBtn}
+                            activeOpacity={0.88}
+                            onPress={() => setIsEnquiryModalVisible(true)}
+                        >
+                            <LinearGradient
+                                colors={[COLORS.maroon, '#500000']}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                style={styles.enquireBtnGradient}
+                            >
+                                <Ionicons name="mail-outline" size={22} color={COLORS.gold} />
+                                <Text style={styles.enquireBtnText}>Enquire Now</Text>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </Animated.ScrollView>
 
-            {/* 6. Floating Chat Button */}
-            <Animated.View style={[styles.chatFabContainer, { transform: [{ scale: pulseAnim }] }]}>
-                <TouchableOpacity
-                    activeOpacity={0.9}
-                    onPress={() => Alert.alert("Chat with " + agencyName, "Connecting you to our premium royal consultant...", [{ text: "Wait" }])}
-                    style={styles.chatFab}
-                >
-                    <BlurView intensity={30} tint="dark" style={styles.chatFabBlur}>
-                        <LinearGradient
-                            colors={[COLORS.maroon, '#500000']}
-                            style={styles.chatGradient}
-                        >
-                            <Ionicons name="chatbubbles-sharp" size={24} color={COLORS.gold} />
-                        </LinearGradient>
-                    </BlurView>
-                </TouchableOpacity>
-            </Animated.View>
+            {renderEnquiryModal()}
         </View>
     );
 };
@@ -340,33 +493,72 @@ const styles = StyleSheet.create({
     heroContainer: {
         height: 320,
     },
-    chatFabContainer: {
-        position: 'absolute',
-        bottom: 30,
-        right: 25,
-        elevation: 15,
-        shadowColor: COLORS.maroon,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.4,
-        shadowRadius: 10,
-        zIndex: 9999,
+    enquireSection: {
+        paddingHorizontal: 24,
+        paddingTop: 20,
+        paddingBottom: 40,
     },
-    chatFab: {
-        width: 65,
-        height: 65,
-        borderRadius: 33,
+    enquireBtn: {
+        borderRadius: 30,
         overflow: 'hidden',
-        borderWidth: 1.5,
-        borderColor: 'rgba(212, 175, 55, 0.4)',
+        elevation: 8,
+        shadowColor: COLORS.maroon,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.35,
+        shadowRadius: 10,
     },
-    chatFabBlur: {
-        flex: 1,
-    },
-    chatGradient: {
-        flex: 1,
-        justifyContent: 'center',
+    enquireBtnGradient: {
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 16,
+        gap: 12,
     },
+    enquireBtnText: {
+        color: '#FFF',
+        fontSize: 17,
+        fontWeight: '800',
+        letterSpacing: 0.5,
+    },
+    // Contact Modal Styles
+    contactModalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
+    contactModalContainer: { width: '100%' },
+    contactFormCard: {
+        backgroundColor: '#FFF',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        padding: 20,
+        paddingTop: 24,
+        maxHeight: '90%',
+        elevation: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -10 },
+        shadowOpacity: 0.1,
+        shadowRadius: 15,
+    },
+    contactHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
+    contactTitle: { fontSize: 24, fontWeight: '800', color: COLORS.maroon },
+    contactSubTitle: { fontSize: 14, fontWeight: '500', color: COLORS.gold, marginTop: 4 },
+    closeContactBtn: { backgroundColor: '#F5F5F5', borderRadius: 25, padding: 8 },
+    contactLabel: { fontWeight: '800', fontSize: 13, color: COLORS.maroon, marginTop: 12, marginBottom: 6 },
+    contactInputWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#FBFBFB',
+        borderWidth: 1.5,
+        borderColor: COLORS.gold,
+        borderRadius: 16,
+        paddingHorizontal: 15,
+        height: 48,
+        gap: 12,
+    },
+    contactInput: { flex: 1, fontSize: 15, color: '#333' },
+    contactInputRow: { flexDirection: 'row', gap: 12 },
+    contactActionRow: { flexDirection: 'row', gap: 15, marginTop: 25, marginBottom: 10 },
+    backContactBtn: { flex: 1, height: 52, borderRadius: 16, backgroundColor: '#F5F5F5', alignItems: 'center', justifyContent: 'center' },
+    confirmContactBtn: { flex: 2, height: 52, borderRadius: 16, backgroundColor: COLORS.maroon, alignItems: 'center', justifyContent: 'center' },
+    backContactText: { fontWeight: '700', fontSize: 16, color: '#666' },
+    confirmContactText: { fontWeight: '700', fontSize: 16, color: '#FFF' },
     slideshowWrapper: {
         flex: 1,
         backgroundColor: '#000',
