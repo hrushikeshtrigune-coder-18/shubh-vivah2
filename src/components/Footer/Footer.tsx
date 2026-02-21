@@ -12,7 +12,9 @@ const BORDER_WIDTH = 5;
 // Light Yellow Background (Updated to Light Ivory)
 const FOOTER_BG_COLOR = '#FFFFE0';
 
-const Footer = ({ state, descriptors, navigation }) => {
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+
+const Footer = ({ state, descriptors, navigation }: BottomTabBarProps) => {
     const insets = useSafeAreaInsets();
 
     const MARGIN_HORIZONTAL = 20;
@@ -105,14 +107,14 @@ const Footer = ({ state, descriptors, navigation }) => {
                             accessibilityRole="button"
                             accessibilityState={isFocused ? { selected: true } : {}}
                             accessibilityLabel={options.tabBarAccessibilityLabel}
-                            testID={options.tabBarTestID}
+                            testID={options.tabBarButton !== undefined ? undefined : (options as any).tabBarTestID}
                             onPress={onPress}
                             style={styles.tabButton}
                             activeOpacity={1}
                         >
                             {/* Icon Logic */}
                             <Animated.View style={[styles.iconContainer, animatedIconStyle]}>
-                                {options.tabBarIcon({
+                                {options.tabBarIcon && options.tabBarIcon({
                                     focused: isFocused,
                                     color: colors.secondary,
                                     size: 24,
@@ -127,7 +129,7 @@ const Footer = ({ state, descriptors, navigation }) => {
                                     opacity: 1,
                                 }
                             ]}>
-                                {label}
+                                {typeof label === 'string' ? label : ''}
                             </Text>
                         </TouchableOpacity>
                     );

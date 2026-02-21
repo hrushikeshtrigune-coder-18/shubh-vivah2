@@ -52,7 +52,7 @@ const TEMPLATES = [
     { id: 't4', image: require('../../../../assets/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
 ];
 
-const InviteStudioScreen = ({ navigation, route }) => {
+const InviteStudioScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     const { eventType } = route.params || { eventType: 'Wedding' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
@@ -352,7 +352,7 @@ const InviteStudioScreen = ({ navigation, route }) => {
 };
 // End of component
 
-const FormatOption = ({ icon, label }) => (
+const FormatOption = ({ icon, label }: { icon: any; label: string }) => (
     <TouchableOpacity style={styles.formatOption}>
         <FontAwesome5 name={icon} size={24} color="#333" />
         <Text style={styles.formatLabel}>{label}</Text>

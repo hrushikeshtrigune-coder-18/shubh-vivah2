@@ -79,7 +79,7 @@ const inviteTypes = [
     }
 ];
 
-const InviteCard = React.memo(({ item, index, scrollY, navigation }) => {
+const InviteCard = React.memo(({ item, index, scrollY, navigation }: { item: any; index: number; scrollY: any; navigation: any }) => {
     // Calculated position based on grid logic
     const isRightColumn = index % 2 !== 0;
     const staggerOffset = isRightColumn ? (FULL_CARD_HEIGHT / 2) : 0;
@@ -191,7 +191,7 @@ const InviteCard = React.memo(({ item, index, scrollY, navigation }) => {
     );
 });
 
-const EInvite = ({ navigation }) => {
+const EInvite = ({ navigation }: { navigation: any }) => {
     const scrollY = useSharedValue(0);
 
     // Scroll Handler

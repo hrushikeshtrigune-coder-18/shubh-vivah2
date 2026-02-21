@@ -3,7 +3,17 @@ import { colors } from '../../theme/colors';
 import { fonts } from '../../theme/fonts';
 import { spacing } from '../../theme/spacing';
 
-const Button = ({ title, onPress, type = 'primary', outline, disabled, loading, style }) => {
+interface ButtonProps {
+    title: string;
+    onPress: () => void;
+    type?: 'primary' | 'secondary';
+    outline?: boolean;
+    disabled?: boolean;
+    loading?: boolean;
+    style?: any;
+}
+
+const Button: React.FC<ButtonProps> = ({ title, onPress, type = 'primary', outline, disabled, loading, style }) => {
     const containerStyle = [
         styles.container,
         type === 'primary' && styles.primary,

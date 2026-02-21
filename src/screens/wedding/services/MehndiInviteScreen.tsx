@@ -53,7 +53,7 @@ const TEMPLATES = [
     { id: 't10', image: require('../../../../assets/EventMimg/Einvite/mehandi10.jpg'), name: 'Simple Beauty' },
 ];
 
-const MehndiInviteScreen = ({ navigation, route }) => {
+const MehndiInviteScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     const { eventType } = route.params || { eventType: 'Mehndi' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
@@ -347,7 +347,7 @@ const MehndiInviteScreen = ({ navigation, route }) => {
 };
 // End of component
 
-const FormatOption = ({ icon, label }) => (
+const FormatOption = ({ icon, label }: { icon: any; label: string }) => (
     <TouchableOpacity style={styles.formatOption}>
         <FontAwesome5 name={icon} size={24} color="#333" />
         <Text style={styles.formatLabel}>{label}</Text>

@@ -55,7 +55,7 @@ const TEMPLATES = [
     { id: 't10', image: require('../../../../assets/EventMimg/Einvite/haldi10.jpg'), name: 'Simple Elegance' },
 ];
 
-const HaldiInviteScreen = ({ navigation, route }) => {
+const HaldiInviteScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     const { eventType } = route.params || { eventType: 'Haldi' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
@@ -349,7 +349,7 @@ const HaldiInviteScreen = ({ navigation, route }) => {
 };
 // End of component
 
-const FormatOption = ({ icon, label }) => (
+const FormatOption = ({ icon, label }: { icon: any; label: string }) => (
     <TouchableOpacity style={styles.formatOption}>
         <FontAwesome5 name={icon} size={24} color="#333" />
         <Text style={styles.formatLabel}>{label}</Text>

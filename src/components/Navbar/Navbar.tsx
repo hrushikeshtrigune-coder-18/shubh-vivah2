@@ -4,7 +4,15 @@ import { colors } from '../../theme/colors';
 import { fonts } from '../../theme/fonts';
 import { spacing } from '../../theme/spacing';
 
-const Navbar = ({ title, leftIcon, onLeftPress, rightIcon, onRightPress }) => {
+interface NavbarProps {
+    title: string;
+    leftIcon?: string | any; // Could be ionicon name or custom component
+    onLeftPress?: () => void;
+    rightIcon?: string | any;
+    onRightPress?: () => void;
+}
+
+const Navbar = ({ title, leftIcon, onLeftPress, rightIcon, onRightPress }: NavbarProps) => {
     return (
         <SafeAreaView edges={['top']} style={styles.safeArea}>
             <View style={styles.container}>

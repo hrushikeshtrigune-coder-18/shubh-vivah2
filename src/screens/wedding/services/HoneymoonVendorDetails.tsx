@@ -110,7 +110,7 @@ const HoneymoonVendorDetails = ({ navigation, route }: any) => {
 
         return (
             <Animated.View style={[styles.menuItemCard, { opacity: fadeAnim, transform: [{ translateY }] }]}>
-                <Image source={item.image || displayVendor.image} style={styles.menuItemImage} />
+                <Image source={item.image || displayVendor.image} style={styles.menuItemImage} resizeMode="cover" />
                 <View style={styles.menuItemInfo}>
                     <Text style={styles.menuItemName}>{item.name}</Text>
                     <Text style={styles.menuItemDesc}>{item.duration} • Starting from {item.price || (displayVendor as any).startPrice}</Text>
@@ -498,7 +498,7 @@ const HoneymoonVendorDetails = ({ navigation, route }: any) => {
                         style={styles.identityBgGradient}
                     />
                     <View style={styles.avatarContainer}>
-                        <Image source={displayVendor.image} style={styles.avatarImage} />
+                        <Image source={displayVendor.image} style={styles.avatarImage} resizeMode="cover" />
                     </View>
                     <View style={styles.nameSection}>
                         <Text style={styles.profileVendorName}>{displayVendor.name}</Text>

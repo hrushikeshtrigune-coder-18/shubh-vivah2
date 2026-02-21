@@ -376,7 +376,7 @@ const DecorationFloralScreen = ({ navigation }: { navigation: any }) => {
 
     const renderActionHero = () => (
         <View style={styles.heroContainer}>
-            <ImageBackground source={venue7} style={styles.heroImage} imageStyle={{ borderBottomLeftRadius: 36, borderBottomRightRadius: 36 }}>
+            <ImageBackground source={venue7} style={styles.heroImage} imageStyle={{ borderBottomLeftRadius: 36, borderBottomRightRadius: 36 }} resizeMode="cover">
                 <LinearGradient colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)']} style={styles.heroGradient}>
                     <View style={styles.topBar}>
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -1250,7 +1250,7 @@ const styles = StyleSheet.create({
     closeBtnProfile: { position: 'absolute', top: 50, left: 20, width: 44, height: 44, borderRadius: 22, backgroundColor: 'rgba(0,0,0,0.3)', alignItems: 'center', justifyContent: 'center', zIndex: 10 },
     profileIdentityOverlay: { marginTop: -60, backgroundColor: '#FFF', borderTopLeftRadius: 40, borderTopRightRadius: 40, paddingHorizontal: 24, paddingTop: 20, alignItems: 'center', paddingBottom: 20 },
     avatarContainer: { width: 110, height: 110, borderRadius: 55, borderWidth: 5, borderColor: '#FFF', elevation: 15, backgroundColor: '#FFF', overflow: 'hidden', marginTop: -70 },
-    avatarImage: { width: '100%', height: '100%' },
+    avatarImage: { width: '100%', height: '100%', resizeMode: 'cover' },
     nameSection: { alignItems: 'center', marginTop: 10 },
     profileVendorName: { fontSize: 28, color: '#111', fontWeight: 'bold' },
     profileBusinessName: { fontSize: 16, color: COLORS.secondary, marginTop: 4, fontWeight: 'bold' },
@@ -1271,7 +1271,7 @@ const styles = StyleSheet.create({
     mTabText: { fontSize: 13, color: '#999', fontWeight: 'bold' },
     mTabTextActive: { color: COLORS.secondary },
     featuredProjectCard: { width: '100%', height: 240, borderRadius: 24, overflow: 'hidden', marginBottom: 20, elevation: 5 },
-    featuredProjectImage: { width: '100%', height: '100%' },
+    featuredProjectImage: { width: '100%', height: '100%', resizeMode: 'cover' },
     featuredProjectOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, height: '60%', padding: 20, justifyContent: 'flex-end' },
     featuredBadge: { backgroundColor: COLORS.secondary, alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, marginBottom: 8 },
     featuredBadgeText: { fontSize: 10, color: '#FFF', textTransform: 'uppercase', fontWeight: 'bold' },

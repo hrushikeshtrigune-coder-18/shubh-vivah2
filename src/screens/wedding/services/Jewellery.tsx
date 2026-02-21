@@ -33,8 +33,19 @@ const COLORS = {
     textLight: '#666666',
 };
 
+interface VideoHeroProps {
+    insets: { top: number; bottom: number; left: number; right: number };
+    onSearchPress: () => void;
+    navigation: any;
+    searchQuery: string;
+    setSearchQuery: (text: string) => void;
+    selectedLocation: string;
+    onLocationPress: () => void;
+}
+
 // Isolated Hero Component for DOM Stability on Web
-const VideoHero = memo(({ insets, onSearchPress, navigation, searchQuery, setSearchQuery, selectedLocation, onLocationPress }) => {
+const VideoHero = memo(({ insets, onSearchPress, navigation, searchQuery, setSearchQuery, selectedLocation, onLocationPress }: VideoHeroProps) => {
+
     const videoSource = require('../../../../assets/videos/jewelaryV (2).mp4');
     const player = useVideoPlayer(videoSource, player => {
         player.loop = true;
@@ -222,7 +233,8 @@ const OUR_VENDORS = [
 
 
 
-const JewelleryScreen = ({ navigation }) => {
+const JewelleryScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+
     const safeInsets = useSafeAreaInsets();
     const insets = useMemo(() => ({
         top: safeInsets?.top || 0,
@@ -231,11 +243,12 @@ const JewelleryScreen = ({ navigation }) => {
         right: safeInsets?.right || 0
     }), [safeInsets]);
 
-    const [likedItems, setLikedItems] = useState({});
+    const [likedItems, setLikedItems] = useState<Record<string, boolean>>({});
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const mainScrollViewRef = useRef(null);
+    const mainScrollViewRef = useRef<ScrollView>(null);
+
     const [topPicksY, setTopPicksY] = useState(0);
 
     const scrollToCollections = () => {
@@ -245,9 +258,10 @@ const JewelleryScreen = ({ navigation }) => {
     };
 
     // Auto-Scroll Logic for Vendors
-    const vendorScrollRef = useRef(null);
-    const scrollInterval = useRef(null);
+    const vendorScrollRef = useRef<ScrollView>(null);
+    const scrollInterval = useRef<NodeJS.Timeout | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+
 
     useEffect(() => {
         startAutoScroll();
@@ -278,7 +292,7 @@ const JewelleryScreen = ({ navigation }) => {
         }
     };
 
-    const handleMomentumScrollEnd = (event) => {
+    const handleMomentumScrollEnd = (event: any) => {
         const contentOffsetX = event.nativeEvent.contentOffset.x;
         const index = Math.round(contentOffsetX / (width * 0.75 + 15));
         setCurrentIndex(index);
@@ -286,18 +300,22 @@ const JewelleryScreen = ({ navigation }) => {
     };
 
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [activeFilterTab, setActiveFilterTab] = useState('Locality');
-    const [selectedFilters, setSelectedFilters] = useState({ Locality: [], Type: [], 'WMG Award': [], 'Review count': [], 'Rating': [] });
 
-    const toggleLike = (id) => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [activeFilterTab, setActiveFilterTab] = useState<string>('Locality');
+    const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({ Locality: [], Type: [], 'WMG Award': [], 'Review count': [], 'Rating': [] });
+
+
+    const toggleLike = (id: string) => {
+
         if (Platform.OS !== 'web') {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         }
         setLikedItems(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
-    const toggleFilterOption = (category, option) => {
+    const toggleFilterOption = (category: string, option: string) => {
+
         setSelectedFilters(prev => {
             const currentOptions = prev[category] || [];
             return currentOptions.includes(option) ? { ...prev, [category]: currentOptions.filter(o => o !== option) } : { ...prev, [category]: [...currentOptions, option] };
@@ -639,9 +657,10 @@ const styles = StyleSheet.create({
         color: '#333',
         paddingVertical: 0,
         ...Platform.select({
-            web: { outlineStyle: 'none' }
+            web: { outlineStyle: 'none' as any }
         })
     },
+
     sectionContainer: { marginTop: 30, paddingHorizontal: 20 },
     sectionTitle: { fontSize: 18, fontWeight: 'bold', color: COLORS.textRed, marginBottom: 10 },
     horizontalScroll: { paddingRight: 20 },

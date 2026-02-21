@@ -53,7 +53,7 @@ const TEMPLATES = [
     { id: 't10', image: require('../../../../assets/EventMimg/Einvite/wedding10.jpg'), name: 'Eternal Bond' },
 ];
 
-const WeddingInviteScreen = ({ navigation, route }) => {
+const WeddingInviteScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
     const { eventType } = route.params || { eventType: 'Wedding' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
@@ -347,7 +347,7 @@ const WeddingInviteScreen = ({ navigation, route }) => {
 };
 // End of component
 
-const FormatOption = ({ icon, label }) => (
+const FormatOption: React.FC<{ icon: string; label: string }> = ({ icon, label }) => (
     <TouchableOpacity style={styles.formatOption}>
         <FontAwesome5 name={icon} size={24} color="#333" />
         <Text style={styles.formatLabel}>{label}</Text>

@@ -51,7 +51,7 @@ const TEMPLATES = [
     { id: 't8', image: require('../../../../assets/EventMimg/Einvite/reseption8.jpg'), name: 'Starry Banquet' },
 ];
 
-const ReceptionInviteScreen = ({ navigation, route }) => {
+const ReceptionInviteScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     const { eventType } = route.params || { eventType: 'Reception' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
@@ -345,7 +345,7 @@ const ReceptionInviteScreen = ({ navigation, route }) => {
 };
 // End of component
 
-const FormatOption = ({ icon, label }) => (
+const FormatOption = ({ icon, label }: { icon: any; label: string }) => (
     <TouchableOpacity style={styles.formatOption}>
         <FontAwesome5 name={icon} size={24} color="#333" />
         <Text style={styles.formatLabel}>{label}</Text>

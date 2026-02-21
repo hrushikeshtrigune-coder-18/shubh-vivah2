@@ -249,29 +249,6 @@ const FoodV = ({ navigation, route }: any) => {
                         </View>
                     </View>
                 ))}
-
-                <View style={styles.gridColumn}>
-                    {[
-                        { title: 'Dessert Extravaganza', type: 'Sweets', likes: 210, images: [food3, food2, food1], height: 220 },
-                        { title: 'Italian Night', type: 'Continental', likes: 56, images: [food1, food4, food2], height: 240 }
-                    ].map((proj, idx) => (
-                        <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
-                            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
-                                {proj.images.map((img: any, i: number) => (
-                                    <Image key={i} source={img} style={[styles.projectImage, { width: (width - 40) }]} />
-                                ))}
-                            </ScrollView>
-                            <View style={styles.typeBadge}><Text style={styles.typeBadgeText}>{proj.type}</Text></View>
-                            <View style={styles.projectCardFooter}>
-                                <View style={styles.likesRow}>
-                                    <Ionicons name="heart" size={14} color="#FF4b4b" />
-                                    <Text style={styles.likesText}>{proj.likes}</Text>
-                                </View>
-                                <Text style={styles.projectCardTitle} numberOfLines={1}>{proj.title}</Text>
-                            </View>
-                        </View>
-                    ))}
-                </View>
             </View>
         );
 
@@ -307,6 +284,7 @@ const FoodV = ({ navigation, route }: any) => {
             </View>
         );
     };
+
 
     const renderPricingSection = () => (
         <View ref={pricingRef} style={styles.profilePricingSection}>

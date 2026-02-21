@@ -10,7 +10,24 @@ import {
 } from 'react-native';
 import { colors } from '../../theme/colors';
 
-const Card = ({ item, index, scrollX, itemWidth, itemHeight, onPress }) => {
+interface CardProps {
+    item: {
+        id: string;
+        title: string;
+        subtitle: string;
+        image: any;
+        description: string;
+        features?: string[];
+        icon?: string;
+    };
+    index: number;
+    scrollX: Animated.Value;
+    itemWidth: number;
+    itemHeight: number;
+    onPress: () => void;
+}
+
+const Card = ({ item, index, scrollX, itemWidth, itemHeight, onPress }: CardProps) => {
     const inputRange = [(index - 1) * itemWidth, index * itemWidth, (index + 1) * itemWidth];
 
     const scale = scrollX.interpolate({

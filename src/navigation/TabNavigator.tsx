@@ -45,7 +45,7 @@ const TabNavigator = () => {
                         iconName = focused ? 'person' : 'person-outline';
                     }
 
-                    return <Ionicons name={iconName} size={size} color={color} />;
+                    return <Ionicons name={iconName as any} size={size} color={color} />;
                 },
             })}
         >

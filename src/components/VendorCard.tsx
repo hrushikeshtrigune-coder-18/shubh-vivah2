@@ -18,10 +18,11 @@ interface Vendor {
     rating: number;
     tag: string;
     location: string;
-    city: string;
+    city?: string;
     image: any;
     previews: any[];
 }
+
 
 interface VendorCardProps {
     vendor: Vendor;
@@ -49,6 +50,30 @@ const VendorCard: React.FC<VendorCardProps> = ({
     containerStyle,
     cardWidth = width * 0.82,
 }) => {
+    // The provided code snippet for handleTabPress uses variables (setActiveSection, tabUnderlineTranslateX, scrollRef, Animated)
+    // that are not defined within the scope of this VendorCard component.
+    // To make the file syntactically correct, this function definition should be placed outside of JSX.
+    // However, without the context of these variables, the function itself would cause runtime errors.
+    // For the purpose of strictly applying the edit and maintaining syntactic correctness for the function definition placement,
+    // it is placed here. Please ensure the necessary hooks and variables are defined if this function is intended to be used.
+    const handleTabPress = (section: string, ref: React.RefObject<View | null>, index: number) => {
+        // setActiveSection(section); // This variable is not defined in VendorCard
+        // Animated.spring(tabUnderlineTranslateX, { // Animated and tabUnderlineTranslateX are not defined
+        //     toValue: index * 90, // Adjusted for new tab width
+        //     useNativeDriver: true,
+        // }).start();
+
+        // if (ref.current && scrollRef.current) { // scrollRef is not defined
+        //     ref.current.measureLayout(
+        //         (scrollRef.current as any), // scrollRef is not defined
+        //         (x: number, y: number) => {
+        //             scrollRef.current?.scrollTo({ y: y - 100, animated: true }); // scrollRef is not defined
+        //         },
+        //         () => {}
+        //     );
+        // }
+    };
+
     return (
         <TouchableOpacity
             style={[styles.card, { width: cardWidth }, containerStyle]}
@@ -60,6 +85,7 @@ const VendorCard: React.FC<VendorCardProps> = ({
                 source={vendor.image}
                 style={styles.heroImage}
                 imageStyle={styles.heroImageBorder}
+                resizeMode="cover"
             >
                 <View style={styles.topRow}>
                     <View style={styles.tagBadge}>
@@ -97,7 +123,7 @@ const VendorCard: React.FC<VendorCardProps> = ({
                 <View style={styles.bottomRow}>
                     <View style={styles.previewsContainer}>
                         {vendor.previews.slice(0, 3).map((img, idx) => (
-                            <Image key={idx} source={img} style={styles.miniThumb} />
+                            <Image key={idx} source={img} style={styles.miniThumb} resizeMode="cover" />
                         ))}
                     </View>
                     <TouchableOpacity
@@ -127,10 +153,8 @@ const styles = StyleSheet.create({
     heroImage: {
         width: '100%',
         height: 200,
-        padding: 15,
     },
     heroImageBorder: {
-        borderRadius: 24,
     },
     topRow: {
         flexDirection: 'row',

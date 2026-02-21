@@ -3,7 +3,17 @@ import { colors } from '../../theme/colors';
 import { fonts } from '../../theme/fonts';
 import { spacing } from '../../theme/spacing';
 
-const Input = ({ label, value, onChangeText, placeholder, secureTextEntry, error, ...props }) => {
+interface InputProps {
+    label: string;
+    value: string;
+    onChangeText: (text: string) => void;
+    placeholder?: string;
+    secureTextEntry?: boolean;
+    error?: string;
+    [key: string]: any; // Allow for other TextInput props
+}
+
+const Input = ({ label, value, onChangeText, placeholder, secureTextEntry, error, ...props }: InputProps) => {
     return (
         <View style={styles.container}>
             {label && <Text style={styles.label}>{label}</Text>}

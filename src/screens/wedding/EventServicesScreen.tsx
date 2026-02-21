@@ -83,9 +83,9 @@ const services = [
 
 ];
 
-const EventServicesScreen = ({ navigation }) => {
+const EventServicesScreen = ({ navigation }: { navigation: any }) => {
     const [searchText, setSearchText] = useState('');
-    const [selectedService, setSelectedService] = useState(null);
+    const [selectedService, setSelectedService] = useState<any>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
     // Category Pills Data
@@ -157,7 +157,7 @@ const EventServicesScreen = ({ navigation }) => {
         : searchSuggestions.filter(item => item.title.toLowerCase().includes(searchText.toLowerCase()));
 
     // Auto-scroll Carousel Logic
-    const flatListRef = useRef(null);
+    const flatListRef = useRef<Animated.FlatList<any>>(null);
     const scrollX = useRef(new Animated.Value(0)).current;
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -183,7 +183,7 @@ const EventServicesScreen = ({ navigation }) => {
         return () => clearInterval(interval);
     }, [currentIndex, isUserScrolling]);
 
-    const renderItem = React.useCallback(({ item, index }) => {
+    const renderItem = React.useCallback(({ item, index }: { item: any; index: number }) => {
         return (
             <Card
                 item={item}
@@ -202,13 +202,13 @@ const EventServicesScreen = ({ navigation }) => {
         );
     }, [ITEM_WIDTH, ITEM_HEIGHT]);
 
-    const getItemLayout = (data, index) => ({
+    const getItemLayout = (data: any, index: number) => ({
         length: ITEM_WIDTH,
         offset: ITEM_WIDTH * index,
         index,
     });
 
-    const onMomentumScrollEnd = (event) => {
+    const onMomentumScrollEnd = (event: any) => {
         const index = Math.round(event.nativeEvent.contentOffset.x / ITEM_WIDTH);
         if (index !== currentIndex) {
             setCurrentIndex(index);
@@ -336,9 +336,9 @@ const EventServicesScreen = ({ navigation }) => {
                                         <Text style={styles.modalDesc}>{selectedService.description}</Text>
 
                                         <View style={styles.modalFeatures}>
-                                            {selectedService.features.map((feature, idx) => (
-                                                <View key={idx} style={styles.modalBadge}>
-                                                    <Text style={styles.modalBadgeText}>{feature}</Text>
+                                            {selectedService.features && selectedService.features.map((feature: string, idx: number) => (
+                                                <View key={idx} style={styles.suggestionChip}>
+                                                    <Text style={styles.suggestionText}>{feature}</Text>
                                                 </View>
                                             ))}
                                         </View>
@@ -548,6 +548,12 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 6,
     },
+    divider: {
+        width: '100%',
+        height: 1,
+        backgroundColor: 'rgba(0,0,0,0.1)',
+        marginVertical: 15,
+    },
     modalContent: {
         padding: 20, // Reduced from 25
         alignItems: 'center',
@@ -582,8 +588,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         fontWeight: '500',
         fontFamily: 'serif',
-        marginBottom: 10, // Reduced margin
-        fontSize: 13, // Slightly reduced font size
     },
     modalFeatures: {
         flexDirection: 'row',

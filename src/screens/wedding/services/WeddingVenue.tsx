@@ -379,7 +379,7 @@ const WeddingVenue = ({ navigation }: { navigation: any }) => {
 
     const renderActionHero = () => (
         <View style={styles.heroContainer}>
-            <ImageBackground source={venue6} style={styles.heroImage} imageStyle={{ borderBottomLeftRadius: 36, borderBottomRightRadius: 36 }}>
+            <ImageBackground source={venue6} style={styles.heroImage} imageStyle={{ borderBottomLeftRadius: 36, borderBottomRightRadius: 36 }} resizeMode="cover">
                 <LinearGradient colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)']} style={styles.heroGradient}>
                     <View style={styles.topBar}>
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -717,7 +717,7 @@ const WeddingVenue = ({ navigation }: { navigation: any }) => {
 
                                         {/* Featured Project Card */}
                                         <TouchableOpacity style={styles.featuredProjectCard}>
-                                            <Image source={venue6} style={styles.featuredProjectImage} />
+                                            <Image source={venue6} style={styles.featuredProjectImage} resizeMode="cover" />
                                             <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.featuredProjectOverlay}>
                                                 <View style={styles.featuredBadge}><Text style={styles.featuredBadgeText}>Featured</Text></View>
                                                 <Text style={styles.featuredProjectTitle}>Grand Royal Wedding 2024</Text>
@@ -743,7 +743,7 @@ const WeddingVenue = ({ navigation }: { navigation: any }) => {
                                                             style={styles.cardCarousel}
                                                         >
                                                             {proj.images.map((img, i) => (
-                                                                <Image key={i} source={img} style={[styles.projectImage, { width: (width - 63) / 2 }]} />
+                                                                <Image key={i} source={img} style={[styles.projectImage, { width: (width - 63) / 2 }]} resizeMode="cover" />
                                                             ))}
                                                         </ScrollView>
                                                         <View style={styles.typeBadge}><Text style={styles.typeBadgeText}>{proj.type}</Text></View>

@@ -54,7 +54,7 @@ const TEMPLATES = [
     { id: 't11', image: require('../../../../assets/EventMimg/Einvite/sangit10.jpg'), name: 'Starry Night' },
 ];
 
-const SangitInviteScreen = ({ navigation, route }) => {
+const SangitInviteScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     const { eventType } = route.params || { eventType: 'Sangeet' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
@@ -348,7 +348,7 @@ const SangitInviteScreen = ({ navigation, route }) => {
 };
 // End of component
 
-const FormatOption = ({ icon, label }) => (
+const FormatOption = ({ icon, label }: { icon: any; label: string }) => (
     <TouchableOpacity style={styles.formatOption}>
         <FontAwesome5 name={icon} size={24} color="#333" />
         <Text style={styles.formatLabel}>{label}</Text>

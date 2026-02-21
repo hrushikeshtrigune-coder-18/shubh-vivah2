@@ -25,6 +25,55 @@ import photography1 from '../../../../assets/images/photography1.jpg';
 
 const { width } = Dimensions.get('window');
 
+// --- INTERFACES ---
+interface Photographer {
+    id: string;
+    name: string;
+    rating: number;
+    reviews: number;
+    tag: string;
+    location: string;
+    city: string;
+    price: string;
+    tags: string[];
+    image: any;
+    previews: any[];
+    accentColor: string;
+}
+
+interface Post {
+    id: string;
+    vendorName: string;
+    vendorLogo: any;
+    images: any[];
+    likes: number;
+    city: string;
+    description: string;
+    rating: number;
+    eventType: string;
+    locationDetail: string;
+    imageHeight: number;
+}
+
+interface Testimonial {
+    id: string;
+    couple: string;
+    location: string;
+    photographer: string;
+    quote: string;
+    image: string;
+}
+
+interface ReasonToBook {
+    id: string;
+    text: string;
+    icon: any;
+}
+
+
+
+
+
 const COLORS = {
     background: '#FFFFF0', // Ivory
     primary: '#CC0E0E',    // Red
@@ -34,7 +83,7 @@ const COLORS = {
     inputBg: '#FFF5F5',
 };
 
-const PHOTOGRAPHERS_DATA = [
+const PHOTOGRAPHERS_DATA: Photographer[] = [
     {
         id: '1',
         name: 'Stories by Joseph',
@@ -79,7 +128,7 @@ const PHOTOGRAPHERS_DATA = [
     },
 ];
 
-const POSTS_DATA = [
+const POSTS_DATA: Post[] = [
     {
         id: 'p1',
         vendorName: 'Stories by Joseph',
@@ -215,11 +264,19 @@ const POSTS_DATA = [
 const POPULAR_SEARCHES = ['Wedding Photographers Goa', 'Cinematic Shoots Mumbai', 'Candid Delhi', 'Traditional Wedding'];
 const TRENDING_TAGS = ['Candid', 'Cinematic', 'Traditional', 'Destination'];
 
+interface PostCardProps {
+    post: Post;
+    onPostPress: (post: Post) => void;
+    onVendorPress: (post: Post) => void;
+    isFullWidth: boolean;
+}
+
 // Post Component (Dynamic Widths for Editorial Layout)
-const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
+const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<ScrollView>(null);
+
 
     const cardWidth = isFullWidth ? (width - 20) : (width - 28) / 2;
     const imageHeight = isFullWidth ? 200 : (post.imageHeight * 0.75);
@@ -228,7 +285,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
         const interval = setInterval(() => {
             const nextIndex = (activeIndex + 1) % post.images.length;
             setActiveIndex(nextIndex);
-            scrollRef.current?.scrollTo({ x: nextIndex * cardWidth, animated: true });
+            (scrollRef.current as any)?.scrollTo({ x: nextIndex * cardWidth, animated: true });
         }, 5000);
 
         return () => clearInterval(interval);
@@ -237,7 +294,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     const handleScroll = Animated.event(
         [{ nativeEvent: { contentOffset: { x: scrollX } } }],
         {
-            useNativeDriver: false, listener: (event) => {
+            useNativeDriver: false, listener: (event: any) => {
                 const index = Math.round(event.nativeEvent.contentOffset.x / cardWidth);
                 if (index !== activeIndex) {
                     setActiveIndex(index);
@@ -245,6 +302,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
             }
         }
     );
+
 
     return (
         <TouchableOpacity
@@ -304,7 +362,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     );
 };
 
-const TESTIMONIALS = [
+const TESTIMONIALS: Testimonial[] = [
     {
         id: '1',
         couple: 'Aditi & Rohan',
@@ -323,15 +381,16 @@ const TESTIMONIALS = [
     },
 ];
 
-const REASONS_TO_BOOK = [
-    { id: '1', text: 'Verified Professionals', icon: 'check-decagram' },
-    { id: '2', text: 'Real Portfolios Only', icon: 'image-album' },
-    { id: '3', text: 'Transparent Pricing', icon: 'cash-check' },
-    { id: '4', text: 'Backup Team Available', icon: 'account-group' },
-    { id: '5', text: 'Secure Payments', icon: 'shield-lock' },
+const REASONS_TO_BOOK: ReasonToBook[] = [
+    { id: '1', text: 'Verified Professionals', icon: 'checkmark-circle' },
+    { id: '2', text: 'Real Portfolios Only', icon: 'images' },
+    { id: '3', text: 'Transparent Pricing', icon: 'cash' },
+    { id: '4', text: 'Backup Team Available', icon: 'people' },
+    { id: '5', text: 'Secure Payments', icon: 'shield-checkmark' },
 ];
 
-const SwipeButton = ({ onSwipeComplete }) => {
+
+const SwipeButton = ({ onSwipeComplete }: { onSwipeComplete: () => void }) => {
     const pan = useRef(new Animated.ValueXY()).current;
     const buttonWidth = width - 70; // Adjusted for padding
     const knobWidth = 44;
@@ -426,9 +485,9 @@ const SwipeButton = ({ onSwipeComplete }) => {
     );
 };
 
-const Photography = ({ navigation }) => {
-    const scrollRef = useRef(null);
-    const featuredScrollRef = useRef(null);
+const Photography = ({ navigation }: { navigation: any }) => {
+    const scrollRef = useRef<ScrollView>(null);
+    const featuredScrollRef = useRef<ScrollView>(null);
     const scrollY = useRef(new Animated.Value(0)).current;
 
     // States
@@ -436,8 +495,8 @@ const Photography = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCity, setSelectedCity] = useState('Mumbai');
     const [featuredIndex, setFeaturedIndex] = useState(0);
-    const [selectedPost, setSelectedPost] = useState(null);
-    const [selectedVendor, setSelectedVendor] = useState(null);
+    const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+    const [selectedVendor, setSelectedVendor] = useState<Photographer | any>(null);
     const [isVendorProfileVisible, setIsVendorProfileVisible] = useState(false);
     const [activeMediaTab, setActiveMediaTab] = useState('Photos');
     const [activePhotoSubTab, setActivePhotoSubTab] = useState('Wedding');
@@ -460,13 +519,16 @@ const Photography = ({ navigation }) => {
     const profileScrollY = useRef(new Animated.Value(0)).current;
 
     // Refs for profile section scrolling
-    const profileScrollRef = useRef(null);
-    const portfolioRef = useRef(null);
-    const pricingRef = useRef(null);
-    const aboutRef = useRef(null);
-    const reviewsRef = useRef(null);
+    const profileScrollRef = useRef<ScrollView>(null);
+    const portfolioRef = useRef<View>(null);
+    const pricingRef = useRef<View>(null);
+    const aboutRef = useRef<View>(null);
+    const reviewsRef = useRef<View>(null);
 
-    const handleTabPress = (section, ref, index) => {
+
+
+    const handleTabPress = (section: string, ref: React.RefObject<View | null>, index: number) => {
+
         setActiveSection(section);
         // Animate underline
         const tabWidth = 70;
@@ -480,14 +542,17 @@ const Photography = ({ navigation }) => {
         scrollToProfileSection(ref);
     };
 
-    const scrollToProfileSection = (ref) => {
-        ref.current?.measureLayout(
-            profileScrollRef.current,
-            (x, y) => {
-                profileScrollRef.current?.scrollTo({ y: y - 80, animated: true });
-            },
-            () => { }
-        );
+    const scrollToProfileSection = (ref: React.RefObject<View | null>) => {
+
+        if (ref.current && profileScrollRef.current) {
+            ref.current.measureLayout(
+                (profileScrollRef.current as any),
+                (x: number, y: number) => {
+                    (profileScrollRef.current as any)?.scrollTo({ y: y - 80, animated: true });
+                },
+                () => { }
+            );
+        }
     };
 
     // Auto-scroll logic for Featured Collections
@@ -496,7 +561,7 @@ const Photography = ({ navigation }) => {
             if (!isSearchFocused) {
                 const nextIndex = (featuredIndex + 1) % PHOTOGRAPHERS_DATA.length;
                 setFeaturedIndex(nextIndex);
-                featuredScrollRef.current?.scrollTo({
+                (featuredScrollRef.current as any)?.scrollTo({
                     x: nextIndex * (width * 0.82 + 24), // card width + margin
                     animated: true,
                 });
@@ -624,7 +689,7 @@ const Photography = ({ navigation }) => {
                         decelerationRate="fast"
                         snapToInterval={width * 0.82 + 24}
                     >
-                        {filteredPhotographers.map((vendor) => (
+                        {filteredPhotographers.map((vendor: Photographer) => (
                             <TouchableOpacity
                                 key={vendor.id}
                                 style={styles.premiumVendorCard}
@@ -634,34 +699,41 @@ const Photography = ({ navigation }) => {
                                     setIsVendorProfileVisible(true);
                                 }}
                             >
-                                <ImageBackground source={vendor.image} style={styles.vendorMainImg} imageStyle={{ borderRadius: 20 }}>
-                                    <View style={styles.premiumTag}>
-                                        <Text style={styles.premiumTagText}>{vendor.tag}</Text>
+                                <View style={styles.vendorMainImgContainer}>
+                                    <Image source={vendor.image} style={styles.vendorMainImg} resizeMode="cover" />
+                                    <View style={styles.premiumOverlayTag}>
+                                        <Text style={styles.premiumOverlayTagText}>{vendor.tag}</Text>
                                     </View>
-                                </ImageBackground>
+                                    <TouchableOpacity style={styles.wishlistHeartBtn}>
+                                        <Ionicons name="heart-outline" size={20} color="#FFF" />
+                                    </TouchableOpacity>
+                                </View>
                                 <View style={styles.vendorDetails}>
                                     <View style={styles.detailsTop}>
                                         <Text style={styles.vendorNamePremium}>{vendor.name}</Text>
-                                        <View style={styles.ratingBadgePremium}>
+                                        <View style={styles.ratingBadgeOrange}>
                                             <Ionicons name="star" size={12} color="#FFF" />
-                                            <Text style={styles.ratingTextPremium}>{vendor.rating}</Text>
+                                            <Text style={styles.ratingTextOrange}>{vendor.rating}</Text>
                                         </View>
                                     </View>
                                     <View style={styles.locationContainerPremium}>
                                         <Ionicons name="location-outline" size={14} color="#666" />
                                         <Text style={styles.locationTextPremium}>{vendor.location}</Text>
                                     </View>
-                                    <View style={styles.previewsRow}>
-                                        {vendor.previews.map((img, idx) => (
-                                            <Image key={idx} source={img} style={styles.miniThumb} />
-                                        ))}
-                                        <TouchableOpacity style={styles.followBtnGold}>
-                                            <Text style={styles.followTextGold}>Follow</Text>
+                                    <View style={styles.cardFooterRow}>
+                                        <View style={styles.miniThumbRow}>
+                                            {vendor.previews.map((img: any, idx: number) => (
+                                                <Image key={idx} source={img} style={styles.miniThumbnail} resizeMode="cover" />
+                                            ))}
+                                        </View>
+                                        <TouchableOpacity style={styles.orangeFollowBtn}>
+                                            <Text style={styles.followBtnInnerText}>Follow</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </View>
                             </TouchableOpacity>
                         ))}
+
                     </ScrollView>
                 ) : (
                     <View style={styles.noResults}><Text style={styles.noResultsText}>No photographers found</Text></View>
@@ -681,16 +753,25 @@ const Photography = ({ navigation }) => {
                     <View key={`full-${filteredPosts[i].id}`} style={{ paddingHorizontal: 10 }}>
                         <PostCard
                             post={filteredPosts[i]}
-                            onPostPress={(p) => {
-                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || { name: p.vendorName, location: p.city, image: p.images[0] };
-                                setSelectedVendor(vendor);
+                            onPostPress={(p: Post) => {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
+                                    id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
+                                    location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
+                                    previews: [], accentColor: '#000'
+                                };
+                                setSelectedVendor(vendor as Photographer);
                                 setIsVendorProfileVisible(true);
                             }}
-                            onVendorPress={(p) => {
-                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || { name: p.vendorName, location: p.city, image: p.images[0] };
-                                setSelectedVendor(vendor);
+                            onVendorPress={(p: Post) => {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
+                                    id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
+                                    location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
+                                    previews: [], accentColor: '#000'
+                                };
+                                setSelectedVendor(vendor as Photographer);
                                 setIsVendorProfileVisible(true);
                             }}
+
                             isFullWidth={true}
                         />
                     </View>
@@ -704,16 +785,25 @@ const Photography = ({ navigation }) => {
                         <PostCard
                             key={`half-${filteredPosts[i].id}`}
                             post={filteredPosts[i]}
-                            onPostPress={(p) => {
-                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || { name: p.vendorName, location: p.city, image: p.images[0] };
-                                setSelectedVendor(vendor);
+                            onPostPress={(p: Post) => {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
+                                    id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
+                                    location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
+                                    previews: [], accentColor: '#000'
+                                };
+                                setSelectedVendor(vendor as Photographer);
                                 setIsVendorProfileVisible(true);
                             }}
-                            onVendorPress={(p) => {
-                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || { name: p.vendorName, location: p.city, image: p.images[0] };
-                                setSelectedVendor(vendor);
+                            onVendorPress={(p: Post) => {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
+                                    id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
+                                    location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
+                                    previews: [], accentColor: '#000'
+                                };
+                                setSelectedVendor(vendor as Photographer);
                                 setIsVendorProfileVisible(true);
                             }}
+
                             isFullWidth={false}
                         />
                     );
@@ -724,11 +814,15 @@ const Photography = ({ navigation }) => {
                         <PostCard
                             key={`half-${filteredPosts[i].id}`}
                             post={filteredPosts[i]}
-                            onPostPress={(p) => {
+                            onPostPress={(p: Post) => {
                                 setSelectedPost(p);
                             }}
-                            onVendorPress={(p) => {
-                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || { name: p.vendorName, location: p.city, image: p.images[0] };
+                            onVendorPress={(p: Post) => {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
+                                    id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
+                                    location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
+                                    previews: [], accentColor: '#000'
+                                };
                                 navigation.navigate('PhotographerPortfolio', { vendor });
                             }}
                             isFullWidth={false}
@@ -755,6 +849,7 @@ const Photography = ({ navigation }) => {
             </View>
         );
     };
+
 
     const renderVendorProfileModal = () => {
         if (!selectedVendor) return null;
@@ -985,16 +1080,17 @@ const Photography = ({ navigation }) => {
                                             <View style={styles.pricingDivider} />
                                             <View style={styles.pricingInclusions}>
                                                 {[
-                                                    { icon: 'camera', label: '2 Senior Photographers' },
-                                                    { icon: 'videocam', label: '1 Cinematographer' },
-                                                    { icon: 'copy', label: '300+ Edited High-Res' },
-                                                    { icon: 'book', label: 'Premium Wedding Album' }
-                                                ].map((inc, i) => (
+                                                    { icon: 'camera-outline', label: '2 Senior Photographers' },
+                                                    { icon: 'videocam-outline', label: '1 Cinematographer' },
+                                                    { icon: 'copy-outline', label: '300+ Edited High-Res' },
+                                                    { icon: 'book-outline', label: 'Premium Wedding Album' }
+                                                ].map((inc: { icon: any, label: string }, i) => (
                                                     <View key={i} style={styles.inclusionLine}>
                                                         <Ionicons name={inc.icon} size={16} color="#999" />
                                                         <Text style={styles.inclusionText}>{inc.label}</Text>
                                                     </View>
                                                 ))}
+
                                             </View>
 
                                         </View>
@@ -1295,9 +1391,14 @@ const Photography = ({ navigation }) => {
                             <TouchableOpacity
                                 style={styles.modalPrimaryBtn}
                                 onPress={() => {
-                                    const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === selectedPost?.vendorName) || { name: selectedPost?.vendorName, location: selectedPost?.locationDetail, image: selectedPost?.images[0] };
+                                    const vendor: Photographer = PHOTOGRAPHERS_DATA.find(v => v.name === selectedPost?.vendorName) || {
+                                        id: 'temp', name: selectedPost?.vendorName || '', rating: 5, reviews: 100, tag: 'Professional',
+                                        location: selectedPost?.locationDetail || '', city: selectedPost?.city || '', price: 'Contact', tags: [], image: selectedPost?.images[0],
+                                        previews: [], accentColor: '#000'
+                                    };
                                     setSelectedVendor(vendor);
                                     setIsVendorProfileVisible(true);
+
                                     setSelectedPost(null);
                                 }}
                             >
@@ -1359,21 +1460,121 @@ const styles = StyleSheet.create({
     popularTag: { backgroundColor: '#FFF9F0', paddingHorizontal: 16, paddingVertical: 9, borderRadius: 24, borderWidth: 1, borderColor: '#FFECB3' },
     popularTagText: { fontFamily: 'Outfit_500Medium', fontSize: 14, color: '#D48806' },
 
-    premiumVendorCard: { width: width * 0.82, marginRight: 24, backgroundColor: '#FFF', borderRadius: 32, elevation: 6, overflow: 'hidden' },
-    vendorMainImg: { width: '100%', height: 180, justifyContent: 'flex-start', padding: 15 },
-    premiumTag: { backgroundColor: 'rgba(255,255,255,0.92)', alignSelf: 'flex-start', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12 },
-    premiumTagText: { color: COLORS.primary, fontSize: 11, fontFamily: 'Outfit_700Bold', letterSpacing: 0.5 },
-    vendorDetails: { padding: 20, paddingTop: 15 },
-    detailsTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
-    vendorNamePremium: { fontFamily: 'Outfit_700Bold', fontSize: 20, color: '#222' },
-    ratingBadgePremium: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.secondary, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 10, gap: 4 },
-    ratingTextPremium: { color: '#FFF', fontSize: 12, fontFamily: 'Outfit_700Bold' },
-    locationContainerPremium: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 16 },
-    locationTextPremium: { fontFamily: 'Outfit_400Regular', fontSize: 13, color: '#666' },
-    previewsRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-    miniThumb: { width: 44, height: 44, backgroundColor: '#F0F0F0', borderRadius: 10 },
-    followBtnGold: { marginLeft: 'auto', borderWidth: 1.5, borderColor: COLORS.secondary, paddingHorizontal: 18, paddingVertical: 8, borderRadius: 14 },
-    followTextGold: { color: COLORS.secondary, fontFamily: 'Outfit_600SemiBold', fontSize: 13 },
+    premiumVendorCard: {
+        width: 300,
+        backgroundColor: '#FFF',
+        borderRadius: 32,
+        overflow: 'hidden',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        marginVertical: 10,
+        marginRight: 20,
+    },
+    vendorMainImgContainer: {
+        width: '100%',
+        height: 200,
+        position: 'relative',
+    },
+    vendorMainImg: {
+        width: '100%',
+        height: '100%',
+    },
+    premiumOverlayTag: {
+        position: 'absolute',
+        top: 15,
+        left: 15,
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+    },
+    premiumOverlayTagText: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 13,
+        color: '#333',
+    },
+    wishlistHeartBtn: {
+        position: 'absolute',
+        top: 15,
+        right: 15,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    vendorDetails: {
+        padding: 20,
+    },
+    detailsTop: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    vendorNamePremium: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 18,
+        color: '#222',
+        flex: 1,
+        marginRight: 10,
+    },
+    ratingBadgeOrange: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#F29502',
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 12,
+        gap: 4,
+    },
+    ratingTextOrange: {
+        color: '#FFF',
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 13,
+    },
+    locationContainerPremium: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        marginBottom: 15,
+    },
+    locationTextPremium: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 14,
+        color: '#666',
+    },
+    cardFooterRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    miniThumbRow: {
+        flexDirection: 'row',
+        gap: 8,
+    },
+    miniThumbnail: {
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        backgroundColor: '#F0F0F0',
+    },
+    orangeFollowBtn: {
+        backgroundColor: '#F29502',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 14,
+    },
+    followBtnInnerText: {
+        color: '#FFF',
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 14,
+    },
+
 
     sectionContainer: { marginTop: 20 },
     sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 20 },
@@ -1389,7 +1590,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         borderWidth: 1.5,
         borderColor: COLORS.secondary,
-        elevation: 3,
     },
     dotContainerCompact: { position: 'absolute', bottom: 10, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 4 },
     dotSmall: { width: 4, height: 4, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.4)' },
@@ -1445,7 +1645,10 @@ const styles = StyleSheet.create({
 
     profileInfoContent: { padding: 20 },
     profileSectionLabel: { fontFamily: 'Outfit_700Bold', fontSize: 18, color: '#1A1A1A', marginBottom: 20 },
+    profileMediaSection: { marginTop: 10 },
     mediaHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
+
+
 
     mediaSubTabsScroll: { marginBottom: 20 },
     mediaSubTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#F5F5F5', marginRight: 10, borderWidth: 1, borderColor: '#EEE' },
@@ -1596,6 +1799,11 @@ const styles = StyleSheet.create({
     confirmContactBtn: { flex: 2, height: 52, borderRadius: 16, backgroundColor: '#C61E1A', alignItems: 'center', justifyContent: 'center' },
     backContactText: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#666' },
     confirmContactText: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#FFF' },
+
+    swipeContainer: { height: 56, width: width - 40, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 28, marginHorizontal: 20, marginBottom: 20, justifyContent: 'center', position: 'relative', overflow: 'hidden' },
+    swipeText: { position: 'absolute', width: '100%', textAlign: 'center', fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#FFF', zIndex: 1 },
+    swipeKnob: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.primary, marginLeft: 6, alignItems: 'center', justifyContent: 'center', zIndex: 2, elevation: 4 },
 });
+
 
 export default Photography;

@@ -110,7 +110,7 @@ const VENDOR_PLANS = [
     }
 ];
 
-const VenuePortfolio = ({ navigation, route }) => {
+const VenuePortfolio = ({ navigation, route }: { navigation: any, route: any }) => {
     // Default data if no params provided
     const params = route.params || {};
     const vendor = params.vendor || {
@@ -136,7 +136,7 @@ const VenuePortfolio = ({ navigation, route }) => {
     });
 
     // Auto-scroll logic for similar vendors (Suggested)
-    const suggestedVendorsRef = useRef(null);
+    const suggestedVendorsRef = useRef<ScrollView>(null);
     React.useEffect(() => {
         let scrollValue = 0;
         const intervalId = setInterval(() => {
@@ -145,8 +145,8 @@ const VenuePortfolio = ({ navigation, route }) => {
                 if (scrollValue > 95 * SIMILAR_VENDORS.length - width) {
                     scrollValue = 0;
                 }
-                if (suggestedVendorsRef.current.scrollTo) {
-                    suggestedVendorsRef.current.scrollTo({ x: scrollValue, animated: true });
+                if ((suggestedVendorsRef.current as any)?.scrollTo) {
+                    (suggestedVendorsRef.current as any).scrollTo({ x: scrollValue, animated: true });
                 }
             }
         }, 3000);
@@ -171,8 +171,8 @@ const VenuePortfolio = ({ navigation, route }) => {
                     nextIndex = 0; // Loop back
                 }
                 setHeroIndex(nextIndex);
-                if (heroCarouselRef.current.scrollTo) {
-                    heroCarouselRef.current.scrollTo({ x: nextIndex * width, animated: true });
+                if ((heroCarouselRef.current as any)?.scrollTo) {
+                    (heroCarouselRef.current as any).scrollTo({ x: nextIndex * width, animated: true });
                 }
             }
         }, 3000);
@@ -192,7 +192,7 @@ const VenuePortfolio = ({ navigation, route }) => {
         startHeroZoom();
     }, [heroIndex]);
 
-    const handleTabPress = (tab) => {
+    const handleTabPress = (tab: any) => {
         setActiveShowcaseTab(tab);
         const toValue = tab === 'venue' ? 0 : 1;
 
@@ -873,12 +873,6 @@ const styles = StyleSheet.create({
         color: '#f29502',
         textTransform: 'uppercase',
         letterSpacing: 2,
-    },
-    descriptionTextHero: {
-        fontFamily: 'Outfit_400Regular',
-        fontSize: 14,
-        color: '#f29502',
-        lineHeight: 22,
     },
     ratingRow: {
         flexDirection: 'row',

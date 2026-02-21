@@ -146,7 +146,7 @@ const planningTools = [
     { id: 't4', title: 'Inspiration', desc: 'Discover trends', icon: 'bulb-outline', color: '#F3E5F5', iconColor: '#7B1FA2' }, // Purple Tint (Accent)
 ];
 
-const AnimatedToolCard = ({ tool, onPress }) => {
+const AnimatedToolCard = ({ tool, onPress }: { tool: any; onPress: any }) => {
     const scaleAnim = useRef(new Animated.Value(1)).current;
 
     const onPressIn = () => {
@@ -196,7 +196,7 @@ const renderPlanningTools = () => (
         </View>
         <View style={styles.toolsGrid}>
             {planningTools.map((tool) => (
-                <AnimatedToolCard key={tool.id} tool={tool} />
+                <AnimatedToolCard key={tool.id} tool={tool} onPress={() => { }} />
             ))}
         </View>
     </View>
@@ -218,7 +218,7 @@ const recommendations = [
 ];
 
 
-const EventManagementUniqueCard = ({ onPress }) => {
+const EventManagementUniqueCard = ({ onPress }: { onPress: any }) => {
     const rotateX = useRef(new Animated.Value(0)).current;
     const rotateY = useRef(new Animated.Value(0)).current;
     const scale = useRef(new Animated.Value(1)).current;
@@ -282,7 +282,7 @@ const EventManagementUniqueCard = ({ onPress }) => {
 };
 
 const Services2 = () => {
-    const navigation = useNavigation();
+    const navigation = useNavigation<any>();
     const searchAnim = useRef(new Animated.Value(0)).current;
 
     // State
@@ -296,7 +296,7 @@ const Services2 = () => {
     const filterCategories = ['All', 'Planning', 'Venue', 'Food', 'Fashion', 'Media', 'Decor'];
 
     // Mapping Services to Categories
-    const getCategory = (title) => {
+    const getCategory = (title: string) => {
         if (['Event Management', 'Honeymoon'].includes(title)) return 'Planning';
         if (['Venues'].includes(title)) return 'Venue';
         if (['Catering'].includes(title)) return 'Food';
@@ -309,7 +309,7 @@ const Services2 = () => {
     // Countdown & Progress State
     const [configModalVisible, setConfigModalVisible] = useState(false);
     const [weddingDate, setWeddingDate] = useState(new Date()); // Default: Today (0 days left)
-    const [bookedServices, setBookedServices] = useState([]); // IDs of booked services (Initially zero)
+    const [bookedServices, setBookedServices] = useState<string[]>([]); // IDs of booked services (Initially zero)
 
     // Filter Logic
     const filteredServices = serviceCategories.filter(item => {
@@ -355,14 +355,14 @@ const Services2 = () => {
     };
 
     // Modal Handler
-    const handleServicePress = (item) => {
+    const handleServicePress = (item: any) => {
         if (item.screen) {
             navigation.navigate(item.screen, item.params);
         }
     };
 
     const renderConfigModal = () => {
-        const toggleService = (id) => {
+        const toggleService = (id: string) => {
             if (bookedServices.includes(id)) {
                 setBookedServices(bookedServices.filter(sId => sId !== id));
             } else {
@@ -370,7 +370,7 @@ const Services2 = () => {
             }
         };
 
-        const changeDate = (field, value) => {
+        const changeDate = (field: string, value: number) => {
             const newDate = new Date(weddingDate);
             if (field === 'month') newDate.setMonth(newDate.getMonth() + value);
             if (field === 'day') newDate.setDate(newDate.getDate() + value);
@@ -634,7 +634,7 @@ const Services2 = () => {
                 <TouchableOpacity
                     style={styles.agencyCard}
                     activeOpacity={0.9}
-                    onPress={() => navigation.navigate('DAngenciesScreen')}
+                    onPress={() => (navigation as any).navigate('DAngenciesScreen')}
                 >
                     <ImageBackground
                         source={require('../../../assets/images/venue1.jpg')}
@@ -651,7 +651,7 @@ const Services2 = () => {
 
                 {/* Unique Event Management Card */}
                 <EventManagementUniqueCard
-                    onPress={() => navigation.navigate('EventManagementScreen')}
+                    onPress={() => (navigation as any).navigate('EventManagementScreen')}
                 />
             </View>
         </View>
@@ -728,7 +728,7 @@ const Services2 = () => {
                 </Text>
             )}
 
-            {searchQuery && filteredServices.length === 0 && filteredRecommendations.length === 0 && (
+            {!!searchQuery && filteredServices.length === 0 && filteredRecommendations.length === 0 && (
                 <View style={{ alignItems: 'center', marginTop: 30, marginBottom: 50 }}>
                     <Ionicons name="search-outline" size={64} color="#ccc" />
                     <Text style={{ marginTop: 10, color: '#888', fontWeight: '500' }}>

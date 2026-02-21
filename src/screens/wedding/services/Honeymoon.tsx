@@ -43,42 +43,95 @@ const COLORS = {
     white: '#FFFFFF',
 };
 
+interface Location {
+    name: string;
+    price: string;
+    duration: string;
+}
+
+interface Preview {
+    uri: string;
+}
+
+interface Vendor {
+    id: string;
+    name: string;
+    tag?: string;
+    tagLine: string;
+    image: string;
+    rating: number;
+    reviews: number;
+    type: string;
+    locations: Location[];
+    startPrice: string;
+    verified: boolean;
+    previews?: (Preview | any)[];
+}
+
+interface Post {
+    id: string;
+    vendorId: string;
+    vendorName: string;
+    images: any[];
+    rating: number;
+    description: string;
+    eventType: string;
+    city: string;
+    locationDetail: string;
+    likes: number;
+    imageHeight: number;
+}
+
+
 const POPULAR_SEARCHES = ['Maldives', 'Santorini', 'Bali', 'Switzerland', 'Udaipur', 'Dubai'];
 
-const OUR_VENDORS = [
+const OUR_VENDORS: Vendor[] = [
     {
         id: 'v101',
         name: 'Royal Heritage Trips',
+        tag: 'Heritage Decor',
         tagLine: 'Experience Indian Royalty',
         image: 'https://images.unsplash.com/photo-1590050752117-23a9d7fc0b29?q=80&w=2000&auto=format&fit=crop',
         rating: 4.8,
         reviews: 156,
         type: 'Domestic',
         locations: [
-            { name: 'Udaipur', price: '₹85K', duration: '4 Nights' },
-            { name: 'Jaipur', price: '₹75K', duration: '3 Nights' }
+            { name: 'Civil Lines, Jaipur', price: '₹85K', duration: '4 Nights' },
+            { name: 'Udaipur', price: '₹75K', duration: '3 Nights' }
         ],
         startPrice: '₹75K',
-        verified: true
+        verified: true,
+        previews: [
+            { uri: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=500&auto=format&fit=crop' },
+            { uri: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=500&auto=format&fit=crop' },
+            { uri: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=500&auto=format&fit=crop' }
+        ]
     },
     {
         id: 'v102',
         name: 'Coastal Charms',
+        tag: 'Oceanic Themes',
         tagLine: 'Bespoke Beach Holidays',
         image: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=2000&auto=format&fit=crop',
         rating: 4.7,
         reviews: 92,
         type: 'Domestic',
         locations: [
-            { name: 'Goa', price: '₹60K', duration: '5 Nights' },
+            { name: 'North Goa', price: '₹60K', duration: '5 Nights' },
             { name: 'Andaman', price: '₹1.1L', duration: '6 Nights' }
         ],
         startPrice: '₹60K',
-        verified: true
+        verified: true,
+        previews: [
+            { uri: 'https://images.unsplash.com/photo-1540206351-d6465b3ac5c1?q=80&w=500&auto=format&fit=crop' },
+            { uri: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=500&auto=format&fit=crop' },
+            { uri: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=500&auto=format&fit=crop' }
+        ]
     }
 ];
 
-const RECENT_POSTS = [
+
+const RECENT_POSTS: Post[] = [
     {
         id: '1',
         vendorId: 'v1',
@@ -148,10 +201,10 @@ const RECENT_POSTS = [
 
 // --- COMPONENTS ---
 
-const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
+const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: { post: Post, onPostPress: (p: Post) => void, onVendorPress?: (p: Post) => void, isFullWidth: boolean }) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<ScrollView | null>(null);
 
     const cardWidth = isFullWidth ? (width - 20) : (width - 28) / 2;
     const imageHeight = isFullWidth ? 200 : (post.imageHeight * 0.75);
@@ -169,7 +222,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     const handleScroll = Animated.event(
         [{ nativeEvent: { contentOffset: { x: scrollX } } }],
         {
-            useNativeDriver: false, listener: (event) => {
+            useNativeDriver: false, listener: (event: any) => {
                 const index = Math.round(event.nativeEvent.contentOffset.x / cardWidth);
                 if (index !== activeIndex) {
                     setActiveIndex(index);
@@ -177,6 +230,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
             }
         }
     );
+
 
     return (
         <TouchableOpacity
@@ -195,15 +249,17 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
                     decelerationRate="fast"
                     snapToInterval={cardWidth}
                 >
-                    {post.images.map((img, index) => (
+                    {post.images.map((img: any, index: number) => (
                         <Image key={index} source={img} style={{ width: cardWidth, height: imageHeight }} resizeMode="cover" />
                     ))}
+
                 </ScrollView>
 
                 <View style={styles.dotContainerCompact}>
-                    {post.images.map((_, index) => (
+                    {post.images.map((_: any, index: number) => (
                         <View key={index} style={[styles.dotSmall, activeIndex === index && styles.dotActiveSmall]} />
                     ))}
+
                 </View>
 
                 <TouchableOpacity style={styles.likeBtnSmall}>
@@ -236,38 +292,51 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }) => {
     );
 };
 
-const VendorCard = ({ vendor, onPress }) => {
+const VendorCard = ({ vendor, onPress }: { vendor: Vendor, onPress: () => void }) => {
     return (
-        <TouchableOpacity style={styles.standardCard} onPress={onPress} activeOpacity={0.9}>
-            <Image source={{ uri: vendor.image }} style={StyleSheet.absoluteFill} resizeMode="cover" />
-            <View style={styles.priceTag}>
-                <Text style={styles.priceText}>From {vendor.startPrice}</Text>
+        <TouchableOpacity style={styles.premiumVendorCard} onPress={onPress} activeOpacity={0.9}>
+            <View style={styles.cardImageContainer}>
+                <Image source={{ uri: vendor.image }} style={styles.cardMainImg} resizeMode="cover" />
+                <View style={styles.imageOverlayTag}>
+                    <Text style={styles.overlayTagText}>{vendor.tag || 'Luxury Decor'}</Text>
+                </View>
+                <TouchableOpacity style={styles.wishlistCircle}>
+                    <Ionicons name="heart-outline" size={18} color="#FFF" />
+                </TouchableOpacity>
             </View>
-            <BlurView intensity={Platform.OS === 'ios' ? 80 : 100} tint="light" style={styles.glassInfo}>
-                <View style={styles.vendorHeader}>
-                    <Text style={styles.vendorNameSerif} numberOfLines={1}>{vendor.name}</Text>
-                    {vendor.verified && (
-                        <Ionicons name="shield-checkmark" size={16} color="#4CAF50" style={{ marginLeft: 4 }} />
-                    )}
+
+            <View style={styles.cardBody}>
+                <View style={styles.cardTitleRow}>
+                    <Text style={styles.cardTitleText} numberOfLines={1}>{vendor.name}</Text>
+                    <View style={styles.ratingOrangeBadge}>
+                        <Ionicons name="star" size={12} color="#FFF" />
+                        <Text style={styles.ratingValueText}>{vendor.rating}</Text>
+                    </View>
                 </View>
-                <View style={styles.ratingRow}>
-                    <Ionicons name="star" size={12} color="#F29502" />
-                    <Text style={styles.ratingText}>{vendor.rating} ({vendor.reviews})</Text>
+
+                <View style={styles.cardLocationRow}>
+                    <Ionicons name="location-outline" size={14} color="#777" />
+                    <Text style={styles.cardLocationText}>{vendor.locations[0]?.name || 'Jaipur'}</Text>
                 </View>
-                <View style={styles.destList}>
-                    {vendor.locations.slice(0, 2).map((loc, idx) => (
-                        <View key={idx} style={styles.miniDestChip}>
-                            <Ionicons name="location-sharp" size={10} color="#CC0E0E" />
-                            <Text style={styles.miniDestText}>{loc.name}</Text>
-                        </View>
-                    ))}
+
+                <View style={styles.cardFooter}>
+                    <View style={styles.miniThumbRow}>
+                        {vendor.previews?.map((img: any, idx: number) => (
+                            <Image key={idx} source={typeof img === 'string' ? { uri: img } : img} style={styles.miniThumbImage} />
+                        ))}
+
+                    </View>
+                    <TouchableOpacity style={styles.orangeFollowBtn}>
+                        <Text style={styles.followBtnInnerText}>Follow</Text>
+                    </TouchableOpacity>
                 </View>
-            </BlurView>
+            </View>
         </TouchableOpacity>
     );
 };
 
-const Honeymoon = ({ navigation }) => {
+
+const Honeymoon = ({ navigation }: { navigation: any }) => {
     const [fontsLoaded] = useFonts({ PlayfairDisplay_700Bold });
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchFocused, setSearchFocused] = useState(false);
@@ -292,7 +361,7 @@ const Honeymoon = ({ navigation }) => {
         width: interpolate(dragX.value, [-width / 2, width / 2], [width, 0], Extrapolation.CLAMP),
     }));
 
-    const handlePostClick = (post) => {
+    const handlePostClick = (post: Post) => {
         // Find corresponding vendor or create dummy
         const vendor = OUR_VENDORS.find(v => v.name === post.vendorName) || {
             name: post.vendorName,
@@ -515,7 +584,7 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 24,
         alignItems: 'center',
-        elevation: 12,
+        elevation: 5,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.15,
@@ -534,22 +603,125 @@ const styles = StyleSheet.create({
     sectionTitle: { fontFamily: 'Outfit_700Bold', fontSize: 24, color: PRIMARY_COLOR },
     seeAllText: { fontFamily: 'Outfit_600SemiBold', fontSize: 14, color: ACCENT_COLOR },
 
-    filmstripContainer: { paddingLeft: 20, paddingRight: 20, gap: 15 },
+    filmstripContainer: { paddingLeft: 20, paddingRight: 20, gap: 20 },
 
-    standardCard: { width: 260, height: 380, backgroundColor: '#FFF', borderRadius: 25, overflow: 'hidden', elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 5, borderWidth: 1, borderColor: '#FFF0E0' },
-    priceTag: { position: 'absolute', top: 15, right: 15, backgroundColor: 'rgba(255, 255, 255, 0.9)', paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10 },
-    priceText: { fontFamily: 'Outfit_700Bold', fontSize: 12, color: PRIMARY_COLOR },
-    glassInfo: { position: 'absolute', bottom: 10, left: 10, right: 10, borderRadius: 20, padding: 12, backgroundColor: Platform.OS === 'android' ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.7)' },
-    vendorHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-    vendorNameSerif: { fontFamily: 'PlayfairDisplay_700Bold', fontSize: 18, color: PRIMARY_COLOR, flex: 1 },
-    ratingRow: { flexDirection: 'row', alignItems: 'center', marginTop: 2 },
-    ratingText: { color: ACCENT_COLOR, fontFamily: 'Outfit_600SemiBold', fontSize: 12, marginLeft: 4 },
-    destList: { flexDirection: 'row', marginTop: 8, gap: 5 },
-    miniDestChip: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFF', paddingVertical: 4, paddingHorizontal: 8, borderRadius: 12, borderWidth: 1, borderColor: '#EEE' },
-    miniDestText: { fontSize: 10, fontFamily: 'Outfit_600SemiBold', color: '#555', marginLeft: 3 },
+    premiumVendorCard: {
+        width: 300,
+        backgroundColor: '#FFF',
+        borderRadius: 32,
+        overflow: 'hidden',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        marginVertical: 10,
+    },
+    cardImageContainer: {
+        width: '100%',
+        height: 200,
+        position: 'relative',
+    },
+    cardMainImg: {
+        width: '100%',
+        height: '100%',
+    },
+    imageOverlayTag: {
+        position: 'absolute',
+        top: 15,
+        left: 15,
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 20,
+    },
+    overlayTagText: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 13,
+        color: '#333',
+    },
+    wishlistCircle: {
+        position: 'absolute',
+        top: 15,
+        right: 15,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    cardBody: {
+        padding: 20,
+    },
+    cardTitleRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    cardTitleText: {
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 18,
+        color: '#222',
+        flex: 1,
+        marginRight: 10,
+    },
+    ratingOrangeBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#F29502',
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 12,
+        gap: 4,
+    },
+    ratingValueText: {
+        color: '#FFF',
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 13,
+    },
+    cardLocationRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+        marginBottom: 15,
+    },
+    cardLocationText: {
+        fontFamily: 'Outfit_400Regular',
+        fontSize: 14,
+        color: '#666',
+    },
+    cardFooter: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    miniThumbRow: {
+        flexDirection: 'row',
+        gap: 8,
+    },
+    miniThumbImage: {
+        width: 40,
+        height: 40,
+        borderRadius: 12,
+        backgroundColor: '#F0F0F0',
+    },
+    orangeFollowBtn: {
+        backgroundColor: '#F29502',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 14,
+    },
+    followBtnInnerText: {
+        color: '#FFF',
+        fontFamily: 'Outfit_700Bold',
+        fontSize: 14,
+    },
+
 
     // PostCard styles
-    postCardCompact: { borderRadius: 24, backgroundColor: '#FFF', overflow: 'hidden', borderWidth: 1.5, borderColor: ACCENT_COLOR, elevation: 3 },
+    postCardCompact: { borderRadius: 24, backgroundColor: '#FFF', overflow: 'hidden', borderWidth: 1.5, borderColor: ACCENT_COLOR },
     dotContainerCompact: { position: 'absolute', bottom: 10, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 4 },
     dotSmall: { width: 4, height: 4, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.4)' },
     dotActiveSmall: { width: 12, backgroundColor: '#FFF' },

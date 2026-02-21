@@ -43,13 +43,15 @@ const COLORS = {
     darkHaldi: '#f29502',
 };
 
-const EventManagement = ({ navigation }) => {
+const EventManagement = ({ navigation }: { navigation: any }) => {
     const { width } = useWindowDimensions();
     const insets = useSafeAreaInsets();
     // Force update for hero section visibility
-    const [expandedService, setExpandedService] = useState(null);
-    const [selectedService, setSelectedService] = useState(null); // For detailed card view
+    const [expandedService, setExpandedService] = useState<string | null>(null);
+    const [selectedService, setSelectedService] = useState<any>(null); // For detailed card view
     const [bookModalVisible, setBookModalVisible] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+
 
     // Video Player Setup
     const videoSource = require('../../../../assets/EventMimg/EventV.mp4');
@@ -65,8 +67,10 @@ const EventManagement = ({ navigation }) => {
     const scrollX = useRef(new Animated.Value(0)).current;
 
     const scrollY = useSharedValue(0);
-    const flatListRef = useRef(null);
+    const flatListRef = useRef<any>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+
 
     // Auto-scroll logic for Featured Vendors
     useEffect(() => {
@@ -92,8 +96,10 @@ const EventManagement = ({ navigation }) => {
         scrollY.value = event.contentOffset.y;
     });
 
-    const scrollViewRef = useAnimatedRef();
+    const scrollViewRef = useAnimatedRef<any>();
+
     const teamSectionY = useSharedValue(0);
+
 
     const scrollToTeam = () => {
         if (scrollViewRef.current) {
@@ -101,7 +107,8 @@ const EventManagement = ({ navigation }) => {
         }
     };
 
-    const toggleService = (id) => {
+    const toggleService = (id: string) => {
+
         if (Platform.OS !== 'web') {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         }
@@ -137,12 +144,18 @@ const EventManagement = ({ navigation }) => {
                     {/* Search Bar - Replaces Trust Highlights */}
                     <View style={styles.searchBarContainer}>
                         <Ionicons name="search" size={20} color="#666" style={{ marginRight: 10 }} />
-                        <Text style={{ color: '#999', fontSize: 16 }}>Search services, venues...</Text>
-                        <View style={{ flex: 1 }} />
-                        <View style={styles.searchFilterBtn}>
+                        <TextInput
+                            style={styles.searchTextInput}
+                            placeholder="Search services, vendors..."
+                            placeholderTextColor="#999"
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+                        <TouchableOpacity style={styles.searchFilterBtn}>
                             <Ionicons name="options-outline" size={18} color="#fff" />
-                        </View>
+                        </TouchableOpacity>
                     </View>
+
                 </View>
 
             </View>
@@ -161,19 +174,22 @@ const EventManagement = ({ navigation }) => {
                 </View>
 
                 <View style={styles.servicesGridContainer}>
-                    {servicesGridData.map((item) => (
-                        <TouchableOpacity
-                            key={item.id}
-                            style={styles.serviceGridItem}
-                            onPress={() => setSelectedService(item)}
-                        >
-                            <View style={styles.serviceGridImageWrapper}>
-                                <Image source={item.image} style={styles.serviceGridImage} resizeMode="cover" />
-                            </View>
-                            <Text style={styles.serviceGridLabel}>{item.title}</Text>
-                        </TouchableOpacity>
-                    ))}
+                    {servicesGridData
+                        .filter(item => item.title.toLowerCase().includes(searchQuery.toLowerCase()))
+                        .map((item) => (
+                            <TouchableOpacity
+                                key={item.id}
+                                style={styles.serviceGridItem}
+                                onPress={() => setSelectedService(item)}
+                            >
+                                <View style={styles.serviceGridImageWrapper}>
+                                    <Image source={item.image} style={styles.serviceGridImage} resizeMode="cover" />
+                                </View>
+                                <Text style={styles.serviceGridLabel}>{item.title}</Text>
+                            </TouchableOpacity>
+                        ))}
                 </View>
+
             </View>
 
             {/* 1.6 Featured Vendors */}
@@ -181,7 +197,10 @@ const EventManagement = ({ navigation }) => {
                 <Text style={[styles.sectionTitle, { color: '#A70002', marginBottom: 15 }]}>Featured Vendors</Text>
                 <FlatList
                     ref={flatListRef}
-                    data={allFeaturedVendors}
+                    data={allFeaturedVendors.filter(vendor =>
+                        vendor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        vendor.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+                    )}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     snapToInterval={width * 0.75 + 20} // width + horizontal margin * 2
@@ -191,6 +210,7 @@ const EventManagement = ({ navigation }) => {
                     renderItem={({ item }) => (
                         <FeaturedVendorCard vendor={item} navigation={navigation} />
                     )}
+
                     initialNumToRender={2}
                     maxToRenderPerBatch={2}
                     windowSize={3}
@@ -236,7 +256,8 @@ const EventManagement = ({ navigation }) => {
                                     <Ionicons name="close" size={24} color="#333" />
                                 </TouchableOpacity>
                             </View>
-                            <Text style={[styles.modalSubtitle, { marginTop: 10, color: '#666' }]}>Fill in the details below and we will get back to you shortly.</Text>
+                            <Text style={[styles.modalSubTitle, { marginTop: 10, color: '#666' }]}>Fill in the details below and we will get back to you shortly.</Text>
+
 
                             <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
                                 <View style={styles.inputGroup}>
@@ -456,7 +477,8 @@ const allFeaturedVendors = [
     }
 ];
 
-const FeaturedVendorCard = ({ vendor, navigation }) => (
+const FeaturedVendorCard = ({ vendor, navigation }: { vendor: any, navigation: any }) => (
+
     <Reanimated.View
         entering={FadeInDown.delay(100).duration(600).springify()}
         style={styles.featuredVendorCardContainer}
@@ -491,7 +513,8 @@ const FeaturedVendorCard = ({ vendor, navigation }) => (
 
                 {/* Tags */}
                 <View style={styles.fTagsRow}>
-                    {(vendor.tags || []).map((tag, index) => (
+                    {(vendor.tags || []).map((tag: string, index: number) => (
+
                         <View key={index} style={styles.fTagBadge}>
                             <Text style={styles.fTagText}>{tag}</Text>
                         </View>
@@ -600,7 +623,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#eee',
     },
+    searchTextInput: {
+        flex: 1,
+        color: '#333',
+        fontSize: 16,
+        height: '100%',
+    },
     searchFilterBtn: {
+
         width: 32,
         height: 32,
         borderRadius: 16,
@@ -980,7 +1010,14 @@ const styles = StyleSheet.create({
         right: 15,
         zIndex: 10,
     },
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
     modalSubTitle: {
+
         color: 'rgba(255,255,255,0.7)',
         fontSize: 14,
         marginBottom: 5,

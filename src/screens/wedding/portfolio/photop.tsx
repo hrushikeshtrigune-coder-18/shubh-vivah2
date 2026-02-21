@@ -95,7 +95,7 @@ const PACKAGES = [
     }
 ];
 
-const AnimatedCard = ({ children, style, delay = 0 }) => {
+const AnimatedCard = ({ children, style, delay = 0 }: { children: any; style: any; delay?: number }) => {
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const translateY = useRef(new Animated.Value(60)).current; // Increased offset for more "pop"
     const scaleAnim = useRef(new Animated.Value(0.75)).current; // Smaller starting point
@@ -132,7 +132,7 @@ const AnimatedCard = ({ children, style, delay = 0 }) => {
     );
 };
 
-const PhotographerPortfolio = ({ navigation, route }) => {
+const PhotographerPortfolio = ({ navigation, route }: { navigation: any; route: any }) => {
     // Default data if no params provided
     const params = route.params || {};
     const photographer = params.vendor || {
@@ -167,8 +167,8 @@ const PhotographerPortfolio = ({ navigation, route }) => {
                 if (scrollValue > 95 * SIMILAR_PHOTOGRAPHERS.length - width) {
                     scrollValue = 0;
                 }
-                if (suggestedVendorsRef.current.scrollTo) {
-                    suggestedVendorsRef.current.scrollTo({ x: scrollValue, animated: true });
+                if ((suggestedVendorsRef.current as any)?.scrollTo) {
+                    (suggestedVendorsRef.current as any).scrollTo({ x: scrollValue, animated: true });
                 }
             }
         }, 3000);
@@ -191,8 +191,8 @@ const PhotographerPortfolio = ({ navigation, route }) => {
                     nextIndex = 0;
                 }
                 setHeroIndex(nextIndex);
-                if (heroCarouselRef.current.scrollTo) {
-                    heroCarouselRef.current.scrollTo({ x: nextIndex * width, animated: true });
+                if ((heroCarouselRef.current as any)?.scrollTo) {
+                    (heroCarouselRef.current as any).scrollTo({ x: nextIndex * width, animated: true });
                 }
             }
         }, 3000);
@@ -212,7 +212,7 @@ const PhotographerPortfolio = ({ navigation, route }) => {
         startHeroZoom();
     }, [heroIndex]);
 
-    const handleTabPress = (tab) => {
+    const handleTabPress = (tab: any) => {
         setActiveShowcaseTab(tab);
         const toValue = tab === 'photos' ? 0 : 1;
 
@@ -519,16 +519,16 @@ const PhotographerPortfolio = ({ navigation, route }) => {
             ? PHOTOGRAPHY_PHOTOS
             : PHOTOGRAPHY_PHOTOS.filter(p => p.category === activeCategory);
 
-        const renderCard = (photo, variant) => {
+        const renderCard = (photo: any, variant: string, index: number) => {
             if (!photo) return null;
             const badge = microBadges[Math.floor(Math.random() * microBadges.length)];
 
             let cardStyle = styles.minimalCard;
             let imageStyle = styles.minimalImage;
 
-            if (variant === 'tall') cardStyle = [styles.minimalCard, styles.tallCard];
-            if (variant === 'wide' || variant === 'video') cardStyle = [styles.minimalCard, styles.videoCard];
-            if (variant === 'square') cardStyle = [styles.minimalCard, styles.squareCard];
+            if (variant === 'tall') (cardStyle as any) = [styles.minimalCard, styles.tallCard];
+            if (variant === 'wide' || variant === 'video') (cardStyle as any) = [styles.minimalCard, styles.videoCard];
+            if (variant === 'square') (cardStyle as any) = [styles.minimalCard, styles.squareCard];
             if (variant === 'circle') {
                 return (
                     <AnimatedCard key={photo.id || Math.random()} style={styles.circleFrame} delay={100}>
@@ -596,7 +596,7 @@ const PhotographerPortfolio = ({ navigation, route }) => {
                     rows.push({
                         id: `row-1-${i}`,
                         type: 'grid_row',
-                        content: row1Items.map(ri => renderCard(ri.item, ri.variant, ri.index))
+                        content: row1Items.map((ri: any) => renderCard(ri.item, ri.variant, ri.index))
                     });
                 }
 
@@ -622,7 +622,7 @@ const PhotographerPortfolio = ({ navigation, route }) => {
                     rows.push({
                         id: `row-2-${i}`,
                         type: 'grid_row',
-                        content: row2Items.map(ri => renderCard(ri.item, ri.variant, ri.index))
+                        content: row2Items.map((ri: any) => renderCard(ri.item, ri.variant, ri.index))
                     });
                 }
 

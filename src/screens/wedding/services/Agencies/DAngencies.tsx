@@ -70,7 +70,18 @@ const AGENCIES_DATA = [
     }
 ];
 
-const AgencyCard = ({ agency, index, fadeAnim, navigation }) => {
+interface Agency {
+    id: string;
+    name: string;
+    location: string;
+    rating: number;
+    reviews: number;
+    description: string;
+    image: any;
+}
+
+const AgencyCard: React.FC<{ agency: Agency; index: number; fadeAnim: any; navigation: any }> = ({ agency, index, fadeAnim, navigation }) => {
+
     return (
         <Animated.View
             style={[
@@ -142,9 +153,10 @@ const AgencyCard = ({ agency, index, fadeAnim, navigation }) => {
     );
 };
 
-const DAgencies = () => {
-    const navigation = useNavigation();
+const DAgencies: React.FC = () => {
+    const navigation = useNavigation<any>();
     const fadeAnims = useRef(AGENCIES_DATA.map(() => new Animated.Value(0))).current;
+
 
     useEffect(() => {
         Animated.stagger(100, fadeAnims.map(anim =>

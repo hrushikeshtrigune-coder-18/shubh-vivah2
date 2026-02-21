@@ -73,7 +73,7 @@ const VENDORS = [
 ];
 
 // --- NEUMORPHIC COMPONENT ---
-const Neumorph = ({ children, style, onPress }) => (
+const Neumorph = ({ children, style, onPress }: { children: any; style?: any; onPress?: () => void }) => (
     <TouchableOpacity
         activeOpacity={0.8}
         onPress={onPress}
@@ -87,9 +87,9 @@ const Neumorph = ({ children, style, onPress }) => (
     </TouchableOpacity>
 );
 
-const Decoration = ({ navigation }) => {
-    const scrollRef = useRef(null);
-    const [selectedStyle, setSelectedStyle] = useState(null);
+const Decoration = ({ navigation }: { navigation: any }) => {
+    const scrollRef = useRef<ScrollView>(null);
+    const [selectedStyle, setSelectedStyle] = useState<any>(null);
 
     // --- ANIMATIONS ---
     // Floating Petals Simulation (using simple repetitive translation)
@@ -104,7 +104,7 @@ const Decoration = ({ navigation }) => {
     }, []);
 
     // Helper for timing to avoid import complexity with reanimated directly sometimes
-    const withTimed = (toValue, config) => withTiming(toValue, config);
+    const withTimed = (toValue: number, config: any) => withTiming(toValue, config);
 
 
     // --- RENDER SECTIONS ---
@@ -161,7 +161,7 @@ const Decoration = ({ navigation }) => {
                         ]}
                         onPress={() => setSelectedStyle(item.id)}
                     >
-                        <Ionicons name={item.icon} size={28} color={item.color} />
+                        <Ionicons name={item.icon as any} size={28} color={item.color} />
                         <Text style={styles.styleText}>{item.title}</Text>
                     </Neumorph>
                 ))}

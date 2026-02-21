@@ -26,7 +26,7 @@ const COLORS = {
     maroon: '#800000',
 };
 
-const VendorDetailScreen = ({ navigation, route }) => {
+const VendorDetailScreen = ({ navigation, route }: { navigation: any; route: any }) => {
     const vendor = route.params?.vendor || {};
     const [activeTab, setActiveTab] = useState('Portfolio');
     const [bookmarked, setBookmarked] = useState(false);
@@ -108,7 +108,7 @@ const VendorDetailScreen = ({ navigation, route }) => {
             case 'Portfolio':
                 return (
                     <View style={styles.portfolioGrid}>
-                        {portfolioImages.map((img, index) => (
+                        {portfolioImages.map((img: any, index: number) => (
                             <View key={index} style={styles.portfolioItem}>
                                 <Image
                                     source={typeof img === 'string' ? { uri: img } : img}

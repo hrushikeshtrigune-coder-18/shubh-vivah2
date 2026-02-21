@@ -281,7 +281,7 @@ const Food = ({ navigation }: { navigation: any }) => {
 
     const renderActionHero = () => (
         <View style={styles.heroContainer}>
-            <ImageBackground source={food4} style={styles.heroImage} imageStyle={{ borderBottomLeftRadius: 36, borderBottomRightRadius: 36 }}>
+            <ImageBackground source={food4} style={styles.heroImage} imageStyle={{ borderBottomLeftRadius: 36, borderBottomRightRadius: 36 }} resizeMode="cover">
                 <LinearGradient colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)']} style={styles.heroGradient}>
                     <View style={styles.topBar}>
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
