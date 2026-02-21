@@ -3,10 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { Image } from 'react-native';
 import Footer from '../components/Footer/Footer';
-import HomeScreen from '../screens/home/HomeScreen';
-import MatchListScreen from '../screens/matchmaking/MatchListScreen';
-import UserProfileScreen from '../screens/profile/UserProfileScreen';
-import VendorListScreen from '../screens/vendor/VendorListScreen';
+
 import Services2 from '../screens/wedding/Services 2';
 import { colors } from '../theme/colors';
 
@@ -22,7 +19,7 @@ const TabNavigator = () => {
                     if (route.name === 'Services') {
                         return (
                             <Image
-                                source={require('../../assets/images/image icon.png')}
+                                source={require('../../assets1/images/image icon.png')}
                                 style={{
                                     width: size,
                                     height: size,
@@ -49,11 +46,9 @@ const TabNavigator = () => {
                 },
             })}
         >
-            <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Matches" component={MatchListScreen} options={{ tabBarLabel: 'Match' }} />
-            <Tab.Screen name="Vendors" component={VendorListScreen} options={{ tabBarLabel: 'Vendor' }} />
+
             <Tab.Screen name="Services" component={Services2} options={{ tabBarLabel: 'Service' }} />
-            <Tab.Screen name="Profile" component={UserProfileScreen} options={{ tabBarLabel: 'Profile' }} />
+
         </Tab.Navigator>
     );
 };

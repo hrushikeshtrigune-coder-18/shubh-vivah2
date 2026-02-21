@@ -50,12 +50,12 @@ const SUB_FILTERS = [
 
 // Mock Data for Makeup
 const PORTFOLIO_IMAGES = [
-    { id: '1', source: require('../../../../assets/EventMimg/Makeup/artist1.jpg'), height: 250, label: 'Bridal Glow', category: 'bridal' },
-    { id: '2', source: require('../../../../assets/EventMimg/Makeup/artist2.jpg'), height: 180, label: 'Party Glam', category: 'party' },
-    { id: '3', source: require('../../../../assets/EventMimg/Makeup/artist3.jpg'), height: 220, label: 'Engagement Look', category: 'engagement' },
-    { id: '4', source: require('../../../../assets/EventMimg/Makeup/artist1.jpg'), height: 200, label: 'Sangeet Vibes', category: 'party' },
-    { id: '5', source: require('../../../../assets/EventMimg/Makeup/artist2.jpg'), height: 240, label: 'Reception Royal', category: 'bridal' },
-    { id: '6', source: require('../../../../assets/EventMimg/Makeup/artist3.jpg'), height: 190, label: 'Haldi Special', category: 'engagement' },
+    { id: '1', source: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), height: 250, label: 'Bridal Glow', category: 'bridal' },
+    { id: '2', source: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), height: 180, label: 'Party Glam', category: 'party' },
+    { id: '3', source: require('../../../../assets1/EventMimg/Makeup/artist3.jpg'), height: 220, label: 'Engagement Look', category: 'engagement' },
+    { id: '4', source: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), height: 200, label: 'Sangeet Vibes', category: 'party' },
+    { id: '5', source: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), height: 240, label: 'Reception Royal', category: 'bridal' },
+    { id: '6', source: require('../../../../assets1/EventMimg/Makeup/artist3.jpg'), height: 190, label: 'Haldi Special', category: 'engagement' },
 ];
 
 const ABOUT_DATA = {
@@ -66,10 +66,10 @@ const ABOUT_DATA = {
 
 // Adapted to Pricing Card format
 const PRICING_PACKAGES = [
-    { id: '1', title: 'Bridal HD Makeup', price: '₹ 15,000', details: 'High Definition makeup, hair styling, draping, lashes, and trial included.', popular: true },
-    { id: '2', title: 'Party Makeup', price: '₹ 5,000', details: 'Glamorous look for bridesmaids and family members. Includes basic hair.', popular: false },
-    { id: '3', title: 'Engagement Look', price: '₹ 10,000', details: 'Subtle yet stunning makeup for your engagement ceremony.', popular: false },
-    { id: '4', title: 'Airbrush Bridal', price: '₹ 20,000+', details: 'Flawless, long-lasting airbrush finish for the bride.', popular: true },
+    { id: '1', title: 'Bridal HD Makeup', price: ' 15,000', details: 'High Definition makeup, hair styling, draping, lashes, and trial included.', popular: true },
+    { id: '2', title: 'Party Makeup', price: ' 5,000', details: 'Glamorous look for bridesmaids and family members. Includes basic hair.', popular: false },
+    { id: '3', title: 'Engagement Look', price: ' 10,000', details: 'Subtle yet stunning makeup for your engagement ceremony.', popular: false },
+    { id: '4', title: 'Airbrush Bridal', price: ' 20,000+', details: 'Flawless, long-lasting airbrush finish for the bride.', popular: true },
 ];
 
 const REVIEWS_DATA = [
@@ -80,18 +80,18 @@ const REVIEWS_DATA = [
 
 // Mock Videos
 const VIDEOS_DATA = [
-    { id: '1', thumbnail: require('../../../../assets/EventMimg/Makeup/artist1.jpg'), title: 'Bridal Makeup Tutorial', duration: '5:15' },
-    { id: '2', thumbnail: require('../../../../assets/EventMimg/Makeup/artist2.jpg'), title: 'Party Look Transformation', duration: '3:30' },
-    { id: '3', thumbnail: require('../../../../assets/EventMimg/Makeup/artist3.jpg'), title: 'Client Testimonials', duration: '1:45' },
+    { id: '1', thumbnail: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), title: 'Bridal Makeup Tutorial', duration: '5:15' },
+    { id: '2', thumbnail: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), title: 'Party Look Transformation', duration: '3:30' },
+    { id: '3', thumbnail: require('../../../../assets1/EventMimg/Makeup/artist3.jpg'), title: 'Client Testimonials', duration: '1:45' },
 ];
 
 // Mock Media
 const MEDIA_DATA = [
-    { id: '1', image: require('../../../../assets/EventMimg/Makeup/artist1.jpg'), title: 'Featured in WedMeGood', source: 'WedMeGood', date: 'Oct 2024' },
-    { id: '2', image: require('../../../../assets/EventMimg/Makeup/artist2.jpg'), title: 'Top 10 MUAs in Goa', source: 'WeddingSutra', date: 'Aug 2024' },
+    { id: '1', image: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), title: 'Featured in WedMeGood', source: 'WedMeGood', date: 'Oct 2024' },
+    { id: '2', image: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), title: 'Top 10 MUAs in Goa', source: 'WeddingSutra', date: 'Aug 2024' },
 ];
 
-const MakeupArtistDetails: React.FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
+const MakeupArtistDetails = ({ route, navigation }: { route?: any; navigation?: any }) => {
 
     const { item } = route.params || {};
     const insets = useSafeAreaInsets();
@@ -129,9 +129,9 @@ const MakeupArtistDetails: React.FC<{ route: any; navigation: any }> = ({ route,
             return PORTFOLIO_IMAGES.slice(0, 3).map((img, i) => ({ id: `hero-${i}`, source: img.source }));
         }
         return [
-            { id: 'hero-1', source: require('../../../../assets/EventMimg/Makeup/artist1.jpg') },
-            { id: 'hero-2', source: require('../../../../assets/EventMimg/Makeup/artist2.jpg') },
-            { id: 'hero-3', source: require('../../../../assets/EventMimg/Makeup/artist3.jpg') },
+            { id: 'hero-1', source: require('../../../../assets1/EventMimg/Makeup/artist1.jpg') },
+            { id: 'hero-2', source: require('../../../../assets1/EventMimg/Makeup/artist2.jpg') },
+            { id: 'hero-3', source: require('../../../../assets1/EventMimg/Makeup/artist3.jpg') },
         ];
     }, [item]);
 
@@ -292,7 +292,7 @@ const MakeupArtistDetails: React.FC<{ route: any; navigation: any }> = ({ route,
                 <View style={styles.sheetContainer}>
                     {/* Floating Avatar - Animated */}
                     <Animated.View style={[styles.avatarContainer, animatedAvatarStyle]}>
-                        <Image source={item?.image || require('../../../../assets/EventMimg/Makeup/artist1.jpg')} style={styles.avatarImage} resizeMode="cover" />
+                        <Image source={item?.image || require('../../../../assets1/EventMimg/Makeup/artist1.jpg')} style={styles.avatarImage} resizeMode="cover" />
                     </Animated.View>
 
                     {/* Vendor Info - Animated */}
@@ -439,7 +439,7 @@ const MakeupArtistDetails: React.FC<{ route: any; navigation: any }> = ({ route,
                                         <TouchableOpacity key={item.id} style={styles.mediaCard}>
                                             <Image source={item.image} style={styles.mediaImage} />
                                             <View style={styles.mediaContent}>
-                                                <Text style={styles.mediaSource}>{item.source} • {item.date}</Text>
+                                                <Text style={styles.mediaSource}>{item.source}  {item.date}</Text>
                                                 <Text style={styles.mediaTitle}>{item.title}</Text>
                                                 <View style={styles.readMoreRow}>
                                                     <Text style={styles.readMoreText}>Read Article</Text>

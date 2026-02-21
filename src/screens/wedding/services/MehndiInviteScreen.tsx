@@ -41,19 +41,19 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/mehandi1.jpg'), name: 'Traditional Henna' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/mehandi2.jpg'), name: 'Green Elegance' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/mehandi3.jpg'), name: 'Floral Vines' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/mehandi4.jpg'), name: 'Royal Peacock' },
-    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/mehandi5.jpg'), name: 'Festive Hands' },
-    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/mehandi6.jpg'), name: 'Modern Mehndi' },
-    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/mehandi7.jpeg'), name: 'Artistic Pattern' },
-    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/mehandi8.jpg'), name: 'Intricate Design' },
-    { id: 't9', image: require('../../../../assets/EventMimg/Einvite/mehandi9.jpg'), name: 'Vibrant Colors' },
-    { id: 't10', image: require('../../../../assets/EventMimg/Einvite/mehandi10.jpg'), name: 'Simple Beauty' },
+    { id: 't1', image: require('../../../../assets1/EventMimg/Einvite/mehandi1.jpg'), name: 'Traditional Henna' },
+    { id: 't2', image: require('../../../../assets1/EventMimg/Einvite/mehandi2.jpg'), name: 'Green Elegance' },
+    { id: 't3', image: require('../../../../assets1/EventMimg/Einvite/mehandi3.jpg'), name: 'Floral Vines' },
+    { id: 't4', image: require('../../../../assets1/EventMimg/Einvite/mehandi4.jpg'), name: 'Royal Peacock' },
+    { id: 't5', image: require('../../../../assets1/EventMimg/Einvite/mehandi5.jpg'), name: 'Festive Hands' },
+    { id: 't6', image: require('../../../../assets1/EventMimg/Einvite/mehandi6.jpg'), name: 'Modern Mehndi' },
+    { id: 't7', image: require('../../../../assets1/EventMimg/Einvite/mehandi7.jpeg'), name: 'Artistic Pattern' },
+    { id: 't8', image: require('../../../../assets1/EventMimg/Einvite/mehandi8.jpg'), name: 'Intricate Design' },
+    { id: 't9', image: require('../../../../assets1/EventMimg/Einvite/mehandi9.jpg'), name: 'Vibrant Colors' },
+    { id: 't10', image: require('../../../../assets1/EventMimg/Einvite/mehandi10.jpg'), name: 'Simple Beauty' },
 ];
 
-const MehndiInviteScreen = ({ navigation, route }: { navigation: any; route: any }) => {
+const MehndiInviteScreen = ({ navigation, route }: { navigation?: any; route?: any }) => {
     const { eventType } = route.params || { eventType: 'Mehndi' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);

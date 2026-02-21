@@ -46,13 +46,13 @@ const FONTS = [
 
 // Template Data
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/ring1.jpg'), name: 'Classic Gold' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/ring2.jpg'), name: 'Floral Bliss' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/ring3.jpg'), name: 'Royal Blue' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
+    { id: 't1', image: require('../../../../assets1/EventMimg/Einvite/ring1.jpg'), name: 'Classic Gold' },
+    { id: 't2', image: require('../../../../assets1/EventMimg/Einvite/ring2.jpg'), name: 'Floral Bliss' },
+    { id: 't3', image: require('../../../../assets1/EventMimg/Einvite/ring3.jpg'), name: 'Royal Blue' },
+    { id: 't4', image: require('../../../../assets1/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
 ];
 
-const InviteStudioScreen = ({ navigation, route }: { navigation: any; route: any }) => {
+const InviteStudioScreen = ({ navigation, route }: { navigation?: any; route?: any }) => {
     const { eventType } = route.params || { eventType: 'Wedding' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);

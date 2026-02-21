@@ -16,14 +16,14 @@ import {
     View
 } from 'react-native';
 import VendorCard from '../../../components/VendorCard';
-import food1 from '../../../../assets/images/food1.jpg';
-import food2 from '../../../../assets/images/food2.jpg';
-import food3 from '../../../../assets/images/food3.jpg';
-import food4 from '../../../../assets/images/food4.jpg';
-import venue1 from '../../../../assets/images/venue1.jpg';
-import venue2 from '../../../../assets/images/venue2.jpg';
-import venue5 from '../../../../assets/images/venue5.jpg';
-import venue6 from '../../../../assets/images/venue6.jpg';
+import food1 from '../../../../assets1/images/food1.jpg';
+import food2 from '../../../../assets1/images/food2.jpg';
+import food3 from '../../../../assets1/images/food3.jpg';
+import food4 from '../../../../assets1/images/food4.jpg';
+import venue1 from '../../../../assets1/images/venue1.jpg';
+import venue2 from '../../../../assets1/images/venue2.jpg';
+import venue5 from '../../../../assets1/images/venue5.jpg';
+import venue6 from '../../../../assets1/images/venue6.jpg';
 
 const { width } = Dimensions.get('window');
 
@@ -221,7 +221,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
 
                 {isFullWidth && <Text style={styles.postDescriptionFull} numberOfLines={2}>{post.description}</Text>}
 
-                <Text style={styles.eventTypeCompact}>{post.eventType} • {post.city}</Text>
+                <Text style={styles.eventTypeCompact}>{post.eventType} {post.city}</Text>
                 <Text style={styles.locationCompact} numberOfLines={1}>{post.locationDetail}</Text>
 
                 <View style={styles.metaRowCompact}>
@@ -233,7 +233,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
     );
 };
 
-const Food = ({ navigation }: { navigation: any }) => {
+const Food = ({ navigation }: { navigation?: any }) => {
     const scrollRef = useRef<ScrollView>(null);
     const featuredScrollRef = useRef<ScrollView>(null);
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -290,7 +290,7 @@ const Food = ({ navigation }: { navigation: any }) => {
                         <TouchableOpacity style={styles.utilityBtn}><Ionicons name="notifications-outline" size={20} color="#FFF" /></TouchableOpacity>
                     </View>
                     <View style={{ marginBottom: 60, paddingHorizontal: 5 }}>
-                        <Text style={styles.heroHeadline}>Finding Your{"\n"}Perfect Feast 🍽️</Text>
+                        <Text style={styles.heroHeadline}>Finding Your{"\n"}Perfect Feast</Text>
                         <Text style={styles.heroSubhead}>Explore exclusive catering & multi-cuisine experts</Text>
                     </View>
                 </LinearGradient>
@@ -298,14 +298,14 @@ const Food = ({ navigation }: { navigation: any }) => {
 
             <View style={[styles.premiumSearchContainer, isSearchFocused && styles.premiumSearchActive]}>
                 <TouchableOpacity style={styles.locationSelector}>
-                    <Text style={styles.locationTextPin}>📍 {selectedCity}</Text>
+                    <Text style={styles.locationTextPin}> {selectedCity}</Text>
                     <Ionicons name="chevron-down" size={14} color={COLORS.secondary} />
                 </TouchableOpacity>
                 <View style={styles.searchDivider} />
                 <View style={styles.searchInputWrapper}>
                     <TextInput
                         style={styles.premiumInput}
-                        placeholder="Search caterers, cuisines…"
+                        placeholder="Search caterers, cuisines"
                         placeholderTextColor="#999"
                         onFocus={() => setSearchFocused(true)}
                         onChangeText={setSearchQuery}
@@ -329,7 +329,7 @@ const Food = ({ navigation }: { navigation: any }) => {
                         <TextInput
                             style={styles.overlayInput}
                             autoFocus
-                            placeholder="Search caterers, cuisines…"
+                            placeholder="Search caterers, cuisines"
                             onChangeText={setSearchQuery}
                             value={searchQuery}
                         />

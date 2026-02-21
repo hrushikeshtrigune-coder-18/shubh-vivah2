@@ -29,8 +29,8 @@ import AnimatedRN, {
 const { width, height } = Dimensions.get('window');
 
 // --- ASSETS & CONSTANTS ---
-const wedImg = require('../../../../assets/images/wed.jpg');
-const honeyImg = require('../../../../assets/images/honey.jpg');
+const wedImg = require('../../../../assets1/images/wed.jpg');
+const honeyImg = require('../../../../assets1/images/honey.jpg');
 
 const PRIMARY_COLOR = '#CC0E0E';
 const ACCENT_COLOR = '#F29502';
@@ -99,7 +99,7 @@ const OUR_VENDORS: Vendor[] = [
             { name: 'Civil Lines, Jaipur', price: '₹85K', duration: '4 Nights' },
             { name: 'Udaipur', price: '₹75K', duration: '3 Nights' }
         ],
-        startPrice: '₹75K',
+        startPrice: '75K',
         verified: true,
         previews: [
             { uri: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=500&auto=format&fit=crop' },
@@ -336,7 +336,7 @@ const VendorCard = ({ vendor, onPress }: { vendor: Vendor, onPress: () => void }
 };
 
 
-const Honeymoon = ({ navigation }: { navigation: any }) => {
+const Honeymoon = ({ navigation }: { navigation?: any }) => {
     const [fontsLoaded] = useFonts({ PlayfairDisplay_700Bold });
     const [searchQuery, setSearchQuery] = useState('');
     const [isSearchFocused, setSearchFocused] = useState(false);
@@ -399,18 +399,19 @@ const Honeymoon = ({ navigation }: { navigation: any }) => {
         </View>
     );
 
+
     const renderSearchBar = () => (
         <View style={styles.searchSectionWrapper}>
             <View style={[styles.premiumSearchContainer, isSearchFocused && styles.premiumSearchActive]}>
                 <TouchableOpacity style={styles.locationSelector}>
-                    <Text style={styles.locationTextPin} numberOfLines={1}>📍 {selectedCity}</Text>
+                    <Text style={styles.locationTextPin} numberOfLines={1}> {selectedCity}</Text>
                     <Ionicons name="chevron-down" size={14} color={COLORS.secondary} />
                 </TouchableOpacity>
                 <View style={styles.searchDivider} />
                 <View style={styles.searchInputWrapper}>
                     <TextInput
                         style={styles.premiumInput}
-                        placeholder="Search destinations, planners…"
+                        placeholder="Search destinations, planners..."
                         placeholderTextColor="#999"
                         onFocus={() => setSearchFocused(true)}
                         onChangeText={setSearchQuery}
@@ -429,7 +430,7 @@ const Honeymoon = ({ navigation }: { navigation: any }) => {
                         <TextInput
                             style={styles.overlayInput}
                             autoFocus
-                            placeholder="Search escapes, locations…"
+                            placeholder="Search escapes, locations..."
                             onChangeText={setSearchQuery}
                             value={searchQuery}
                         />

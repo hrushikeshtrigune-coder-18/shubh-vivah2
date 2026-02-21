@@ -44,10 +44,10 @@ const HoneymoonVendorDetails = ({ navigation, route }: any) => {
             { uri: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=2070&auto=format&fit=crop' }
         ],
         locations: [
-            { name: 'Maldives', price: '₹2.5L', duration: '5 Nights', type: 'International', image: { uri: 'https://images.unsplash.com/photo-1540206351-d6465b3ac5c1?q=80&w=2000&auto=format&fit=crop' } },
-            { name: 'Bali', price: '₹1.8L', duration: '6 Nights', type: 'International', image: { uri: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=2038&auto=format&fit=crop' } },
-            { name: 'Goa', price: '₹60K', duration: '4 Nights', type: 'Domestic', image: { uri: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=2000&auto=format&fit=crop' } },
-            { name: 'Kerala', price: '₹80K', duration: '5 Nights', type: 'Domestic', image: { uri: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=2000&auto=format&fit=crop' } }
+            { name: 'Maldives', price: '2.5L', duration: '5 Nights', type: 'International', image: { uri: 'https://images.unsplash.com/photo-1540206351-d6465b3ac5c1?q=80&w=2000&auto=format&fit=crop' } },
+            { name: 'Bali', price: '1.8L', duration: '6 Nights', type: 'International', image: { uri: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=2038&auto=format&fit=crop' } },
+            { name: 'Goa', price: '60K', duration: '4 Nights', type: 'Domestic', image: { uri: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?q=80&w=2000&auto=format&fit=crop' } },
+            { name: 'Kerala', price: '80K', duration: '5 Nights', type: 'Domestic', image: { uri: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=2000&auto=format&fit=crop' } }
         ],
         startPrice: '45,000'
     };
@@ -113,7 +113,7 @@ const HoneymoonVendorDetails = ({ navigation, route }: any) => {
                 <Image source={item.image || displayVendor.image} style={styles.menuItemImage} resizeMode="cover" />
                 <View style={styles.menuItemInfo}>
                     <Text style={styles.menuItemName}>{item.name}</Text>
-                    <Text style={styles.menuItemDesc}>{item.duration} • Starting from {item.price || (displayVendor as any).startPrice}</Text>
+                    <Text style={styles.menuItemDesc}>{item.duration}  Starting from {item.price || (displayVendor as any).startPrice}</Text>
                 </View>
                 <Ionicons name="airplane" size={20} color={COLORS.primary} style={{ marginRight: 15 }} />
             </Animated.View>
@@ -233,7 +233,7 @@ const HoneymoonVendorDetails = ({ navigation, route }: any) => {
             <View style={styles.pricingCardLarge}>
                 <View style={styles.pricingHeaderRow}>
                     <Text style={styles.pricingItemTitle}>Standard Concierge</Text>
-                    <Text style={styles.pricingValue}>₹15,000 <Text style={styles.pricePer}>/service</Text></Text>
+                    <Text style={styles.pricingValue}>15,000 <Text style={styles.pricePer}>/service</Text></Text>
                 </View>
                 <Text style={styles.pricingDesc}>Full itinerary planning, booking assistance, and 24/7 on-trip support for your dream honeymoon.</Text>
                 <View style={styles.pricingFeaturesGrid}>
@@ -305,7 +305,7 @@ const HoneymoonVendorDetails = ({ navigation, route }: any) => {
                         </View>
                         <View>
                             <Text style={styles.reviewUserName}>{idx === 0 ? 'Rahul & Sneha' : idx === 1 ? 'Ankit & Kavya' : 'Mehul & Priya'}</Text>
-                            <Text style={styles.reviewDate}>{idx + 1} months ago • {idx === 0 ? 'Maldives' : idx === 1 ? 'Santorini' : 'Bali'} Trip</Text>
+                            <Text style={styles.reviewDate}>{idx + 1} months ago  {idx === 0 ? 'Maldives' : idx === 1 ? 'Santorini' : 'Bali'} Trip</Text>
                         </View>
                         <View style={styles.itemRatingCompact}>
                             <Ionicons name="star" size={10} color={COLORS.secondary} />
@@ -505,7 +505,7 @@ const HoneymoonVendorDetails = ({ navigation, route }: any) => {
                         <Text style={styles.profileBusinessName}>{displayVendor.tag}</Text>
                         <View style={styles.profileLocationRow}>
                             <Ionicons name="pricetag" size={14} color={COLORS.secondary} />
-                            <Text style={styles.startPriceText}>Starts from ₹{(displayVendor as any).startPrice || '45,000'}</Text>
+                            <Text style={styles.startPriceText}>Starts from {(displayVendor as any).startPrice || '45,000'}</Text>
                         </View>
                     </View>
                 </View>

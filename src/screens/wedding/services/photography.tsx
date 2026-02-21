@@ -19,9 +19,9 @@ import {
     View
 } from 'react-native';
 
-import ph2 from '../../../../assets/images/ph2.jpg';
-import ph3 from '../../../../assets/images/ph3.jpg';
-import photography1 from '../../../../assets/images/photography1.jpg';
+import ph2 from '../../../../assets1/images/ph2.jpg';
+import ph3 from '../../../../assets1/images/ph3.jpg';
+import photography1 from '../../../../assets1/images/photography1.jpg';
 
 const { width } = Dimensions.get('window');
 
@@ -106,7 +106,7 @@ const PHOTOGRAPHERS_DATA: Photographer[] = [
         tag: 'Premium Wedding',
         location: 'Juhu, Mumbai',
         city: 'Mumbai',
-        price: '₹2,00,000 / day',
+        price: '2,00,000 / day',
         tags: ['Same-day edits', 'Traditional', 'Studio'],
         image: ph2,
         previews: [photography1, ph3, ph2],
@@ -120,7 +120,7 @@ const PHOTOGRAPHERS_DATA: Photographer[] = [
         tag: 'Cinematic Films',
         location: 'South Delhi, Delhi',
         city: 'Delhi',
-        price: '₹5,00,000 / day',
+        price: '5,00,000 / day',
         tags: ['Luxury', 'Film', 'Destination'],
         image: ph3,
         previews: [ph2, photography1, ph3],
@@ -350,7 +350,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
 
                 {isFullWidth && <Text style={styles.postDescriptionFull} numberOfLines={2}>{post.description}</Text>}
 
-                <Text style={styles.eventTypeCompact}>{post.eventType} • {post.city}</Text>
+                <Text style={styles.eventTypeCompact}>{post.eventType}  {post.city}</Text>
                 <Text style={styles.locationCompact} numberOfLines={1}>{post.locationDetail}</Text>
 
                 <View style={styles.metaRowCompact}>
@@ -368,15 +368,15 @@ const TESTIMONIALS: Testimonial[] = [
         couple: 'Aditi & Rohan',
         location: 'Udaipur',
         photographer: 'Stories by Joseph',
-        quote: '“They captured emotions we didn’t even notice. Truly magical!”',
+        quote: '"They captured emotions we didn\'t even notice. Truly magical!"',
         image: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=600&auto=format&fit=crop',
     },
     {
         id: '2',
-        couple: 'Priya & Vikram',
-        location: 'Goa',
-        photographer: 'Twogether Studios',
-        quote: '“The cinematic film was better than a Bollywood movie. Crying happy tears!”',
+        couple: 'Priya & Rahul',
+        location: 'Udaipur, RJ',
+        photographer: 'Cinematic Memoir',
+        quote: '"The cinematic film was better than a Bollywood movie. Crying happy tears!"',
         image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=600&auto=format&fit=crop',
     },
 ];
@@ -485,7 +485,7 @@ const SwipeButton = ({ onSwipeComplete }: { onSwipeComplete: () => void }) => {
     );
 };
 
-const Photography = ({ navigation }: { navigation: any }) => {
+const Photography = ({ navigation }: { navigation?: any }) => {
     const scrollRef = useRef<ScrollView>(null);
     const featuredScrollRef = useRef<ScrollView>(null);
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -602,7 +602,7 @@ const Photography = ({ navigation }: { navigation: any }) => {
                         <TouchableOpacity style={styles.utilityBtn}><Ionicons name="notifications-outline" size={20} color="#FFF" /></TouchableOpacity>
                     </View>
                     <View style={{ marginBottom: 60, paddingHorizontal: 5 }}>
-                        <Text style={styles.heroHeadline}>Capturing Your{"\n"}Forever Moments 📸</Text>
+                        <Text style={styles.heroHeadline}>Capturing Your{"\n"}Forever Moments</Text>
                         <Text style={styles.heroSubhead}>Explore top-rated wedding photographers</Text>
                     </View>
                 </LinearGradient>
@@ -610,7 +610,7 @@ const Photography = ({ navigation }: { navigation: any }) => {
 
             <View style={[styles.premiumSearchContainer, isSearchFocused && styles.premiumSearchActive]}>
                 <TouchableOpacity style={styles.locationSelector}>
-                    <Text style={styles.locationTextPin}>📍 {selectedCity}</Text>
+                    <Text style={styles.locationTextPin}> {selectedCity}</Text>
                     <Ionicons name="chevron-down" size={14} color={COLORS.secondary} />
                 </TouchableOpacity>
                 <View style={styles.searchDivider} />
@@ -988,7 +988,7 @@ const Photography = ({ navigation }: { navigation: any }) => {
                                                 <View style={styles.featuredBadge}><Text style={styles.featuredBadgeText}>Featured</Text></View>
                                                 <Text style={styles.featuredProjectTitle}>{activePhotoSubTab} Memories</Text>
                                                 <View style={styles.featuredMetaRow}>
-                                                    <Text style={styles.featuredMetaText}>18 Photos • Story Highlights</Text>
+                                                    <Text style={styles.featuredMetaText}>18 Photos  Story Highlights</Text>
                                                     <View style={styles.viewProjectBtn}><Text style={styles.viewProjectBtnText}>View Project</Text></View>
                                                 </View>
                                             </LinearGradient>
@@ -1062,9 +1062,9 @@ const Photography = ({ navigation }: { navigation: any }) => {
 
                                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pricingCardsScroll}>
                                     {[
-                                        { title: 'The Wedding Story', price: '₹1,50,000', per: 'per day', tag: 'Most Popular', color: '#CC0E0E' },
-                                        { title: 'Cinematic Memoir', price: '₹2,50,000', per: 'per day', tag: 'Best Value', color: '#D48806' },
-                                        { title: 'Pre-Wedding Magic', price: '₹75,000', per: 'full shoot', tag: 'New', color: '#2C3E50' }
+                                        { title: 'The Wedding Story', price: '1,50,000', per: 'per day', tag: 'Most Popular', color: '#CC0E0E' },
+                                        { title: 'Cinematic Memoir', price: '2,50,000', per: 'per day', tag: 'Best Value', color: '#D48806' },
+                                        { title: 'Pre-Wedding Magic', price: '75,000', per: 'full shoot', tag: 'New', color: '#2C3E50' }
                                     ].map((pkg, idx) => (
                                         <View key={idx} style={styles.eventPriceCard}>
                                             <View style={[styles.eventCardTopTag, { backgroundColor: pkg.color }]}>

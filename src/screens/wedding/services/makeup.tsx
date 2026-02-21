@@ -48,7 +48,7 @@ const VideoHero = memo(({ insets, onSearchPress, navigation, searchQuery, setSea
 
 
     // Using a placeholder video or the one found in assets
-    const videoSource = require('../../../../assets/EventMimg/EventV.mp4');
+    const videoSource = require('../../../../assets1/EventMimg/EventV.mp4');
     const player = useVideoPlayer(videoSource, player => {
         player.loop = true;
         player.play();
@@ -75,8 +75,8 @@ const VideoHero = memo(({ insets, onSearchPress, navigation, searchQuery, setSea
                 </View>
 
                 <View style={styles.heroContent}>
-                    <Text style={styles.heroHeadline}>Enhance Your Beauty with {"\n"}Professional Artistry✨</Text>
-                    <Text style={styles.heroSubtext}>Bridal • Party • Editorial • HD Makeup</Text>
+                    <Text style={styles.heroHeadline}>Enhance Your Beauty with {"\n"}Professional Artistry</Text>
+                    <Text style={styles.heroSubtext}>Bridal Party Editorial HD Makeup</Text>
 
                     <TouchableOpacity style={styles.heroCTA} onPress={onSearchPress}>
                         <Ionicons name="sparkles" size={20} color="#fff" style={{ marginRight: 10 }} />
@@ -105,12 +105,12 @@ const VideoHero = memo(({ insets, onSearchPress, navigation, searchQuery, setSea
 });
 
 const makeupData = [
-    { id: '1', name: 'Glamour by Gloria', location: 'Goa', locality: 'Panjim', rating: '4.9', ratingValue: 4.9, reviews: 320, guests: 'Bridal', type: 'Airbrush', wmgAward: true, price: '₹ 15k', image: require('../../../../assets/EventMimg/Makeup/artist1.jpg'), category: 'Makeup', likes: '1.2k', description: 'Certified MUA specializing in bridal and party makeup.' },
-    { id: '2', name: 'Divine Touch', location: 'Mumbai, MH', locality: 'Bandra', rating: '4.8', ratingValue: 4.8, reviews: 150, guests: 'Party', type: 'HD Makeup', wmgAward: false, price: '₹ 12k', image: require('../../../../assets/EventMimg/Makeup/artist2.jpg'), category: 'Makeup', likes: '850', description: 'Creating flawless looks for your special occasions.' },
-    { id: '3', name: 'Stories by Joseph', location: 'Delhi, DL', locality: 'Saket', rating: '4.9', ratingValue: 4.9, reviews: 210, guests: 'Bridal', type: 'Traditional', wmgAward: true, price: '₹ 20k', image: require('../../../../assets/EventMimg/Makeup/artist3.jpg'), category: 'Makeup', likes: '2.1k', description: 'Award-winning artist known for natural and elegant styles.' },
-    { id: '4', name: 'Elegant Brushes', location: 'Bangalore, KA', locality: 'Indiranagar', rating: '4.7', ratingValue: 4.7, reviews: 95, guests: 'Bridal', type: 'HD Makeup', wmgAward: false, price: '₹ 18k', image: require('../../../../assets/EventMimg/Makeup/artist1.jpg'), category: 'Makeup', likes: '600', description: 'Expert in high-definition makeup for long-lasting wear.' },
-    { id: '5', name: 'Radiant Glow', location: 'Pune, MH', locality: 'Koregaon Park', rating: '4.6', ratingValue: 4.6, reviews: 80, guests: 'Party', type: 'Airbrush', wmgAward: false, price: '₹ 10k', image: require('../../../../assets/EventMimg/Makeup/artist2.jpg'), category: 'Makeup', likes: '450', description: 'Enhancing your natural beauty with premium products.' },
-    { id: '6', name: 'The Makeup Studio', location: 'Chennai, TN', locality: 'T. Nagar', rating: '4.8', ratingValue: 4.8, reviews: 180, guests: 'Bridal', type: 'Traditional', wmgAward: true, price: '₹ 22k', image: require('../../../../assets/EventMimg/Makeup/artist3.jpg'), category: 'Makeup', likes: '1.5k', description: 'Traditional South Indian bridal makeup specialists.' },
+    { id: '1', name: 'Glamour by Gloria', location: 'Goa', locality: 'Panjim', rating: '4.9', ratingValue: 4.9, reviews: 320, guests: 'Bridal', type: 'Airbrush', wmgAward: true, price: '15k', image: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), category: 'Makeup', likes: '1.2k', description: 'Certified MUA specializing in bridal and party makeup.' },
+    { id: '2', name: 'Divine Touch', location: 'Mumbai, MH', locality: 'Bandra', rating: '4.8', ratingValue: 4.8, reviews: 150, guests: 'Party', type: 'HD Makeup', wmgAward: false, price: '12k', image: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), category: 'Makeup', likes: '850', description: 'Creating flawless looks for your special occasions.' },
+    { id: '3', name: 'Stories by Joseph', location: 'Delhi, DL', locality: 'Saket', rating: '4.9', ratingValue: 4.9, reviews: 210, guests: 'Bridal', type: 'Traditional', wmgAward: true, price: '20k', image: require('../../../../assets1/EventMimg/Makeup/artist3.jpg'), category: 'Makeup', likes: '2.1k', description: 'Award-winning artist known for natural and elegant styles.' },
+    { id: '4', name: 'Elegant Brushes', location: 'Bangalore, KA', locality: 'Indiranagar', rating: '4.7', ratingValue: 4.7, reviews: 95, guests: 'Bridal', type: 'HD Makeup', wmgAward: false, price: '18k', image: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), category: 'Makeup', likes: '600', description: 'Expert in high-definition makeup for long-lasting wear.' },
+    { id: '5', name: 'Radiant Glow', location: 'Pune, MH', locality: 'Koregaon Park', rating: '4.6', ratingValue: 4.6, reviews: 80, guests: 'Party', type: 'Airbrush', wmgAward: false, price: '10k', image: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), category: 'Makeup', likes: '450', description: 'Enhancing your natural beauty with premium products.' },
+    { id: '6', name: 'The Makeup Studio', location: 'Chennai, TN', locality: 'T. Nagar', rating: '4.8', ratingValue: 4.8, reviews: 180, guests: 'Bridal', type: 'Traditional', wmgAward: true, price: '22k', image: require('../../../../assets1/EventMimg/Makeup/artist3.jpg'), category: 'Makeup', likes: '1.5k', description: 'Traditional South Indian bridal makeup specialists.' },
 ];
 
 const DETAILED_FILTERS = [
@@ -127,12 +127,12 @@ const OUR_VENDORS = [
         name: 'Glamour by Gloria',
         location: 'Goa',
         rating: '4.9',
-        image: require('../../../../assets/EventMimg/Makeup/artist1.jpg'),
+        image: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'),
         isLuxury: true,
         thumbnails: [
-            require('../../../../assets/EventMimg/Makeup/artist1.jpg'),
-            require('../../../../assets/EventMimg/Makeup/artist2.jpg'),
-            require('../../../../assets/EventMimg/Makeup/artist3.jpg')
+            require('../../../../assets1/EventMimg/Makeup/artist1.jpg'),
+            require('../../../../assets1/EventMimg/Makeup/artist2.jpg'),
+            require('../../../../assets1/EventMimg/Makeup/artist3.jpg')
         ]
     },
     {
@@ -140,12 +140,12 @@ const OUR_VENDORS = [
         name: 'Divine Touch',
         location: 'Mumbai, MH',
         rating: '4.8',
-        image: require('../../../../assets/EventMimg/Makeup/artist2.jpg'),
+        image: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'),
         isLuxury: false,
         thumbnails: [
-            require('../../../../assets/EventMimg/Makeup/artist2.jpg'),
-            require('../../../../assets/EventMimg/Makeup/artist3.jpg'),
-            require('../../../../assets/EventMimg/Makeup/artist1.jpg')
+            require('../../../../assets1/EventMimg/Makeup/artist2.jpg'),
+            require('../../../../assets1/EventMimg/Makeup/artist3.jpg'),
+            require('../../../../assets1/EventMimg/Makeup/artist1.jpg')
         ]
     },
     {
@@ -153,17 +153,17 @@ const OUR_VENDORS = [
         name: 'Stories by Joseph',
         location: 'Delhi, DL',
         rating: '4.9',
-        image: require('../../../../assets/EventMimg/Makeup/artist3.jpg'),
+        image: require('../../../../assets1/EventMimg/Makeup/artist3.jpg'),
         isLuxury: true,
         thumbnails: [
-            require('../../../../assets/EventMimg/Makeup/artist3.jpg'),
-            require('../../../../assets/EventMimg/Makeup/artist1.jpg'),
-            require('../../../../assets/EventMimg/Makeup/artist2.jpg')
+            require('../../../../assets1/EventMimg/Makeup/artist3.jpg'),
+            require('../../../../assets1/EventMimg/Makeup/artist1.jpg'),
+            require('../../../../assets1/EventMimg/Makeup/artist2.jpg')
         ]
     },
 ];
 
-const MakeupScreen = ({ navigation }: { navigation: any }) => {
+const MakeupScreen = ({ navigation }: { navigation?: any }) => {
 
     const safeInsets = useSafeAreaInsets();
     const insets = useMemo(() => ({
@@ -401,7 +401,7 @@ const MakeupScreen = ({ navigation }: { navigation: any }) => {
                                             </View>
                                             <Text style={styles.cardDescription} numberOfLines={2}>{item.description}</Text>
                                             <View style={{ marginTop: 8 }}>
-                                                <Text style={styles.cardMeta}>{item.category} • {item.location}</Text>
+                                                <Text style={styles.cardMeta}>{item.category} {item.location}</Text>
                                                 <Text style={styles.cardLocality}>{item.locality}</Text>
                                             </View>
                                             <View style={styles.cardFooter}>
@@ -434,7 +434,7 @@ const MakeupScreen = ({ navigation }: { navigation: any }) => {
                                                     </View>
                                                 </View>
                                                 <View style={{ marginTop: 6 }}>
-                                                    <Text style={styles.gridMeta} numberOfLines={1}>{item.category} • {item.location}</Text>
+                                                    <Text style={styles.gridMeta} numberOfLines={1}>{item.category} {item.location}</Text>
                                                     <Text style={styles.gridLocality} numberOfLines={1}>{item.locality}</Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
@@ -462,7 +462,7 @@ const MakeupScreen = ({ navigation }: { navigation: any }) => {
                                                         </View>
                                                     </View>
                                                     <View style={{ marginTop: 6 }}>
-                                                        <Text style={styles.gridMeta} numberOfLines={1}>{nextItem.category} • {nextItem.location}</Text>
+                                                        <Text style={styles.gridMeta} numberOfLines={1}>{nextItem.category} {nextItem.location}</Text>
                                                         <Text style={styles.gridLocality} numberOfLines={1}>{nextItem.locality}</Text>
                                                     </View>
                                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>

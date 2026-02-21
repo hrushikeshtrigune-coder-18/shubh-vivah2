@@ -18,9 +18,9 @@ import {
 } from 'react-native';
 
 // Local Image Imports
-const venue1 = require('../../../../assets/images/venue1.jpg');
-const venue2 = require('../../../../assets/images/venue2.jpg');
-const venue3 = require('../../../../assets/images/venue3.jpg');
+const venue1 = require('../../../../assets1/images/venue1.jpg');
+const venue2 = require('../../../../assets1/images/venue2.jpg');
+const venue3 = require('../../../../assets1/images/venue3.jpg');
 
 const { width } = Dimensions.get('window');
 
@@ -102,15 +102,23 @@ const VENDOR_PLANS = [
     },
     {
         id: '3',
+        name: 'Emerald Plan',
+        price: '₹75,000',
+        features: ['Luxury Decor', 'Live Band', 'Drone Coverage', 'Floral Entrance'],
+        icon: 'ribbon-outline',
+        color: '#6ab04c'
+    },
+    {
+        id: '4',
         name: 'Diamond Plan',
         price: '₹1,00,000',
-        features: ['Luxury Decoration', 'Live Band', 'Cinematography', 'Catering Support'],
-        icon: 'sparkles',
+        features: ['Royal Decor', 'International Artists', '4K Cinematic Video', 'Exotic Florals'],
+        icon: 'star',
         color: '#f0932b'
     }
 ];
 
-const VenuePortfolio = ({ navigation, route }: { navigation: any, route: any }) => {
+const VenuePortfolio = ({ navigation, route }: { navigation?: any, route?: any }) => {
     // Default data if no params provided
     const params = route.params || {};
     const vendor = params.vendor || {
@@ -510,9 +518,9 @@ const VenuePortfolio = ({ navigation, route }: { navigation: any, route: any }) 
             { icon: "🌸", text: "Floral Theme" },
             { icon: "✨", text: "Premium Setup" },
             { icon: "🌙", text: "Night Event" },
-            { icon: "💍", text: "Bridal Suite" },
+            { icon: "👰", text: "Bridal Suite" },
             { icon: "🎉", text: "Grand Entry" },
-            { icon: "🏰", text: "Heritage Look" }
+            { icon: "�", text: "Heritage Look" }
         ];
 
         // Sliding Indicator Width (assuming roughly equal tabs)

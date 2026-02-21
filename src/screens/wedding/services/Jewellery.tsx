@@ -46,7 +46,7 @@ interface VideoHeroProps {
 // Isolated Hero Component for DOM Stability on Web
 const VideoHero = memo(({ insets, onSearchPress, navigation, searchQuery, setSearchQuery, selectedLocation, onLocationPress }: VideoHeroProps) => {
 
-    const videoSource = require('../../../../assets/videos/jewelaryV (2).mp4');
+    const videoSource = require('../../../../assets1/videos/jewelaryV (2).mp4');
     const player = useVideoPlayer(videoSource, player => {
         player.loop = true;
         player.play();
@@ -73,8 +73,8 @@ const VideoHero = memo(({ insets, onSearchPress, navigation, searchQuery, setSea
                 </View>
 
                 <View style={styles.heroContent}>
-                    <Text style={styles.heroHeadline}>We Don't Just Sell Jewellery — {"\n"}We Create Legacies✨</Text>
-                    <Text style={styles.heroSubtext}>Traditional • Modern • Destination Experiences</Text>
+                    <Text style={styles.heroHeadline}>We Don't Just Sell Jewellery {"\n"}We Create Legacies</Text>
+                    <Text style={styles.heroSubtext}>Traditional  Destination Experiences</Text>
 
                     <TouchableOpacity style={styles.heroCTA} onPress={onSearchPress}>
                         <Ionicons name="sparkles" size={20} color="#fff" style={{ marginRight: 10 }} />
@@ -103,17 +103,17 @@ const VideoHero = memo(({ insets, onSearchPress, navigation, searchQuery, setSea
 });
 
 const jewelleryData = [
-    { id: '1', name: 'Royal Kundan Set', location: 'Jaipur, RJ', locality: 'Pimpri Chinchwad', rating: '4.8', ratingValue: 4.8, reviews: 45, guests: 'Bridal Set, Gemstone', type: 'Gold, Kundan', wmgAward: true, price: '₹ 1.5L', image: require('../../../../assets/EventMimg/Jewellery folder/bridalJewelary.jpg.jpeg'), category: 'Jewellery', likes: '1.2k', description: 'Handcrafted Kundan set with precious stones, perfect for your big day.' },
-    { id: '12', name: 'Diamond Choker', location: 'Mumbai, MH', locality: 'Chinchwad', rating: '4.9', ratingValue: 4.9, reviews: 120, guests: 'Necklace', type: 'Diamond', wmgAward: true, price: '₹ 2.25L', image: require('../../../../assets/EventMimg/Jewellery folder/Djewellery.jpg.jpeg'), category: 'Jewellery', likes: '2.5k', description: 'Exquisite diamond choker with solitary emerald center piece.' },
-    { id: '3', name: 'Temple Gold Set', location: 'Chennai, TN', locality: 'Pimpri', rating: '4.7', ratingValue: 4.7, reviews: 25, guests: 'Traditional', type: 'Gold', wmgAward: false, price: '₹ 3.0L', image: require('../../../../assets/EventMimg/Jewellery folder/jewelary.jpg.jpeg'), category: 'Jewellery', likes: '850', description: 'Traditional Temple jewellery with intricate god and goddess motifs.' },
-    { id: '4', name: 'Polki Earrings', location: 'Hyderabad, TS', locality: 'Kothrud', rating: '4.6', ratingValue: 4.6, reviews: 8, guests: 'Earrings', type: 'Artificial', wmgAward: false, price: '₹ 75k', image: require('../../../../assets/EventMimg/Jewellery folder/jewelry4.jpg.jpeg'), category: 'Accessories', likes: '450', description: 'Statement Polki earrings to add a touch of royalty to your look.' },
-    { id: '15', name: 'Antique Bangles', location: 'Kolkata, WB', locality: 'Alephata', rating: '4.8', ratingValue: 4.8, reviews: 60, guests: 'Bangles', type: 'Gold', wmgAward: true, price: '₹ 1.2L', image: require('../../../../assets/EventMimg/Jewellery folder/RING 3.jpeg'), category: 'Jewellery', likes: '1.8k', description: 'Antique gold bangles with intricate filigree work.' },
-    { id: '6', name: 'Floral Hathphool', location: 'Delhi, DL', locality: 'Ashok Nagar', rating: '4.5', ratingValue: 4.5, reviews: 12, guests: 'Floral', type: 'Flower Jewellery', wmgAward: false, price: '₹ 15k', image: require('../../../../assets/EventMimg/Jewellery folder/flowerlJewelary.jpg.jpeg'), category: 'Flower Jewellery', likes: '320', description: 'Fresh floral hathphool for Haldi and Mehendi ceremonies.' },
-    { id: '7', name: 'Rent: Kundan Set', location: 'Pune, MH', locality: 'Pimpri Chinchwad', rating: '4.2', ratingValue: 4.2, reviews: 35, guests: 'Rental, Gemstone', type: 'Bridal Jewellery on Rent', wmgAward: false, price: '₹ 25k', image: require('../../../../assets/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'), category: 'Bridal Jewellery on Rent', likes: '210', description: 'Premium Kundan bridal set available for rent at affordable rates.' },
-    { id: '8', name: 'Ruby Gemstone Ring', location: 'Mumbai, MH', locality: 'Kothrud', rating: '4.9', ratingValue: 4.9, reviews: 50, guests: 'Gemstone', type: 'Gold, Diamond', wmgAward: true, price: '₹ 85k', image: require('../../../../assets/EventMimg/Jewellery folder/RING4.jpg.jpeg'), category: 'Jewellery', likes: '980', description: 'Stunning ruby gemstone ring surrounded by diamonds.' },
-    { id: '9', name: 'Emerald Necklace', location: 'Delhi, DL', locality: 'Ashok Nagar', rating: '4.7', ratingValue: 4.7, reviews: 22, guests: 'Necklace, Gemstone', type: 'Gold', wmgAward: false, price: '₹ 1.8L', image: require('../../../../assets/EventMimg/Jewellery folder/Djewellery1.jpg.jpeg'), category: 'Jewellery', likes: '650', description: 'Elegant emerald necklace set in 18k gold.' },
-    { id: '10', name: 'Pearl Drop Earrings', location: 'Jaipur, RJ', locality: 'Chinchwad', rating: '4.5', ratingValue: 4.5, reviews: 18, guests: 'Earrings', type: 'Artificial', wmgAward: false, price: '₹ 12k', image: require('../../../../assets/EventMimg/Jewellery folder/accessories.jpg.jpeg'), category: 'Accessories', likes: '150', description: 'Classic pearl drop earrings suitable for any occasion.' },
-    { id: '11', name: 'Diamond Bangle Set', location: 'Surat, GJ', locality: 'Pimpri', rating: '4.8', ratingValue: 4.8, reviews: 42, guests: 'Bangles, Diamond', type: 'Diamond', wmgAward: true, price: '₹ 3.5L', image: require('../../../../assets/EventMimg/Jewellery folder/Djewellery2.jpg.jpeg'), category: 'Jewellery', likes: '3.1k', description: 'Luxurious diamond bangle set with intricate detailing.' },
+    { id: '1', name: 'Royal Kundan Set', location: 'Jaipur, RJ', locality: 'Pimpri Chinchwad', rating: '4.8', ratingValue: 4.8, reviews: 45, guests: 'Bridal Set, Gemstone', type: 'Gold, Kundan', wmgAward: true, price: ' 1.5L', image: require('../../../../assets1/EventMimg/Jewellery folder/bridalJewelary.jpg.jpeg'), category: 'Jewellery', likes: '1.2k', description: 'Handcrafted Kundan set with precious stones, perfect for your big day.' },
+    { id: '12', name: 'Diamond Choker', location: 'Mumbai, MH', locality: 'Chinchwad', rating: '4.9', ratingValue: 4.9, reviews: 120, guests: 'Necklace', type: 'Diamond', wmgAward: true, price: ' 2.25L', image: require('../../../../assets1/EventMimg/Jewellery folder/Djewellery.jpg.jpeg'), category: 'Jewellery', likes: '2.5k', description: 'Exquisite diamond choker with solitary emerald center piece.' },
+    { id: '3', name: 'Temple Gold Set', location: 'Chennai, TN', locality: 'Pimpri', rating: '4.7', ratingValue: 4.7, reviews: 25, guests: 'Traditional', type: 'Gold', wmgAward: false, price: ' 3.0L', image: require('../../../../assets1/EventMimg/Jewellery folder/jewelary.jpg.jpeg'), category: 'Jewellery', likes: '850', description: 'Traditional Temple jewellery with intricate god and goddess motifs.' },
+    { id: '4', name: 'Polki Earrings', location: 'Hyderabad, TS', locality: 'Kothrud', rating: '4.6', ratingValue: 4.6, reviews: 8, guests: 'Earrings', type: 'Artificial', wmgAward: false, price: ' 75k', image: require('../../../../assets1/EventMimg/Jewellery folder/jewelry4.jpg.jpeg'), category: 'Accessories', likes: '450', description: 'Statement Polki earrings to add a touch of royalty to your look.' },
+    { id: '15', name: 'Antique Bangles', location: 'Kolkata, WB', locality: 'Alephata', rating: '4.8', ratingValue: 4.8, reviews: 60, guests: 'Bangles', type: 'Gold', wmgAward: true, price: ' 1.2L', image: require('../../../../assets1/EventMimg/Jewellery folder/RING 3.jpeg'), category: 'Jewellery', likes: '1.8k', description: 'Antique gold bangles with intricate filigree work.' },
+    { id: '6', name: 'Floral Hathphool', location: 'Delhi, DL', locality: 'Ashok Nagar', rating: '4.5', ratingValue: 4.5, reviews: 12, guests: 'Floral', type: 'Flower Jewellery', wmgAward: false, price: ' 15k', image: require('../../../../assets1/EventMimg/Jewellery folder/flowerlJewelary.jpg.jpeg'), category: 'Flower Jewellery', likes: '320', description: 'Fresh floral hathphool for Haldi and Mehendi ceremonies.' },
+    { id: '7', name: 'Rent: Kundan Set', location: 'Pune, MH', locality: 'Pimpri Chinchwad', rating: '4.2', ratingValue: 4.2, reviews: 35, guests: 'Rental, Gemstone', type: 'Bridal Jewellery on Rent', wmgAward: false, price: ' 25k', image: require('../../../../assets1/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'), category: 'Bridal Jewellery on Rent', likes: '210', description: 'Premium Kundan bridal set available for rent at affordable rates.' },
+    { id: '8', name: 'Ruby Gemstone Ring', location: 'Mumbai, MH', locality: 'Kothrud', rating: '4.9', ratingValue: 4.9, reviews: 50, guests: 'Gemstone', type: 'Gold, Diamond', wmgAward: true, price: ' 85k', image: require('../../../../assets1/EventMimg/Jewellery folder/RING4.jpg.jpeg'), category: 'Jewellery', likes: '980', description: 'Stunning ruby gemstone ring surrounded by diamonds.' },
+    { id: '9', name: 'Emerald Necklace', location: 'Delhi, DL', locality: 'Ashok Nagar', rating: '4.7', ratingValue: 4.7, reviews: 22, guests: 'Necklace, Gemstone', type: 'Gold', wmgAward: false, price: ' 1.8L', image: require('../../../../assets1/EventMimg/Jewellery folder/Djewellery1.jpg.jpeg'), category: 'Jewellery', likes: '650', description: 'Elegant emerald necklace set in 18k gold.' },
+    { id: '10', name: 'Pearl Drop Earrings', location: 'Jaipur, RJ', locality: 'Chinchwad', rating: '4.5', ratingValue: 4.5, reviews: 18, guests: 'Earrings', type: 'Artificial', wmgAward: false, price: ' 12k', image: require('../../../../assets1/EventMimg/Jewellery folder/accessories.jpg.jpeg'), category: 'Accessories', likes: '150', description: 'Classic pearl drop earrings suitable for any occasion.' },
+    { id: '11', name: 'Diamond Bangle Set', location: 'Surat, GJ', locality: 'Pimpri', rating: '4.8', ratingValue: 4.8, reviews: 42, guests: 'Bangles, Diamond', type: 'Diamond', wmgAward: true, price: ' 3.5L', image: require('../../../../assets1/EventMimg/Jewellery folder/Djewellery2.jpg.jpeg'), category: 'Jewellery', likes: '3.1k', description: 'Luxurious diamond bangle set with intricate detailing.' },
 ];
 
 const DETAILED_FILTERS = [
@@ -130,12 +130,12 @@ const OUR_VENDORS = [
         name: 'Tanishq Jewellers',
         location: 'Pimpri Chinchwad, Pune',
         rating: '4.9',
-        image: require('../../../../assets/EventMimg/Jewellery folder/bridalJewelary.jpg.jpeg'),
+        image: require('../../../../assets1/EventMimg/Jewellery folder/bridalJewelary.jpg.jpeg'),
         isLuxury: true,
         thumbnails: [
-            require('../../../../assets/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/jewelry4.jpg.jpeg')
+            require('../../../../assets1/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/jewelry4.jpg.jpeg')
         ]
     },
     {
@@ -143,12 +143,12 @@ const OUR_VENDORS = [
         name: 'Kalyan Jewellers',
         location: 'Kothrud, Pune',
         rating: '4.8',
-        image: require('../../../../assets/EventMimg/Jewellery folder/jewelary.jpg.jpeg'),
+        image: require('../../../../assets1/EventMimg/Jewellery folder/jewelary.jpg.jpeg'),
         isLuxury: true,
         thumbnails: [
-            require('../../../../assets/EventMimg/Jewellery folder/jewelry4.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/RING 3.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/RING1.jpg.jpeg')
+            require('../../../../assets1/EventMimg/Jewellery folder/jewelry4.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/RING 3.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/RING1.jpg.jpeg')
         ]
     },
     {
@@ -156,12 +156,12 @@ const OUR_VENDORS = [
         name: 'Malabar Gold & Diamonds',
         location: 'Ashok Nagar, Pune',
         rating: '4.7',
-        image: require('../../../../assets/EventMimg/Jewellery folder/Djewellery.jpg.jpeg'),
+        image: require('../../../../assets1/EventMimg/Jewellery folder/Djewellery.jpg.jpeg'),
         isLuxury: false,
         thumbnails: [
-            require('../../../../assets/EventMimg/Jewellery folder/Djewellery1.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/Djewellery2.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/RING2.jpg.jpeg')
+            require('../../../../assets1/EventMimg/Jewellery folder/Djewellery1.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/Djewellery2.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/RING2.jpg.jpeg')
         ]
     },
     {
@@ -169,12 +169,12 @@ const OUR_VENDORS = [
         name: 'PNG Jewellers',
         location: 'Laxmi Road, Pune',
         rating: '4.8',
-        image: require('../../../../assets/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'),
+        image: require('../../../../assets1/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'),
         isLuxury: true,
         thumbnails: [
-            require('../../../../assets/EventMimg/Jewellery folder/accessories.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/RING4.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/flowerlJewelary.jpg.jpeg')
+            require('../../../../assets1/EventMimg/Jewellery folder/accessories.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/RING4.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/flowerlJewelary.jpg.jpeg')
         ]
     },
     {
@@ -182,12 +182,12 @@ const OUR_VENDORS = [
         name: 'Ranka Jewellers',
         location: 'Hadapsar, Pune',
         rating: '4.6',
-        image: require('../../../../assets/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'),
+        image: require('../../../../assets1/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'),
         isLuxury: false,
         thumbnails: [
-            require('../../../../assets/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/jewelry4.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/RING 3.jpeg')
+            require('../../../../assets1/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/jewelry4.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/RING 3.jpeg')
         ]
     },
     {
@@ -195,12 +195,12 @@ const OUR_VENDORS = [
         name: 'BlueStone Jewellery',
         location: 'Viman Nagar, Pune',
         rating: '4.5',
-        image: require('../../../../assets/EventMimg/Jewellery folder/Djewellery.jpg.jpeg'),
+        image: require('../../../../assets1/EventMimg/Jewellery folder/Djewellery.jpg.jpeg'),
         isLuxury: false,
         thumbnails: [
-            require('../../../../assets/EventMimg/Jewellery folder/Djewellery1.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/Djewellery2.jpg.jpeg'),
-            require('../../../../assets/EventMimg/Jewellery folder/RING1.jpg.jpeg')
+            require('../../../../assets1/EventMimg/Jewellery folder/Djewellery1.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/Djewellery2.jpg.jpeg'),
+            require('../../../../assets1/EventMimg/Jewellery folder/RING1.jpg.jpeg')
         ]
     },
     {
@@ -233,7 +233,7 @@ const OUR_VENDORS = [
 
 
 
-const JewelleryScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
+const JewelleryScreen = ({ navigation }: { navigation?: any }) => {
 
     const safeInsets = useSafeAreaInsets();
     const insets = useMemo(() => ({
@@ -477,7 +477,7 @@ const JewelleryScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                                             </View>
                                             <Text style={styles.cardDescription} numberOfLines={2}>{item.description}</Text>
                                             <View style={{ marginTop: 8 }}>
-                                                <Text style={styles.cardMeta}>{item.category} • {item.location}</Text>
+                                                <Text style={styles.cardMeta}>{item.category}  {item.location}</Text>
                                                 <Text style={styles.cardLocality}>{item.locality}</Text>
                                             </View>
                                             <View style={styles.cardFooter}>
@@ -510,7 +510,7 @@ const JewelleryScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                                                     </View>
                                                 </View>
                                                 <View style={{ marginTop: 6 }}>
-                                                    <Text style={styles.gridMeta} numberOfLines={1}>{item.category} • {item.location}</Text>
+                                                    <Text style={styles.gridMeta} numberOfLines={1}>{item.category}  {item.location}</Text>
                                                     <Text style={styles.gridLocality} numberOfLines={1}>{item.locality}</Text>
                                                 </View>
                                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>
@@ -538,7 +538,7 @@ const JewelleryScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
                                                         </View>
                                                     </View>
                                                     <View style={{ marginTop: 6 }}>
-                                                        <Text style={styles.gridMeta} numberOfLines={1}>{nextItem.category} • {nextItem.location}</Text>
+                                                        <Text style={styles.gridMeta} numberOfLines={1}>{nextItem.category}  {nextItem.location}</Text>
                                                         <Text style={styles.gridLocality} numberOfLines={1}>{nextItem.locality}</Text>
                                                     </View>
                                                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 }}>

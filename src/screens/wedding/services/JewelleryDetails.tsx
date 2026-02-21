@@ -47,14 +47,14 @@ const SUB_FILTERS = [
 ];
 
 const PORTFOLIO_IMAGES = [
-    { id: '1', source: require('../../../../assets/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'), height: 200, label: 'Traditional', category: 'traditional' },
-    { id: '2', source: require('../../../../assets/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'), height: 280, label: 'Floral Design', category: 'floral' },
-    { id: '3', source: require('../../../../assets/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'), height: 240, label: 'Theme Based', category: 'theme' },
-    { id: '4', source: require('../../../../assets/EventMimg/Jewellery folder/jewelry4.jpg.jpeg'), height: 180, label: 'Bridal Set', category: 'traditional' },
-    { id: '5', source: require('../../../../assets/EventMimg/Jewellery folder/RING 3.jpeg'), height: 260, label: 'Modern Ring', category: 'theme' },
-    { id: '6', source: require('../../../../assets/EventMimg/Jewellery folder/RING1.jpg.jpeg'), height: 220, label: 'Floral Ring', category: 'floral' },
-    { id: '7', source: require('../../../../assets/EventMimg/Jewellery folder/RING2.jpg.jpeg'), height: 240, label: 'Classic Gold', category: 'traditional' },
-    { id: '8', source: require('../../../../assets/EventMimg/Jewellery folder/RING4.jpg.jpeg'), height: 200, label: 'Theme Cut', category: 'theme' },
+    { id: '1', source: require('../../../../assets1/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'), height: 200, label: 'Traditional', category: 'traditional' },
+    { id: '2', source: require('../../../../assets1/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'), height: 280, label: 'Floral Design', category: 'floral' },
+    { id: '3', source: require('../../../../assets1/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'), height: 240, label: 'Theme Based', category: 'theme' },
+    { id: '4', source: require('../../../../assets1/EventMimg/Jewellery folder/jewelry4.jpg.jpeg'), height: 180, label: 'Bridal Set', category: 'traditional' },
+    { id: '5', source: require('../../../../assets1/EventMimg/Jewellery folder/RING 3.jpeg'), height: 260, label: 'Modern Ring', category: 'theme' },
+    { id: '6', source: require('../../../../assets1/EventMimg/Jewellery folder/RING1.jpg.jpeg'), height: 220, label: 'Floral Ring', category: 'floral' },
+    { id: '7', source: require('../../../../assets1/EventMimg/Jewellery folder/RING2.jpg.jpeg'), height: 240, label: 'Classic Gold', category: 'traditional' },
+    { id: '8', source: require('../../../../assets1/EventMimg/Jewellery folder/RING4.jpg.jpeg'), height: 200, label: 'Theme Cut', category: 'theme' },
 ];
 
 const ABOUT_DATA = {
@@ -64,10 +64,10 @@ const ABOUT_DATA = {
 };
 
 const PRICING_PACKAGES = [
-    { id: '1', title: 'Bridal Gold Set', price: '₹ 1.5L - 5L', details: 'Complete necklace, earrings, and maang tikka set in 22k gold.', popular: true },
-    { id: '2', title: 'Diamond Engagement Ring', price: '₹ 50k - 2L', details: 'Solitaire and halo settings available in 18k gold and platinum.', popular: false },
-    { id: '3', title: 'Antique Temple Set', price: '₹ 2L - 8L', details: 'Handcrafted deity motifs with precious gemstones.', popular: false },
-    { id: '4', title: 'Polki Choker', price: '₹ 3L+', details: 'Uncut diamonds set in traditional jadau style.', popular: true },
+    { id: '1', title: 'Bridal Gold Set', price: ' 1.5L - 5L', details: 'Complete necklace, earrings, and maang tikka set in 22k gold.', popular: true },
+    { id: '2', title: 'Diamond Engagement Ring', price: ' 50k - 2L', details: 'Solitaire and halo settings available in 18k gold and platinum.', popular: false },
+    { id: '3', title: 'Antique Temple Set', price: ' 2L - 8L', details: 'Handcrafted deity motifs with precious gemstones.', popular: false },
+    { id: '4', title: 'Polki Choker', price: ' 3L+', details: 'Uncut diamonds set in traditional jadau style.', popular: true },
 ];
 
 const REVIEWS_DATA = [
@@ -77,19 +77,19 @@ const REVIEWS_DATA = [
 ];
 
 const VIDEOS_DATA = [
-    { id: '1', thumbnail: require('../../../../assets/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'), title: 'Bridal Collection Launch 2024', duration: '2:15' },
-    { id: '2', thumbnail: require('../../../../assets/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'), title: 'Behind the Scenes: Handcrafted Kundan', duration: '4:30' },
-    { id: '3', thumbnail: require('../../../../assets/EventMimg/Jewellery folder/bridalJewelary.jpg.jpeg'), title: 'Real Brides Testimonials', duration: '1:45' },
-    { id: '4', thumbnail: require('../../../../assets/EventMimg/Jewellery folder/Djewellery.jpg.jpeg'), title: 'Diamond Solitaire Showcase', duration: '3:00' },
+    { id: '1', thumbnail: require('../../../../assets1/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'), title: 'Bridal Collection Launch 2024', duration: '2:15' },
+    { id: '2', thumbnail: require('../../../../assets1/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'), title: 'Behind the Scenes: Handcrafted Kundan', duration: '4:30' },
+    { id: '3', thumbnail: require('../../../../assets1/EventMimg/Jewellery folder/bridalJewelary.jpg.jpeg'), title: 'Real Brides Testimonials', duration: '1:45' },
+    { id: '4', thumbnail: require('../../../../assets1/EventMimg/Jewellery folder/Djewellery.jpg.jpeg'), title: 'Diamond Solitaire Showcase', duration: '3:00' },
 ];
 
 const MEDIA_DATA = [
-    { id: '1', image: require('../../../../assets/EventMimg/Jewellery folder/jewelary.jpg.jpeg'), title: 'featured in Vogue Wedding Book 2024', source: 'Vogue India', date: 'Oct 2024' },
-    { id: '2', image: require('../../../../assets/EventMimg/Jewellery folder/RING4.jpg.jpeg'), title: 'Best Traditional Jewellery Award', source: 'WeddingSutra', date: 'Aug 2024' },
-    { id: '3', image: require('../../../../assets/EventMimg/Jewellery folder/accessories.jpg.jpeg'), title: 'Top 10 Jewellers in Pune', source: 'LBB Pune', date: 'July 2024' },
+    { id: '1', image: require('../../../../assets1/EventMimg/Jewellery folder/jewelary.jpg.jpeg'), title: 'featured in Vogue Wedding Book 2024', source: 'Vogue India', date: 'Oct 2024' },
+    { id: '2', image: require('../../../../assets1/EventMimg/Jewellery folder/RING4.jpg.jpeg'), title: 'Best Traditional Jewellery Award', source: 'WeddingSutra', date: 'Aug 2024' },
+    { id: '3', image: require('../../../../assets1/EventMimg/Jewellery folder/accessories.jpg.jpeg'), title: 'Top 10 Jewellers in Pune', source: 'LBB Pune', date: 'July 2024' },
 ];
 
-const JewelleryDetails: React.FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
+const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any }) => {
     const { item } = route.params || {};
 
     const insets = useSafeAreaInsets();
@@ -443,7 +443,7 @@ const JewelleryDetails: React.FC<{ route: any; navigation: any }> = ({ route, na
                                         <TouchableOpacity key={item.id} style={styles.mediaCard}>
                                             <Image source={item.image} style={styles.mediaImage} />
                                             <View style={styles.mediaContent}>
-                                                <Text style={styles.mediaSource}>{item.source} • {item.date}</Text>
+                                                <Text style={styles.mediaSource}>{item.source}  {item.date}</Text>
                                                 <Text style={styles.mediaTitle}>{item.title}</Text>
                                                 <View style={styles.readMoreRow}>
                                                     <Text style={styles.readMoreText}>Read Article</Text>

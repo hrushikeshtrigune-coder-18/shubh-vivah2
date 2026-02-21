@@ -1,56 +1,21 @@
-import { useContext, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Button from '../../components/Button/Button';
-import Input from '../../components/Input/Input';
-import { AuthContext } from '../../context/AuthContext';
-import { colors } from '../../theme/colors';
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const LoginScreen = ({ navigation }: { navigation: any }) => {
-    const { login } = useContext(AuthContext);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
+const LoginScreen = ({ navigation }: any) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Login</Text>
-            <Input label="Email" value={email} onChangeText={setEmail} placeholder="Enter your email" />
-            <Input
-                label="Password"
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Enter your password"
-                secureTextEntry
-            />
-            <Button title="Login" onPress={() => login(email, password)} />
-            <Button
-                title="Register"
-                type="secondary"
-                onPress={() => navigation.navigate('Register')}
-            />
-            <Button
-                title="Forgot Password?"
-                type="secondary"
-                outline
-                onPress={() => navigation.navigate('ForgotPassword')}
-            />
+            <Text style={styles.title}>Login Screen</Text>
+            {/* Register link removed by user preference */}
         </View>
+
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        justifyContent: 'center',
-        backgroundColor: colors.background,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
-        color: colors.primary,
-    },
+    container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+    button: { padding: 10, backgroundColor: '#CC0E0E', borderRadius: 5 },
+    buttonText: { color: '#FFF' },
 });
 
 export default LoginScreen;

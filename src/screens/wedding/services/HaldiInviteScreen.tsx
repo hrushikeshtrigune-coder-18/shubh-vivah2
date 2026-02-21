@@ -43,19 +43,19 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/haldi1.jpg'), name: 'Traditional Yellow' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/haldi2.jpg'), name: 'Floral Mandala' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/haldi3.jpg'), name: 'Festive Marigold' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/haldi4.jpeg'), name: 'Modern Minimal' },
-    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/haldi5.jpg'), name: 'Royal Gold' },
-    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/haldi6.jpeg'), name: 'Elegant Motif' },
-    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/haldi7.jpg'), name: 'Classic Border' },
-    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/haldi8.jpeg'), name: 'Vibrant Floral' },
-    { id: 't9', image: require('../../../../assets/EventMimg/Einvite/haldi9.jpg'), name: 'Artistic Splash' },
-    { id: 't10', image: require('../../../../assets/EventMimg/Einvite/haldi10.jpg'), name: 'Simple Elegance' },
+    { id: 't1', image: require('../../../../assets1/EventMimg/Einvite/haldi1.jpg'), name: 'Traditional Yellow' },
+    { id: 't2', image: require('../../../../assets1/EventMimg/Einvite/haldi2.jpg'), name: 'Floral Mandala' },
+    { id: 't3', image: require('../../../../assets1/EventMimg/Einvite/haldi3.jpg'), name: 'Festive Marigold' },
+    { id: 't4', image: require('../../../../assets1/EventMimg/Einvite/haldi4.jpeg'), name: 'Modern Minimal' },
+    { id: 't5', image: require('../../../../assets1/EventMimg/Einvite/haldi5.jpg'), name: 'Royal Gold' },
+    { id: 't6', image: require('../../../../assets1/EventMimg/Einvite/haldi6.jpeg'), name: 'Elegant Motif' },
+    { id: 't7', image: require('../../../../assets1/EventMimg/Einvite/haldi7.jpg'), name: 'Classic Border' },
+    { id: 't8', image: require('../../../../assets1/EventMimg/Einvite/haldi8.jpeg'), name: 'Vibrant Floral' },
+    { id: 't9', image: require('../../../../assets1/EventMimg/Einvite/haldi9.jpg'), name: 'Artistic Splash' },
+    { id: 't10', image: require('../../../../assets1/EventMimg/Einvite/haldi10.jpg'), name: 'Simple Elegance' },
 ];
 
-const HaldiInviteScreen = ({ navigation, route }: { navigation: any; route: any }) => {
+const HaldiInviteScreen = ({ navigation, route }: { navigation?: any; route?: any }) => {
     const { eventType } = route.params || { eventType: 'Haldi' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);

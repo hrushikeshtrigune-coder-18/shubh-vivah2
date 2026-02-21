@@ -52,9 +52,9 @@ interface Post {
 }
 
 
-import mehandiDefault from '../../../../assets/images/mehandi.jpg';
-import mehandi1 from '../../../../assets/images/mehandi1.jpg';
-import mehandiPortrait from '../../../../assets/images/mehandiF.jpg';
+import mehandiDefault from '../../../../assets1/images/mehandi.jpg';
+import mehandi1 from '../../../../assets1/images/mehandi1.jpg';
+import mehandiPortrait from '../../../../assets1/images/mehandiF.jpg';
 
 // --- CONSTANTS & THEME ---
 const COLORS = {
@@ -102,7 +102,7 @@ const MEHANDI_ARTISTS_DATA: MehandiArtist[] = [
         tag: 'Intricate Bridal',
         location: 'Juhu, Mumbai',
         city: 'Mumbai',
-        price: '₹7,000 / event',
+        price: '7,000 / event',
         tags: ['Bridal Specialist', 'Portrait Mehandi', 'Certified'],
         image: mehandiPortrait,
         previews: [mehandi1, mehandiDefault, mehandiPortrait],
@@ -116,7 +116,7 @@ const MEHANDI_ARTISTS_DATA: MehandiArtist[] = [
         tag: 'Speed Artist',
         location: 'Koregaon Park, Pune',
         city: 'Pune',
-        price: '₹5,500 / event',
+        price: '5,500 / event',
         tags: ['Speed Artist', 'Modern Designs', 'Geometric'],
         image: mehandi1,
         previews: [mehandiPortrait, mehandiDefault, mehandi1],
@@ -130,7 +130,7 @@ const MEHANDI_ARTISTS_DATA: MehandiArtist[] = [
         tag: 'Traditional Specialist',
         location: 'Panjim, Goa',
         city: 'Goa',
-        price: '₹6,000 / event',
+        price: '6,000 / event',
         tags: ['Traditional', 'Intricate', 'Organic Henna'],
         image: mehandiDefault,
         previews: [mehandi1, mehandiPortrait, mehandiDefault],
@@ -309,7 +309,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
 
                 {isFullWidth && <Text style={styles.postDescriptionFull} numberOfLines={2}>{post.description}</Text>}
 
-                <Text style={styles.eventTypeCompact}>{post.eventType} • {post.city}</Text>
+                <Text style={styles.eventTypeCompact}>{post.eventType}  {post.city}</Text>
                 <Text style={styles.locationCompact} numberOfLines={1}>{post.locationDetail}</Text>
 
                 <View style={styles.metaRowCompact}>
@@ -344,10 +344,10 @@ const DESIGN_STYLES = [
 ];
 
 const FEATURED_PATTERNS = [
-    { id: '1', title: 'Back-Hand Vines', image: require('../../../../assets/images/mehandi.jpg') },
-    { id: '2', title: 'Leg Patterns', image: require('../../../../assets/images/mehandi1.jpg') },
-    { id: '3', title: 'Floral Bel', image: require('../../../../assets/images/mehandi.jpg') },
-    { id: '4', title: 'Finger Caps', image: require('../../../../assets/images/mehandi1.jpg') },
+    { id: '1', title: 'Back-Hand Vines', image: require('../../../../assets1/images/mehandi.jpg') },
+    { id: '2', title: 'Leg Patterns', image: require('../../../../assets1/images/mehandi1.jpg') },
+    { id: '3', title: 'Floral Bel', image: require('../../../../assets1/images/mehandi.jpg') },
+    { id: '4', title: 'Finger Caps', image: require('../../../../assets1/images/mehandi1.jpg') },
 ];
 const SwipeButton = ({ onSwipeComplete }: { onSwipeComplete: () => void }) => {
     const pan = useRef(new Animated.ValueXY()).current;
@@ -444,7 +444,7 @@ const SwipeButton = ({ onSwipeComplete }: { onSwipeComplete: () => void }) => {
     );
 };
 
-const MehandiScreen = ({ navigation }: { navigation: any }) => {
+const MehandiScreen = ({ navigation }: { navigation?: any }) => {
     const scrollRef = useRef<ScrollView>(null);
     const featuredScrollRef = useRef<ScrollView>(null);
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -557,7 +557,7 @@ const MehandiScreen = ({ navigation }: { navigation: any }) => {
                         <TouchableOpacity style={styles.utilityBtn}><Ionicons name="notifications-outline" size={20} color="#FFF" /></TouchableOpacity>
                     </View>
                     <View style={{ marginBottom: 60, paddingHorizontal: 5 }}>
-                        <Text style={styles.heroHeadline}>The Scent of{"\n"}Celebration 🌿</Text>
+                        <Text style={styles.heroHeadline}>The Scent of{"\n"}Celebration</Text>
                         <Text style={styles.heroSubhead}>Explore top-rated bridal mehandi artists</Text>
                     </View>
                 </LinearGradient>
@@ -565,7 +565,7 @@ const MehandiScreen = ({ navigation }: { navigation: any }) => {
 
             <View style={[styles.premiumSearchContainer, isSearchFocused && styles.premiumSearchActive]}>
                 <TouchableOpacity style={styles.locationSelector}>
-                    <Text style={styles.locationTextPin}>📍 {selectedCity}</Text>
+                    <Text style={styles.locationTextPin}> {selectedCity}</Text>
                     <Ionicons name="chevron-down" size={14} color={COLORS.secondary} />
                 </TouchableOpacity>
                 <View style={styles.searchDivider} />
@@ -898,9 +898,9 @@ const MehandiScreen = ({ navigation }: { navigation: any }) => {
                                 </View>
                                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pricingCardsScroll}>
                                     {[
-                                        { title: 'Royal Bridal Mehandi', price: '₹7,000', per: 'per event', tag: 'Most Popular', color: '#CC0E0E' },
-                                        { title: 'Arabic Designer Mehandi', price: '₹4,000', per: 'per person', tag: 'Trending', color: '#D48806' },
-                                        { title: 'Portrait Special', price: '₹12,000', per: 'full hands', tag: 'Exquisite', color: '#2C3E50' }
+                                        { title: 'Royal Bridal Mehandi', price: '7,000', per: 'per event', tag: 'Most Popular', color: '#CC0E0E' },
+                                        { title: 'Arabic Designer Mehandi', price: '4,000', per: 'per person', tag: 'Trending', color: '#D48806' },
+                                        { title: 'Portrait Special', price: '12,000', per: 'full hands', tag: 'Exquisite', color: '#2C3E50' }
                                     ].map((pkg, idx) => (
                                         <View key={idx} style={styles.eventPriceCard}>
                                             <View style={[styles.eventCardTopTag, { backgroundColor: pkg.color }]}><Text style={styles.eventCardTagText}>{pkg.tag}</Text></View>

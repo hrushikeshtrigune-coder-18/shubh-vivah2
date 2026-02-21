@@ -32,29 +32,28 @@ const COLORS = {
 };
 
 const serviceCategories = [
-    { id: '1', title: 'E-Invites', icon: require('../../../../../assets/images/invite.jpg'), screen: 'EInviteScreen', params: {} },
-    { id: '2', title: 'Event Management', icon: require('../../../../../assets/images/venue1.jpg'), screen: 'DAngenciesScreen', params: {} }, // Leads to Agency Discovery
-    { id: '3', title: 'Venues', icon: require('../../../../../assets/images/venue1.jpg'), screen: 'WeddingVenue', params: {} },
-    { id: '4', title: 'Catering', icon: require('../../../../../assets/images/Food.jpg'), screen: 'Food', params: {} },
-    { id: '5', title: 'Photography', icon: require('../../../../../assets/images/photo.jpg'), screen: 'Photography', params: {} },
-    { id: '6', title: 'Decor', icon: require('../../../../../assets/images/decor.jpg'), screen: 'DecorationFloral', params: {} },
-    { id: '7', title: 'Jewellery', icon: require('../../../../../assets/images/Jewellery.jpg'), screen: 'JewelleryScreen', params: {} },
-    { id: '8', title: 'Mehandi', icon: require('../../../../../assets/images/mehandi.jpg'), screen: 'MehandiScreen', params: {} },
-    { id: '9', title: 'Makeup', icon: require('../../../../../assets/images/makeup.jpg'), screen: 'MakeupScreen', params: {} },
-    { id: '10', title: 'Honeymoon', icon: require('../../../../../assets/images/honeymoon planning.jpg'), screen: 'Honeymoon', params: {} },
+    { id: '1', title: 'E-Invites', icon: require('../../../../assets1/images/invite.jpg'), screen: 'EInviteScreen', params: {} },
+    { id: '2', title: 'Event Management', icon: require('../../../../assets1/images/venue1.jpg'), screen: 'DAngenciesScreen', params: {} }, // Leads to Agency Discovery
+    { id: '3', title: 'Venues', icon: require('../../../../assets1/images/venue1.jpg'), screen: 'WeddingVenue', params: {} },
+    { id: '4', title: 'Catering', icon: require('../../../../assets1/images/Food.jpg'), screen: 'Food', params: {} },
+    { id: '5', title: 'Photography', icon: require('../../../../assets1/images/photo.jpg'), screen: 'Photography', params: {} },
+    { id: '6', title: 'Decor', icon: require('../../../../assets1/images/decor.jpg'), screen: 'DecorationFloral', params: {} },
+    { id: '7', title: 'Jewellery', icon: require('../../../../assets1/images/Jewellery.jpg'), screen: 'JewelleryScreen', params: {} },
+    { id: '8', title: 'Mehandi', icon: require('../../../../assets1/images/mehandi.jpg'), screen: 'MehandiScreen', params: {} },
+    { id: '9', title: 'Makeup', icon: require('../../../../assets1/images/makeup.jpg'), screen: 'MakeupScreen', params: {} },
+    { id: '10', title: 'Honeymoon', icon: require('../../../../assets1/images/honeymoon planning.jpg'), screen: 'Honeymoon', params: {} },
 ];
 
 
 const slideshowImages = [
-    require('../../../../../assets/images/venue1.jpg'),
-    require('../../../../../assets/images/photo.jpg'),
-    require('../../../../../assets/images/Food.jpg'),
+    require('../../../../assets1/images/venue1.jpg'),
+    require('../../../../assets1/images/photo.jpg'),
+    require('../../../../assets1/images/Food.jpg'),
 ];
 
 const locations = ['Pune', 'Mumbai', 'Goa', 'Udaipur', 'Jaipur'];
 
-const WAgencies: React.FC = () => {
-    const navigation = useNavigation<any>();
+const WAgencies = ({ navigation }: { navigation?: any }) => {
     const route = useRoute<any>();
     const { agency } = route.params || {};
 

@@ -30,7 +30,7 @@ const services = [
         id: '1',
         title: 'E-Invites',
         subtitle: 'Digital & Animated',
-        image: require('../../../assets/images/invite.jpg'),
+        image: require('../../../assets1/images/invite.jpg'),
         description: 'Eco-friendly and animated digital invitations to impress your guests instantly.',
         features: ['Video Invites', 'RSVP Tracking'],
         icon: 'envelope-open-text'
@@ -48,7 +48,7 @@ const services = [
         id: '3',
         title: 'Wedding Venue',
         subtitle: 'Heritage & Luxury',
-        image: require('../../../assets/images/decor.jpg'),
+        image: require('../../../assets1/images/decor.jpg'),
         description: 'Experience royalty with our curated selection of heritage palaces and luxury banquet halls.',
         features: ['500-2000 Pax', 'Royal Stay'],
         icon: 'archway'
@@ -57,7 +57,7 @@ const services = [
         id: '4',
         title: 'Food & Catering',
         subtitle: 'Gourmet Feasts',
-        image: require('../../../assets/images/Food.jpg'),
+        image: require('../../../assets1/images/Food.jpg'),
         description: 'Exquisite culinary experiences with multi-cuisine menus from top chefs.',
         features: ['Live Counters', 'Global Cuisine'],
         icon: 'utensils'
@@ -66,7 +66,7 @@ const services = [
         id: '5',
         title: 'Photography',
         subtitle: 'Drone & Candid',
-        image: require('../../../assets/images/photo.jpg'),
+        image: require('../../../assets1/images/photo.jpg'),
         description: 'Capture every emotion with our cinematic storytelling and expert drone shots.',
         features: ['4K Drone', 'Same Day Edit'],
         icon: 'camera'
@@ -75,7 +75,7 @@ const services = [
         id: '6',
         title: 'Honeymoon Planning',
         subtitle: 'Romantic Getaways',
-        image: require('../../../assets/images/honeymoon planning.jpg'),
+        image: require('../../../assets1/images/honeymoon planning.jpg'),
         description: 'Romantic getaways to the world\'s most beautiful destinations.',
         features: ['Custom Packages', 'Luxury Stays'],
         icon: 'plane'
@@ -114,7 +114,7 @@ const EventServicesScreen = ({ navigation }: { navigation: any }) => {
             id: 's2',
             title: 'Decoration & Floral',
             subtitle: 'Styling & Ambience',
-            image: require('../../../assets/images/decor.jpg'),
+            image: require('../../../assets1/images/decor.jpg'),
             description: 'Transform your venue with bespoke floral arrangements and immersive themes.',
             features: ['Theme Decor', 'Floral Styling'],
             icon: 'holly-berry'
@@ -132,7 +132,7 @@ const EventServicesScreen = ({ navigation }: { navigation: any }) => {
             id: 's5',
             title: 'Bridal Makeup',
             subtitle: 'Professional Artists',
-            image: require('../../../assets/images/makeup.jpg'),
+            image: require('../../../assets1/images/makeup.jpg'),
             description: 'Get the perfect bridal look with our certified makeup artists.',
             features: ['HD Makeup', 'Trial Included'],
             icon: 'magic'
@@ -141,7 +141,7 @@ const EventServicesScreen = ({ navigation }: { navigation: any }) => {
             id: 's6',
             title: 'Jewellery',
             subtitle: 'Bridal & Gold',
-            image: require('../../../assets/images/Jewellery.jpg'),
+            image: require('../../../assets1/images/Jewellery.jpg'),
             description: 'Exquisite bridal and wedding jewellery collections.',
             features: ['Gold & Diamond', 'Custom Designs'],
             icon: 'gem'
@@ -222,7 +222,7 @@ const EventServicesScreen = ({ navigation }: { navigation: any }) => {
 
             {/* Premium Glassmorphic Header */}
             <ImageBackground
-                source={require('../../../assets/images/decor.jpg')}
+                source={require('../../../assets1/images/decor.jpg')}
                 style={styles.heroContainer}
                 imageStyle={styles.heroImage}
             >

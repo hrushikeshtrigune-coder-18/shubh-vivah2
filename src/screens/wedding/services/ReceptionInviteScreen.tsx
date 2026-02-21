@@ -41,17 +41,17 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/reception3.jpg'), name: 'Grand Reception' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/reception4.jpg'), name: 'Elegant Evening' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/reception5.jpg'), name: 'Royal Feast' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/reception6.jpg'), name: 'Modern Celebration' },
-    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/reception7.jpg'), name: 'Classic Dinner' },
-    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/reseption1.jpg'), name: 'Floral Night' },
-    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/reseption2.jpg'), name: 'Golden Gala' },
-    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/reseption8.jpg'), name: 'Starry Banquet' },
+    { id: 't1', image: require('../../../../assets1/EventMimg/Einvite/reception3.jpg'), name: 'Grand Reception' },
+    { id: 't2', image: require('../../../../assets1/EventMimg/Einvite/reception4.jpg'), name: 'Elegant Evening' },
+    { id: 't3', image: require('../../../../assets1/EventMimg/Einvite/reception5.jpg'), name: 'Royal Feast' },
+    { id: 't4', image: require('../../../../assets1/EventMimg/Einvite/reception6.jpg'), name: 'Modern Celebration' },
+    { id: 't5', image: require('../../../../assets1/EventMimg/Einvite/reception7.jpg'), name: 'Classic Dinner' },
+    { id: 't6', image: require('../../../../assets1/EventMimg/Einvite/reseption1.jpg'), name: 'Floral Night' },
+    { id: 't7', image: require('../../../../assets1/EventMimg/Einvite/reseption2.jpg'), name: 'Golden Gala' },
+    { id: 't8', image: require('../../../../assets1/EventMimg/Einvite/reseption8.jpg'), name: 'Starry Banquet' },
 ];
 
-const ReceptionInviteScreen = ({ navigation, route }: { navigation: any; route: any }) => {
+const ReceptionInviteScreen = ({ navigation, route }: { navigation?: any; route?: any }) => {
     const { eventType } = route.params || { eventType: 'Reception' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);

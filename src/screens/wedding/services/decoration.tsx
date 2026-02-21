@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get('window');
 
 // --- ASSETS ---
 // Replace with actual asset requirements if needed
-const HERO_IMG = require('../../../../assets/images/decor.jpg');
+const HERO_IMG = require('../../../../assets1/images/decor.jpg');
 
 const PRIMARY_COLOR = '#CC0E0E';
 const ACCENT_COLOR = '#F29502';
@@ -43,7 +43,7 @@ const VENDORS = [
         image: 'https://images.unsplash.com/photo-1519225421980-715cb0202128?q=80&w=2000&auto=format&fit=crop',
         rating: 4.9,
         reviews: 210,
-        price: '₹1.5L',
+        price: '1.5L',
         location: 'Mumbai',
         tags: ['Mandap', 'Floral'],
         verified: true,
@@ -54,7 +54,7 @@ const VENDORS = [
         image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop',
         rating: 4.7,
         reviews: 150,
-        price: '₹80k',
+        price: '80k',
         location: 'Pune',
         tags: ['Lighting', 'Modern'],
         verified: true,
@@ -65,7 +65,7 @@ const VENDORS = [
         image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop',
         rating: 4.8,
         reviews: 95,
-        price: '₹2.5L',
+        price: '2.5L',
         location: 'Delhi',
         tags: ['Theme', 'Royal'],
         verified: false,
@@ -119,10 +119,10 @@ const Decoration = ({ navigation }: { navigation: any }) => {
 
             <View style={styles.heroContent}>
                 <Animated.Text entering={FadeInDown.delay(300)} style={styles.heroTitle}>
-                    Where Your Wedding Comes to Life 🌸
+                    Where Your Wedding Comes to Life
                 </Animated.Text>
                 <Animated.Text entering={FadeInDown.delay(600)} style={styles.heroSub}>
-                    Mandaps • Floral Styling • Theme Decor
+                    Mandaps Floral Styling Theme Decor
                 </Animated.Text>
 
                 {/* Simulated Floating Petals Overlay - Simplified just dots for now */}
@@ -140,12 +140,12 @@ const Decoration = ({ navigation }: { navigation: any }) => {
                         />
                     ))}
                 </View>
-            </View>
+            </View >
 
             <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
                 <Ionicons name="arrow-back" size={24} color="#FFF" />
             </TouchableOpacity>
-        </View>
+        </View >
     );
 
     const renderStyleExplorer = () => (

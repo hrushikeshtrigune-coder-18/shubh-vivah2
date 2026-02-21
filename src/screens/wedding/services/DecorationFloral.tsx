@@ -18,20 +18,20 @@ import {
     View
 } from 'react-native';
 import VendorCard from '../../../components/VendorCard';
-import venue1 from '../../../../assets/images/venue1.jpg';
-import venue2 from '../../../../assets/images/venue2.jpg';
-import venue3 from '../../../../assets/images/venue3.jpg';
-import venue4 from '../../../../assets/images/venue4.jpg';
-import venue5 from '../../../../assets/images/venue5.jpg';
-import venue6 from '../../../../assets/images/venue6.jpg';
-import venue7 from '../../../../assets/images/venue7.jpg';
-import venue8 from '../../../../assets/images/venue8.jpg';
+import venue1 from '../../../../assets1/images/venue1.jpg';
+import venue2 from '../../../../assets1/images/venue2.jpg';
+import venue3 from '../../../../assets1/images/venue3.jpg';
+import venue4 from '../../../../assets1/images/venue4.jpg';
+import venue5 from '../../../../assets1/images/venue5.jpg';
+import venue6 from '../../../../assets1/images/venue6.jpg';
+import venue7 from '../../../../assets1/images/venue7.jpg';
+import venue8 from '../../../../assets1/images/venue8.jpg';
 
 // New Floral Images
-import dfPastel from '../../../../assets/DF images/Floral Pastel.jpg';
-import dfMinimal from '../../../../assets/DF images/Modern Minimal.jpg';
-import dfRoyal from '../../../../assets/DF images/Royal Heritage.jpg';
-import dfMarigold from '../../../../assets/DF images/Traditional Marigold.jpg';
+import dfPastel from '../../../../assets1/DF images/Floral Pastel.jpg';
+import dfMinimal from '../../../../assets1/DF images/Modern Minimal.jpg';
+import dfRoyal from '../../../../assets1/DF images/Royal Heritage.jpg';
+import dfMarigold from '../../../../assets1/DF images/Traditional Marigold.jpg';
 
 const { width, height } = Dimensions.get('window');
 
@@ -251,7 +251,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
 
                     {isFullWidth && <Text style={styles.postDescriptionFull} numberOfLines={2}>{post.description}</Text>}
 
-                    <Text style={styles.eventTypeCompact}>{post.eventType} • {post.city}</Text>
+                    <Text style={styles.eventTypeCompact}>{post.eventType}  {post.city}</Text>
                     <Text style={styles.locationCompact} numberOfLines={1}>{post.locationDetail}</Text>
 
                     <View style={styles.metaRowCompact}>
@@ -265,7 +265,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
 };
 
 
-const DecorationFloralScreen = ({ navigation }: { navigation: any }) => {
+const DecorationFloralScreen = ({ navigation }: { navigation?: any }) => {
     const scrollRef = useRef<ScrollView>(null);
     const featuredScrollRef = useRef<ScrollView>(null);
 
@@ -385,7 +385,7 @@ const DecorationFloralScreen = ({ navigation }: { navigation: any }) => {
                         <TouchableOpacity style={styles.utilityBtn}><Ionicons name="notifications-outline" size={20} color="#FFF" /></TouchableOpacity>
                     </View>
                     <View style={{ marginBottom: 60, paddingHorizontal: 25 }}>
-                        <Text style={styles.heroHeadline}>Finding Your{"\n"}Perfect Decor 🌸</Text>
+                        <Text style={styles.heroHeadline}>Finding Your{"\n"}Perfect Decor</Text>
                         <Text style={styles.heroSubhead}>Explore exclusive high-end decoration themes</Text>
                     </View>
                 </LinearGradient>
@@ -393,14 +393,14 @@ const DecorationFloralScreen = ({ navigation }: { navigation: any }) => {
 
             <View style={[styles.premiumSearchContainer, isSearchFocused && styles.premiumSearchActive]}>
                 <TouchableOpacity style={styles.locationSelector}>
-                    <Text style={styles.locationTextPin}>📍 {selectedCity}</Text>
+                    <Text style={styles.locationTextPin}> {selectedCity}</Text>
                     <Ionicons name="chevron-down" size={14} color={COLORS.secondary} />
                 </TouchableOpacity>
                 <View style={styles.searchDivider} />
                 <View style={styles.searchInputWrapper}>
                     <TextInput
                         style={styles.premiumInput}
-                        placeholder="Search decor, areas…"
+                        placeholder="Search decor, areas"
                         placeholderTextColor="#999"
                         onFocus={() => setSearchFocused(true)}
                         onChangeText={setSearchQuery}
@@ -424,7 +424,7 @@ const DecorationFloralScreen = ({ navigation }: { navigation: any }) => {
                         <TextInput
                             style={styles.overlayInput}
                             autoFocus
-                            placeholder="Search decor, areas…"
+                            placeholder="Search decor, areas"
                             onChangeText={setSearchQuery}
                             value={searchQuery}
                         />
@@ -681,7 +681,7 @@ const DecorationFloralScreen = ({ navigation }: { navigation: any }) => {
                                                 </View>
                                                 <Text style={styles.featuredProjectTitle}>{selectedVendor.featuredProject?.title || 'Bespoke Decoration Project'}</Text>
                                                 <View style={styles.featuredMetaRow}>
-                                                    <Text style={styles.featuredMetaText}>12 Photos • Premium Setup</Text>
+                                                    <Text style={styles.featuredMetaText}>12 Photos  Premium Setup</Text>
                                                     <TouchableOpacity style={styles.viewProjectBtn}>
                                                         <Text style={styles.viewProjectBtnText}>View Project</Text>
                                                     </TouchableOpacity>
@@ -802,9 +802,9 @@ const DecorationFloralScreen = ({ navigation }: { navigation: any }) => {
 
                                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pricingCardsScroll}>
                                     {[
-                                        { title: 'Floral Royal', price: '₹1,50,000', per: 'per event', tag: 'Most Popular', color: COLORS.primary },
-                                        { title: 'Pastel Bliss', price: '₹75,000', per: 'per event', tag: 'Limited Offer', color: '#D48806' },
-                                        { title: 'Thematic Setup', price: '₹50,000', per: 'starting', tag: 'Customizable', color: '#2C3E50' }
+                                        { title: 'Floral Royal', price: '1,50,000', per: 'per event', tag: 'Most Popular', color: COLORS.primary },
+                                        { title: 'Pastel Bliss', price: '75,000', per: 'per event', tag: 'Limited Offer', color: '#D48806' },
+                                        { title: 'Thematic Setup', price: '50,000', per: 'starting', tag: 'Customizable', color: '#2C3E50' }
                                     ].map((pkg, idx) => (
                                         <View key={idx} style={styles.eventPriceCard}>
                                             <View style={[styles.eventCardTopTag, { backgroundColor: pkg.color }]}>

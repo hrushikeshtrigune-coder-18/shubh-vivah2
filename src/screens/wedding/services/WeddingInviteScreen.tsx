@@ -1,4 +1,4 @@
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+﻿import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 
 import { Animated, Dimensions, Image, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -41,19 +41,19 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/wedding1.jpg'), name: 'Royal Wedding' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/wedding2.jpg'), name: 'Classic Elegance' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/wedding3.jpg'), name: 'Floral Dreams' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/wedding4.jpg'), name: 'Modern Love' },
-    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/wedding5.jpg'), name: 'Traditional Red' },
-    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/wedding6.jpg'), name: 'Golden Knots' },
-    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/wedding7.jpg'), name: 'Vintage Charm' },
-    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/wedding8.jpg'), name: 'Pure Romance' },
-    { id: 't9', image: require('../../../../assets/EventMimg/Einvite/wedding9.jpg'), name: 'Majestic Union' },
-    { id: 't10', image: require('../../../../assets/EventMimg/Einvite/wedding10.jpg'), name: 'Eternal Bond' },
+    { id: 't1', image: require('../../../../assets1/EventMimg/Einvite/wedding1.jpg'), name: 'Royal Wedding' },
+    { id: 't2', image: require('../../../../assets1/EventMimg/Einvite/wedding2.jpg'), name: 'Classic Elegance' },
+    { id: 't3', image: require('../../../../assets1/EventMimg/Einvite/wedding3.jpg'), name: 'Floral Dreams' },
+    { id: 't4', image: require('../../../../assets1/EventMimg/Einvite/wedding4.jpg'), name: 'Modern Love' },
+    { id: 't5', image: require('../../../../assets1/EventMimg/Einvite/wedding5.jpg'), name: 'Traditional Red' },
+    { id: 't6', image: require('../../../../assets1/EventMimg/Einvite/wedding6.jpg'), name: 'Golden Knots' },
+    { id: 't7', image: require('../../../../assets1/EventMimg/Einvite/wedding7.jpg'), name: 'Vintage Charm' },
+    { id: 't8', image: require('../../../../assets1/EventMimg/Einvite/wedding8.jpg'), name: 'Pure Romance' },
+    { id: 't9', image: require('../../../../assets1/EventMimg/Einvite/wedding9.jpg'), name: 'Majestic Union' },
+    { id: 't10', image: require('../../../../assets1/EventMimg/Einvite/wedding10.jpg'), name: 'Eternal Bond' },
 ];
 
-const WeddingInviteScreen = ({ navigation, route }: { navigation: any; route: any }) => {
+const WeddingInviteScreen = ({ navigation, route }: { navigation?: any; route?: any }) => {
     const { eventType } = route.params || { eventType: 'Wedding' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);

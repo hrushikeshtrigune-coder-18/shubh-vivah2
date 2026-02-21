@@ -43,7 +43,7 @@ const serviceCategories = [
     {
         id: '1',
         title: 'E-Invites',
-        icon: require('../../../assets/images/invite.jpg'),
+        icon: require('../../../assets1/images/invite.jpg'),
         screen: 'EInviteScreen',
         suggestions: [
             { id: 's1', title: 'Video Invites', icon: 'videocam-outline' },
@@ -54,7 +54,7 @@ const serviceCategories = [
     {
         id: '3',
         title: 'Venues',
-        icon: require('../../../assets/images/venue1.jpg'),
+        icon: require('../../../assets1/images/venue1.jpg'),
         screen: 'WeddingVenue',
         suggestions: [
             { id: 's1', title: 'Resorts', icon: 'business-outline' },
@@ -65,7 +65,7 @@ const serviceCategories = [
     {
         id: '4',
         title: 'Catering',
-        icon: require('../../../assets/images/Food.jpg'),
+        icon: require('../../../assets1/images/Food.jpg'),
         screen: 'Food',
         suggestions: [
             { id: 's1', title: 'Buffet', icon: 'restaurant-outline' },
@@ -75,7 +75,7 @@ const serviceCategories = [
     {
         id: '5',
         title: 'Photography',
-        icon: require('../../../assets/images/photo.jpg'),
+        icon: require('../../../assets1/images/photo.jpg'),
         screen: 'Photography',
         suggestions: [
             { id: 's1', title: 'Candid', icon: 'camera-outline' },
@@ -86,7 +86,7 @@ const serviceCategories = [
     {
         id: '6',
         title: 'Decor',
-        icon: require('../../../assets/images/decor.jpg'),
+        icon: require('../../../assets1/images/decor.jpg'),
         screen: 'DecorationFloral',
         suggestions: [
             { id: 's1', title: 'Floral', icon: 'rose-outline' },
@@ -96,7 +96,7 @@ const serviceCategories = [
     {
         id: '7',
         title: 'Jewellery',
-        icon: require('../../../assets/images/Jewellery.jpg'),
+        icon: require('../../../assets1/images/Jewellery.jpg'),
         screen: 'JewelleryScreen',
         suggestions: [
             { id: 's1', title: 'Bridal Sets', icon: 'diamond-outline' },
@@ -106,7 +106,7 @@ const serviceCategories = [
     {
         id: '8',
         title: 'Mehandi',
-        icon: require('../../../assets/images/mehandi.jpg'),
+        icon: require('../../../assets1/images/mehandi.jpg'),
         screen: 'MehandiScreen',
         suggestions: [
             { id: 's1', title: 'Bridal', icon: 'flower-outline' },
@@ -116,7 +116,7 @@ const serviceCategories = [
     {
         id: '9',
         title: 'Makeup',
-        icon: require('../../../assets/images/makeup.jpg'),
+        icon: require('../../../assets1/images/makeup.jpg'),
         screen: 'MakeupScreen',
         params: { serviceName: 'Bridal Makeup' },
         suggestions: [
@@ -127,7 +127,7 @@ const serviceCategories = [
     {
         id: '10',
         title: 'Honeymoon',
-        icon: require('../../../assets/images/honeymoon planning.jpg'),
+        icon: require('../../../assets1/images/honeymoon planning.jpg'),
         screen: 'Honeymoon',
         suggestions: [
             { id: 's1', title: 'International', icon: 'earth-outline' },
@@ -210,11 +210,11 @@ const renderPlanningTools = () => (
 
 // Data: Recommendations (Updated as per User Request)
 const recommendations = [
-    { id: 'r1', title: 'E-Invites', subtitle: 'Digital & Animated', image: require('../../../assets/images/invite.jpg'), screen: 'EInviteScreen' },
-    { id: 'r3', title: 'Wedding Venue', subtitle: 'Luxury Locations', image: require('../../../assets/images/venue1.jpg'), screen: 'WeddingVenue' },
-    { id: 'r4', title: 'Food & Catering', subtitle: 'Gourmet Menu', image: require('../../../assets/images/Food.jpg'), screen: 'Food' },
-    { id: 'r5', title: 'Photography', subtitle: 'Capture Moments', image: require('../../../assets/images/photo.jpg'), screen: 'Photography' },
-    { id: 'r6', title: 'Honeymoon Planning', subtitle: 'Romantic Getaways', image: require('../../../assets/images/honeymoon planning.jpg'), screen: 'Honeymoon' },
+    { id: 'r1', title: 'E-Invites', subtitle: 'Digital & Animated', image: require('../../../assets1/images/invite.jpg'), screen: 'EInviteScreen' },
+    { id: 'r3', title: 'Wedding Venue', subtitle: 'Luxury Locations', image: require('../../../assets1/images/venue1.jpg'), screen: 'WeddingVenue' },
+    { id: 'r4', title: 'Food & Catering', subtitle: 'Gourmet Menu', image: require('../../../assets1/images/Food.jpg'), screen: 'Food' },
+    { id: 'r5', title: 'Photography', subtitle: 'Capture Moments', image: require('../../../assets1/images/photo.jpg'), screen: 'Photography' },
+    { id: 'r6', title: 'Honeymoon Planning', subtitle: 'Romantic Getaways', image: require('../../../assets1/images/honeymoon planning.jpg'), screen: 'Honeymoon' },
 ];
 
 
@@ -268,7 +268,7 @@ const EventManagementUniqueCard = ({ onPress }: { onPress: any }) => {
                     style={styles.uniqueCardGradient}
                 >
                     <Image
-                        source={require('../../../assets/images/Gust Mangment.jpg')}
+                        source={require('../../../assets1/images/Gust Mangment.jpg')}
                         style={styles.uniqueCardImage}
                     />
                     <View style={styles.uniqueCardContent}>
@@ -396,7 +396,7 @@ const Services2 = () => {
 
                         <ScrollView showsVerticalScrollIndicator={false}>
                             {/* Date Picker Section */}
-                            <Text style={styles.configSectionTitle}>When is the Big Day? 📅</Text>
+                            <Text style={styles.configSectionTitle}>When is the Big Day?</Text>
                             <View style={styles.datePickerContainer}>
                                 <View style={styles.dateControl}>
                                     <TouchableOpacity onPress={() => changeDate('day', -1)}><Ionicons name="remove-circle-outline" size={28} color={COLORS.maroon} /></TouchableOpacity>
@@ -416,7 +416,7 @@ const Services2 = () => {
                             </View>
 
                             {/* Service Checklist Section */}
-                            <Text style={styles.configSectionTitle}>Mark Booked Services ✅</Text>
+                            <Text style={styles.configSectionTitle}>Mark Booked Services …</Text>
                             <View style={styles.checklistContainer}>
                                 {serviceCategories.map((service) => (
                                     <View key={service.id} style={styles.checklistItem}>
@@ -637,7 +637,7 @@ const Services2 = () => {
                     onPress={() => (navigation as any).navigate('DAngenciesScreen')}
                 >
                     <ImageBackground
-                        source={require('../../../assets/images/venue1.jpg')}
+                        source={require('../../../assets1/images/venue1.jpg')}
                         style={styles.agencyCardBg}
                         imageStyle={{ borderRadius: 24 }}
                     >

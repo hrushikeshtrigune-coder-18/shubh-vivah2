@@ -132,7 +132,7 @@ const AnimatedCard = ({ children, style, delay = 0 }: { children: any; style: an
     );
 };
 
-const PhotographerPortfolio = ({ navigation, route }: { navigation: any; route: any }) => {
+const PhotographerPortfolio = ({ navigation, route }: { navigation?: any; route?: any }) => {
     // Default data if no params provided
     const params = route.params || {};
     const photographer = params.vendor || {
@@ -501,12 +501,12 @@ const PhotographerPortfolio = ({ navigation, route }: { navigation: any; route: 
 
     const renderGallery = () => {
         const microBadges = [
-            { icon: "📷", text: "High Res" },
-            { icon: "✨", text: "Signature" },
-            { icon: "🎬", text: "Cinematic" },
-            { icon: "🖤", text: "Mono" },
-            { icon: "🌅", text: "Golden" },
-            { icon: "🏰", text: "Palatial" }
+            { icon: "star", text: "High Res" },
+            { icon: "ribbon", text: "Signature" },
+            { icon: "videocam", text: "Cinematic" },
+            { icon: "color-wand", text: "Mono" },
+            { icon: "sunny", text: "Golden" },
+            { icon: "business", text: "Palatial" }
         ];
 
         const tabWidth = 100;

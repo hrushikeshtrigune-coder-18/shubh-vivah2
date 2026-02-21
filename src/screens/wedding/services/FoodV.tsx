@@ -16,10 +16,10 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import food1 from '../../../../assets/images/food1.jpg';
-import food2 from '../../../../assets/images/food2.jpg';
-import food3 from '../../../../assets/images/food3.jpg';
-import food4 from '../../../../assets/images/food4.jpg';
+import food1 from '../../../../assets1/images/food1.jpg';
+import food2 from '../../../../assets1/images/food2.jpg';
+import food3 from '../../../../assets1/images/food3.jpg';
+import food4 from '../../../../assets1/images/food4.jpg';
 
 const { width } = Dimensions.get('window');
 
@@ -31,7 +31,7 @@ const COLORS = {
     textDark: '#CC0E0E',
 };
 
-const FoodV = ({ navigation, route }: any) => {
+const FoodV = ({ navigation, route }: { navigation?: any; route?: any }) => {
     const { vendor } = route.params || {};
 
     // Default Data (Fallback)
@@ -292,7 +292,7 @@ const FoodV = ({ navigation, route }: any) => {
             <View style={styles.pricingCardLarge}>
                 <View style={styles.pricingHeaderRow}>
                     <Text style={styles.pricingItemTitle}>Grand Buffet Package</Text>
-                    <Text style={styles.pricingValue}>₹1,200 <Text style={styles.pricePer}>/plate</Text></Text>
+                    <Text style={styles.pricingValue}>1,200 <Text style={styles.pricePer}>/plate</Text></Text>
                 </View>
                 <Text style={styles.pricingDesc}>Minimum 300 guests. Includes 4 welcome drinks, 8 snacks, 2 soups, 12 main course dishes, and 6 desserts.</Text>
                 <View style={styles.pricingFeaturesGrid}>
@@ -362,7 +362,7 @@ const FoodV = ({ navigation, route }: any) => {
                         <View style={styles.userIconSmall}><Text style={styles.userInitials}>AP</Text></View>
                         <View>
                             <Text style={styles.reviewUserName}>Ananya Pandey</Text>
-                            <Text style={styles.reviewDate}>2 weeks ago • Wedding Reception</Text>
+                            <Text style={styles.reviewDate}>2 weeks ago Wedding Reception</Text>
                         </View>
                         <View style={styles.itemRatingCompact}>
                             <Ionicons name="star" size={10} color={COLORS.secondary} />

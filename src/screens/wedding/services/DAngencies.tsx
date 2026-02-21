@@ -39,7 +39,7 @@ const AGENCIES_DATA = [
         rating: 4.9,
         reviews: 128,
         description: 'Majestic palace weddings with royal perfection and modern luxury.',
-        image: require('../../../../../assets/images/venue1.jpg'),
+        image: require('../../../../assets1/images/venue1.jpg'),
     },
     {
         id: '2',
@@ -48,7 +48,7 @@ const AGENCIES_DATA = [
         rating: 4.8,
         reviews: 215,
         description: 'Bespoke high-profile planning merging contemporary and cultural roots.',
-        image: require('../../../../../assets/images/photo.jpg'),
+        image: require('../../../../assets1/images/photo.jpg'),
     },
     {
         id: '3',
@@ -57,7 +57,7 @@ const AGENCIES_DATA = [
         rating: 4.7,
         reviews: 95,
         description: 'Bringing ancient traditions to life with elegant management flare.',
-        image: require('../../../../../assets/images/decor.jpg'),
+        image: require('../../../../assets1/images/decor.jpg'),
     },
     {
         id: '4',
@@ -66,7 +66,7 @@ const AGENCIES_DATA = [
         rating: 4.8,
         reviews: 154,
         description: 'Luxury destination beach weddings with premium thematic coordination.',
-        image: require('../../../../../assets/images/Food.jpg'),
+        image: require('../../../../assets1/images/Food.jpg'),
     }
 ];
 
@@ -137,7 +137,7 @@ const AgencyCard: React.FC<{ agency: Agency; index: number; fadeAnim: any; navig
 
                     <View style={styles.cardActionRow}>
                         <View style={styles.reviewsBrief}>
-                            <Text style={styles.reviewsTextSmall}>{agency.reviews} ⭐ Reviews</Text>
+                            <Text style={styles.reviewsTextSmall}>{agency.reviews}  Reviews</Text>
                         </View>
                         <View style={styles.exploreTrigger}>
                             <Text style={styles.exploreText}>View Details</Text>
@@ -153,8 +153,7 @@ const AgencyCard: React.FC<{ agency: Agency; index: number; fadeAnim: any; navig
     );
 };
 
-const DAgencies: React.FC = () => {
-    const navigation = useNavigation<any>();
+const DAgencies = ({ navigation }: { navigation?: any }) => {
     const fadeAnims = useRef(AGENCIES_DATA.map(() => new Animated.Value(0))).current;
 
 
@@ -176,7 +175,7 @@ const DAgencies: React.FC = () => {
             {/* Background Pattern Layer */}
             <View style={[StyleSheet.absoluteFill, { opacity: 0.03 }]}>
                 <ImageBackground
-                    source={require('../../../../../assets/images/venue1.jpg')} // Using as a subtle texture
+                    source={require('../../../../assets1/images/venue1.jpg')} // Using as a subtle texture
                     style={StyleSheet.absoluteFill}
                     blurRadius={50}
                 />

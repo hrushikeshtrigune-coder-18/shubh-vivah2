@@ -16,14 +16,14 @@ import {
     View
 } from 'react-native';
 import VendorCard from '../../../components/VendorCard';
-import venue1 from '../../../../assets/images/venue1.jpg';
-import venue2 from '../../../../assets/images/venue2.jpg';
-import venue3 from '../../../../assets/images/venue3.jpg';
-import venue4 from '../../../../assets/images/venue4.jpg';
-import venue5 from '../../../../assets/images/venue5.jpg';
-import venue6 from '../../../../assets/images/venue6.jpg';
-import venue7 from '../../../../assets/images/venue7.jpg';
-import venue8 from '../../../../assets/images/venue8.jpg';
+import venue1 from '../../../../assets1/images/venue1.jpg';
+import venue2 from '../../../../assets1/images/venue2.jpg';
+import venue3 from '../../../../assets1/images/venue3.jpg';
+import venue4 from '../../../../assets1/images/venue4.jpg';
+import venue5 from '../../../../assets1/images/venue5.jpg';
+import venue6 from '../../../../assets1/images/venue6.jpg';
+import venue7 from '../../../../assets1/images/venue7.jpg';
+import venue8 from '../../../../assets1/images/venue8.jpg';
 
 const { width } = Dimensions.get('window');
 
@@ -276,7 +276,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
 
                 {isFullWidth && <Text style={styles.postDescriptionFull} numberOfLines={2}>{post.description}</Text>}
 
-                <Text style={styles.eventTypeCompact}>{post.eventType} • {post.city}</Text>
+                <Text style={styles.eventTypeCompact}>{post.eventType}  {post.city}</Text>
                 <Text style={styles.locationCompact} numberOfLines={1}>{post.locationDetail}</Text>
 
                 <View style={styles.metaRowCompact}>
@@ -288,7 +288,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
     );
 };
 
-const WeddingVenue = ({ navigation }: { navigation: any }) => {
+const WeddingVenue = ({ navigation }: { navigation?: any }) => {
     const scrollRef = useRef<ScrollView>(null);
     const featuredScrollRef = useRef<ScrollView>(null);
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -388,7 +388,7 @@ const WeddingVenue = ({ navigation }: { navigation: any }) => {
                         <TouchableOpacity style={styles.utilityBtn}><Ionicons name="notifications-outline" size={20} color="#FFF" /></TouchableOpacity>
                     </View>
                     <View style={{ marginBottom: 60, paddingHorizontal: 5 }}>
-                        <Text style={styles.heroHeadline}>Finding Your{"\n"}Perfect Venue 💍</Text>
+                        <Text style={styles.heroHeadline}>Finding Your{"\n"}Perfect Venue</Text>
                         <Text style={styles.heroSubhead}>Explore exclusive high-end wedding spaces</Text>
                     </View>
                 </LinearGradient>
@@ -396,14 +396,14 @@ const WeddingVenue = ({ navigation }: { navigation: any }) => {
 
             <View style={[styles.premiumSearchContainer, isSearchFocused && styles.premiumSearchActive]}>
                 <TouchableOpacity style={styles.locationSelector}>
-                    <Text style={styles.locationTextPin}>📍 {selectedCity}</Text>
+                    <Text style={styles.locationTextPin}> {selectedCity}</Text>
                     <Ionicons name="chevron-down" size={14} color={COLORS.secondary} />
                 </TouchableOpacity>
                 <View style={styles.searchDivider} />
                 <View style={styles.searchInputWrapper}>
                     <TextInput
                         style={styles.premiumInput}
-                        placeholder="Search venues, areas…"
+                        placeholder="Search venues, areas"
                         placeholderTextColor="#999"
                         onFocus={() => setSearchFocused(true)}
                         onChangeText={setSearchQuery}
@@ -427,7 +427,7 @@ const WeddingVenue = ({ navigation }: { navigation: any }) => {
                         <TextInput
                             style={styles.overlayInput}
                             autoFocus
-                            placeholder="Search venues, areas…"
+                            placeholder="Search venues, areas"
                             onChangeText={setSearchQuery}
                             value={searchQuery}
                         />
@@ -722,7 +722,7 @@ const WeddingVenue = ({ navigation }: { navigation: any }) => {
                                                 <View style={styles.featuredBadge}><Text style={styles.featuredBadgeText}>Featured</Text></View>
                                                 <Text style={styles.featuredProjectTitle}>Grand Royal Wedding 2024</Text>
                                                 <View style={styles.featuredMetaRow}>
-                                                    <Text style={styles.featuredMetaText}>12 Photos • Luxury Backdrop</Text>
+                                                    <Text style={styles.featuredMetaText}>12 Photos  Luxury Backdrop</Text>
                                                     <View style={styles.viewProjectBtn}><Text style={styles.viewProjectBtnText}>View Project</Text></View>
                                                 </View>
                                             </LinearGradient>
@@ -812,9 +812,9 @@ const WeddingVenue = ({ navigation }: { navigation: any }) => {
 
                                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pricingCardsScroll}>
                                     {[
-                                        { title: 'Wedding Royale', price: '₹1,50,000', per: 'per event', tag: 'Most Popular', color: '#CC0E0E' },
-                                        { title: 'Engagement Gala', price: '₹75,000', per: 'per event', tag: 'Limited Offer', color: '#D48806' },
-                                        { title: 'Pre-Wedding Shoot', price: '₹45,000', per: 'per day', tag: 'New', color: '#2C3E50' }
+                                        { title: 'Wedding Royale', price: '1,50,000', per: 'per event', tag: 'Most Popular', color: '#CC0E0E' },
+                                        { title: 'Engagement Gala', price: '75,000', per: 'per event', tag: 'Limited Offer', color: '#D48806' },
+                                        { title: 'Pre-Wedding Shoot', price: '45,000', per: 'per day', tag: 'New', color: '#2C3E50' }
                                     ].map((pkg, idx) => (
                                         <View key={idx} style={styles.eventPriceCard}>
                                             <View style={[styles.eventCardTopTag, { backgroundColor: pkg.color }]}>
@@ -969,7 +969,7 @@ const WeddingVenue = ({ navigation }: { navigation: any }) => {
                                 <View style={styles.engagementTriggers}>
                                     <View style={styles.triggerCard}>
                                         <Text style={styles.triggerLabel}>Starting Price</Text>
-                                        <Text style={styles.triggerVal}>₹1,500 <Text style={styles.perPlate}>/plate</Text></Text>
+                                        <Text style={styles.triggerVal}>1,500 <Text style={styles.perPlate}>/plate</Text></Text>
                                     </View>
                                     <View style={styles.triggerCard}>
                                         <Text style={styles.triggerLabel}>Capacity</Text>

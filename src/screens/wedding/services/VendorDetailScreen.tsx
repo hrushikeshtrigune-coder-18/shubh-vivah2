@@ -26,7 +26,7 @@ const COLORS = {
     maroon: '#800000',
 };
 
-const VendorDetailScreen = ({ navigation, route }: { navigation: any; route: any }) => {
+const VendorDetailScreen = ({ navigation, route }: { navigation?: any; route?: any }) => {
     const vendor = route.params?.vendor || {};
     const [activeTab, setActiveTab] = useState('Portfolio');
     const [bookmarked, setBookmarked] = useState(false);
@@ -62,12 +62,12 @@ const VendorDetailScreen = ({ navigation, route }: { navigation: any; route: any
     const tabs = ['Portfolio', 'Albums', 'Videos'];
 
     const portfolioImages = vendor.portfolio || [
-        require('../../../../assets/images/decor.jpg'),
-        require('../../../../assets/images/Food.jpg'),
-        require('../../../../assets/images/photo.jpg'),
-        require('../../../../assets/images/entertenment.jpg'),
-        require('../../../../assets/images/venue1.jpg'),
-        require('../../../../assets/images/venue2.jpg'),
+        require('../../../../assets1/images/decor.jpg'),
+        require('../../../../assets1/images/Food.jpg'),
+        require('../../../../assets1/images/photo.jpg'),
+        require('../../../../assets1/images/entertenment.jpg'),
+        require('../../../../assets1/images/venue1.jpg'),
+        require('../../../../assets1/images/venue2.jpg'),
     ];
 
     const handleShare = async () => {

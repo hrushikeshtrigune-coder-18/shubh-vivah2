@@ -41,20 +41,20 @@ const FONTS = [
 ];
 
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/sangit.jpeg'), name: 'Musical Night' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/sangit1.jpg'), name: 'Dancing Couple' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/sangit2.jpg'), name: 'Royal Stage' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/sangit3.jpg'), name: 'Vibrant Beats' },
-    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/sangit4.jpg'), name: 'Elegant Sangeet' },
-    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/sangit5.jpg'), name: 'Traditional Tune' },
-    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/sangit6.jpg'), name: 'Festive Lights' },
-    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/sangit7.jpg'), name: 'Classic Melody' },
-    { id: 't9', image: require('../../../../assets/EventMimg/Einvite/sangit8.jpg'), name: 'Modern Dance' },
-    { id: 't10', image: require('../../../../assets/EventMimg/Einvite/sangit9.jpg'), name: 'Golden Celebration' },
-    { id: 't11', image: require('../../../../assets/EventMimg/Einvite/sangit10.jpg'), name: 'Starry Night' },
+    { id: 't1', image: require('../../../../assets1/EventMimg/Einvite/sangit.jpeg'), name: 'Musical Night' },
+    { id: 't2', image: require('../../../../assets1/EventMimg/Einvite/sangit1.jpg'), name: 'Dancing Couple' },
+    { id: 't3', image: require('../../../../assets1/EventMimg/Einvite/sangit2.jpg'), name: 'Royal Stage' },
+    { id: 't4', image: require('../../../../assets1/EventMimg/Einvite/sangit3.jpg'), name: 'Vibrant Beats' },
+    { id: 't5', image: require('../../../../assets1/EventMimg/Einvite/sangit4.jpg'), name: 'Elegant Sangeet' },
+    { id: 't6', image: require('../../../../assets1/EventMimg/Einvite/sangit5.jpg'), name: 'Traditional Tune' },
+    { id: 't7', image: require('../../../../assets1/EventMimg/Einvite/sangit6.jpg'), name: 'Festive Lights' },
+    { id: 't8', image: require('../../../../assets1/EventMimg/Einvite/sangit7.jpg'), name: 'Classic Melody' },
+    { id: 't9', image: require('../../../../assets1/EventMimg/Einvite/sangit8.jpg'), name: 'Modern Dance' },
+    { id: 't10', image: require('../../../../assets1/EventMimg/Einvite/sangit9.jpg'), name: 'Golden Celebration' },
+    { id: 't11', image: require('../../../../assets1/EventMimg/Einvite/sangit10.jpg'), name: 'Starry Night' },
 ];
 
-const SangitInviteScreen = ({ navigation, route }: { navigation: any; route: any }) => {
+const SangitInviteScreen = ({ navigation, route }: { navigation?: any; route?: any }) => {
     const { eventType } = route.params || { eventType: 'Sangeet' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
