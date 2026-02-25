@@ -25,7 +25,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
-// STRICT Color Palette
+// STRICT Color Palette from JewelleryDetails
 const COLORS = {
     kumkum: '#A70002',       // Primary Accent
     akshid: '#FFFFE4',       // Background / Soft sections
@@ -36,67 +36,70 @@ const COLORS = {
     textDark: '#1A1A1A',     // Deep black for contrast
     textGray: '#666666',
     cardShadow: 'rgba(167, 0, 2, 0.1)', // Kumkum tinted shadow
+    gold: '#D4AF37',
 };
+
 
 const SUB_CATEGORIES = ['Photos', 'Videos', 'Media'];
 const SUB_FILTERS = [
     { id: 'All', name: 'All', icon: 'grid-outline' },
-    { id: 'floral', name: 'Floral', icon: 'flower-outline' },
-    { id: 'theme', name: 'Theme', icon: 'color-palette-outline' },
-    { id: 'traditional', name: 'Traditional', icon: 'layers-outline' },
+    { id: 'bridal', name: 'Bridal', icon: 'heart-outline' },
+    { id: 'party', name: 'Party', icon: 'sparkles-outline' },
+    { id: 'engagement', name: 'Engagement', icon: 'ring-outline' }, // closest to ring is ring-outline? using ellipse or similar if not found
 ];
 
+// Mock Data for Makeup
 const PORTFOLIO_IMAGES = [
-    { id: '1', source: require('../../../../assets/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'), height: 200, label: 'Traditional', category: 'traditional' },
-    { id: '2', source: require('../../../../assets/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'), height: 280, label: 'Floral Design', category: 'floral' },
-    { id: '3', source: require('../../../../assets/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'), height: 240, label: 'Theme Based', category: 'theme' },
-    { id: '4', source: require('../../../../assets/EventMimg/Jewellery folder/jewelry4.jpg.jpeg'), height: 180, label: 'Bridal Set', category: 'traditional' },
-    { id: '5', source: require('../../../../assets/EventMimg/Jewellery folder/RING 3.jpeg'), height: 260, label: 'Modern Ring', category: 'theme' },
-    { id: '6', source: require('../../../../assets/EventMimg/Jewellery folder/RING1.jpg.jpeg'), height: 220, label: 'Floral Ring', category: 'floral' },
-    { id: '7', source: require('../../../../assets/EventMimg/Jewellery folder/RING2.jpg.jpeg'), height: 240, label: 'Classic Gold', category: 'traditional' },
-    { id: '8', source: require('../../../../assets/EventMimg/Jewellery folder/RING4.jpg.jpeg'), height: 200, label: 'Theme Cut', category: 'theme' },
+    { id: '1', source: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), height: 250, label: 'Bridal Glow', category: 'bridal' },
+    { id: '2', source: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), height: 180, label: 'Party Glam', category: 'party' },
+    { id: '3', source: require('../../../../assets1/EventMimg/Makeup/artist3.jpg'), height: 220, label: 'Engagement Look', category: 'engagement' },
+    { id: '4', source: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), height: 200, label: 'Sangeet Vibes', category: 'party' },
+    { id: '5', source: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), height: 240, label: 'Reception Royal', category: 'bridal' },
+    { id: '6', source: require('../../../../assets1/EventMimg/Makeup/artist3.jpg'), height: 190, label: 'Haldi Special', category: 'engagement' },
 ];
 
 const ABOUT_DATA = {
-    description: "Welcome to Royal Orchid Palace, where we craft timeless pieces of jewellery that become a part of your legacy. Established in 1998, we have been serving the finest families with our exquisite gold, diamond, and polki collections.",
-    highlights: ["custom designs", "certified purity", "lifetime exchange"],
-    specialties: ["Bridal Sets", "Antique Kundan", "Solitaire Rings", "Temple Jewellery"]
+    description: "Welcome to Glamour by Gloria, where we enhance your natural beauty for your special day. With over 5 years of experience, we specialize in HD and Airbrush makeup that looks flawless in person and in photos.",
+    highlights: ["Certified MUA", "Premium Products", "Global Experience"],
+    specialties: ["Bridal HD Makeup", "Airbrush Techniques", "Hairstyling", "Draping"]
 };
 
+// Adapted to Pricing Card format
 const PRICING_PACKAGES = [
-    { id: '1', title: 'Bridal Gold Set', price: ' 1.5L - 5L', details: 'Complete necklace, earrings, and maang tikka set in 22k gold.', popular: true },
-    { id: '2', title: 'Diamond Engagement Ring', price: ' 50k - 2L', details: 'Solitaire and halo settings available in 18k gold and platinum.', popular: false },
-    { id: '3', title: 'Antique Temple Set', price: ' 2L - 8L', details: 'Handcrafted deity motifs with precious gemstones.', popular: false },
-    { id: '4', title: 'Polki Choker', price: ' 3L+', details: 'Uncut diamonds set in traditional jadau style.', popular: true },
+    { id: '1', title: 'Bridal HD Makeup', price: ' 15,000', details: 'High Definition makeup, hair styling, draping, lashes, and trial included.', popular: true },
+    { id: '2', title: 'Party Makeup', price: ' 5,000', details: 'Glamorous look for bridesmaids and family members. Includes basic hair.', popular: false },
+    { id: '3', title: 'Engagement Look', price: ' 10,000', details: 'Subtle yet stunning makeup for your engagement ceremony.', popular: false },
+    { id: '4', title: 'Airbrush Bridal', price: ' 20,000+', details: 'Flawless, long-lasting airbrush finish for the bride.', popular: true },
 ];
 
 const REVIEWS_DATA = [
-    { id: '1', user: 'Anjali Sharma', rating: 5, date: '2 days ago', comment: 'Absolutely stunning collection! The bridal set I bought was the highlight of my wedding. Highly recommend.' },
-    { id: '2', user: 'Rahul Verma', rating: 4, date: '1 week ago', comment: 'Great designs and transparent pricing. The staff was very patient and helpful.' },
-    { id: '3', user: 'Priya Patel', rating: 5, date: '3 weeks ago', comment: 'Loved the custom engagement ring. It was exactly what I imagined. Thank you!' },
+    { id: '1', user: 'Priya Sharma', rating: 5, date: '2 days ago', comment: 'Absolutely loved my bridal look! She is very professional and uses high-end products.' },
+    { id: '2', user: 'Anjali Verma', rating: 4, date: '1 week ago', comment: 'Great work with the makeup, but hair styling could be better. Overall satisfied.' },
+    { id: '3', user: 'Sneha Patel', rating: 5, date: '3 weeks ago', comment: 'Best MUA in town! Made me look like a dream.' },
 ];
 
+// Mock Videos
 const VIDEOS_DATA = [
-    { id: '1', thumbnail: require('../../../../assets/EventMimg/Jewellery folder/jewelry1.jpg.jpeg'), title: 'Bridal Collection Launch 2024', duration: '2:15' },
-    { id: '2', thumbnail: require('../../../../assets/EventMimg/Jewellery folder/jewelry3.jpg.jpeg'), title: 'Behind the Scenes: Handcrafted Kundan', duration: '4:30' },
-    { id: '3', thumbnail: require('../../../../assets/EventMimg/Jewellery folder/bridalJewelary.jpg.jpeg'), title: 'Real Brides Testimonials', duration: '1:45' },
-    { id: '4', thumbnail: require('../../../../assets/EventMimg/Jewellery folder/Djewellery.jpg.jpeg'), title: 'Diamond Solitaire Showcase', duration: '3:00' },
+    { id: '1', thumbnail: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), title: 'Bridal Makeup Tutorial', duration: '5:15' },
+    { id: '2', thumbnail: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), title: 'Party Look Transformation', duration: '3:30' },
+    { id: '3', thumbnail: require('../../../../assets1/EventMimg/Makeup/artist3.jpg'), title: 'Client Testimonials', duration: '1:45' },
 ];
 
+// Mock Media
 const MEDIA_DATA = [
-    { id: '1', image: require('../../../../assets/EventMimg/Jewellery folder/jewelary.jpg.jpeg'), title: 'featured in Vogue Wedding Book 2024', source: 'Vogue India', date: 'Oct 2024' },
-    { id: '2', image: require('../../../../assets/EventMimg/Jewellery folder/RING4.jpg.jpeg'), title: 'Best Traditional Jewellery Award', source: 'WeddingSutra', date: 'Aug 2024' },
-    { id: '3', image: require('../../../../assets/EventMimg/Jewellery folder/accessories.jpg.jpeg'), title: 'Top 10 Jewellers in Pune', source: 'LBB Pune', date: 'July 2024' },
+    { id: '1', image: require('../../../../assets1/EventMimg/Makeup/artist1.jpg'), title: 'Featured in WedMeGood', source: 'WedMeGood', date: 'Oct 2024' },
+    { id: '2', image: require('../../../../assets1/EventMimg/Makeup/artist2.jpg'), title: 'Top 10 MUAs in Goa', source: 'WeddingSutra', date: 'Aug 2024' },
 ];
 
-const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any }) => {
-    const { item } = route.params || {};
+const MakeupArtistDetails = ({ route, navigation }: { route?: any; navigation?: any }) => {
 
+    const { item } = route.params || {};
     const insets = useSafeAreaInsets();
     const [activeTab, setActiveTab] = useState('PROJECTS');
     const [isBookmark, setIsBookmark] = useState(false);
     const [bookModalVisible, setBookModalVisible] = useState(false);
-    const [activeSubTab, setActiveSubTab] = useState('Media');
+    const [activeSubTab, setActiveSubTab] = useState('Photos'); // Default to Photos just like Source? Source says 'Media' in state but 'Photos' in handleViewPhotos
+    // Let's default to 'Photos' for better UX here
     const [activeSubFilter, setActiveSubFilter] = useState('All');
 
     const mainScrollRef = useRef<ScrollView>(null);
@@ -118,17 +121,18 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
 
     // Dynamic Hero Images
     const heroImages = React.useMemo(() => {
-        if (item?.thumbnails && Array.isArray(item.thumbnails) && item.thumbnails.length > 0) {
-            return item.thumbnails.map((img: any, index: number) => ({ id: `hero-${index}`, source: img }));
-        }
-
+        // If item has specific thumbnails, use them
+        // For now, let's use the provided item image or mapping
         if (item?.image) {
-            if (typeof item.image === 'string') {
-                return [{ id: 'hero-main', source: { uri: item.image } }];
-            }
-            return [{ id: 'hero-main', source: item.image }];
+            // Replicate the single image multiple times for the carousel effect if only 1 is provided
+            // or use PORTFOLIO_IMAGES as hero images
+            return PORTFOLIO_IMAGES.slice(0, 3).map((img, i) => ({ id: `hero-${i}`, source: img.source }));
         }
-        return [];
+        return [
+            { id: 'hero-1', source: require('../../../../assets1/EventMimg/Makeup/artist1.jpg') },
+            { id: 'hero-2', source: require('../../../../assets1/EventMimg/Makeup/artist2.jpg') },
+            { id: 'hero-3', source: require('../../../../assets1/EventMimg/Makeup/artist3.jpg') },
+        ];
     }, [item]);
 
     useEffect(() => {
@@ -141,10 +145,10 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
                     x: nextIndex * width,
                     animated: true,
                 });
+
                 return nextIndex;
             });
         }, 3000);
-
 
         return () => clearInterval(interval);
     }, [heroImages.length]);
@@ -161,13 +165,11 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
         setActiveTab('PROJECTS');
         setActiveSubTab('Photos');
         if (mainScrollRef.current && contentY > 0) {
-            // Need to use scrollTo on the underlying native component or work with Animated ref
-            // Since useAnimatedRef is often used with Reanimated, we use a standard ref here if possible 
-            // but Animated.ScrollView might require .scrollTo({ y, animated })
             (mainScrollRef.current as any).scrollTo({ y: contentY - 60, animated: true }); // -60 for header offset
         }
 
     };
+
     // Animate Avatar
     const animatedAvatarStyle = useAnimatedStyle(() => {
         const left = interpolate(
@@ -261,15 +263,14 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
                         setCurrentIndex(newIndex);
                     }}
                 >
-                    {heroImages.map((item: any) => (
+                    {heroImages.map((img, index) => (
                         <Image
-                            key={item.id}
-                            source={item.source}
+                            key={index} // Use index as key if id not unique in mocked array
+                            source={img.source}
                             style={{ width, height: 450 }}
                             resizeMode="cover"
                         />
                     ))}
-
                 </ScrollView>
                 <View style={styles.heroOverlay} />
             </View>
@@ -291,47 +292,42 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
                 <View style={styles.sheetContainer}>
                     {/* Floating Avatar - Animated */}
                     <Animated.View style={[styles.avatarContainer, animatedAvatarStyle]}>
-                        <Image source={item?.image} style={styles.avatarImage} resizeMode="cover" />
+                        <Image source={item?.image || require('../../../../assets1/EventMimg/Makeup/artist1.jpg')} style={styles.avatarImage} resizeMode="cover" />
                     </Animated.View>
 
                     {/* Vendor Info - Animated */}
                     <Animated.View style={[styles.vendorInfoSection, animatedInfoStyle]}>
-                        <Text style={styles.vendorName}>{item?.name || 'Royal Orchid Palace'}</Text>
+                        <Text style={styles.vendorName}>{item?.name || 'Glamour by Gloria'}</Text>
                         <View style={styles.locationRow}>
                             <Ionicons name="location-outline" size={16} color={COLORS.textGray} />
-                            <Text style={styles.locationText}>{item?.location || 'Located in the beautiful city of Pune, MH.'}</Text>
+                            <Text style={styles.locationText}>{item?.location || 'Pune, MH'}</Text>
                         </View>
-                        <Text style={styles.tagline}>{item?.tagline || 'Offering a royal experience with curated luxury events.'}</Text>
+                        <Text style={styles.tagline}>{item?.tagline || 'Enhancing your natural beauty for your special day.'}</Text>
 
                         {/* Highlights / Stats Row */}
                         <View style={styles.statsRow}>
                             <View style={styles.statItem}>
                                 <Ionicons name="heart-outline" size={18} color={COLORS.textDark} />
-                                <Text style={styles.statValue}>2.5k</Text>
+                                <Text style={styles.statValue}>1.2k</Text>
                             </View>
                             <View style={styles.statItem}>
                                 <Ionicons name="eye-outline" size={18} color={COLORS.textDark} />
-                                <Text style={styles.statValue}>15k</Text>
+                                <Text style={styles.statValue}>5k</Text>
                             </View>
                             <View style={styles.statItem}>
                                 <Ionicons name="star" size={18} color={COLORS.darkHaldi} />
-                                <Text style={styles.statValue}>{item?.ratingValue || 4.8} ({item?.reviews || 320})</Text>
+                                <Text style={styles.statValue}>{item?.rating || 4.9} ({item?.reviews || 120})</Text>
                             </View>
                         </View>
                     </Animated.View>
 
                     <View style={styles.divider} />
 
-                    {/* Highlights Scroll */}
-
-
                     {/* Main Tabs */}
                     <View
                         style={styles.mainTabsWrapper}
                         onLayout={(event) => {
                             const layout = event.nativeEvent.layout;
-                            setContentY(layout.y + 280); // +280 approx for Hero height + Info height if layout.y is relative to parent View
-                            // Actually since onLayout is inside ScrollView, layout.y is relative to ScrollView content start
                             setContentY(layout.y);
                         }}
                     >
@@ -484,7 +480,7 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
                             <View style={styles.specialtiesGrid}>
                                 {ABOUT_DATA.specialties.map((spec, index) => (
                                     <View key={index} style={styles.specialtyItem}>
-                                        <Ionicons name="diamond-outline" size={16} color={COLORS.kumkum} />
+                                        <Ionicons name="sparkles-outline" size={16} color={COLORS.kumkum} />
                                         <Text style={styles.specialtyText}>{spec}</Text>
                                     </View>
                                 ))}
@@ -496,12 +492,12 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
                     {activeTab === 'REVIEWS' && (
                         <View style={styles.sectionContent}>
                             <View style={styles.ratingSummary}>
-                                <Text style={styles.bigRating}>4.8</Text>
+                                <Text style={styles.bigRating}>4.9</Text>
                                 <View>
                                     <View style={{ flexDirection: 'row' }}>
                                         {[1, 2, 3, 4, 5].map(i => <Ionicons key={i} name="star" size={16} color={COLORS.darkHaldi} />)}
                                     </View>
-                                    <Text style={styles.totalReviews}>Based on 320 reviews</Text>
+                                    <Text style={styles.totalReviews}>Based on 120 reviews</Text>
                                 </View>
                             </View>
 
@@ -531,7 +527,7 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
                     {/* CTA Buttons */}
                     <View style={styles.ctaRow}>
                         <TouchableOpacity style={[styles.contactBtn, styles.bookBtn]} onPress={() => setBookModalVisible(true)}>
-                            <Text style={styles.contactBtnText}>Book Visit</Text>
+                            <Text style={styles.contactBtnText}>Book Appointment</Text>
                             <Ionicons name="calendar-outline" size={18} color={COLORS.white} />
                         </TouchableOpacity>
 
@@ -556,12 +552,12 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
                         <TouchableWithoutFeedback onPress={() => { }}>
                             <View style={styles.modalContent}>
                                 <View style={styles.modalHeader}>
-                                    <Text style={styles.modalTitle}>Book a Visit</Text>
+                                    <Text style={styles.modalTitle}>Book Appointment</Text>
                                     <TouchableOpacity onPress={() => setBookModalVisible(false)} style={styles.closeBtn}>
                                         <Ionicons name="close" size={20} color={COLORS.darkHaldi} />
                                     </TouchableOpacity>
                                 </View>
-                                <Text style={styles.modalSubtitle}>Schedule a tour of {item?.name || 'Royal Orchid Palace'}</Text>
+                                <Text style={styles.modalSubtitle}>Schedule a session with {item?.name || 'Glamour by Gloria'}</Text>
 
                                 <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
                                     <View style={styles.formCard}>
@@ -569,67 +565,43 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
                                             <Text style={styles.label}>Full Name</Text>
                                             <View style={styles.inputWrapper}>
                                                 <Ionicons name="person-outline" size={20} color={COLORS.textGray} style={styles.inputIcon} />
-                                                <TextInput
-                                                    placeholder="Enter your full name"
-                                                    style={styles.input}
-                                                    placeholderTextColor={COLORS.textGray + '99'}
-                                                    value={bookingForm.fullName}
-                                                    onChangeText={(text) => setBookingForm(prev => ({ ...prev, fullName: text }))}
-                                                />
+                                                <TextInput placeholder="Enter your full name" style={styles.input} placeholderTextColor={COLORS.textGray + '99'} />
                                             </View>
                                         </View>
+
                                         <View style={styles.inputGroup}>
-                                            <Text style={styles.label}>Mobile Number (OTP optional)</Text>
+                                            <Text style={styles.label}>Mobile Number</Text>
                                             <View style={styles.inputWrapper}>
                                                 <Ionicons name="call-outline" size={20} color={COLORS.textGray} style={styles.inputIcon} />
-                                                <TextInput
-                                                    placeholder="Enter mobile number"
-                                                    keyboardType="phone-pad"
-                                                    style={styles.input}
-                                                    placeholderTextColor={COLORS.textGray + '99'}
-                                                    value={bookingForm.mobile}
-                                                    onChangeText={(text) => setBookingForm(prev => ({ ...prev, mobile: text }))}
-                                                />
+                                                <TextInput placeholder="Enter mobile number" keyboardType="phone-pad" style={styles.input} placeholderTextColor={COLORS.textGray + '99'} />
                                             </View>
                                         </View>
+
                                         <View style={styles.rowInputs}>
                                             <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
-                                                <Text style={styles.label}>Preferred Date</Text>
+                                                <Text style={styles.label}>Event Date</Text>
                                                 <View style={styles.inputWrapper}>
                                                     <Ionicons name="calendar-outline" size={20} color={COLORS.textGray} style={styles.inputIcon} />
-                                                    <TextInput
-                                                        placeholder="DD/MM/YYYY"
-                                                        style={styles.input}
-                                                        placeholderTextColor={COLORS.textGray + '99'}
-                                                        value={bookingForm.date}
-                                                        onChangeText={(text) => setBookingForm(prev => ({ ...prev, date: text }))}
-                                                    />
+                                                    <TextInput placeholder="DD/MM/YYYY" style={styles.input} placeholderTextColor={COLORS.textGray + '99'} />
                                                 </View>
                                             </View>
                                             <View style={[styles.inputGroup, { flex: 1 }]}>
                                                 <Text style={styles.label}>Time Slot</Text>
                                                 <View style={styles.inputWrapper}>
                                                     <Ionicons name="time-outline" size={20} color={COLORS.textGray} style={styles.inputIcon} />
-                                                    <TextInput
-                                                        placeholder="e.g. 2:00 PM"
-                                                        style={styles.input}
-                                                        placeholderTextColor={COLORS.textGray + '99'}
-                                                        value={bookingForm.timeSlot}
-                                                        onChangeText={(text) => setBookingForm(prev => ({ ...prev, timeSlot: text }))}
-                                                    />
+                                                    <TextInput placeholder="e.g. 10:00 AM" style={styles.input} placeholderTextColor={COLORS.textGray + '99'} />
                                                 </View>
                                             </View>
-
                                         </View>
 
-                                        <Text style={styles.disclaimer}>* Our relationship manager will call you to confirm the appointment.</Text>
+                                        <Text style={styles.disclaimer}>* We will contact you to confirm your appointment.</Text>
 
                                         <View style={styles.modalFooter}>
                                             <TouchableOpacity style={styles.backBtnModal} onPress={() => setBookModalVisible(false)}>
                                                 <Text style={styles.backBtnText}>Back</Text>
                                             </TouchableOpacity>
                                             <TouchableOpacity style={styles.confirmBtn}>
-                                                <Text style={styles.confirmBtnText}>Confirm Visit</Text>
+                                                <Text style={styles.confirmBtnText}>Confirm Booking</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -637,21 +609,20 @@ const JewelleryDetails = ({ route, navigation }: { route?: any; navigation?: any
                             </View>
                         </TouchableWithoutFeedback>
                     </View>
-                </TouchableWithoutFeedback >
-            </Modal >
-        </View >
+                </TouchableWithoutFeedback>
+            </Modal>
+        </View>
     );
 };
 
-// End of JewelleryDetails
 
+// Styles Copied from JewelleryDetails.jsx
 const styles = StyleSheet.create({
     mainContainer: { flex: 1, backgroundColor: COLORS.akshid },
 
     // Fixed Hero
     heroBackground: { position: 'absolute', top: 0, left: 0, right: 0, height: 450 },
-    heroImage: { width: '100%', height: '100%' }, // Kept for reference, replaced by FlatList items inline style
-    heroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.1)', pointerEvents: 'none' }, // Ensure overlay doesn't block touches if we want manual scroll
+    heroOverlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.1)', pointerEvents: 'none' },
 
     // Fixed Header
     fixedHeader: {
@@ -664,7 +635,6 @@ const styles = StyleSheet.create({
     },
 
     // Sheet
-    scrollContent: { paddingBottom: 40 },
     sheetContainer: {
         backgroundColor: COLORS.akshid,
         borderTopLeftRadius: 35,
@@ -680,11 +650,9 @@ const styles = StyleSheet.create({
         })
     },
 
-    // Avatar - Base styles, animated parts handled by reanimated
+    // Avatar
     avatarContainer: {
         position: 'absolute',
-        // top: 50, // Handled by animation
-        // left: 20, // Handled by animation
         width: 80, height: 80, borderRadius: 40,
         backgroundColor: COLORS.akshid,
         padding: 4,
@@ -695,8 +663,8 @@ const styles = StyleSheet.create({
     },
     avatarImage: { width: '100%', height: '100%', borderRadius: 40 },
 
-    // Vendor Info - Base styles
-    vendorInfoSection: { marginBottom: 20 }, // marginLeft handled by animation
+    // Vendor Info
+    vendorInfoSection: { marginBottom: 20 },
     vendorName: { fontSize: 20, fontWeight: '800', color: COLORS.textDark, marginBottom: 5 },
     locationRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, gap: 4 },
     locationText: { fontSize: 13, color: COLORS.textGray, fontWeight: '500' },
@@ -707,8 +675,6 @@ const styles = StyleSheet.create({
     statValue: { fontSize: 12, fontWeight: '600', color: COLORS.textDark },
 
     divider: { height: 1, backgroundColor: 'rgba(0,0,0,0.05)', marginBottom: 20 },
-
-
 
     // Main Tabs
     mainTabsWrapper: {
@@ -782,7 +748,7 @@ const styles = StyleSheet.create({
         right: 0,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.25)', // Glassmorphic look
+        backgroundColor: 'rgba(255, 255, 255, 0.25)',
         paddingVertical: 5,
         marginHorizontal: 20,
         borderRadius: 20,
@@ -791,13 +757,67 @@ const styles = StyleSheet.create({
         color: COLORS.white,
         fontSize: 14,
         fontWeight: '900',
-        fontFamily: Platform.select({ ios: 'Times New Roman', android: 'serif' }), // Serif for that ETH style
+        fontFamily: Platform.select({ ios: 'Times New Roman', android: 'serif' }),
     },
+
+    // Videos
+    videosGrid: { gap: 15 },
+    videoCard: { marginBottom: 20, borderRadius: 15, overflow: 'hidden', backgroundColor: COLORS.white, elevation: 2 },
+    videoThumbnail: { width: '100%', height: 200 },
+    playIconOverlay: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.2)' },
+    videoDurationBadge: { position: 'absolute', bottom: 10, right: 10, backgroundColor: 'rgba(0,0,0,0.7)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 },
+    videoDurationText: { color: COLORS.white, fontSize: 10, fontWeight: 'bold' },
+    videoInfoOverlay: { padding: 12 },
+    videoTitle: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark },
+
+    // Media
+    mediaList: { gap: 15 },
+    mediaCard: { flexDirection: 'row', backgroundColor: COLORS.white, borderRadius: 12, overflow: 'hidden', elevation: 2 },
+    mediaImage: { width: 100, height: 100 },
+    mediaContent: { flex: 1, padding: 12, justifyContent: 'center' },
+    mediaSource: { fontSize: 10, color: COLORS.textGray, marginBottom: 4, textTransform: 'uppercase' },
+    mediaTitle: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8 },
+    readMoreRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+    readMoreText: { fontSize: 12, color: COLORS.kumkum, fontWeight: '600' },
+
+    // Section Content generic
+    sectionContent: { marginTop: 10 },
+    sectionHeading: { fontSize: 18, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 10, fontFamily: 'serif' },
+
+    // Pricing
+    pricingCard: { backgroundColor: COLORS.white, padding: 15, borderRadius: 12, marginBottom: 10, elevation: 1, borderWidth: 1, borderColor: '#eee' },
+    pricingHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 5 },
+    pricingTitle: { fontSize: 16, fontWeight: 'bold', color: COLORS.textDark },
+    popularTag: { backgroundColor: COLORS.gold, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 },
+    popularText: { color: COLORS.white, fontSize: 10, fontWeight: 'bold' },
+    pricingPrice: { fontSize: 16, fontWeight: 'bold', color: COLORS.textRed, marginBottom: 5 },
+    pricingDetails: { fontSize: 12, color: COLORS.textGray, lineHeight: 18 },
+
+    // About
+    aboutDescription: { fontSize: 14, color: COLORS.textGray, lineHeight: 22 },
+    specialtiesGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 10 },
+    specialtyItem: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#f9f9f9', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: '#eee' },
+    specialtyText: { fontSize: 12, color: COLORS.textDark, fontWeight: '600' },
+
+    // Reviews
+    ratingSummary: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.white, padding: 15, borderRadius: 12, marginBottom: 15 },
+    bigRating: { fontSize: 32, fontWeight: 'bold', color: COLORS.textDark, marginRight: 15 },
+    totalReviews: { fontSize: 12, color: COLORS.textGray, marginTop: 2 },
+    reviewCard: { backgroundColor: COLORS.white, padding: 15, borderRadius: 12, marginBottom: 10 },
+    reviewHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
+    reviewerInfo: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    reviewerAvatar: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#eee', alignItems: 'center', justifyContent: 'center' },
+    avatarText: { fontWeight: 'bold', color: COLORS.textGray },
+    reviewerName: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark },
+    reviewDate: { fontSize: 11, color: COLORS.textGray },
+    reviewRating: { flexDirection: 'row', alignItems: 'center', gap: 2, backgroundColor: 'green', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
+    ratingNum: { color: COLORS.white, fontSize: 10, fontWeight: 'bold' },
+    reviewComment: { fontSize: 13, color: COLORS.textGray, lineHeight: 18 },
 
     // Bottom CTA
     ctaRow: { marginTop: 30, flexDirection: 'row', gap: 15 },
     contactBtn: {
-        flex: 1, paddingVertical: 15, borderRadius: 30,
+        flex: 1, paddingVertical: 15, paddingHorizontal: 20, borderRadius: 30,
         flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10,
         ...Platform.select({
             web: { boxShadow: '0px 4px 10px rgba(0,0,0,0.1)' },
@@ -839,104 +859,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15, height: 50, backgroundColor: '#F9F9F9'
     },
     inputIcon: { marginRight: 10 },
-    input: {
-        flex: 1, color: '#2B2B2B', fontSize: 15,
-        ...Platform.select({
-            web: { outlineStyle: 'none' as any }
-        })
-    },
-
+    input: { flex: 1, color: COLORS.textDark, fontSize: 14 },
     rowInputs: { flexDirection: 'row' },
-    disclaimer: { fontSize: 11, color: COLORS.darkHaldi, fontStyle: 'italic', marginBottom: 25, lineHeight: 16 },
-    modalFooter: { flexDirection: 'row', gap: 15, marginTop: 10 },
-    backBtnModal: {
-        flex: 0.4, backgroundColor: 'transparent', borderRadius: 12, borderWidth: 1, borderColor: COLORS.darkHaldi,
-        justifyContent: 'center', alignItems: 'center', paddingVertical: 14
-    },
-    backBtnText: { color: COLORS.darkHaldi, fontWeight: '600', fontSize: 16 },
-    confirmBtn: {
-        flex: 1, backgroundColor: COLORS.kumkum, borderRadius: 12,
-        justifyContent: 'center', alignItems: 'center', paddingVertical: 14,
-        ...Platform.select({
-            default: { elevation: 3 }
-        })
-    },
-    confirmBtnText: { color: COLORS.white, fontWeight: 'bold', fontSize: 16 },
-
-    // New Sections Styles
-    sectionContent: { marginTop: 10, paddingBottom: 20 },
-    sectionHeading: { fontSize: 22, fontWeight: '800', color: COLORS.textDark, marginBottom: 15 },
-
-    // Pricing Styles
-    pricingCard: {
-        backgroundColor: COLORS.white, borderRadius: 16, padding: 15, marginBottom: 15,
-        ...Platform.select({
-            default: { elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5 }
-        })
-    },
-    pricingHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 },
-    pricingTitle: { fontSize: 16, fontWeight: '700', color: COLORS.textDark },
-    popularTag: { backgroundColor: '#FFF8E1', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8, borderWidth: 1, borderColor: COLORS.haldi },
-    popularText: { fontSize: 10, fontWeight: '700', color: COLORS.darkHaldi },
-    pricingPrice: { fontSize: 18, fontWeight: '800', color: COLORS.kumkum, marginBottom: 5 },
-    pricingDetails: { fontSize: 13, color: COLORS.textGray, lineHeight: 18 },
-
-    // About Styles
-    aboutDescription: { fontSize: 14, color: COLORS.textDark, lineHeight: 22 },
-    specialtiesGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 10 },
-    specialtyItem: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.white, paddingVertical: 8, paddingHorizontal: 12, borderRadius: 20, gap: 5, borderWidth: 1, borderColor: '#eee' },
-    specialtyText: { fontSize: 13, fontWeight: '600', color: COLORS.textDark },
-
-    // Reviews Styles
-    ratingSummary: { flexDirection: 'row', alignItems: 'center', gap: 15, marginBottom: 25, backgroundColor: '#FFF8E1', padding: 15, borderRadius: 16 },
-    bigRating: { fontSize: 36, fontWeight: '800', color: COLORS.darkHaldi },
-    totalReviews: { fontSize: 12, color: COLORS.textGray, marginTop: 2 },
-    reviewCard: { marginBottom: 20, borderBottomWidth: 1, borderBottomColor: '#eee', paddingBottom: 15 },
-    reviewHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 },
-    reviewerInfo: { flexDirection: 'row', gap: 10, alignItems: 'center' },
-    reviewerAvatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.kumkum, alignItems: 'center', justifyContent: 'center' },
-    avatarText: { color: COLORS.white, fontWeight: 'bold', fontSize: 18 },
-    reviewerName: { fontSize: 15, fontWeight: '700', color: COLORS.textDark },
-    reviewDate: { fontSize: 11, color: COLORS.textGray },
-    reviewRating: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.darkHaldi, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 8, gap: 3 },
-    ratingNum: { color: COLORS.white, fontWeight: 'bold', fontSize: 12 },
-    reviewComment: { fontSize: 13, color: '#444', lineHeight: 20 },
-
-    // Video Styles
-    videosGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-    videoCard: {
-        width: '48%', height: 120, borderRadius: 12, marginBottom: 15, overflow: 'hidden', position: 'relative', backgroundColor: '#000',
-        ...Platform.select({
-            default: { elevation: 3 }
-        })
-    },
-    videoThumbnail: { width: '100%', height: '100%', opacity: 0.8 },
-    playIconOverlay: { ...StyleSheet.absoluteFillObject, justifyContent: 'center', alignItems: 'center' },
-    videoDurationBadge: { position: 'absolute', top: 8, right: 8, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
-    videoDurationText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
-    videoInfoOverlay: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        padding: 8,
-        backgroundColor: 'rgba(0,0,0,0.6)'
-    },
-
-    videoTitle: { color: '#fff', fontSize: 11, fontWeight: '600', textShadowColor: 'rgba(0,0,0,0.5)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 },
-
-    // Media Styles
-    mediaList: { paddingBottom: 10 },
-    mediaCard: {
-        flexDirection: 'row', backgroundColor: COLORS.white, borderRadius: 12, marginBottom: 15, overflow: 'hidden',
-        borderWidth: 1, borderColor: '#eee'
-    },
-    mediaImage: { width: 100, height: 100 },
-    mediaContent: { flex: 1, padding: 12, justifyContent: 'center' },
-    mediaSource: { fontSize: 11, color: COLORS.kumkum, fontWeight: '700', textTransform: 'uppercase', marginBottom: 4 },
-    mediaTitle: { fontSize: 14, fontWeight: 'bold', color: COLORS.textDark, marginBottom: 8, lineHeight: 20 },
-    readMoreRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-    readMoreText: { fontSize: 12, color: COLORS.kumkum, fontWeight: '600' }
+    disclaimer: { fontSize: 11, color: COLORS.textGray, fontStyle: 'italic', marginBottom: 20 },
+    modalFooter: { flexDirection: 'row', gap: 15 },
+    backBtnModal: { flex: 1, paddingVertical: 15, borderRadius: 12, borderWidth: 1, borderColor: COLORS.textGray, alignItems: 'center' },
+    backBtnText: { color: COLORS.textGray, fontWeight: 'bold' },
+    confirmBtn: { flex: 2, backgroundColor: COLORS.kumkum, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
+    confirmBtnText: { color: COLORS.white, fontWeight: 'bold' },
 });
 
-export default JewelleryDetails;
+export default MakeupArtistDetails;

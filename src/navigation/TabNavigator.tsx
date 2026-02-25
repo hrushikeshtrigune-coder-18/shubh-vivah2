@@ -2,9 +2,9 @@ import { Ionicons } from '@expo/vector-icons'; // Use vector icons for premium l
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { Image } from 'react-native';
-import Footer from '../components/Footer/Footer';
+import Footer from '../components1/Footer/Footer';
 
-import Services2 from '../screens/wedding/Services2';
+import Services2 from '../screens1/wedding/Services2';
 import { colors } from '../theme/colors';
 
 const Tab = createBottomTabNavigator();
@@ -19,7 +19,7 @@ const TabNavigator = () => {
                     if (route.name === 'Services') {
                         return (
                             <Image
-                                source={require('../../assets/images/image icon.png')}
+                                source={require('../../assets1/images/image icon.png')}
                                 style={{
                                     width: size,
                                     height: size,

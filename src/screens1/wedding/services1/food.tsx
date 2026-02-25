@@ -15,15 +15,15 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import VendorCard from '../../../components/VendorCard';
-import food1 from '../../../../assets/images/food1.jpg';
-import food2 from '../../../../assets/images/food2.jpg';
-import food3 from '../../../../assets/images/food3.jpg';
-import food4 from '../../../../assets/images/food4.jpg';
-import venue1 from '../../../../assets/images/venue1.jpg';
-import venue2 from '../../../../assets/images/venue2.jpg';
-import venue5 from '../../../../assets/images/venue5.jpg';
-import venue6 from '../../../../assets/images/venue6.jpg';
+import VendorCard from '../../../components1/VendorCard';
+import food1 from '../../../../assets1/images/food1.jpg';
+import food2 from '../../../../assets1/images/food2.jpg';
+import food3 from '../../../../assets1/images/food3.jpg';
+import food4 from '../../../../assets1/images/food4.jpg';
+import venue1 from '../../../../assets1/images/venue1.jpg';
+import venue2 from '../../../../assets1/images/venue2.jpg';
+import venue5 from '../../../../assets1/images/venue5.jpg';
+import venue6 from '../../../../assets1/images/venue6.jpg';
 
 const { width } = Dimensions.get('window');
 

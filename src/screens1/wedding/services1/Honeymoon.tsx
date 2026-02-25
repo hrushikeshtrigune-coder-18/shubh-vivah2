@@ -29,8 +29,8 @@ import AnimatedRN, {
 const { width, height } = Dimensions.get('window');
 
 // --- ASSETS & CONSTANTS ---
-const wedImg = require('../../../../assets/images/wed.jpg');
-const honeyImg = require('../../../../assets/images/honey.jpg');
+const wedImg = require('../../../../assets1/images/wed.jpg');
+const honeyImg = require('../../../../assets1/images/honey.jpg');
 
 const PRIMARY_COLOR = '#CC0E0E';
 const ACCENT_COLOR = '#F29502';

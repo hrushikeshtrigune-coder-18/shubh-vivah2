@@ -2,12 +2,13 @@ import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 
 import { Animated, Dimensions, Image, Modal, Platform, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-
+// import { SafeAreaView } from 'react-native-safe-area-context';
 const { width, height } = Dimensions.get('window');
+// Calculate card dimensions to ensure fit
 const CARD_WIDTH = width * 0.8;
 const CARD_ASPECT_RATIO = 0.67; // 2:3
 const CARD_HEIGHT = CARD_WIDTH / CARD_ASPECT_RATIO;
-const PREVIEW_HEIGHT = CARD_HEIGHT + 60;
+const PREVIEW_HEIGHT = CARD_HEIGHT + 60; // Card height + padding for top/bottom
 
 const COLORS = {
     kumkum: '#A70002',
@@ -23,43 +24,41 @@ const Tabs = [
     { id: 'theme', icon: 'palette', label: 'Theme & Format' },
 ];
 
+// Text Styling Options
 const TEXT_COLORS = [
     COLORS.textRed,
     COLORS.kumkum,
     COLORS.darkHaldi,
     COLORS.maroon,
-    '#000000',
-    '#FFFFFF',
-    '#1A237E',
-    '#004D40',
+    '#000000', // Black
+    '#FFFFFF', // White
+    '#1A237E', // Navy Blue
+    '#004D40', // Teal
 ];
 
 const FONTS = [
     { id: 'system', label: 'System', value: 'System' },
     { id: 'serif', label: 'Serif', value: 'serif' },
     { id: 'monospace', label: 'Mono', value: 'monospace' },
+    // In a real app, we would load custom fonts here.
+    // For now, we rely on basic system font variants.
 ];
 
+// Template Data
 const TEMPLATES = [
-    { id: 't1', image: require('../../../../assets/EventMimg/Einvite/wedding1.jpg'), name: 'Royal Wedding' },
-    { id: 't2', image: require('../../../../assets/EventMimg/Einvite/wedding2.jpg'), name: 'Classic Elegance' },
-    { id: 't3', image: require('../../../../assets/EventMimg/Einvite/wedding3.jpg'), name: 'Floral Dreams' },
-    { id: 't4', image: require('../../../../assets/EventMimg/Einvite/wedding4.jpg'), name: 'Modern Love' },
-    { id: 't5', image: require('../../../../assets/EventMimg/Einvite/wedding5.jpg'), name: 'Traditional Red' },
-    { id: 't6', image: require('../../../../assets/EventMimg/Einvite/wedding6.jpg'), name: 'Golden Knots' },
-    { id: 't7', image: require('../../../../assets/EventMimg/Einvite/wedding7.jpg'), name: 'Vintage Charm' },
-    { id: 't8', image: require('../../../../assets/EventMimg/Einvite/wedding8.jpg'), name: 'Pure Romance' },
-    { id: 't9', image: require('../../../../assets/EventMimg/Einvite/wedding9.jpg'), name: 'Majestic Union' },
-    { id: 't10', image: require('../../../../assets/EventMimg/Einvite/wedding10.jpg'), name: 'Eternal Bond' },
+    { id: 't1', image: require('../../../../assets1/EventMimg/Einvite/ring1.jpg'), name: 'Classic Gold' },
+    { id: 't2', image: require('../../../../assets1/EventMimg/Einvite/ring2.jpg'), name: 'Floral Bliss' },
+    { id: 't3', image: require('../../../../assets1/EventMimg/Einvite/ring3.jpg'), name: 'Royal Blue' },
+    { id: 't4', image: require('../../../../assets1/EventMimg/Einvite/ring4.png'), name: 'Modern Minimal' },
 ];
 
-const WeddingInviteScreen: React.FC<{ navigation: any; route: any }> = ({ navigation, route }) => {
+const InviteStudioScreen = ({ navigation, route }: { navigation?: any; route?: any }) => {
     const { eventType } = route.params || { eventType: 'Wedding' };
     const [activeTab, setActiveTab] = useState('details');
     const [selectedTemplate, setSelectedTemplate] = useState(TEMPLATES[0]);
     const [customStyle, setCustomStyle] = useState({
         textColor: COLORS.maroon,
-        fontFamily: 'System'
+        fontFamily: 'System' // Default
     });
     const [modalVisible, setModalVisible] = useState(false);
     const scrollY = React.useRef(new Animated.Value(0)).current;
@@ -70,14 +69,15 @@ const WeddingInviteScreen: React.FC<{ navigation: any; route: any }> = ({ naviga
         extrapolate: 'clamp',
     });
 
+    // Form State
     const [eventDetails, setEventDetails] = useState({
         title: 'Wedding Ceremony',
         names: 'Aarav & Ananya',
         host: 'Mrs. & Mr. Sharma',
-        date: '25 - 01 - 2026',
-        time: '8:00 PM',
+        date: '24 - 01 - 2026',
+        time: '7:00 PM',
         venue: 'The Leela Palace, Udaipur',
-        message: 'Join us for the wedding ceremony.'
+        message: 'We request the honor of your presence at our wedding ceremony.'
     });
 
     const renderPreviewCard = () => (
@@ -92,6 +92,11 @@ const WeddingInviteScreen: React.FC<{ navigation: any; route: any }> = ({ naviga
                     {eventDetails.title}
                 </Text>
                 <Text style={[styles.overlayCouple, { color: COLORS.kumkum, fontFamily: customStyle.fontFamily === 'serif' ? 'serif' : 'System' }]}>
+                    {/* Keep Couple Name distinct or link to customStyle if desired. Let's link it to font but keep Red color for emphasis? Or user full control?
+                        Let's give full control for now or keep couple name emphasis.
+                        User asked for "select color for card content". Usually main text follows this.
+                        I will apply custom color to everything for simplicity, except maybe divider.
+                     */}
                     {eventDetails.names}
                 </Text>
                 <Text style={[styles.overlayHost, { color: customStyle.textColor, fontFamily: customStyle.fontFamily }]}>
@@ -347,7 +352,7 @@ const WeddingInviteScreen: React.FC<{ navigation: any; route: any }> = ({ naviga
 };
 // End of component
 
-const FormatOption: React.FC<{ icon: string; label: string }> = ({ icon, label }) => (
+const FormatOption = ({ icon, label }: { icon: any; label: string }) => (
     <TouchableOpacity style={styles.formatOption}>
         <FontAwesome5 name={icon} size={24} color="#333" />
         <Text style={styles.formatLabel}>{label}</Text>
@@ -723,4 +728,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default WeddingInviteScreen;
+export default InviteStudioScreen;

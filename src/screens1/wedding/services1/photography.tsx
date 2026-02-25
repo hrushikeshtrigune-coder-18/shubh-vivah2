@@ -19,10 +19,14 @@ import {
     View
 } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+import ph2 from '../../../../assets1/images/ph2.jpg';
+import ph3 from '../../../../assets1/images/ph3.jpg';
+import photography1 from '../../../../assets1/images/photography1.jpg';
+
+const { width } = Dimensions.get('window');
 
 // --- INTERFACES ---
-interface MehandiArtist {
+interface Photographer {
     id: string;
     name: string;
     rating: number;
@@ -51,12 +55,25 @@ interface Post {
     imageHeight: number;
 }
 
+interface Testimonial {
+    id: string;
+    couple: string;
+    location: string;
+    photographer: string;
+    quote: string;
+    image: string;
+}
 
-import mehandiDefault from '../../../../assets/images/mehandi.jpg';
-import mehandi1 from '../../../../assets/images/mehandi1.jpg';
-import mehandiPortrait from '../../../../assets/images/mehandiF.jpg';
+interface ReasonToBook {
+    id: string;
+    text: string;
+    icon: any;
+}
 
-// --- CONSTANTS & THEME ---
+
+
+
+
 const COLORS = {
     background: '#FFFFF0', // Ivory
     primary: '#CC0E0E',    // Red
@@ -66,74 +83,47 @@ const COLORS = {
     inputBg: '#FFF5F5',
 };
 
-const FONTS = {
-    serif: 'System', // Use System Serif for "Handwritten" feel if custom font not avail
-    sans: 'System',
-};
-
-// --- DUMMY DATA ---
-const STYLES_INFO = {
-    'Bridal': {
-        title: 'Royal Bridal',
-        desc: 'Full hands & feet, intricate storytelling.',
-        time: '4-6 Hours',
-        complexity: 'High',
-    },
-    'Arabic': {
-        title: 'Modern Arabic',
-        desc: 'Flowing floral patterns, open spaces.',
-        time: '1-2 Hours',
-        complexity: 'Medium',
-    },
-    'Minimal': {
-        title: 'Chic Minimal',
-        desc: 'Simple finger tips or wrist cuffs.',
-        time: '30-45 Mins',
-        complexity: 'Low',
-    },
-};
-
-const MEHANDI_ARTISTS_DATA: MehandiArtist[] = [
+const PHOTOGRAPHERS_DATA: Photographer[] = [
     {
         id: '1',
-        name: 'Shaaa Mehandi',
+        name: 'Stories by Joseph',
         rating: 4.9,
         reviews: 320,
-        tag: 'Intricate Bridal',
-        location: 'Juhu, Mumbai',
-        city: 'Mumbai',
-        price: '7,000 / event',
-        tags: ['Bridal Specialist', 'Portrait Mehandi', 'Certified'],
-        image: mehandiPortrait,
-        previews: [mehandi1, mehandiDefault, mehandiPortrait],
+        tag: 'Luxury Candid',
+        location: 'Anjuna, Goa',
+        city: 'Goa',
+        price: '₹3,00,000 / day',
+        tags: ['Candid', 'Drone', 'Cinematic'],
+        image: photography1,
+        previews: [ph2, ph3, photography1],
         accentColor: '#3d1616',
     },
     {
         id: '2',
-        name: 'Kajal Artistry',
-        rating: 4.8,
-        reviews: 210,
-        tag: 'Speed Artist',
-        location: 'Koregaon Park, Pune',
-        city: 'Pune',
-        price: '5,500 / event',
-        tags: ['Speed Artist', 'Modern Designs', 'Geometric'],
-        image: mehandi1,
-        previews: [mehandiPortrait, mehandiDefault, mehandi1],
+        name: 'Twogether Studios',
+        rating: 5.0,
+        reviews: 450,
+        tag: 'Premium Wedding',
+        location: 'Juhu, Mumbai',
+        city: 'Mumbai',
+        price: '2,00,000 / day',
+        tags: ['Same-day edits', 'Traditional', 'Studio'],
+        image: ph2,
+        previews: [photography1, ph3, ph2],
         accentColor: '#301828',
     },
     {
         id: '3',
-        name: 'Sana Henna Art',
-        rating: 4.7,
-        reviews: 185,
-        tag: 'Traditional Specialist',
-        location: 'Panjim, Goa',
-        city: 'Goa',
-        price: '6,000 / event',
-        tags: ['Traditional', 'Intricate', 'Organic Henna'],
-        image: mehandiDefault,
-        previews: [mehandi1, mehandiPortrait, mehandiDefault],
+        name: 'The Wedding Filmer',
+        rating: 4.8,
+        reviews: 210,
+        tag: 'Cinematic Films',
+        location: 'South Delhi, Delhi',
+        city: 'Delhi',
+        price: '5,00,000 / day',
+        tags: ['Luxury', 'Film', 'Destination'],
+        image: ph3,
+        previews: [ph2, photography1, ph3],
         accentColor: '#421010',
     },
 ];
@@ -141,86 +131,138 @@ const MEHANDI_ARTISTS_DATA: MehandiArtist[] = [
 const POSTS_DATA: Post[] = [
     {
         id: 'p1',
-        vendorName: 'Shaaa Mehandi',
-        vendorLogo: mehandiPortrait,
-        images: [mehandiPortrait, mehandi1, mehandiDefault],
+        vendorName: 'Stories by Joseph',
+        vendorLogo: photography1,
+        images: [photography1, ph2, ph3],
         likes: 1200,
-        city: 'Mumbai',
-        description: 'Exquisite bridal mehandi with detailed storytelling patterns.',
+        city: 'Goa',
+        description: 'Magic of destination weddings in Goa. Capturing the golden hour vibes.',
         rating: 4.9,
-        eventType: 'Bridal Mehandi',
-        locationDetail: 'St. Regis Mumbai',
+        eventType: 'Beach Wedding',
+        locationDetail: 'W Hotel Goa',
         imageHeight: 220
     },
     {
         id: 'p2',
-        vendorName: 'Kajal Artistry',
-        vendorLogo: mehandi1,
-        images: [mehandi1, mehandiPortrait, mehandiDefault],
+        vendorName: 'Twogether Studios',
+        vendorLogo: ph2,
+        images: [ph2, photography1, ph3],
         likes: 850,
-        city: 'Pune',
-        description: 'Modern Arabic fusion for the contemporary bride.',
-        rating: 4.8,
-        eventType: 'Arabic Fusion',
-        locationDetail: 'JW Marriott Pune',
+        city: 'Mumbai',
+        description: 'Elegant indoor ceremonies. Focus on emotions and traditional rituals.',
+        rating: 5.0,
+        eventType: 'Traditional Ceremony',
+        locationDetail: 'Taj Mahal Palace',
         imageHeight: 180
     },
     {
         id: 'p3',
-        vendorName: 'Sana Henna Art',
-        vendorLogo: mehandiDefault,
-        images: [mehandiDefault, mehandi1, mehandiPortrait],
+        vendorName: 'The Wedding Filmer',
+        vendorLogo: ph3,
+        images: [ph3, ph2, photography1],
         likes: 2100,
-        city: 'Goa',
-        description: 'Deep organic mahogany stains for a destination wedding.',
-        rating: 4.7,
-        eventType: 'Traditional Bridal',
-        locationDetail: 'W Goa',
+        city: 'Delhi',
+        description: 'Grand cinematic films for royal destination weddings.',
+        rating: 4.8,
+        eventType: 'Royal Wedding',
+        locationDetail: 'Fairmont Jaipur',
         imageHeight: 250
     },
     {
         id: 'p4',
-        vendorName: 'Shaaa Mehandi',
-        vendorLogo: mehandiPortrait,
-        images: [mehandi1, mehandiDefault, mehandiPortrait],
+        vendorName: 'Stories by Joseph',
+        vendorLogo: photography1,
+        images: [ph2, ph3, photography1],
         likes: 950,
-        city: 'Mumbai',
-        description: 'Intricate finger details and wrist cuffs for an elegant look.',
+        city: 'Goa',
+        description: 'Candid moments from a sunset beach wedding.',
         rating: 4.9,
-        eventType: 'Minimalist Design',
-        locationDetail: 'Taj Lands End, Mumbai',
+        eventType: 'Candid Shoot',
+        locationDetail: 'Calangute, Goa',
         imageHeight: 200
     },
     {
         id: 'p5',
-        vendorName: 'Kajal Artistry',
-        vendorLogo: mehandi1,
-        images: [mehandiPortrait, mehandiDefault, mehandi1],
+        vendorName: 'Twogether Studios',
+        vendorLogo: ph2,
+        images: [ph3, photography1, ph2],
         likes: 1100,
-        city: 'Pune',
-        description: 'Symmetrical geometric patterns for the modern mehandi lover.',
-        rating: 4.8,
-        eventType: 'Modern Geometric',
-        locationDetail: 'Conrad Pune',
+        city: 'Mumbai',
+        description: 'Capturing the essence of traditional Marathi weddings.',
+        rating: 5.0,
+        eventType: 'Traditional',
+        locationDetail: 'JW Marriott, Sahar',
         imageHeight: 230
     },
     {
         id: 'p6',
-        vendorName: 'Sana Henna Art',
-        vendorLogo: mehandiDefault,
-        images: [mehandi1, mehandiPortrait, mehandiDefault],
+        vendorName: 'The Wedding Filmer',
+        vendorLogo: ph3,
+        images: [photography1, ph2, ph3],
         likes: 1800,
-        city: 'Goa',
-        description: 'Flowing floral bel and peacock motifs across the palms.',
-        rating: 4.7,
-        eventType: 'Floral Traditional',
-        locationDetail: 'Leela Palace, Goa',
+        city: 'Delhi',
+        description: 'High-end destination wedding cinematography.',
+        rating: 4.8,
+        eventType: 'Cinematic Movie',
+        locationDetail: 'Rambagh Palace, Jaipur',
         imageHeight: 180
     },
+    {
+        id: 'p7',
+        vendorName: 'Stories by Joseph',
+        vendorLogo: photography1,
+        images: [ph3, ph2, photography1],
+        likes: 720,
+        city: 'Bangalore',
+        description: 'Modern indoor wedding photography with natural lighting.',
+        rating: 4.9,
+        eventType: 'Pre-wedding Shoot',
+        locationDetail: 'Leela Palace',
+        imageHeight: 210
+    },
+    {
+        id: 'p8',
+        vendorName: 'Twogether Studios',
+        vendorLogo: ph2,
+        images: [photography1, ph3, ph2],
+        likes: 1350,
+        city: 'Pune',
+        description: 'Emotional highlights from a grand reception night.',
+        rating: 5.0,
+        eventType: 'Reception',
+        locationDetail: 'Conrad Pune',
+        imageHeight: 190
+    },
+    {
+        id: 'p9',
+        vendorName: 'The Wedding Filmer',
+        vendorLogo: ph3,
+        images: [ph2, photography1, ph3],
+        likes: 2400,
+        city: 'Udaipur',
+        description: 'Royal entries and cinematic slow-mo captures.',
+        rating: 4.8,
+        eventType: 'Grand Entry',
+        locationDetail: 'The Oberoi Udaivilas',
+        imageHeight: 240
+    },
+    {
+        id: 'p10',
+        vendorName: 'Stories by Joseph',
+        vendorLogo: photography1,
+        images: [photography1, ph2, ph3],
+        likes: 680,
+        city: 'Goa',
+        description: 'The joy of intimate weddings. Simple and beautiful.',
+        rating: 4.9,
+        eventType: 'Intimate Wedding',
+        locationDetail: 'South Goa Beach',
+        imageHeight: 170
+    }
 ];
 
-const POPULAR_SEARCHES = ['Bridal Mehandi Mumbai', 'Arabic Designs Pune', 'Portrait Artists', 'Budget Friendly'];
-const TRENDING_TAGS = ['Bridal', 'Arabic', 'Minimal', 'Portrait'];
+const POPULAR_SEARCHES = ['Wedding Photographers Goa', 'Cinematic Shoots Mumbai', 'Candid Delhi', 'Traditional Wedding'];
+const TRENDING_TAGS = ['Candid', 'Cinematic', 'Traditional', 'Destination'];
 
 interface PostCardProps {
     post: Post;
@@ -243,7 +285,7 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
         const interval = setInterval(() => {
             const nextIndex = (activeIndex + 1) % post.images.length;
             setActiveIndex(nextIndex);
-            scrollRef.current?.scrollTo({ x: nextIndex * cardWidth, animated: true });
+            (scrollRef.current as any)?.scrollTo({ x: nextIndex * cardWidth, animated: true });
         }, 5000);
 
         return () => clearInterval(interval);
@@ -288,7 +330,6 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
                     {post.images.map((_, index) => (
                         <View key={index} style={[styles.dotSmall, activeIndex === index && styles.dotActiveSmall]} />
                     ))}
-
                 </View>
 
                 <TouchableOpacity style={styles.likeBtnSmall}>
@@ -321,34 +362,34 @@ const PostCard = ({ post, onPostPress, onVendorPress, isFullWidth }: PostCardPro
     );
 };
 
-const REASONS_TO_BOOK = [
-    { id: '1', text: 'Certified Artists', icon: 'ribbon-outline' },
-    { id: '2', text: 'Organic Natural Henna', icon: 'leaf-outline' },
-    { id: '3', text: 'Custom Portrait Designs', icon: 'brush-outline' },
-    { id: '4', text: 'Home Visit Available', icon: 'home-outline' },
-    { id: '5', text: 'Secure Booking', icon: 'shield-checkmark-outline' },
+const TESTIMONIALS: Testimonial[] = [
+    {
+        id: '1',
+        couple: 'Aditi & Rohan',
+        location: 'Udaipur',
+        photographer: 'Stories by Joseph',
+        quote: '"They captured emotions we didn\'t even notice. Truly magical!"',
+        image: 'https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=600&auto=format&fit=crop',
+    },
+    {
+        id: '2',
+        couple: 'Priya & Rahul',
+        location: 'Udaipur, RJ',
+        photographer: 'Cinematic Memoir',
+        quote: '"The cinematic film was better than a Bollywood movie. Crying happy tears!"',
+        image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=600&auto=format&fit=crop',
+    },
 ];
 
-const MOOD_BOARD_IMAGES = [
-    'https://images.unsplash.com/photo-1595152772835-219674b2a8a6?q=80&w=400&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1616091093747-4d8b9daf1e5d?q=80&w=400&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1563823294326-8c4de8e09f5a?q=80&w=400&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1544988636-6da456345ec4?q=80&w=400&auto=format&fit=crop',
+const REASONS_TO_BOOK: ReasonToBook[] = [
+    { id: '1', text: 'Verified Professionals', icon: 'checkmark-circle' },
+    { id: '2', text: 'Real Portfolios Only', icon: 'images' },
+    { id: '3', text: 'Transparent Pricing', icon: 'cash' },
+    { id: '4', text: 'Backup Team Available', icon: 'people' },
+    { id: '5', text: 'Secure Payments', icon: 'shield-checkmark' },
 ];
 
-const DESIGN_STYLES = [
-    { id: '1', title: 'Minimalist Arabic', icon: 'leaf-outline', desc: 'Elegant Vines' },
-    { id: '2', title: 'Rajasthani', icon: 'hand-right-outline', desc: 'Intricate Patterns' },
-    { id: '3', title: 'Modern Mandala', icon: 'aperture-outline', desc: 'Geometric Center' },
-    { id: '4', title: 'Portrait Bridal', icon: 'heart-circle-outline', desc: 'Love Story' },
-];
 
-const FEATURED_PATTERNS = [
-    { id: '1', title: 'Back-Hand Vines', image: require('../../../../assets/images/mehandi.jpg') },
-    { id: '2', title: 'Leg Patterns', image: require('../../../../assets/images/mehandi1.jpg') },
-    { id: '3', title: 'Floral Bel', image: require('../../../../assets/images/mehandi.jpg') },
-    { id: '4', title: 'Finger Caps', image: require('../../../../assets/images/mehandi1.jpg') },
-];
 const SwipeButton = ({ onSwipeComplete }: { onSwipeComplete: () => void }) => {
     const pan = useRef(new Animated.ValueXY()).current;
     const buttonWidth = width - 70; // Adjusted for padding
@@ -392,7 +433,7 @@ const SwipeButton = ({ onSwipeComplete }: { onSwipeComplete: () => void }) => {
                 Animated.sequence([
                     Animated.timing(shimmerAnim, {
                         toValue: 1,
-                        duration: 3500,
+                        duration: 2000,
                         useNativeDriver: true,
                     }),
                     Animated.delay(1000),
@@ -444,7 +485,7 @@ const SwipeButton = ({ onSwipeComplete }: { onSwipeComplete: () => void }) => {
     );
 };
 
-const MehandiScreen = ({ navigation }: { navigation?: any }) => {
+const Photography = ({ navigation }: { navigation?: any }) => {
     const scrollRef = useRef<ScrollView>(null);
     const featuredScrollRef = useRef<ScrollView>(null);
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -455,7 +496,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
     const [selectedCity, setSelectedCity] = useState('Mumbai');
     const [featuredIndex, setFeaturedIndex] = useState(0);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-    const [selectedVendor, setSelectedVendor] = useState<MehandiArtist | null>(null);
+    const [selectedVendor, setSelectedVendor] = useState<Photographer | any>(null);
     const [isVendorProfileVisible, setIsVendorProfileVisible] = useState(false);
     const [activeMediaTab, setActiveMediaTab] = useState('Photos');
     const [activePhotoSubTab, setActivePhotoSubTab] = useState('Wedding');
@@ -472,6 +513,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
     const [contactTime, setContactTime] = useState('');
     const [contactNote, setContactNote] = useState('');
 
+
     // Animation Values for Sticky Tabs
     const tabUnderlineTranslateX = useRef(new Animated.Value(0)).current;
     const profileScrollY = useRef(new Animated.Value(0)).current;
@@ -483,7 +525,10 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
     const aboutRef = useRef<View>(null);
     const reviewsRef = useRef<View>(null);
 
-    const handleTabPress = (section: string, ref: React.RefObject<View>, index: number) => {
+
+
+    const handleTabPress = (section: string, ref: React.RefObject<View | null>, index: number) => {
+
         setActiveSection(section);
         // Animate underline
         const tabWidth = 70;
@@ -514,7 +559,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
     useEffect(() => {
         const interval = setInterval(() => {
             if (!isSearchFocused) {
-                const nextIndex = (featuredIndex + 1) % MEHANDI_ARTISTS_DATA.length;
+                const nextIndex = (featuredIndex + 1) % PHOTOGRAPHERS_DATA.length;
                 setFeaturedIndex(nextIndex);
                 (featuredScrollRef.current as any)?.scrollTo({
                     x: nextIndex * (width * 0.82 + 24), // card width + margin
@@ -527,9 +572,9 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
     }, [featuredIndex, isSearchFocused]);
 
     // Filtering Logic
-    const getFilteredArtists = () => {
+    const getFilteredPhotographers = () => {
         const query = searchQuery.toLowerCase();
-        return MEHANDI_ARTISTS_DATA.filter(v =>
+        return PHOTOGRAPHERS_DATA.filter(v =>
             v.city.toLowerCase().includes(query) ||
             v.name.toLowerCase().includes(query) ||
             v.location.toLowerCase().includes(query)
@@ -548,7 +593,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
 
     const renderActionHero = () => (
         <View style={styles.heroContainer}>
-            <ImageBackground source={mehandiPortrait} style={styles.heroImage} imageStyle={{ borderBottomLeftRadius: 36, borderBottomRightRadius: 36 }}>
+            <ImageBackground source={photography1} style={styles.heroImage} imageStyle={{ borderBottomLeftRadius: 36, borderBottomRightRadius: 36 }}>
                 <LinearGradient colors={['rgba(0,0,0,0.1)', 'rgba(0,0,0,0.3)', 'rgba(0,0,0,0.7)']} style={styles.heroGradient}>
                     <View style={styles.topBar}>
                         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -557,8 +602,8 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                         <TouchableOpacity style={styles.utilityBtn}><Ionicons name="notifications-outline" size={20} color="#FFF" /></TouchableOpacity>
                     </View>
                     <View style={{ marginBottom: 60, paddingHorizontal: 5 }}>
-                        <Text style={styles.heroHeadline}>The Scent of{"\n"}Celebration</Text>
-                        <Text style={styles.heroSubhead}>Explore top-rated bridal mehandi artists</Text>
+                        <Text style={styles.heroHeadline}>Capturing Your{"\n"}Forever Moments</Text>
+                        <Text style={styles.heroSubhead}>Explore top-rated wedding photographers</Text>
                     </View>
                 </LinearGradient>
             </ImageBackground>
@@ -572,7 +617,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                 <View style={styles.searchInputWrapper}>
                     <TextInput
                         style={styles.premiumInput}
-                        placeholder="Search mehandi artist"
+                        placeholder="Search photographer"
                         placeholderTextColor="#999"
                         onFocus={() => setSearchFocused(true)}
                         onChangeText={setSearchQuery}
@@ -580,6 +625,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                     />
                 </View>
             </View>
+
         </View>
     );
 
@@ -591,7 +637,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                         <TextInput
                             style={styles.overlayInput}
                             autoFocus
-                            placeholder="Search mehandi artist"
+                            placeholder="Search photographer"
                             onChangeText={setSearchQuery}
                             value={searchQuery}
                         />
@@ -624,15 +670,17 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
         </Modal>
     );
 
+
+
     const renderLargePremiumVendorCards = () => {
-        const filteredArtists = getFilteredArtists();
+        const filteredPhotographers = getFilteredPhotographers();
         return (
             <View style={styles.sectionContainer}>
                 <View style={styles.sectionHeader}>
-                    <Text style={styles.sectionTitle}>Featured Artists</Text>
+                    <Text style={styles.sectionTitle}>Our Photographers</Text>
                     <TouchableOpacity><Text style={styles.seeAllText}>Browse More</Text></TouchableOpacity>
                 </View>
-                {filteredArtists.length > 0 ? (
+                {filteredPhotographers.length > 0 ? (
                     <ScrollView
                         ref={featuredScrollRef}
                         horizontal
@@ -641,7 +689,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                         decelerationRate="fast"
                         snapToInterval={width * 0.82 + 24}
                     >
-                        {filteredArtists.map((vendor) => (
+                        {filteredPhotographers.map((vendor: Photographer) => (
                             <TouchableOpacity
                                 key={vendor.id}
                                 style={styles.premiumVendorCard}
@@ -674,7 +722,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                                     </View>
                                     <View style={styles.cardFooterRow}>
                                         <View style={styles.miniThumbRow}>
-                                            {vendor.previews.map((img, idx) => (
+                                            {vendor.previews.map((img: any, idx: number) => (
                                                 <Image key={idx} source={img} style={styles.miniThumbnail} resizeMode="cover" />
                                             ))}
                                         </View>
@@ -688,7 +736,7 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
 
                     </ScrollView>
                 ) : (
-                    <View style={styles.noResults}><Text style={styles.noResultsText}>No artists found</Text></View>
+                    <View style={styles.noResults}><Text style={styles.noResultsText}>No photographers found</Text></View>
                 )}
             </View>
         );
@@ -706,26 +754,26 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                         <PostCard
                             post={filteredPosts[i]}
                             onPostPress={(p: Post) => {
-                                const vendor = MEHANDI_ARTISTS_DATA.find(v => v.name === p.vendorName) || {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
                                     id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
                                     location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
                                     previews: [], accentColor: '#000'
                                 };
-                                setSelectedVendor(vendor as MehandiArtist);
+                                setSelectedVendor(vendor as Photographer);
                                 setIsVendorProfileVisible(true);
                             }}
                             onVendorPress={(p: Post) => {
-                                const vendor = MEHANDI_ARTISTS_DATA.find(v => v.name === p.vendorName) || {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
                                     id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
                                     location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
                                     previews: [], accentColor: '#000'
                                 };
-                                setSelectedVendor(vendor as MehandiArtist);
+                                setSelectedVendor(vendor as Photographer);
                                 setIsVendorProfileVisible(true);
                             }}
+
                             isFullWidth={true}
                         />
-
                     </View>
                 );
                 i++;
@@ -738,21 +786,21 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                             key={`half-${filteredPosts[i].id}`}
                             post={filteredPosts[i]}
                             onPostPress={(p: Post) => {
-                                const vendor = MEHANDI_ARTISTS_DATA.find(v => v.name === p.vendorName) || {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
                                     id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
                                     location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
                                     previews: [], accentColor: '#000'
                                 };
-                                setSelectedVendor(vendor as MehandiArtist);
+                                setSelectedVendor(vendor as Photographer);
                                 setIsVendorProfileVisible(true);
                             }}
                             onVendorPress={(p: Post) => {
-                                const vendor = MEHANDI_ARTISTS_DATA.find(v => v.name === p.vendorName) || {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
                                     id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
                                     location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
                                     previews: [], accentColor: '#000'
                                 };
-                                setSelectedVendor(vendor as MehandiArtist);
+                                setSelectedVendor(vendor as Photographer);
                                 setIsVendorProfileVisible(true);
                             }}
 
@@ -767,24 +815,16 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                             key={`half-${filteredPosts[i].id}`}
                             post={filteredPosts[i]}
                             onPostPress={(p: Post) => {
-                                const vendor = MEHANDI_ARTISTS_DATA.find(v => v.name === p.vendorName) || {
-                                    id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
-                                    location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
-                                    previews: [], accentColor: '#000'
-                                };
-                                setSelectedVendor(vendor as MehandiArtist);
-                                setIsVendorProfileVisible(true);
+                                setSelectedPost(p);
                             }}
                             onVendorPress={(p: Post) => {
-                                const vendor = MEHANDI_ARTISTS_DATA.find(v => v.name === p.vendorName) || {
+                                const vendor = PHOTOGRAPHERS_DATA.find(v => v.name === p.vendorName) || {
                                     id: 'temp', name: p.vendorName, rating: 5, reviews: 100, tag: 'Professional',
                                     location: p.city, city: p.city, price: 'Contact', tags: [], image: p.images[0],
                                     previews: [], accentColor: '#000'
                                 };
-                                setSelectedVendor(vendor as MehandiArtist);
-                                setIsVendorProfileVisible(true);
+                                navigation.navigate('PhotographerPortfolio', { vendor });
                             }}
-
                             isFullWidth={false}
                         />
                     );
@@ -799,18 +839,27 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
             }
             return pattern;
         };
+
         return (
             <View style={styles.sectionContainer}>
                 <View style={[styles.sectionHeader, { marginBottom: 25, paddingHorizontal: 10 }]}>
-                    <Text style={styles.sectionTitle}>Recent Designs</Text>
+                    <Text style={styles.sectionTitle}>Recent Posts</Text>
                 </View>
                 {renderRhythmicPattern()}
             </View>
         );
     };
 
+
     const renderVendorProfileModal = () => {
         if (!selectedVendor) return null;
+
+        // Mock categorize posts for the vendor
+        const categories = {
+            Candid: [photography1, ph2, ph3, photography1],
+            Cinematic: [ph2, ph3, photography1, ph2],
+            Traditional: [ph3, photography1, ph2, ph3]
+        };
 
         return (
             <Modal
@@ -830,22 +879,29 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                         )}
                         scrollEventThrottle={16}
                     >
-                        {/* Header & Identity */}
+                        {/* 0: Header with Background */}
                         <View style={styles.profileHeader}>
-                            <Image source={selectedVendor.image} style={styles.coverImage} />
-                            <LinearGradient colors={['rgba(0,0,0,0.5)', 'transparent']} style={styles.headerOverlay} />
-                            <TouchableOpacity style={styles.closeBtnProfile} onPress={() => setIsVendorProfileVisible(false)}>
+                            <Image source={selectedVendor.image || photography1} style={styles.coverImage} />
+                            <LinearGradient
+                                colors={['rgba(0,0,0,0.5)', 'transparent']}
+                                style={styles.headerOverlay}
+                            />
+                            <TouchableOpacity
+                                style={styles.closeBtnProfile}
+                                onPress={() => setIsVendorProfileVisible(false)}
+                            >
                                 <Ionicons name="chevron-down" size={28} color="#FFF" />
                             </TouchableOpacity>
                         </View>
 
+                        {/* 1: Profile Identity (Floating) */}
                         <View style={styles.profileIdentityOverlay}>
                             <View style={styles.avatarContainer}>
-                                <Image source={selectedVendor.image} style={styles.avatarImage} />
+                                <Image source={selectedVendor.image || photography1} style={styles.avatarImage} />
                             </View>
                             <View style={styles.nameSection}>
                                 <Text style={styles.profileVendorName}>{selectedVendor.name}</Text>
-                                <Text style={styles.profileBusinessName}>Timeless Henna Artistry</Text>
+                                <Text style={styles.profileBusinessName}>Candid & Cinematic Excellence</Text>
                                 <View style={styles.profileLocationRow}>
                                     <Ionicons name="location" size={16} color={COLORS.primary} />
                                     <Text style={styles.profileLocationText}>{selectedVendor.location}</Text>
@@ -853,57 +909,167 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                             </View>
                         </View>
 
-                        {/* Sticky Nav */}
+                        {/* 2: Sticky Shortcut Nav Bar */}
                         <View style={styles.stickyNavWrapper}>
                             <View style={styles.shortcutNavBar}>
-                                {['Projects', 'Pricing', 'About', 'Reviews'].map((tab, idx) => (
-                                    <TouchableOpacity key={tab} onPress={() => handleTabPress(tab, [portfolioRef, pricingRef, aboutRef, reviewsRef][idx] as any, idx)}>
-                                        <Text style={[styles.shortcutNavText, activeSection === tab && styles.shortcutNavTextActive]}>{tab}</Text>
-                                    </TouchableOpacity>
-                                ))}
+                                <TouchableOpacity onPress={() => handleTabPress('Projects', portfolioRef, 0)}>
+                                    <Text style={[styles.shortcutNavText, activeSection === 'Projects' && styles.shortcutNavTextActive]}>Projects</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleTabPress('Pricing', pricingRef, 1)}>
+                                    <Text style={[styles.shortcutNavText, activeSection === 'Pricing' && styles.shortcutNavTextActive]}>Pricing</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleTabPress('About', aboutRef, 2)}>
+                                    <Text style={[styles.shortcutNavText, activeSection === 'About' && styles.shortcutNavTextActive]}>About</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => handleTabPress('Reviews', reviewsRef, 3)}>
+                                    <Text style={[styles.shortcutNavText, activeSection === 'Reviews' && styles.shortcutNavTextActive]}>Reviews</Text>
+                                </TouchableOpacity>
 
-                                <Animated.View style={[styles.tabUnderline, { width: 70, transform: [{ translateX: tabUnderlineTranslateX }] }]} />
+                                {/* Animated Gold Underline */}
+                                <Animated.View
+                                    style={[
+                                        styles.tabUnderline,
+                                        {
+                                            width: 70,
+                                            transform: [{ translateX: tabUnderlineTranslateX }]
+                                        }
+                                    ]}
+                                />
                             </View>
                         </View>
 
-                        {/* Content */}
+                        {/* 3: Main Scrollable Content */}
                         <View style={styles.profileInfoContent}>
+                            {/* Portfolio Section */}
                             <View ref={portfolioRef} style={styles.profileMediaSection}>
-                                <Text style={styles.profileSectionLabel}>Portfolio Showcase</Text>
-                                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.mediaSubTabsScroll}>
-                                    {['Bridal', 'Arabic', 'Modern'].map(sub => (
-                                        <TouchableOpacity key={sub} style={[styles.mediaSubTab, activePhotoSubTab === sub && styles.mediaSubTabActive]} onPress={() => setActivePhotoSubTab(sub)}>
-                                            <Text style={[styles.mediaSubTabText, activePhotoSubTab === sub && styles.mediaSubTabTextActive]}>{sub}</Text>
-                                        </TouchableOpacity>
-                                    ))}
-                                </ScrollView>
-                                <View style={styles.pinterestGrid}>
-                                    <View style={styles.gridColumn}>
-                                        <View style={[styles.projectCard, { height: 260 }]}><Image source={selectedVendor.image} style={styles.projectImage} /></View>
-                                    </View>
-                                    <View style={styles.gridColumn}>
-                                        <View style={[styles.projectCard, { height: 210 }]}><Image source={mehandi1} style={styles.projectImage} /></View>
+                                <View style={styles.mediaHeaderRow}>
+                                    <Text style={styles.profileSectionLabel}>Portfolio</Text>
+                                    <View style={styles.mediaMainTabs}>
+                                        {['Photos', 'Videos'].map(mTab => (
+                                            <TouchableOpacity
+                                                key={mTab}
+                                                style={[styles.mediaMainTab, activeMediaTab === mTab && styles.mediaMainTabActive]}
+                                                onPress={() => setActiveMediaTab(mTab)}
+                                            >
+                                                <Text style={[styles.mTabText, activeMediaTab === mTab && styles.mTabTextActive]}>{mTab}</Text>
+                                            </TouchableOpacity>
+                                        ))}
                                     </View>
                                 </View>
+
+                                {activeMediaTab === 'Photos' ? (
+                                    <View>
+                                        {/* Portfolio Sub-Tabs */}
+                                        <ScrollView
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}
+                                            style={styles.mediaSubTabsScroll}
+                                        >
+                                            {['Pre-Wedding', 'Wedding', 'Post-Wedding'].map(sub => (
+                                                <TouchableOpacity
+                                                    key={sub}
+                                                    style={[styles.mediaSubTab, activePhotoSubTab === sub && styles.mediaSubTabActive]}
+                                                    onPress={() => setActivePhotoSubTab(sub)}
+                                                >
+                                                    <Text style={[styles.mediaSubTabText, activePhotoSubTab === sub && styles.mediaSubTabTextActive]}>{sub}</Text>
+                                                </TouchableOpacity>
+                                            ))}
+                                        </ScrollView>
+
+                                        {/* Filtered Content Title */}
+                                        <Text style={[styles.profileSectionLabel, { marginBottom: 15, fontSize: 16 }]}>
+                                            {activePhotoSubTab} Showcase
+                                        </Text>
+
+                                        {/* Featured Project */}
+                                        <TouchableOpacity style={styles.featuredProjectCard}>
+                                            <Image source={activePhotoSubTab === 'Pre-Wedding' ? ph2 : activePhotoSubTab === 'Post-Wedding' ? ph3 : photography1} style={styles.featuredProjectImage} />
+                                            <LinearGradient colors={['transparent', 'rgba(0,0,0,0.8)']} style={styles.featuredProjectOverlay}>
+                                                <View style={styles.featuredBadge}><Text style={styles.featuredBadgeText}>Featured</Text></View>
+                                                <Text style={styles.featuredProjectTitle}>{activePhotoSubTab} Memories</Text>
+                                                <View style={styles.featuredMetaRow}>
+                                                    <Text style={styles.featuredMetaText}>18 Photos  Story Highlights</Text>
+                                                    <View style={styles.viewProjectBtn}><Text style={styles.viewProjectBtnText}>View Project</Text></View>
+                                                </View>
+                                            </LinearGradient>
+                                        </TouchableOpacity>
+
+                                        {/* Pinterest Grid */}
+                                        <View style={styles.pinterestGrid}>
+                                            <View style={styles.gridColumn}>
+                                                {[
+                                                    { title: 'The Moment', type: activePhotoSubTab, likes: 145, images: [ph2, ph3, photography1], height: 260 },
+                                                    { title: 'Tradition', type: activePhotoSubTab, likes: 120, images: [ph3, photography1, ph2], height: 200 }
+                                                ].map((proj, idx) => (
+                                                    <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
+                                                        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
+                                                            {proj.images.map((img, i) => (
+                                                                <Image key={i} source={img} style={[styles.projectImage, { width: (width - 63) / 2 }]} />
+                                                            ))}
+                                                        </ScrollView>
+                                                        <View style={styles.typeBadge}><Text style={styles.typeBadgeText}>{proj.type}</Text></View>
+                                                        <View style={styles.projectCardFooter}>
+                                                            <View style={styles.likesRow}>
+                                                                <Ionicons name="heart" size={14} color="#FF4b4b" />
+                                                                <Text style={styles.likesText}>{proj.likes}</Text>
+                                                            </View>
+                                                            <TouchableOpacity style={styles.miniViewProject}><Ionicons name="eye" size={16} color={COLORS.secondary} /></TouchableOpacity>
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </View>
+                                            <View style={styles.gridColumn}>
+                                                {[
+                                                    { title: 'Portrait', type: activePhotoSubTab, likes: 198, images: [photography1, ph2, ph3], height: 210 },
+                                                    { title: 'Celebration', type: activePhotoSubTab, likes: 167, images: [ph2, ph3, photography1], height: 250 }
+                                                ].map((proj, idx) => (
+                                                    <View key={idx} style={[styles.projectCard, { height: proj.height }]}>
+                                                        <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.cardCarousel}>
+                                                            {proj.images.map((img, i) => (
+                                                                <Image key={i} source={img} style={[styles.projectImage, { width: (width - 63) / 2 }]} />
+                                                            ))}
+                                                        </ScrollView>
+                                                        <View style={styles.typeBadge}><Text style={styles.typeBadgeText}>{proj.type}</Text></View>
+                                                        <View style={styles.projectCardFooter}>
+                                                            <View style={styles.likesRow}>
+                                                                <Ionicons name="heart" size={14} color="#FF4b4b" />
+                                                                <Text style={styles.likesText}>{proj.likes}</Text>
+                                                            </View>
+                                                            <TouchableOpacity style={styles.miniViewProject}><Ionicons name="eye" size={16} color={COLORS.secondary} /></TouchableOpacity>
+                                                        </View>
+                                                    </View>
+                                                ))}
+                                            </View>
+                                        </View>
+                                    </View>
+                                ) : (
+                                    <View style={styles.videoPlaceholder}>
+                                        <Ionicons name="play-circle-outline" size={48} color={COLORS.secondary} />
+                                        <Text style={styles.videoPlaceholderText}>Cinematic films coming soon</Text>
+                                    </View>
+                                )}
                             </View>
 
+                            {/* Pricing Section */}
                             <View ref={pricingRef} style={styles.profilePricingSection}>
                                 <View style={styles.pricingSectionTitleRow}>
                                     <Text style={styles.profileSectionLabel}>Service Packages</Text>
                                     <View style={styles.verifiedPriceBadge}>
-                                        <Ionicons name="shield-checkmark-outline" size={14} color="#D48806" />
-                                        <Text style={styles.verifiedPriceText}>Verified Pricing</Text>
-
+                                        <Ionicons name="shield-checkmark" size={14} color="#D48806" />
+                                        <Text style={styles.verifiedPriceText}>Best Price Guaranteed</Text>
                                     </View>
                                 </View>
+
                                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pricingCardsScroll}>
                                     {[
-                                        { title: 'Royal Bridal Mehandi', price: '7,000', per: 'per event', tag: 'Most Popular', color: '#CC0E0E' },
-                                        { title: 'Arabic Designer Mehandi', price: '4,000', per: 'per person', tag: 'Trending', color: '#D48806' },
-                                        { title: 'Portrait Special', price: '12,000', per: 'full hands', tag: 'Exquisite', color: '#2C3E50' }
+                                        { title: 'The Wedding Story', price: '1,50,000', per: 'per day', tag: 'Most Popular', color: '#CC0E0E' },
+                                        { title: 'Cinematic Memoir', price: '2,50,000', per: 'per day', tag: 'Best Value', color: '#D48806' },
+                                        { title: 'Pre-Wedding Magic', price: '75,000', per: 'full shoot', tag: 'New', color: '#2C3E50' }
                                     ].map((pkg, idx) => (
                                         <View key={idx} style={styles.eventPriceCard}>
-                                            <View style={[styles.eventCardTopTag, { backgroundColor: pkg.color }]}><Text style={styles.eventCardTagText}>{pkg.tag}</Text></View>
+                                            <View style={[styles.eventCardTopTag, { backgroundColor: pkg.color }]}>
+                                                <Text style={styles.eventCardTagText}>{pkg.tag}</Text>
+                                            </View>
                                             <View style={styles.eventCardIdentity}>
                                                 <Text style={styles.eventPackageTitle}>{pkg.title}</Text>
                                                 <View style={styles.eventPriceTag}>
@@ -914,11 +1080,11 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                                             <View style={styles.pricingDivider} />
                                             <View style={styles.pricingInclusions}>
                                                 {[
-                                                    { icon: 'brush-outline' as any, label: 'Organic Henna Stain' },
-                                                    { icon: 'time-outline' as any, label: '4-6 Hours Coverage' },
-                                                    { icon: 'images-outline' as any, label: 'Post-stain Oil Care' },
-                                                    { icon: 'star-outline' as any, label: 'Custom Design Sketch' }
-                                                ].map((inc, i) => (
+                                                    { icon: 'camera-outline', label: '2 Senior Photographers' },
+                                                    { icon: 'videocam-outline', label: '1 Cinematographer' },
+                                                    { icon: 'copy-outline', label: '300+ Edited High-Res' },
+                                                    { icon: 'book-outline', label: 'Premium Wedding Album' }
+                                                ].map((inc: { icon: any, label: string }, i) => (
                                                     <View key={i} style={styles.inclusionLine}>
                                                         <Ionicons name={inc.icon} size={16} color="#999" />
                                                         <Text style={styles.inclusionText}>{inc.label}</Text>
@@ -926,26 +1092,33 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                                                 ))}
 
                                             </View>
+
                                         </View>
                                     ))}
                                 </ScrollView>
                             </View>
 
-                            <View ref={aboutRef} style={styles.profileAboutContainer}>
+                            {/* About Us */}
+                            <View ref={aboutRef} style={[styles.profileAboutContainer, { marginTop: 40 }]}>
                                 <Text style={styles.profileSectionLabel}>Artist Story</Text>
                                 <View style={styles.storyQuoteSection}>
                                     <View style={styles.quoteBar} />
-                                    <Text style={styles.storyQuoteText}>"We don't just apply henna, we weave your love story into art."</Text>
+                                    <Text style={styles.storyQuoteText}>
+                                        "We don't just take pictures, we curate emotions and timeless stories."
+                                    </Text>
                                 </View>
-                                <Text style={styles.profileAboutText}>Specializing in intricate bridal motifs and organic henna stains that last. My passion is to bring your dream design to life with over a decade of experience in traditional and modern mehandi.</Text>
+                                <Text style={styles.profileAboutText}>
+                                    With over a decade of capturing the most beautiful weddings across the globe, {selectedVendor.name} has become synonymous with artistic storytelling. Our approach is to be invisible yet present, catching those fleeting glances and silent tears of joy.
+                                </Text>
                             </View>
 
+                            {/* Reviews */}
                             <View ref={reviewsRef} style={styles.profileReviewsSection}>
                                 <Text style={styles.profileSectionLabel}>Artist Ratings</Text>
                                 <View style={styles.ratingOverview}>
                                     <View style={styles.bigRatingBadge}>
                                         <Text style={styles.bigRatingScore}>{selectedVendor.rating}</Text>
-                                        <Text style={styles.bigRatingStatus}>Expert</Text>
+                                        <Text style={styles.bigRatingStatus}>Top Rated</Text>
                                         <View style={styles.bigRatingStars}>
                                             {[1, 2, 3, 4, 5].map(i => <Ionicons key={i} name="star" size={14} color="#FFD700" />)}
                                         </View>
@@ -953,38 +1126,30 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                                     </View>
                                     <View style={styles.distributionSide}>
                                         {[
-                                            { star: 5, progress: 0.95 },
-                                            { star: 4, progress: 0.05 },
-                                            { star: 3, progress: 0 }, { star: 2, progress: 0 }, { star: 1, progress: 0 }
+                                            { star: 5, progress: 0.92 },
+                                            { star: 4, progress: 0.08 },
+                                            { star: 3, progress: 0.0 }, { star: 2, progress: 0 }, { star: 1, progress: 0 }
                                         ].map(item => (
                                             <View key={item.star} style={styles.distRowMini}>
                                                 <Text style={styles.distStarNumMini}>{item.star}</Text>
-                                                <View style={styles.progressBarMiniBg}><View style={[styles.progressBarMiniFill, { width: `${item.progress * 100}%` }]} /></View>
+                                                <View style={styles.progressBarMiniBg}>
+                                                    <View style={[styles.progressBarMiniFill, { width: `${item.progress * 100}%` }]} />
+                                                </View>
                                             </View>
                                         ))}
                                     </View>
                                 </View>
                             </View>
 
-                            {/* Tap to Rate */}
-                            <View style={styles.tapToRateContainer}>
-                                <Text style={styles.tapToRateTitle}>Tap to Rate</Text>
-                                <View style={styles.tapToRateStars}>
-                                    {[1, 2, 3, 4, 5].map((star) => (
-                                        <TouchableOpacity key={star} onPress={() => setUserRating(star)}>
-                                            <Ionicons
-                                                name={userRating >= star ? "star" : "star-outline"}
-                                                size={32}
-                                                color={userRating >= star ? "#FFD700" : "#DDD"}
-                                            />
-                                        </TouchableOpacity>
-                                    ))}
-                                </View>
-                            </View>
-
+                            {/* Why Choose Us Section */}
                             <View style={styles.whyChooseCard}>
-                                <Text style={styles.whyChooseTitle}>Why Book With Me</Text>
-                                {['100% Organic Henna', 'Long Lasting Stain', 'Modern & Traditional Fusion', 'Home Services Available'].map((item, idx) => (
+                                <Text style={styles.whyChooseTitle}>Why Choose Us</Text>
+                                {[
+                                    'Professional High-End Equipment',
+                                    'Cinematic Storytelling Style',
+                                    'Friendly & Experienced Crew',
+                                    'Fast Delivery (30 Days)'
+                                ].map((item, idx) => (
                                     <View key={idx} style={styles.whyChooseItem}>
                                         <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
                                         <Text style={styles.whyChooseText}>{item}</Text>
@@ -992,12 +1157,13 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                                 ))}
                             </View>
 
+                            {/* FAQ Section */}
                             <View style={styles.faqSection}>
                                 <Text style={styles.faqMainTitle}>FAQs</Text>
                                 {[
-                                    { q: 'When should I apply mehandi?', a: 'Ideally 2 days before the wedding for deep stain.' },
-                                    { q: 'Do you provide organic cones?', a: 'Yes, we only use handmade organic henna.' },
-                                    { q: 'How long does bridal mehandi take?', a: 'Usually 4-6 hours depending on complexity.' }
+                                    { q: 'How many photos will I receive?', a: 'Typically 300-500 edited images per event.' },
+                                    { q: 'What is your delivery timeline?', a: 'Standard delivery is within 4-6 weeks.' },
+                                    { q: 'Do you travel for weddings?', a: 'Yes, we capture weddings worldwide.' }
                                 ].map((faq, idx) => (
                                     <View key={idx} style={styles.faqItem}>
                                         <View style={styles.faqHeader}>
@@ -1009,8 +1175,11 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                                 ))}
                             </View>
 
-                            <TouchableOpacity style={styles.contactUsBtn} onPress={() => setIsContactModalVisible(true)}>
-                                <Text style={styles.contactUsBtnText}>Check Availability</Text>
+                            <TouchableOpacity
+                                style={styles.contactUsBtn}
+                                onPress={() => setIsContactModalVisible(true)}
+                            >
+                                <Text style={styles.contactUsBtnText}>Contact Us</Text>
                                 <Ionicons name="chatbubble-ellipses" size={22} color="#FFF" />
                             </TouchableOpacity>
                         </View>
@@ -1023,44 +1192,146 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
 
     const renderContactModal = () => {
         return (
-            <Modal visible={isContactModalVisible} animationType="fade" transparent onRequestClose={() => setIsContactModalVisible(false)}>
+            <Modal
+                visible={isContactModalVisible}
+                animationType="fade"
+                transparent={true}
+                onRequestClose={() => setIsContactModalVisible(false)}
+            >
                 <View style={styles.contactModalOverlay}>
-                    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.contactModalContainer}>
+                    <KeyboardAvoidingView
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                        style={styles.contactModalContainer}
+                    >
                         <View style={styles.contactFormCard}>
                             <View style={styles.contactHeader}>
                                 <View>
-                                    <Text style={styles.contactTitle}>Book Artist</Text>
-                                    <Text style={styles.contactSubTitle}>Schedule your session with {selectedVendor?.name}</Text>
+                                    <Text style={styles.contactTitle}>Book a Visit</Text>
+                                    <Text style={styles.contactSubTitle}>
+                                        Schedule a tour of {selectedVendor?.name || 'Rohan Mehta'}
+                                    </Text>
                                 </View>
-                                <TouchableOpacity onPress={() => setIsContactModalVisible(false)}><Ionicons name="close" size={24} color="#666" /></TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.closeContactBtn}
+                                    onPress={() => setIsContactModalVisible(false)}
+                                >
+                                    <Ionicons name="close" size={24} color="#666" />
+                                </TouchableOpacity>
                             </View>
+
                             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 20 }}>
                                 <Text style={styles.contactLabel}>Full Name</Text>
-                                <View style={styles.contactInputWrapper}><Ionicons name="person-outline" size={20} color="#999" /><TextInput style={styles.contactInput} placeholder="Enter name" value={contactName} onChangeText={setContactName} /></View>
+                                <View style={styles.contactInputWrapper}>
+                                    <Ionicons name="person-outline" size={20} color="#999" />
+                                    <TextInput
+                                        style={styles.contactInput}
+                                        placeholder="Enter your full name"
+                                        placeholderTextColor="#BBB"
+                                        value={contactName}
+                                        onChangeText={setContactName}
+                                    />
+                                </View>
 
-                                <Text style={styles.contactLabel}>Event Type</Text>
-                                <View style={styles.contactInputWrapper}><Ionicons name="list-outline" size={20} color="#999" /><TextInput style={styles.contactInput} placeholder="e.g. Wedding" value={contactEventType} onChangeText={setContactEventType} /></View>
+                                <Text style={styles.contactLabel}>Mobile Number (OTP optional)</Text>
+                                <View style={styles.contactInputWrapper}>
+                                    <Ionicons name="call-outline" size={20} color="#999" />
+                                    <TextInput
+                                        style={styles.contactInput}
+                                        placeholder="Enter mobile number"
+                                        placeholderTextColor="#BBB"
+                                        keyboardType="phone-pad"
+                                        value={contactMobile}
+                                        onChangeText={setContactMobile}
+                                    />
+                                </View>
 
-                                <View style={{ flexDirection: 'row', gap: 15 }}>
+                                <View style={styles.contactInputRow}>
                                     <View style={{ flex: 1 }}>
-                                        <Text style={styles.contactLabel}>Event Date</Text>
+                                        <Text style={styles.contactLabel}>Event Type</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="list-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="e.g. Wedding"
+                                                placeholderTextColor="#BBB"
+                                                value={contactEventType}
+                                                onChangeText={setContactEventType}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>City</Text>
+                                        <View style={styles.contactInputWrapper}>
+                                            <Ionicons name="business-outline" size={20} color="#999" />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="Enter city"
+                                                placeholderTextColor="#BBB"
+                                                value={contactCity}
+                                                onChangeText={setContactCity}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <View style={styles.contactInputRow}>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.contactLabel}>Preferred Date</Text>
                                         <View style={styles.contactInputWrapper}>
                                             <Ionicons name="calendar-outline" size={20} color="#999" />
-                                            <TextInput style={styles.contactInput} placeholder="DD/MM/YY" value={contactDate} onChangeText={setContactDate} />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="DD/MM/YYYY"
+                                                placeholderTextColor="#BBB"
+                                                value={contactDate}
+                                                onChangeText={setContactDate}
+                                            />
                                         </View>
                                     </View>
                                     <View style={{ flex: 1 }}>
-                                        <Text style={styles.contactLabel}>Event Time</Text>
+                                        <Text style={styles.contactLabel}>Time Slot</Text>
                                         <View style={styles.contactInputWrapper}>
                                             <Ionicons name="time-outline" size={20} color="#999" />
-                                            <TextInput style={styles.contactInput} placeholder="HH:MM AM/PM" value={contactTime} onChangeText={setContactTime} />
+                                            <TextInput
+                                                style={styles.contactInput}
+                                                placeholder="e.g. 2:00 PM"
+                                                placeholderTextColor="#BBB"
+                                                value={contactTime}
+                                                onChangeText={setContactTime}
+                                            />
                                         </View>
                                     </View>
+                                </View>
+
+                                <Text style={styles.contactLabel}>Add a Note</Text>
+                                <View style={[styles.contactInputWrapper, { height: 80, alignItems: 'flex-start', paddingTop: 10 }]}>
+                                    <TextInput
+                                        style={[styles.contactInput, { textAlignVertical: 'top' }]}
+                                        placeholder="Optional notes..."
+                                        placeholderTextColor="#BBB"
+                                        multiline
+                                        numberOfLines={3}
+                                        value={contactNote}
+                                        onChangeText={setContactNote}
+                                    />
                                 </View>
 
                                 <View style={styles.contactActionRow}>
-                                    <TouchableOpacity style={styles.backContactBtn} onPress={() => setIsContactModalVisible(false)}><Text style={styles.backContactText}>Back</Text></TouchableOpacity>
-                                    <TouchableOpacity style={styles.confirmContactBtn} onPress={() => { alert('Inquiry Sent!'); setIsContactModalVisible(false); }}><Text style={styles.confirmContactText}>Submit</Text></TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.backContactBtn}
+                                        onPress={() => setIsContactModalVisible(false)}
+                                    >
+                                        <Text style={styles.backContactText}>Back</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.confirmContactBtn}
+                                        onPress={() => {
+                                            alert('Booking Request Sent!');
+                                            setIsContactModalVisible(false);
+                                        }}
+                                    >
+                                        <Text style={styles.confirmContactText}>Confirm Visit</Text>
+                                    </TouchableOpacity>
                                 </View>
                             </ScrollView>
                         </View>
@@ -1070,8 +1341,35 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
         );
     };
 
-    const renderEditorialPostModal = () => {
-        return (
+
+
+
+
+
+    return (
+        <View style={styles.container}>
+            <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+            <ScrollView
+                ref={scrollRef}
+                showsVerticalScrollIndicator={false}
+                onScroll={Animated.event(
+                    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                    { useNativeDriver: false }
+                )}
+                scrollEventThrottle={16}
+            >
+                {renderActionHero()}
+
+                {renderLargePremiumVendorCards()}
+
+                {renderVendorPostsFeed()}
+
+                <View style={{ height: 40 }} />
+            </ScrollView>
+            {renderSearchOverlay()}
+            {renderVendorProfileModal()}
+
+
             <Modal visible={!!selectedPost} transparent animationType="slide" onRequestClose={() => setSelectedPost(null)}>
                 <View style={styles.modalContainer}>
                     <ScrollView showsVerticalScrollIndicator={false} pagingEnabled horizontal style={{ flex: 1 }}>
@@ -1093,12 +1391,12 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                             <TouchableOpacity
                                 style={styles.modalPrimaryBtn}
                                 onPress={() => {
-                                    const vendor = MEHANDI_ARTISTS_DATA.find(v => v.name === selectedPost?.vendorName) || {
-                                        id: 'temp', name: (selectedPost?.vendorName || 'Artist'), rating: 5, reviews: 100, tag: 'Professional',
-                                        location: (selectedPost?.locationDetail || 'Mumbai'), city: (selectedPost?.city || 'Mumbai'), price: 'Contact', tags: [], image: selectedPost?.images[0],
+                                    const vendor: Photographer = PHOTOGRAPHERS_DATA.find(v => v.name === selectedPost?.vendorName) || {
+                                        id: 'temp', name: selectedPost?.vendorName || '', rating: 5, reviews: 100, tag: 'Professional',
+                                        location: selectedPost?.locationDetail || '', city: selectedPost?.city || '', price: 'Contact', tags: [], image: selectedPost?.images[0],
                                         previews: [], accentColor: '#000'
                                     };
-                                    setSelectedVendor(vendor as MehandiArtist);
+                                    setSelectedVendor(vendor);
                                     setIsVendorProfileVisible(true);
 
                                     setSelectedPost(null);
@@ -1110,20 +1408,6 @@ const MehandiScreen = ({ navigation }: { navigation?: any }) => {
                     </LinearGradient>
                 </View>
             </Modal>
-        );
-    };
-
-    return (
-        <View style={styles.container}>
-            <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
-                {renderActionHero()}
-                {renderLargePremiumVendorCards()}
-                {renderVendorPostsFeed()}
-            </ScrollView>
-            {renderSearchOverlay()}
-            {renderVendorProfileModal()}
-            {renderEditorialPostModal()}
         </View>
     );
 };
@@ -1136,7 +1420,7 @@ const styles = StyleSheet.create({
     topBar: { position: 'absolute', top: 50, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', zIndex: 10 },
     backButton: { backgroundColor: 'rgba(0,0,0,0.35)', padding: 10, borderRadius: 24 },
     utilityBtn: { backgroundColor: 'rgba(0,0,0,0.35)', padding: 10, borderRadius: 24 },
-    heroHeadline: { fontFamily: 'Outfit_700Bold', fontSize: 36, color: '#FFF', lineHeight: 44, marginBottom: 12 },
+    heroHeadline: { fontFamily: 'Outfit_700Bold', fontSize: 36, color: COLORS.white, lineHeight: 44, marginBottom: 12 },
     heroSubhead: { fontFamily: 'Outfit_400Regular', fontSize: 16, color: '#FFEB3B', marginBottom: 24, opacity: 0.95 },
 
     premiumSearchContainer: {
@@ -1161,6 +1445,7 @@ const styles = StyleSheet.create({
     searchInputWrapper: { flex: 1, flexDirection: 'row', alignItems: 'center' },
     premiumInput: { flex: 1, fontFamily: 'Outfit_400Regular', fontSize: 15, color: '#333' },
 
+
     overlayContainer: { flex: 1, backgroundColor: '#FFF' },
     overlayHeader: { paddingTop: 60, paddingHorizontal: 20, borderBottomWidth: 1, borderColor: '#F5F5F5', paddingBottom: 20 },
     overlaySearchBox: { flexDirection: 'row', alignItems: 'center', gap: 15 },
@@ -1182,7 +1467,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         elevation: 5,
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
+        shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 10,
         marginVertical: 10,
@@ -1294,11 +1579,18 @@ const styles = StyleSheet.create({
     sectionContainer: { marginTop: 20 },
     sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, marginBottom: 20 },
     sectionTitle: { fontFamily: 'Outfit_700Bold', fontSize: 24, color: '#CC0E0E' },
+
     seeAllText: { fontFamily: 'Outfit_600SemiBold', fontSize: 14, color: COLORS.secondary },
     noResults: { padding: 60, alignItems: 'center' },
     noResultsText: { fontFamily: 'Outfit_400Regular', color: '#999', fontSize: 15 },
 
-    postCardCompact: { borderRadius: 24, backgroundColor: '#FFF', overflow: 'hidden', borderWidth: 1.5, borderColor: COLORS.secondary },
+    postCardCompact: {
+        borderRadius: 24,
+        backgroundColor: '#FFF',
+        overflow: 'hidden',
+        borderWidth: 1.5,
+        borderColor: COLORS.secondary,
+    },
     dotContainerCompact: { position: 'absolute', bottom: 10, width: '100%', flexDirection: 'row', justifyContent: 'center', gap: 4 },
     dotSmall: { width: 4, height: 4, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.4)' },
     dotActiveSmall: { width: 12, backgroundColor: '#FFF' },
@@ -1315,6 +1607,22 @@ const styles = StyleSheet.create({
     postDescriptionFull: { fontFamily: 'Outfit_400Regular', fontSize: 13, color: '#555', lineHeight: 20, marginBottom: 12 },
     editorialRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10, marginBottom: 10, alignItems: 'flex-start' },
 
+    modalContainer: { flex: 1, backgroundColor: '#000' },
+    modalHeader: { position: 'absolute', top: 60, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', zIndex: 10 },
+    closeButton: { padding: 12, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 28 },
+    modalContent: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 30, paddingBottom: 50, gap: 20 },
+    modalVendorInfo: { flexDirection: 'row', alignItems: 'center', gap: 15 },
+    modalLogo: { width: 56, height: 56, borderRadius: 28, borderWidth: 2, borderColor: COLORS.secondary, overflow: 'hidden' },
+    miniLogoImg: { width: '100%', height: '100%', borderRadius: 28 },
+    modalVendorName: { color: '#FFF', fontSize: 24, fontFamily: 'Outfit_700Bold' },
+    modalTagline: { color: COLORS.secondary, fontSize: 14, fontFamily: 'Outfit_500Medium' },
+    modalLongDesc: { color: '#CCC', fontSize: 15, lineHeight: 22, fontFamily: 'Outfit_300Light' },
+    modalActions: { flexDirection: 'row', gap: 16, marginTop: 10 },
+    modalPrimaryBtn: { flex: 1, backgroundColor: COLORS.primary, paddingVertical: 16, borderRadius: 16, alignItems: 'center' },
+    modalSecondaryBtn: { flex: 1, backgroundColor: 'rgba(255,255,255,0.15)', paddingVertical: 16, borderRadius: 16, alignItems: 'center', flexDirection: 'row', justifyContent: 'center', gap: 8, borderWidth: 1, borderColor: 'rgba(255,255,255,0.2)' },
+    btnText: { color: '#FFF', fontFamily: 'Outfit_600SemiBold', fontSize: 16 },
+
+    // Profile Modal Styles
     profileContainer: { flex: 1, backgroundColor: '#FFF' },
     profileHeader: { height: 280, width: '100%', position: 'relative' },
     coverImage: { width: '100%', height: '100%', resizeMode: 'cover' },
@@ -1338,29 +1646,51 @@ const styles = StyleSheet.create({
     profileInfoContent: { padding: 20 },
     profileSectionLabel: { fontFamily: 'Outfit_700Bold', fontSize: 18, color: '#1A1A1A', marginBottom: 20 },
     profileMediaSection: { marginTop: 10 },
+    mediaHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
+
+
 
     mediaSubTabsScroll: { marginBottom: 20 },
     mediaSubTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#F5F5F5', marginRight: 10, borderWidth: 1, borderColor: '#EEE' },
     mediaSubTabActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
     mediaSubTabText: { fontFamily: 'Outfit_600SemiBold', fontSize: 13, color: '#666' },
     mediaSubTabTextActive: { color: '#FFF' },
+    mediaMainTabs: { flexDirection: 'row', backgroundColor: '#F5F5F5', borderRadius: 12, padding: 4 },
+    mediaMainTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 8 },
+    mediaMainTabActive: { backgroundColor: '#FFF', elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4 },
+    mTabText: { fontFamily: 'Outfit_600SemiBold', fontSize: 13, color: '#999' },
+    mTabTextActive: { color: COLORS.primary },
+
+    featuredProjectCard: { height: 240, borderRadius: 24, overflow: 'hidden', marginBottom: 25 },
+    featuredProjectImage: { width: '100%', height: '100%' },
+    featuredProjectOverlay: { ...StyleSheet.absoluteFillObject, justifyContent: 'flex-end', padding: 20 },
+    featuredBadge: { backgroundColor: COLORS.secondary, alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, marginBottom: 10 },
+    featuredBadgeText: { fontFamily: 'Outfit_700Bold', fontSize: 10, color: '#FFF', textTransform: 'uppercase' },
+    featuredProjectTitle: { fontFamily: 'Outfit_700Bold', fontSize: 22, color: '#FFF' },
+    featuredMetaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 },
+    featuredMetaText: { fontFamily: 'Outfit_400Regular', fontSize: 13, color: '#EEE' },
+    viewProjectBtn: { backgroundColor: 'rgba(255,255,255,0.2)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10, borderWidth: 1, borderColor: 'rgba(255,255,255,0.3)' },
+    viewProjectBtnText: { fontFamily: 'Outfit_600SemiBold', fontSize: 12, color: '#FFF' },
 
     pinterestGrid: { flexDirection: 'row', gap: 15 },
     gridColumn: { flex: 1, gap: 15 },
-    projectCard: { borderRadius: 20, overflow: 'hidden', backgroundColor: '#F8F8F8', elevation: 3 },
-    projectImage: { height: '100%', width: '100%', resizeMode: 'cover' },
+    projectCard: { borderRadius: 20, overflow: 'hidden', backgroundColor: '#F8F8F8', elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 5 },
+    cardCarousel: { flex: 1 },
+    projectImage: { height: '100%', resizeMode: 'cover' },
+    typeBadge: { position: 'absolute', top: 12, left: 12, backgroundColor: 'rgba(255,255,255,0.9)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
+    typeBadgeText: { fontFamily: 'Outfit_700Bold', fontSize: 10, color: COLORS.primary },
     projectCardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 12, backgroundColor: '#FFF' },
     likesRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
     likesText: { fontFamily: 'Outfit_600SemiBold', fontSize: 12, color: '#666' },
-    typeBadge: { position: 'absolute', top: 12, left: 12, backgroundColor: 'rgba(255,255,255,0.9)', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
-    typeBadgeText: { fontFamily: 'Outfit_700Bold', fontSize: 10, color: COLORS.primary },
+    miniViewProject: { padding: 4 },
 
     profilePricingSection: { marginTop: 40 },
     pricingSectionTitleRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
     verifiedPriceBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#FFF9E6', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: '#FFE58F' },
     verifiedPriceText: { fontFamily: 'Outfit_600SemiBold', fontSize: 12, color: '#D48806' },
     pricingCardsScroll: { paddingRight: 20 },
-    eventPriceCard: { width: width * 0.75, backgroundColor: '#FFF', borderRadius: 24, padding: 24, marginRight: 15, elevation: 8, borderWidth: 1, borderColor: '#F0F0F0' },
+
+    eventPriceCard: { width: width * 0.75, backgroundColor: '#FFF', borderRadius: 24, padding: 24, marginRight: 15, elevation: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 8, borderWidth: 1, borderColor: '#F0F0F0' },
     eventCardTopTag: { position: 'absolute', top: 0, right: 30, paddingHorizontal: 12, paddingVertical: 6, borderBottomLeftRadius: 12, borderBottomRightRadius: 12 },
     eventCardTagText: { fontFamily: 'Outfit_700Bold', fontSize: 10, color: '#FFF' },
     eventCardIdentity: { marginTop: 10 },
@@ -1373,7 +1703,8 @@ const styles = StyleSheet.create({
     inclusionLine: { flexDirection: 'row', alignItems: 'center', gap: 10 },
     inclusionText: { fontFamily: 'Outfit_400Regular', fontSize: 14, color: '#555' },
 
-    profileAboutContainer: { marginTop: 40 },
+
+    profileAboutContainer: { padding: 0 },
     storyQuoteSection: { flexDirection: 'row', gap: 15, marginBottom: 15 },
     quoteBar: { width: 4, backgroundColor: COLORS.secondary, borderRadius: 2 },
     storyQuoteText: { flex: 1, fontFamily: 'Outfit_600SemiBold', fontSize: 18, color: '#444', fontStyle: 'italic', lineHeight: 26 },
@@ -1392,6 +1723,13 @@ const styles = StyleSheet.create({
     progressBarMiniBg: { flex: 1, height: 6, backgroundColor: '#E0E0E0', borderRadius: 3 },
     progressBarMiniFill: { height: '100%', backgroundColor: '#FFD700', borderRadius: 3 },
 
+    profileContactBtn: { backgroundColor: COLORS.primary, marginTop: 30, paddingVertical: 18, borderRadius: 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 12, elevation: 8, shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 10 },
+    profileContactBtnText: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#FFF' },
+
+    videoPlaceholder: { height: 200, backgroundColor: '#F8F8F8', borderRadius: 24, justifyContent: 'center', alignItems: 'center', borderStyle: 'dashed', borderWidth: 2, borderColor: '#DDD' },
+    videoPlaceholderText: { fontFamily: 'Outfit_500Medium', fontSize: 14, color: '#999', marginTop: 10 },
+
+    // Why Choose & FAQ Styles
     whyChooseCard: { backgroundColor: '#FFFEF5', borderRadius: 24, padding: 25, marginTop: 30, borderWidth: 1, borderColor: '#FFF9E6' },
     whyChooseTitle: { fontFamily: 'Outfit_700Bold', fontSize: 18, color: '#1A1A1A', marginBottom: 15 },
     whyChooseItem: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 12 },
@@ -1402,35 +1740,46 @@ const styles = StyleSheet.create({
     faqItem: { marginBottom: 20 },
     faqHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 },
     faqQuestion: { fontFamily: 'Outfit_600SemiBold', fontSize: 16, color: '#1A1A1A', flex: 1 },
-
-    // Tap to Rate Styles
-    tapToRateContainer: {
-        backgroundColor: '#FFF',
-        borderRadius: 24,
-        padding: 20,
-        marginTop: 20,
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#F0F0F0',
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.05,
-        shadowRadius: 5
-    },
-    tapToRateTitle: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#333', marginBottom: 10 },
-    tapToRateStars: { flexDirection: 'row', gap: 10 },
     faqDivider: { height: 1, backgroundColor: '#F0F0F0', marginTop: 10 },
 
-    contactUsBtn: { backgroundColor: '#2C1810', marginTop: 30, paddingVertical: 14, paddingHorizontal: 24, borderRadius: 30, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 10, elevation: 6 },
+    contactUsBtn: {
+        backgroundColor: '#2C1810',
+        marginTop: 30,
+        paddingVertical: 14,
+        paddingHorizontal: 24,
+        borderRadius: 30,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 10,
+        elevation: 6,
+        shadowColor: '#2C1810',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8
+    },
     contactUsBtnText: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#FFF' },
 
+    // Contact Modal Styles
     contactModalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' },
     contactModalContainer: { width: '100%' },
-    contactFormCard: { backgroundColor: '#FFF', borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 20, paddingTop: 24, maxHeight: '90%' },
+    contactFormCard: {
+        backgroundColor: '#FFF',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        padding: 20,
+        paddingTop: 24,
+        maxHeight: '90%',
+        elevation: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -10 },
+        shadowOpacity: 0.1,
+        shadowRadius: 15
+    },
     contactHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
     contactTitle: { fontFamily: 'Outfit_700Bold', fontSize: 24, color: '#C61E1A' },
     contactSubTitle: { fontFamily: 'Outfit_500Medium', fontSize: 14, color: '#F29502', marginTop: 4 },
+    closeContactBtn: { backgroundColor: '#F5F5F5', borderRadius: 25, padding: 8 },
     contactLabel: { fontFamily: 'Outfit_700Bold', fontSize: 13, color: '#C61E1A', marginTop: 12, marginBottom: 6 },
     contactInputWrapper: {
         flexDirection: 'row',
@@ -1444,53 +1793,17 @@ const styles = StyleSheet.create({
         gap: 12
     },
     contactInput: { flex: 1, fontFamily: 'Outfit_500Medium', fontSize: 16, color: '#333' },
-    contactActionRow: { flexDirection: 'row', gap: 15, marginTop: 25 },
+    contactInputRow: { flexDirection: 'row', gap: 12 },
+    contactActionRow: { flexDirection: 'row', gap: 15, marginTop: 25, marginBottom: 10 },
     backContactBtn: { flex: 1, height: 52, borderRadius: 16, backgroundColor: '#F5F5F5', alignItems: 'center', justifyContent: 'center' },
     confirmContactBtn: { flex: 2, height: 52, borderRadius: 16, backgroundColor: '#C61E1A', alignItems: 'center', justifyContent: 'center' },
     backContactText: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#666' },
     confirmContactText: { fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#FFF' },
 
-    testimonialCard: { width: width * 0.7, backgroundColor: '#FFF', borderRadius: 20, padding: 20, marginRight: 15, borderWidth: 1, borderColor: '#FEE' },
-    testimonialText: { fontFamily: 'Outfit_400Regular', fontSize: 14, color: '#444', fontStyle: 'italic', lineHeight: 22 },
-    testimonialName: { fontFamily: 'Outfit_700Bold', fontSize: 13, color: COLORS.secondary, marginTop: 12 },
-
-    modalContainer: { flex: 1, backgroundColor: '#000' },
-    modalHeader: { position: 'absolute', top: 60, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', zIndex: 10 },
-    closeButton: { padding: 12, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 28 },
-    modalContent: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 30, paddingBottom: 50, gap: 20 },
-    modalVendorInfo: { flexDirection: 'row', alignItems: 'center', gap: 15 },
-    modalLogo: { width: 56, height: 56, borderRadius: 28, borderWidth: 2, borderColor: COLORS.secondary, overflow: 'hidden' },
-    miniLogoImg: { width: '100%', height: '100%', borderRadius: 28 },
-    modalVendorName: { color: '#FFF', fontSize: 24, fontFamily: 'Outfit_700Bold' },
-    modalTagline: { color: COLORS.secondary, fontSize: 14, fontFamily: 'Outfit_500Medium' },
-    modalLongDesc: { color: '#CCC', fontSize: 15, lineHeight: 22, fontFamily: 'Outfit_300Light' },
-    modalActions: { flexDirection: 'row', gap: 16, marginTop: 10 },
-    modalPrimaryBtn: { flex: 1, backgroundColor: COLORS.primary, paddingVertical: 16, borderRadius: 16, alignItems: 'center' },
-    btnText: { color: '#FFF', fontFamily: 'Outfit_600SemiBold', fontSize: 16 },
-    swipeContainer: {
-        width: width - 40,
-        height: 56,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        borderRadius: 28,
-        marginHorizontal: 20,
-        overflow: 'hidden',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 30,
-        marginTop: 20
-    },
-    swipeText: { color: '#FFF', fontFamily: 'Outfit_700Bold', fontSize: 16, textTransform: 'uppercase', letterSpacing: 1 },
-    swipeKnob: {
-        position: 'absolute',
-        left: 6,
-        width: 44,
-        height: 44,
-        borderRadius: 22,
-        backgroundColor: COLORS.secondary,
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 4
-    }
+    swipeContainer: { height: 56, width: width - 40, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 28, marginHorizontal: 20, marginBottom: 20, justifyContent: 'center', position: 'relative', overflow: 'hidden' },
+    swipeText: { position: 'absolute', width: '100%', textAlign: 'center', fontFamily: 'Outfit_700Bold', fontSize: 16, color: '#FFF', zIndex: 1 },
+    swipeKnob: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.primary, marginLeft: 6, alignItems: 'center', justifyContent: 'center', zIndex: 2, elevation: 4 },
 });
 
-export default MehandiScreen;
+
+export default Photography;

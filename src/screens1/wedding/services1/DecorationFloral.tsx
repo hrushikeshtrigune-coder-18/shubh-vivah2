@@ -17,21 +17,21 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import VendorCard from '../../../components/VendorCard';
-import venue1 from '../../../../assets/images/venue1.jpg';
-import venue2 from '../../../../assets/images/venue2.jpg';
-import venue3 from '../../../../assets/images/venue3.jpg';
-import venue4 from '../../../../assets/images/venue4.jpg';
-import venue5 from '../../../../assets/images/venue5.jpg';
-import venue6 from '../../../../assets/images/venue6.jpg';
-import venue7 from '../../../../assets/images/venue7.jpg';
-import venue8 from '../../../../assets/images/venue8.jpg';
+import VendorCard from '../../../components1/VendorCard';
+import venue1 from '../../../../assets1/images/venue1.jpg';
+import venue2 from '../../../../assets1/images/venue2.jpg';
+import venue3 from '../../../../assets1/images/venue3.jpg';
+import venue4 from '../../../../assets1/images/venue4.jpg';
+import venue5 from '../../../../assets1/images/venue5.jpg';
+import venue6 from '../../../../assets1/images/venue6.jpg';
+import venue7 from '../../../../assets1/images/venue7.jpg';
+import venue8 from '../../../../assets1/images/venue8.jpg';
 
 // New Floral Images
-import dfPastel from '../../../../assets/DF images/Floral Pastel.jpg';
-import dfMinimal from '../../../../assets/DF images/Modern Minimal.jpg';
-import dfRoyal from '../../../../assets/DF images/Royal Heritage.jpg';
-import dfMarigold from '../../../../assets/DF images/Traditional Marigold.jpg';
+import dfPastel from '../../../../assets1/DF images/Floral Pastel.jpg';
+import dfMinimal from '../../../../assets1/DF images/Modern Minimal.jpg';
+import dfRoyal from '../../../../assets1/DF images/Royal Heritage.jpg';
+import dfMarigold from '../../../../assets1/DF images/Traditional Marigold.jpg';
 
 const { width, height } = Dimensions.get('window');
 

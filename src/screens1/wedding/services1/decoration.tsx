@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get('window');
 
 // --- ASSETS ---
 // Replace with actual asset requirements if needed
-const HERO_IMG = require('../../../../assets/images/decor.jpg');
+const HERO_IMG = require('../../../../assets1/images/decor.jpg');
 
 const PRIMARY_COLOR = '#CC0E0E';
 const ACCENT_COLOR = '#F29502';

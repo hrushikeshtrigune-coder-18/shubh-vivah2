@@ -20,8 +20,8 @@ import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AuthProvider } from './context/AuthContext';
-import { RoleProvider } from './context/RoleContext';
+import { AuthProvider } from './context1/AuthContext';
+import { RoleProvider } from './context1/RoleContext';
 import AppNavigator from './navigation/AppNavigator';
 
 export default function App() {
