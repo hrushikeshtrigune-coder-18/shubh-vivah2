@@ -3,14 +3,14 @@ import { useRouter } from "expo-router";
 import { CheckSquare, Square } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-    Alert,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const TermsConditions = () => {

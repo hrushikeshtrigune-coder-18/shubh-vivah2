@@ -2,11 +2,11 @@ import { MatchProfile } from "@/types/connections";
 import React, { useRef, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Animated, {
-    Extrapolation,
-    interpolate,
-    useAnimatedScrollHandler,
-    useAnimatedStyle,
-    useSharedValue,
+  Extrapolation,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
 } from "react-native-reanimated";
 import BestMatchCard from "./BestMatchCard";
 

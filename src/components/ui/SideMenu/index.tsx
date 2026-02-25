@@ -4,24 +4,24 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    Dimensions,
-    Image,
-    LayoutAnimation,
-    Modal,
-    Platform,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    UIManager,
-    View,
+  Dimensions,
+  Image,
+  LayoutAnimation,
+  Modal,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  UIManager,
+  View,
 } from "react-native";
 import Animated, {
-    FadeIn,
-    FadeOut,
-    SlideInLeft,
-    SlideOutLeft,
+  FadeIn,
+  FadeOut,
+  SlideInLeft,
+  SlideOutLeft,
 } from "react-native-reanimated";
 
 if (

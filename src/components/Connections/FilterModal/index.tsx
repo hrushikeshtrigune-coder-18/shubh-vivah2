@@ -1,30 +1,30 @@
 import { Colors } from "@/constants/Colors";
 import {
-    CITY_OPTIONS,
-    EDUCATION_OPTIONS,
-    MARITAL_STATUS_OPTIONS,
-    PROFESSION_OPTIONS,
-    RELIGION_OPTIONS,
-    STATE_OPTIONS,
+  CITY_OPTIONS,
+  EDUCATION_OPTIONS,
+  MARITAL_STATUS_OPTIONS,
+  PROFESSION_OPTIONS,
+  RELIGION_OPTIONS,
+  STATE_OPTIONS,
 } from "@/data/mockConnectionsData";
 import { DEFAULT_FILTERS, FilterState } from "@/types/connections";
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import Slider from "@react-native-community/slider";
 import React, {
-    forwardRef,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
 import {
-    Dimensions,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const { height } = Dimensions.get("window");

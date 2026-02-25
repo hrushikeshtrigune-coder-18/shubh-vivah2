@@ -1,7 +1,7 @@
 import {
-    CustomModalDropdown,
-    ProfileLayout,
-    RadioGroup,
+  CustomModalDropdown,
+  ProfileLayout,
+  RadioGroup,
 } from "@/components/Profile/CompleteProfileForm";
 import { useProfileForm } from "@/context/ProfileFormContext";
 import { useRouter } from "expo-router";

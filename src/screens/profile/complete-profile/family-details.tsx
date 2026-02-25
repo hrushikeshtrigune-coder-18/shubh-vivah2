@@ -1,7 +1,7 @@
 import {
-    Counter,
-    CustomModalDropdown,
-    ProfileLayout,
+  Counter,
+  CustomModalDropdown,
+  ProfileLayout,
 } from "@/components/Profile/CompleteProfileForm";
 import { useProfileForm } from "@/context/ProfileFormContext";
 import { useRouter } from "expo-router";

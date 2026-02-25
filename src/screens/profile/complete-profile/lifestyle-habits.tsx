@@ -1,17 +1,17 @@
 import {
-    COLORS,
-    ProfileLayout,
+  COLORS,
+  ProfileLayout,
 } from "@/components/Profile/CompleteProfileForm";
 import { useProfileForm } from "@/context/ProfileFormContext";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    Alert,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const EATING_HABITS = ["Vegetarian", "Eggetarian", "Non Vegetarian"];

@@ -1,11 +1,11 @@
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import {
-    BottomSheetBackdrop,
-    BottomSheetModal,
-    BottomSheetTextInput,
-    BottomSheetView,
-    useBottomSheetModal,
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetTextInput,
+  BottomSheetView,
+  useBottomSheetModal,
 } from "@gorhom/bottom-sheet";
 import React, { forwardRef, useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";

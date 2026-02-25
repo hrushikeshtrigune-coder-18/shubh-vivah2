@@ -5,12 +5,12 @@ import { StatusBar } from "expo-status-bar";
 import { MotiView } from "moti";
 import React, { useMemo, useState } from "react";
 import {
-    Image,
-    SectionList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import Animated, { Layout } from "react-native-reanimated";

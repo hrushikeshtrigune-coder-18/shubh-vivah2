@@ -3,17 +3,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
-    Platform,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import Animated, {
-    Extrapolation,
-    SharedValue,
-    interpolate,
-    useAnimatedStyle,
+  Extrapolation,
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

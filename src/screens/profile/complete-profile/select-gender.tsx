@@ -2,14 +2,14 @@ import { COLORS } from "@/components/Profile/CompleteProfileForm";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    Alert,
-    Dimensions,
-    Image,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  Dimensions,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const { width } = Dimensions.get("window");

@@ -1,23 +1,20 @@
 import { MatchProfile } from "@/types/connections";
 import { LinearGradient } from "expo-linear-gradient";
-import {
-    Hand,
-    Sparkles
-} from "lucide-react-native";
+import { Hand, Sparkles } from "lucide-react-native";
 import React from "react";
 import {
-    Dimensions,
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import Animated, {
-    Extrapolation,
-    SharedValue,
-    interpolate,
-    useAnimatedStyle,
+  Extrapolation,
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
 } from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");

@@ -2,12 +2,12 @@ import { Colors } from "@/constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useRef } from "react";
 import {
-    ActivityIndicator,
-    Animated,
-    StyleSheet,
-    Text,
-    TouchableWithoutFeedback,
-    ViewStyle,
+  ActivityIndicator,
+  Animated,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  ViewStyle,
 } from "react-native";
 
 interface ButtonProps {

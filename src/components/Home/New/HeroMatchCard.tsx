@@ -3,18 +3,18 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
-    Dimensions,
-    ImageBackground,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import Animated, {
-    Extrapolation,
-    SharedValue,
-    interpolate,
-    useAnimatedStyle,
+  Extrapolation,
+  SharedValue,
+  interpolate,
+  useAnimatedStyle,
 } from "react-native-reanimated";
 
 const { width } = Dimensions.get("window");

@@ -6,13 +6,13 @@ import { useRouter } from "expo-router";
 import { MotiView } from "moti";
 import React from "react";
 import {
-    Dimensions,
-    ImageBackground,
-    Modal,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  ImageBackground,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import MatchPercentageRing from "../../MatchPercentageRing";
 

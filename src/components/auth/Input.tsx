@@ -2,12 +2,12 @@ import { Colors } from "@/constants/Colors";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    TextInputProps,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  TextInputProps,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 interface InputProps extends TextInputProps {

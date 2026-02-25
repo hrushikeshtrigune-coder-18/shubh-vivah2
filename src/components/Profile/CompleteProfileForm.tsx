@@ -1,24 +1,24 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import {
-    ArrowLeft,
-    Check,
-    ChevronDown,
-    Minus,
-    Plus,
-    X,
+  ArrowLeft,
+  Check,
+  ChevronDown,
+  Minus,
+  Plus,
+  X,
 } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-    Dimensions,
-    FlatList,
-    Image,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  FlatList,
+  Image,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

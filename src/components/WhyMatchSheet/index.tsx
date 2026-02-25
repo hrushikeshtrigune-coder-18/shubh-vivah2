@@ -3,12 +3,12 @@ import { MatchProfile } from "@/types/connections";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
-    Dimensions,
-    Modal,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import Animated, { SlideInDown } from "react-native-reanimated";
 

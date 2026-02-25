@@ -7,12 +7,12 @@ import { CheckCircle2, Heart, Star, UserPlus } from "lucide-react-native";
 import { MotiView } from "moti";
 import React, { useState } from "react";
 import {
-    Dimensions,
-    ImageBackground,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const { width } = Dimensions.get("window");

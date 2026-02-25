@@ -1,12 +1,12 @@
 import { Colors } from "@/constants/Colors";
 import React from "react";
 import {
-    Dimensions,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 const { width } = Dimensions.get("window");

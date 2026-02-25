@@ -2,13 +2,13 @@ import { getSearchSuggestions } from "@/services/matchService";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useRef, useState } from "react";
 import {
-    Keyboard,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 interface ModernSearchBarProps {
