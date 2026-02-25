@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons'; // Use vector icons for premium l
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
 import { Image } from 'react-native';
-import Footer from '../components/Footer/Footer';
+import Footer from '../components1/Footer/Footer';
 
 import Services2 from '../screens/wedding/Services2';
 import { colors } from '../theme/colors';

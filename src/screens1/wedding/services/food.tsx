@@ -15,7 +15,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import VendorCard from '../../../components/VendorCard';
+import VendorCard from '../../../components1/VendorCard';
 import food1 from '../../../../assets1/images/food1.jpg';
 import food2 from '../../../../assets1/images/food2.jpg';
 import food3 from '../../../../assets1/images/food3.jpg';
