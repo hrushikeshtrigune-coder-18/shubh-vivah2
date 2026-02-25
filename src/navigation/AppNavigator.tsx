@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useContext } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { AuthContext, useAuth } from '../context 1/AuthContext';
+import { AuthContext, useAuth } from '../context/AuthContext';
 import Services2 from '../screens/wedding/Services2';
 
 // Screens

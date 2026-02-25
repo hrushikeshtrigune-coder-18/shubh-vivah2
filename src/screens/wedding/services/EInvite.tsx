@@ -33,7 +33,7 @@ const inviteTypes = [
         id: '1',
         title: 'Ring Ceremony',
         subtitle: 'Engagement',
-        image: require('../../../../assets1/EventMimg/Einvite/Ring.png'),
+        image: require('../../../../assets/EventMimg/Einvite/Ring.png'),
         icon: 'ring',
         overlayColor: 'rgba(255, 105, 180, 0.2)'
     },
@@ -41,7 +41,7 @@ const inviteTypes = [
         id: '2',
         title: 'Haldi',
         subtitle: 'Yellow Hue',
-        image: require('../../../../assets1/EventMimg/Einvite/Haldi.png'),
+        image: require('../../../../assets/EventMimg/Einvite/Haldi.png'),
         icon: 'sun',
         overlayColor: 'rgba(255, 215, 0, 0.2)'
     },
@@ -49,7 +49,7 @@ const inviteTypes = [
         id: '3',
         title: 'Sangeet',
         subtitle: 'Musical Night',
-        image: require('../../../../assets1/EventMimg/Einvite/Sanget.png'),
+        image: require('../../../../assets/EventMimg/Einvite/Sanget.png'),
         icon: 'music',
         overlayColor: 'rgba(75, 0, 130, 0.2)'
     },
@@ -57,7 +57,7 @@ const inviteTypes = [
         id: '4',
         title: 'Mehndi',
         subtitle: 'Henna Designs',
-        image: require('../../../../assets1/EventMimg/Einvite/Mehandi.png'),
+        image: require('../../../../assets/EventMimg/Einvite/Mehandi.png'),
         icon: 'paint-brush',
         overlayColor: 'rgba(34, 139, 34, 0.2)'
     },
@@ -65,7 +65,7 @@ const inviteTypes = [
         id: '5',
         title: 'Wedding',
         subtitle: 'The Big Day',
-        image: require('../../../../assets1/EventMimg/Einvite/wedding.png'),
+        image: require('../../../../assets/EventMimg/Einvite/wedding.png'),
         icon: 'heart',
         overlayColor: 'rgba(255, 0, 0, 0.2)'
     },
@@ -73,7 +73,7 @@ const inviteTypes = [
         id: '6',
         title: 'Reception',
         subtitle: 'Grand Feast',
-        image: require('../../../../assets1/EventMimg/Einvite/Reception.png'),
+        image: require('../../../../assets/EventMimg/Einvite/Reception.png'),
         icon: 'wine-glass',
         overlayColor: 'rgba(0, 0, 128, 0.2)'
     }

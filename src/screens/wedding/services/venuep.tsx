@@ -18,9 +18,9 @@ import {
 } from 'react-native';
 
 // Local Image Imports
-const venue1 = require('../../../../assets1/images/venue1.jpg');
-const venue2 = require('../../../../assets1/images/venue2.jpg');
-const venue3 = require('../../../../assets1/images/venue3.jpg');
+const venue1 = require('../../../../assets/images/venue1.jpg');
+const venue2 = require('../../../../assets/images/venue2.jpg');
+const venue3 = require('../../../../assets/images/venue3.jpg');
 
 const { width } = Dimensions.get('window');
 

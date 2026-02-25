@@ -54,7 +54,7 @@ const EventManagement = ({ navigation }: { navigation?: any }) => {
 
 
     // Video Player Setup
-    const videoSource = require('../../../../assets1/EventMimg/EventV.mp4');
+    const videoSource = require('../../../../assets/EventMimg/EventV.mp4');
     const player = useVideoPlayer(videoSource, player => {
         player.loop = true;
         player.play();
@@ -402,18 +402,18 @@ const allFeaturedVendors = [
         price: '2.5L',
         rating: '4.8',
         reviews: '45',
-        image: require('../../../../assets1/images/decor.jpg'),
+        image: require('../../../../assets/images/decor.jpg'),
         tags: ['Heritage', 'Luxury', 'Royal'],
         description: 'Premium wedding venue offering royal heritage ambiance with modern amenities and impeccable hospitality.',
         likes: '2.5k',
         views: '15k',
         portfolio: [
-            require('../../../../assets1/images/decor.jpg'),
-            require('../../../../assets1/images/venue1.jpg'),
-            require('../../../../assets1/images/venue2.jpg'),
-            require('../../../../assets1/images/venue3.jpg'),
-            require('../../../../assets1/images/venue4.jpg'),
-            require('../../../../assets1/images/venue5.jpg'),
+            require('../../../../assets/images/decor.jpg'),
+            require('../../../../assets/images/venue1.jpg'),
+            require('../../../../assets/images/venue2.jpg'),
+            require('../../../../assets/images/venue3.jpg'),
+            require('../../../../assets/images/venue4.jpg'),
+            require('../../../../assets/images/venue5.jpg'),
         ]
     },
     {
@@ -423,18 +423,18 @@ const allFeaturedVendors = [
         price: '3.2L',
         rating: '4.9',
         reviews: '68',
-        image: require('../../../../assets1/images/Food.jpg'),
+        image: require('../../../../assets/images/Food.jpg'),
         tags: ['Catering', 'Floral', 'Grand'],
         description: 'Exquisite event management with world-class catering and stunning floral arrangements.',
         likes: '3.1k',
         views: '22k',
         portfolio: [
-            require('../../../../assets1/images/Food.jpg'),
-            require('../../../../assets1/images/food1.jpg'),
-            require('../../../../assets1/images/food2.jpg'),
-            require('../../../../assets1/images/food3.jpg'),
-            require('../../../../assets1/images/food4.jpg'),
-            require('../../../../assets1/images/decor.jpg'),
+            require('../../../../assets/images/Food.jpg'),
+            require('../../../../assets/images/food1.jpg'),
+            require('../../../../assets/images/food2.jpg'),
+            require('../../../../assets/images/food3.jpg'),
+            require('../../../../assets/images/food4.jpg'),
+            require('../../../../assets/images/decor.jpg'),
         ]
     },
     {
@@ -444,18 +444,18 @@ const allFeaturedVendors = [
         price: '1.8L',
         rating: '4.7',
         reviews: '32',
-        image: require('../../../../assets1/images/entertenment.jpg'),
+        image: require('../../../../assets/images/entertenment.jpg'),
         tags: ['Affordable', 'Creative', 'Themed'],
         description: 'Affordable yet elegant event planning with creative themes and seamless coordination.',
         likes: '1.8k',
         views: '10k',
         portfolio: [
-            require('../../../../assets1/images/entertenment.jpg'),
-            require('../../../../assets1/images/photo.jpg'),
-            require('../../../../assets1/images/venue6.jpg'),
-            require('../../../../assets1/images/venue7.jpg'),
-            require('../../../../assets1/images/venue8.jpg'),
-            require('../../../../assets1/images/decor.jpg'),
+            require('../../../../assets/images/entertenment.jpg'),
+            require('../../../../assets/images/photo.jpg'),
+            require('../../../../assets/images/venue6.jpg'),
+            require('../../../../assets/images/venue7.jpg'),
+            require('../../../../assets/images/venue8.jpg'),
+            require('../../../../assets/images/decor.jpg'),
         ]
     },
     {
@@ -465,14 +465,14 @@ const allFeaturedVendors = [
         price: '4.0L',
         rating: '4.9',
         reviews: '89',
-        image: require('../../../../assets1/images/photo.jpg'),
+        image: require('../../../../assets/images/photo.jpg'),
         tags: ['Destination', 'Royal', 'Fairytale'],
         description: 'Luxury destination wedding specialists creating fairytale celebrations in royal Rajasthani settings.',
         likes: '4.2k',
         views: '28k',
         portfolio: [
-            require('../../../../assets1/images/photo.jpg'),
-            require('../../../../assets1/images/ph2.jpg'),
+            require('../../../../assets/images/photo.jpg'),
+            require('../../../../assets/images/ph2.jpg'),
         ]
     }
 ];
@@ -526,16 +526,16 @@ const FeaturedVendorCard = ({ vendor, navigation }: { vendor: any, navigation: a
 );
 
 const servicesGridData = [
-    { id: '1', title: 'E-Invites', image: require('../../../../assets1/images/invite.jpg') },
-    { id: '2', title: 'Event Management', image: require('../../../../assets1/images/Gust Mangment.jpg') },
-    { id: '3', title: 'Venues', image: require('../../../../assets1/images/venue1.jpg') },
-    { id: '4', title: 'Catering', image: require('../../../../assets1/images/Food.jpg') },
-    { id: '5', title: 'Photography', image: require('../../../../assets1/images/photo.jpg') },
-    { id: '6', title: 'Decor', image: require('../../../../assets1/images/decor.jpg') },
-    { id: '7', title: 'Jewellery', image: require('../../../../assets1/images/Jewellery.jpg') },
-    { id: '8', title: 'Mehandi', image: require('../../../../assets1/images/mehandi.jpg') },
-    { id: '9', title: 'Makeup', image: require('../../../../assets1/images/makeup.jpg') },
-    { id: '10', title: 'Honeymoon', image: require('../../../../assets1/images/honeymoon planning.jpg') },
+    { id: '1', title: 'E-Invites', image: require('../../../../assets/images/invite.jpg') },
+    { id: '2', title: 'Event Management', image: require('../../../../assets/images/Gust Mangment.jpg') },
+    { id: '3', title: 'Venues', image: require('../../../../assets/images/venue1.jpg') },
+    { id: '4', title: 'Catering', image: require('../../../../assets/images/Food.jpg') },
+    { id: '5', title: 'Photography', image: require('../../../../assets/images/photo.jpg') },
+    { id: '6', title: 'Decor', image: require('../../../../assets/images/decor.jpg') },
+    { id: '7', title: 'Jewellery', image: require('../../../../assets/images/Jewellery.jpg') },
+    { id: '8', title: 'Mehandi', image: require('../../../../assets/images/mehandi.jpg') },
+    { id: '9', title: 'Makeup', image: require('../../../../assets/images/makeup.jpg') },
+    { id: '10', title: 'Honeymoon', image: require('../../../../assets/images/honeymoon planning.jpg') },
 ];
 
 
