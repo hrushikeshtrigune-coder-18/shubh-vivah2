@@ -3,7 +3,7 @@ import {
   CustomModalDropdown,
   CustomTextInput,
   ProfileLayout,
-  RadioGroup
+  RadioGroup,
 } from "@/components/Profile/CompleteProfileForm";
 import { useProfileForm } from "@/context/ProfileFormContext";
 import { useLocalSearchParams, useRouter } from "expo-router";

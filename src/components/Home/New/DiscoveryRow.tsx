@@ -1,11 +1,11 @@
 import { MatchProfile } from "@/types/connections";
 import React from "react";
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import QuickViewCard from "./QuickViewCard";
 

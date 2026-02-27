@@ -1,6 +1,6 @@
 import {
-    CustomModalDropdown,
-    ProfileLayout,
+  CustomModalDropdown,
+  ProfileLayout,
 } from "@/components/Profile/CompleteProfileForm";
 import { useProfileForm } from "@/context/ProfileFormContext";
 import { useRouter } from "expo-router";

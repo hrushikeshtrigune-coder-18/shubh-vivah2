@@ -2,12 +2,12 @@ import { Colors } from "@/constants/Colors";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import {
-    Animated,
-    Dimensions,
-    Image,
-    StyleSheet,
-    Text,
-    View,
+  Animated,
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 const { width } = Dimensions.get("window");

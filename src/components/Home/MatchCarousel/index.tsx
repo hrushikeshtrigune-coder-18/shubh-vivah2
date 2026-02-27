@@ -2,8 +2,8 @@ import { MatchProfile } from "@/types/connections";
 import React from "react";
 import { Dimensions, View } from "react-native";
 import Animated, {
-    useAnimatedScrollHandler,
-    useSharedValue,
+  useAnimatedScrollHandler,
+  useSharedValue,
 } from "react-native-reanimated";
 import MatchCard, { SNAP_INTERVAL } from "./MatchCard";
 

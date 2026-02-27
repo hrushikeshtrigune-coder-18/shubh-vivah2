@@ -4,7 +4,7 @@ import CollapsibleHero from "@/components/Home/New/CollapsibleHero";
 import DiscoveryRow from "@/components/Home/New/DiscoveryRow";
 import HomeSearchOverlay from "@/components/Home/New/HomeSearchOverlay";
 import InteractionsSheet, {
-    InteractionsSheetRef,
+  InteractionsSheetRef,
 } from "@/components/Home/New/InteractionsSheet";
 import KundaliCard from "@/components/Home/New/KundaliCard";
 import NearbyRadarSection from "@/components/Home/New/NearbyRadarSection";
@@ -24,8 +24,8 @@ import { MotiView } from "moti";
 import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import Animated, {
-    useAnimatedScrollHandler,
-    useSharedValue,
+  useAnimatedScrollHandler,
+  useSharedValue,
 } from "react-native-reanimated";
 import SideMenu from "@/components/SideMenu"; // Force refresh
 

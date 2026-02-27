@@ -6,23 +6,23 @@ import PreferencesSheet from "@/components/Home/New/PreferencesSheet";
 import { Colors } from "@/constants/Colors";
 import { searchProfiles } from "@/services/matchService";
 import {
-    DEFAULT_FILTERS,
-    FilterState,
-    MatchProfile,
+  DEFAULT_FILTERS,
+  FilterState,
+  MatchProfile,
 } from "@/types/connections";
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-    FlatList,
-    Platform,
-    RefreshControl,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  FlatList,
+  Platform,
+  RefreshControl,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function ConnectionsScreen() {

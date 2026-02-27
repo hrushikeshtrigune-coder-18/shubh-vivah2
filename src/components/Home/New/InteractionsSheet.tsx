@@ -1,17 +1,17 @@
 import { Colors } from "@/constants/Colors";
 import { MOCK_MATCHES } from "@/data/mockConnectionsData";
 import {
-    BottomSheetBackdrop,
-    BottomSheetModal,
-    BottomSheetScrollView,
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { MotiView } from "moti";
 import React, {
-    forwardRef,
-    useCallback,
-    useImperativeHandle,
-    useMemo,
-    useState,
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useState,
 } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 

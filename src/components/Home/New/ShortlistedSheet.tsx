@@ -2,9 +2,9 @@ import { Colors } from "@/constants/Colors";
 import { MOCK_MATCHES } from "@/data/mockConnectionsData";
 import { Ionicons } from "@expo/vector-icons";
 import {
-    BottomSheetBackdrop,
-    BottomSheetModal,
-    BottomSheetScrollView,
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import { MotiView } from "moti";
 import React, { forwardRef, useCallback, useMemo } from "react";

@@ -3,11 +3,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Sparkles } from "lucide-react-native";
 import React from "react";
 import {
-    ImageBackground,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 interface QuickViewCardProps {

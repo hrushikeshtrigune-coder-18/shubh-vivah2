@@ -2,11 +2,11 @@ import { Colors } from "@/constants/Colors";
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Animated, {
-    Easing,
-    interpolate,
-    useAnimatedProps,
-    useSharedValue,
-    withTiming,
+  Easing,
+  interpolate,
+  useAnimatedProps,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 import Svg, { Circle, Defs, LinearGradient, Stop } from "react-native-svg";
 
