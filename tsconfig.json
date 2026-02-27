@@ -4,7 +4,11 @@
     "strict": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "importHelpers": true,
+    "jsx": "react-jsx",
+    "allowJs": true,
+    "checkJs": false
   },
   "include": [
     "src/**/*.ts",
@@ -13,5 +17,11 @@
     "app/**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
+  ],
+  "exclude": [
+    "**/*.jsx",
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js"
   ]
 }
